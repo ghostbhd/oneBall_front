@@ -1,15 +1,20 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
+import { Socket } from 'socket.io';
+import { SendMessageDto } from './dto/add-msg.dtp';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { Message } from 'src/entities/Message.entity';
+import { User } from 'src/entities/user.entity';
+import { UserService } from 'src/User/user.service';
+import { CreateUserDto } from '../DTOS/create-user.dto';
 
 @WebSocketGateway()
 export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('createChat')
-  create(@MessageBody() createChatDto: CreateChatDto) {
-    return this.chatService.create(createChatDto);
+  create(@MessageBody() SendMessageDto: SendMessageDto) {
+    return this.chatService.create(SendMessageDto);
   }
 
   @SubscribeMessage('findAllChat')
