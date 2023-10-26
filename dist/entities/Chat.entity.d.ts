@@ -5,5 +5,6 @@ export declare class Chat {
     DateStarted: string;
     userid1: User;
     userid2: User;
+    content: string;
     messageid: Message[];
 }

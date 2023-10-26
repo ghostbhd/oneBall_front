@@ -4,9 +4,11 @@ import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/User/user.service';
 import { SendMessageDto } from './dto/add-msg.dtp';
-import { UpdateChatDto } from './dto/update-chat.dto';
-import { CreateUserDto } from '../DTOS/create-user.dto';
+// import { CreateUserDto } from '../DTOS/create-user.dto';
 import { Repository } from 'typeorm';
+import { Chat } from 'src/entities/Chat.entity';
+import { Channel} from 'src/entities/Channel.entity';
+import { Channel_Membership} from 'src/entities/Channel_Membership.entity';
 
 
 @Injectable()
@@ -14,14 +16,16 @@ export class ChatService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
+    @InjectRepository(Chat)
+    private readonly directMessageRepository: Repository<Chat>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Channel)
+    private readonly channelRepository: Repository<Channel>,
+    @InjectRepository(Channel_Membership)
+    private readonly Channel_MembershipRepository: Repository<Channel_Membership>,
 ) {}
-  async sendMessage(user: User, content: string): Promise<Message> {
-    // Here, the logic to store the message in the database would go.
-    const message = new Message();
-    message.Content= content;
-    message.SenderUserID = user;
-    return await this.messageRepository.save(message);
-}
+    
 
   create(createChatDto: SendMessageDto) {
     return 'This action adds a new chat';
@@ -31,13 +35,6 @@ export class ChatService {
     return `This action returns all chat`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
-  }
-
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
 
   remove(id: number) {
     return `This action removes a #${id} chat`;

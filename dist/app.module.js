@@ -19,6 +19,8 @@ const Channel_Message_entity_1 = require("./entities/Channel_Message.entity");
 const Friendship_entity_1 = require("./entities/Friendship.entity");
 const auth_module_1 = require("./auth/auth.module");
 const user_module_1 = require("./User/user.module");
+const chat_gateway_1 = require("./chat/chat.gateway");
+const chat_module_1 = require("./chat/chat.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,7 +31,9 @@ exports.AppModule = AppModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, Channel_entity_1.Channel, Channel_Membership_entity_1.Channel_Membership, Chat_entity_1.Chat, Message_entity_1.Message, Channel_Message_entity_1.Channel_Message, Friendship_entity_1.Friendship]),
             user_module_1.UserModule,
             auth_module_1.AuthModule,
+            chat_module_1.ChatModule,
         ],
+        providers: [chat_gateway_1.ChatGateway],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
