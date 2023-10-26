@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './User/user.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { ChatModule } from './chat/chat.module';
+import { ChannelModule } from './chat/channel/channel.module';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { ChatModule } from './chat/chat.module';
     UserModule,
     AuthModule,
     ChatModule,
+    ChannelModule,
   ],
   providers: [ChatGateway],
   // exports: [TypeOrmModule],

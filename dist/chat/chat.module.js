@@ -22,7 +22,7 @@ exports.ChatModule = ChatModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([Message_entity_1.Message, Chat_entity_1.Chat, user_entity_1.User, Channel_entity_1.Channel, Channel_Membership_entity_1.Channel_Membership])],
         providers: [chat_service_1.ChatService,],
-        exports: [chat_service_1.ChatService],
+        exports: [chat_service_1.ChatService, typeorm_1.TypeOrmModule],
     })
 ], ChatModule);
 //# sourceMappingURL=chat.module.js.map

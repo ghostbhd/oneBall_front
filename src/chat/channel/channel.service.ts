@@ -75,6 +75,16 @@ async createChannelForUser(ownerId: number, channelName: string): Promise<Channe
     
     return await this.messageRepository.save(message);  // Ensure you have injected messageRepository
   }
+
+  async getChannelById(channelId: number): Promise<Channel> {
+    const channel = await this.channelRepository.findOne({ where: { id: channelId } });
+    if (!channel) {
+        throw new NotFoundException('Channel not found');
+    }
+
+    return channel;
+}
+
       
 }
 

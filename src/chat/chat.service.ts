@@ -3,7 +3,7 @@ import { Message } from 'src/entities/Message.entity';
 import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/User/user.service';
-import { SendMessageDto } from './dto/add-msg.dtp';
+import { SendMessageDto } from './chat.dto/add-msg.dtp';
 // import { CreateUserDto } from '../DTOS/create-user.dto';
 import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';

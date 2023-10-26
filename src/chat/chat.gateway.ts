@@ -2,7 +2,7 @@ import { WebSocketGateway, SubscribeMessage, MessageBody,WebSocketServer, OnGate
 import { ChatService } from './chat.service';
 import { Socket } from 'socket.io';
 import { Chat } from 'src/entities/Chat.entity';
-import { SendMessageDto } from './dto/add-msg.dtp';
+import { SendMessageDto } from './chat.dto/add-msg.dtp';
 // import { UpdateChatDto } from './dto/update-chat.dto';
 import { Message } from 'src/entities/Message.entity';
 import { User } from 'src/entities/user.entity';
