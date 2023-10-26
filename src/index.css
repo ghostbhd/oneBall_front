@@ -1,0 +1,12 @@
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* bg-orange_3 rounded-3xl text-white */
+
+.app
+{
+    background: url('./assets/bg contain.png') no-repeat center center fixed;
+}
