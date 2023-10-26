@@ -1,6 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, OneToMany, ManyToOne,PrimaryGeneratedColumn } from "typeorm"
 import { Channel_Membership } from "./Channel_Membership.entity";
 import { Channel_Message } from "./Channel_Message.entity";
+import { User } from "./user.entity";
+
 
 @Entity()
 export class Channel {
@@ -12,5 +14,8 @@ export class Channel {
     channel_membershipid: Channel_Membership;
     @OneToMany(() => Channel_Message, channel_message => channel_message.channelid)
     Channel_messageid: Channel_Message;
+    @ManyToOne(() => User)
+    owner: User;
+    
 
 }

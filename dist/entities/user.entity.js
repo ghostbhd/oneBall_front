@@ -16,6 +16,7 @@ const Chat_entity_1 = require("./Chat.entity");
 const Message_entity_1 = require("./Message.entity");
 const Channel_Membership_entity_1 = require("./Channel_Membership.entity");
 const Channel_Message_entity_1 = require("./Channel_Message.entity");
+const Channel_entity_1 = require("./Channel.entity");
 let User = class User {
 };
 exports.User = User;
@@ -63,6 +64,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Channel_Message_entity_1.Channel_Message, channel_message => channel_message.SenderUserid),
     __metadata("design:type", Channel_Message_entity_1.Channel_Message)
 ], User.prototype, "channel_messageid", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Channel_entity_1.Channel, channel => channel.owner),
+    __metadata("design:type", Array)
+], User.prototype, "ownedChannels", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

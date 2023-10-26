@@ -5,6 +5,8 @@ import { Message } from './Message.entity';
 import { Channel_Membership } from './Channel_Membership.entity';
 import { Channel_Message } from './Channel_Message.entity';
 import { StringifyOptions } from 'querystring';
+import { Channel } from "./Channel.entity";
+
 
 @Entity()
 export class User {
@@ -30,4 +32,6 @@ export class User {
   channel_membershipid: Channel_Membership;
   @OneToMany(() => Channel_Message, channel_message => channel_message.SenderUserid)
   channel_messageid: Channel_Message;
+  @OneToMany(() => Channel, channel => channel.owner)
+  ownedChannels: Channel[];
 }

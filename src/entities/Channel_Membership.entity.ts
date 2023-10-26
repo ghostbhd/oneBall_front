@@ -12,4 +12,5 @@ export class Channel_Membership {
     channelid: Channel;
     @Column()
     DateJoined: string;
+    
 }
