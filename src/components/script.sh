@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir $1
+mv $1.jsx $1/index.jsx

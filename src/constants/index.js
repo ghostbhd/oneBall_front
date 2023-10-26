@@ -1,0 +1,54 @@
+// Sidebar icons
+import {MdSpaceDashboard} from 'react-icons/md'; // dashboard icon
+import {FaUser} from 'react-icons/fa'; // profile icon
+import {IoGameController} from 'react-icons/io5'; // games icon
+import {BiSolidMessageDetail} from 'react-icons/bi'; // messages icon
+import {ImStatsDots} from 'react-icons/im'; // stats icon
+import {MdSettings} from 'react-icons/md'; // settings icon
+import {TbLogout} from 'react-icons/tb'; // logout icon
+
+//other icons
+import {FaAngleRight} from 'react-icons/fa'; // arrow icon
+
+export const sidebarItems = [
+    {
+        icon: MdSpaceDashboard ,
+        title: 'Dashboard',
+        link: '/'
+    },
+    {
+        icon: FaUser,
+        title: 'Profile',
+        link: '/profile'
+    },
+    {
+        icon: IoGameController,
+        title: 'Games',
+        link: '/games'
+    },
+    {
+        icon: BiSolidMessageDetail,
+        title: 'Messages',
+        link: '/messages'
+    },
+    {
+        icon: ImStatsDots,
+        title: 'Stats',
+        link: '/stats'
+    },
+    {
+        icon: MdSettings,
+        title: 'Settings',
+        link: '/settings'
+    },
+    {
+        icon: TbLogout,
+        title: 'Logout',
+        link: '/logout'
+    },
+
+];
+
+export const icons = {
+    toRight: FaAngleRight,
+}
