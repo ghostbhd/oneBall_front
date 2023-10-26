@@ -12,7 +12,7 @@ import { Channel_Membership} from 'src/entities/Channel_Membership.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Message, Chat,User,Channel,Channel_Membership])],  
   providers: [ ChatService,],   
-  exports: [ChatService],
+  exports: [ChatService,TypeOrmModule],
 })
 export class ChatModule {}
 

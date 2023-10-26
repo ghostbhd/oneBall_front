@@ -1,6 +1,6 @@
 import { Message } from 'src/entities/Message.entity';
 import { User } from 'src/entities/user.entity';
-import { SendMessageDto } from './dto/add-msg.dtp';
+import { SendMessageDto } from './chat.dto/add-msg.dtp';
 import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
 import { Channel } from 'src/entities/Channel.entity';
