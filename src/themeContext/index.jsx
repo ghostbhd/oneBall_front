@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
 
 const defaultTheme = {
-  isSidebarCollapsed: false,
+  isSidebarCollapsed: true,
   toggleSidebar: () => {},
 };
 

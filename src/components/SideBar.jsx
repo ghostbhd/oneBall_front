@@ -16,11 +16,11 @@ const SideBar = () => {
         ${
           theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW
         } p-4 text-blue_light_1
-        transition-all duration-500`}
+        transition-all duration-700`}
     >
       {/* Toggle button ---------------------- */}
-      <div className="absolute top-16 right-0">
-        <button onClick={toggleSidebar} className="text-3xl">
+      <div className="absolute bottom-36 right-0">
+        <button onClick={toggleSidebar} className="text-3xl bg-[#0f2939] rounded-l-full">
           {theme.isSidebarCollapsed === true ? (
             <icons.arrowRight />
           ) : (
@@ -29,26 +29,34 @@ const SideBar = () => {
         </button>
       </div>
       {/* Sidebar items ---------------------- */}
-      <ul className="flex flex-col space-y-7 w-full">
+      <ul
+        className={`flex flex-col space-y-7 w-full ${
+          theme.isSidebarCollapsed ? "items-center" : ""
+        }`}
+      >
         {/* logo ------------------------ */}
         <li className="text-[25pt] px-4">
-          <Link to={"/"}>{theme.isSidebarCollapsed ? 'Pi' : 'PiPo'}</Link>
+          <Link to={"/"}>{theme.isSidebarCollapsed ? "Pi" : "PiPo"}</Link>
         </li>
         {/* items ------------------------ */}
         {sidebarItems.map((item, index) => (
           <li
             key={item.title}
-            className={`w-full ${
+            className={`transition-transform duration-500 ${
               index === sidebarItems.length - 3
                 ? "!mb-auto"
                 : index === 0
                 ? "!mt-auto"
                 : ""
+            } ${
+              theme.isSidebarCollapsed
+                ? "flex w-max justify-center"
+                : "w-full"
             }`}
           >
             <Link
               to={item.link}
-              className={`flex flex-row items-center p-2 ${
+              className={`flex flex-row items-center p-2 transition-all duration-500 hover:text-white ${
                 location.pathname === `${item.link}`
                   ? `bg-orange_3 rounded-3xl text-white`
                   : ""
@@ -59,10 +67,18 @@ const SideBar = () => {
               } `}
             >
               {/* Icon / title -------------------------------- */}
-              <span className="text-xl">{<item.icon />}</span>
+              <span
+                className={`${
+                  theme.isSidebarCollapsed ? "text-2xl" : "text-xl"
+                }`}
+              >
+                {<item.icon />}
+              </span>
               <span
                 className={`text-base ${
-                  theme.isSidebarCollapsed ? "hidden" : "ml-6"
+                  theme.isSidebarCollapsed
+                    ? "hidden"
+                    : "ml-6"
                 }`}
               >
                 {item.title}
