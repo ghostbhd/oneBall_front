@@ -9,6 +9,7 @@ import {TbLogout} from 'react-icons/tb'; // logout icon
 
 //other icons
 import {FaAngleRight} from 'react-icons/fa'; // arrow icon
+import {BiSolidArrowToRight, BiSolidArrowFromRight} from 'react-icons/bi'; // arrow icon
 
 export const sidebarItems = [
     {
@@ -51,4 +52,6 @@ export const sidebarItems = [
 
 export const icons = {
     toRight: FaAngleRight,
+    arrowRight: BiSolidArrowToRight,
+    arrowLeft: BiSolidArrowFromRight
 }

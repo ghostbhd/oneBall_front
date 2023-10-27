@@ -21,7 +21,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`flex flex-wrap w-full h-full`}>
+    <div className={`flex flex-wrap w-full h-full space-y-4`}>
       {loading ? (
         <p className="w-full text-blue_light_4 text-center p-4">Loading...</p>
       ) : (
