@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchDataFromMockApi } from "../../data/mockApi";
 import MessageList from "./MessageList";
 import ProfileDetails from "./ProfileDetails";
+import GameBtn from "./GameBtn";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -21,9 +22,9 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`flex flex-wrap w-full h-full space-y-4`}>
+    <div className={`flex flex-wrap w-full h-full`}>
       {loading ? (
-        <p className="w-full text-blue_light_4 text-center p-4">Loading...</p>
+        <p className="w-full text-bLight_4 text-center p-4">Loading...</p>
       ) : (
         <>
           {/* messages ---------------------------------------------------------------- */}
@@ -31,6 +32,9 @@ const Dashboard = () => {
 
           {/* profile ----------------------------------------------------------------- */}
           <ProfileDetails user={data.user} />
+
+          {/* Game -------------------------------------------------------------------- */}
+          <GameBtn />
         </>
       )}
     </div>
@@ -38,5 +42,6 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 // To Do: put message item into link

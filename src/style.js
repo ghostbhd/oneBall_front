@@ -4,11 +4,12 @@ const style = {
     sidebarW2: "w-1/12",
     contentW: "w-10/12",
     contentW2: "w-11/12",
-    blueBlur: "bg-blue_dark_1 bg-opacity-50 backdrop-blur-3xl",
+    blueBlur: "bg-bDark_2 bg-opacity-40 backdrop-blur-3xl",
     rounded: "rounded-[20px]",
-    online: "border-orange_3",
+    online: "border-org_3",
     offline: "border-[#999]",
-    inGame: "border-blue_light_3",
+    inGame: "border-bLight_3",
+    transition: "transition-all duration-700",
 }
 
 export default style;
