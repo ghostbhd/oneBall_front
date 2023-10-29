@@ -15,17 +15,22 @@ import { useTheme } from "./themeContext";
 
 const App = () => {
   const { theme } = useTheme();
+
   return (
     <BrowserRouter>
       <div className={`app w-full h-full flex flex-row fixed`}>
         <div
           className={`absolute right-0 top-0 w-full h-full bg-[#0a2028] opacity-50`}
         ></div>
+        {/* sidebar ----------------------------------------------------------------- */}
         <SideBar />
+
+        {/* content ----------------------------------------------------------------- */}
         <div
-          className={`content flex flex-wrap p-4 overflow-y-auto ${
-            theme.isSidebarCollapsed ? style.contentW2 : style.contentW
-          } ${style.backdropBlur} transition-all duration-500`}
+          className={`p-4 px-10 overflow-y-auto
+            ${style.backdropBlur} ${style.transition} 
+            ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
+          `}
         >
           <Routes>
             <Route path="/" element={<Dashboard />} />

@@ -9,24 +9,24 @@ const ProfileDetails = ({ user }) => {
     backgroundPosition: `center`,
   };
 
-  const pStyle = "text-blue_light_2 text-4xl w-max text-center";
-  const spanStyle = "block text-blue_light_4 text-base";
+  const pStyle = "text-bLight_2 text-[26pt] w-3/12 text-center leading-[.8em]";
+  const spanStyle = "block text-bLight_5 text-[12pt]";
 
   return (
-    <div className="flex flex-col relative w-6/12 ml-auto h-max">
+    <div className="flex flex-col relative w-5/12 ml-auto h-max">
       {/* details --------------------------------------------------------------------------------*/}
       <div
         className={`w-9/12 flex flex-col h-max p-4 pl-7 left-0 ${style.blueBlur} ${style.rounded}`}
       >
         {/* FullName and userName -------------------------------------*/}
-        <p className="w-8/12 text-blue_light_3 text-2xl text-center">
+        <p className="w-8/12 text-bLight_3 text-2xl text-center">
           {user.fullName}
-          <span className={`block text-lg text-blue_light_4`}>
+          <span className={`block text-lg text-bLight_4`}>
             {user.username}
           </span>
         </p>
         {/* level, games, win, lose  ----------------*/}
-        <div className={`w-8/12 p-8 flex flex-col`}>
+        <div className={`w-8/12 p-8 flex flex-col space-y-4`}>
           <div className="w-full flex mb-2">
             <p className={pStyle}>
               {user.level} <span className={`${spanStyle}`}>Level</span>
@@ -44,18 +44,21 @@ const ProfileDetails = ({ user }) => {
             </p>
           </div>
         </div>
-        <Link
-          to={"/games"}
-          className="w-8/12 text-center text-lg text-orange_3 mt-5"
-        >
-          view more
-        </Link>
+        {/* link view more to /games */}
+        <div className="w-8/12 text-center justify-center">
+          <Link
+            to={"/games"}
+            className="w-max text-base transition-colors duration-300 text-bLight_5 hover:text-bLight_2 mt-5"
+          >
+            view more
+          </Link>
+        </div>
       </div>
       {/* image ---------------------------*/}
       <div
-        className={`absolute w-56 h-80 right-4 ${
-          style.rounded
-        } top-[50%] transform translate-y-[-50%] border-8
+        title="profile image"
+        className={`absolute w-52 h-[90%] right-0 ${style.rounded}
+          top-[50%] transform translate-y-[-50%] border-[7px] shadow-3xl
         ${
           user.status === "online"
             ? style.online

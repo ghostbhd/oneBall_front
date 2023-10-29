@@ -6,14 +6,14 @@ import style from "../../style";
 const MessageList = ({ last4Msgs }) => {
   return (
     <div
-      className={`w-5/12 h-max ${style.rounded} p-5 px-6 ${style.blueBlur}`}
+      className={`w-5/12 h-max ${style.rounded} p-5 px-6 ${style.blueBlur} bg-opacity-30 shadow-2xl`}
     >
       {/* head ***/}
-      <div className={`flex w-full text-blue_light_4 py-1`}>
+      <div className={`flex w-full text-bLight_4 py-1`}>
         <span className="">Messages</span>
         <Link
           to="/messages"
-          className={`ml-auto text-3xl font-bold hover:text-blue_light_2 transition-colors`}
+          className={`ml-auto text-3xl font-bold hover:text-bLight_2 transition-colors`}
         >
           {<icons.toRight />}
         </Link>
@@ -25,8 +25,8 @@ const MessageList = ({ last4Msgs }) => {
           last4Msgs.map((item) => (
             <li
               key={item.id}
-              className="flex flex-wrap w-full h-max bg-blue_dark_2 rounded-l-[50px] rounded-r-[20px]
-          border-b-2 border-r-2 border-blue_light_4"
+              className="flex flex-wrap w-full h-max rounded-l-[50px] rounded-r-[20px]
+          border-b-2 border-r-2 border-bDark_1 bg-gradient-to-r from-bDark_2 to-bDark_4"
             >
               {/* image ****/}
               <img
@@ -43,7 +43,7 @@ const MessageList = ({ last4Msgs }) => {
               />
               {/* text ****/}
               <div className="flex flex-col w-4/6 ml-4 pr-2">
-                <span className="text-blue_light_2 w-full">
+                <span className="text-bLight_2 w-full">
                   @{item.username}
                   {item.ischannel ? <span className=""></span> : null}
                 </span>
@@ -54,7 +54,7 @@ const MessageList = ({ last4Msgs }) => {
             </li>
           )) // else
         ) : (
-          <p className="w-full text-blue_light_4 text-center p-4">
+          <p className="w-full text-bLight_4 text-center p-4">
             No recent messages available.
           </p>
         )}

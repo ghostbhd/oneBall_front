@@ -12,11 +12,10 @@ const SideBar = () => {
 
   return (
     <div
-      className={`${style.blueBlur} flex h-screen 
+      className={`${style.blueBlur} flex h-screen ${style.transition}
         ${
           theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW
-        } p-4 text-blue_light_1
-        transition-all duration-700`}
+        } p-4 text-bLight_1`}
     >
       {/* Toggle button ---------------------- */}
       <div className="absolute bottom-36 right-0">
@@ -42,7 +41,7 @@ const SideBar = () => {
         {sidebarItems.map((item, index) => (
           <li
             key={item.title}
-            className={`transition-transform duration-500 ${
+            className={` ${
               index === sidebarItems.length - 3
                 ? "!mb-auto"
                 : index === 0
@@ -56,13 +55,13 @@ const SideBar = () => {
           >
             <Link
               to={item.link}
-              className={`flex flex-row items-center p-2 transition-all duration-500 hover:text-white ${
+              className={`flex flex-row p-2  hover:text-white transition-colors duration-300 ${
                 location.pathname === `${item.link}`
-                  ? `bg-orange_3 rounded-3xl text-white`
+                  ? `bg-org_3 rounded-3xl text-white`
                   : ""
               } ${
                 theme.isSidebarCollapsed
-                  ? "justify-center"
+                  ? "rounded-full justify-center"
                   : ""
               } `}
             >
@@ -78,7 +77,7 @@ const SideBar = () => {
                 className={`text-base ${
                   theme.isSidebarCollapsed
                     ? "hidden"
-                    : "ml-6"
+                    : "ml-10"
                 }`}
               >
                 {item.title}
