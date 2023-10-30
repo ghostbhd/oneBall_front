@@ -22,19 +22,23 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`flex flex-wrap w-full h-full`}>
+    <div className={`flex flex-row w-full h-full`}>
       {loading ? (
-        <p className="w-full text-bLight_4 text-center p-4">Loading...</p>
+        <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
+          Loading...
+        </p>
       ) : (
         <>
-          {/* messages ---------------------------------------------------------------- */}
-          <MessageList last4Msgs={data.last4Msg} />
-
-          {/* profile ----------------------------------------------------------------- */}
-          <ProfileDetails user={data.user} />
-
-          {/* Game -------------------------------------------------------------------- */}
-          <GameBtn />
+          <div className="w-1/2 flex flex-col space-y-14">
+            {/* messages ---------------------------------------------------------------- */}
+            <MessageList last4Msgs={data.last4Msg} />
+            {/* Game -------------------------------------------------------------------- */}
+            <GameBtn />
+          </div>
+          <div className="w-1/2 flex flex-col">
+            {/* profile ----------------------------------------------------------------- */}
+            <ProfileDetails user={data.user} />
+          </div>
         </>
       )}
     </div>
@@ -42,6 +46,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
 
 // To Do: put message item into link

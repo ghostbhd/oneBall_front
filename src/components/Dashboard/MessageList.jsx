@@ -6,7 +6,10 @@ import style from "../../style";
 const MessageList = ({ last4Msgs }) => {
   return (
     <div
-      className={`w-5/12 h-max ${style.rounded} p-5 px-6 ${style.blueBlur} bg-opacity-30 shadow-2xl`}
+      className={`
+        h-max p-5 px-6 bg-opacity-30 shadow-2xl 
+        ${style.blueBlur} ${style.rounded} ${style.boxWidth}
+      `}
     >
       {/* head ***/}
       <div className={`flex w-full text-bLight_4 py-1`}>

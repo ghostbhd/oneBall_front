@@ -13,7 +13,7 @@ const ProfileDetails = ({ user }) => {
   const spanStyle = "block text-bLight_5 text-[12pt]";
 
   return (
-    <div className="flex flex-col relative w-5/12 ml-auto h-max">
+    <div className={`flex flex-col relative w-11/12 ml-auto h-max ${style.boxWidth}`}>
       {/* details --------------------------------------------------------------------------------*/}
       <div
         className={`w-9/12 flex flex-col h-max p-4 pl-7 left-0 ${style.blueBlur} ${style.rounded}`}

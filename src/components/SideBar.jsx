@@ -12,14 +12,16 @@ const SideBar = () => {
 
   return (
     <div
-      className={`${style.blueBlur} flex h-screen ${style.transition}
-        ${
-          theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW
-        } p-4 text-bLight_1`}
+      className={`flex h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-50
+        ${style.blueBlur} ${style.transition}
+        ${theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW}`}
     >
       {/* Toggle button ---------------------- */}
       <div className="absolute bottom-36 right-0">
-        <button onClick={toggleSidebar} className="text-3xl bg-[#0f2939] rounded-l-full">
+        <button
+          onClick={toggleSidebar}
+          className="text-3xl bg-[#0f2939] rounded-l-full"
+        >
           {theme.isSidebarCollapsed === true ? (
             <icons.arrowRight />
           ) : (
@@ -48,9 +50,7 @@ const SideBar = () => {
                 ? "!mt-auto"
                 : ""
             } ${
-              theme.isSidebarCollapsed
-                ? "flex w-max justify-center"
-                : "w-full"
+              theme.isSidebarCollapsed ? "flex w-max justify-center" : "w-full"
             }`}
           >
             <Link
@@ -60,9 +60,7 @@ const SideBar = () => {
                   ? `bg-org_3 rounded-3xl text-white`
                   : ""
               } ${
-                theme.isSidebarCollapsed
-                  ? "rounded-full justify-center"
-                  : ""
+                theme.isSidebarCollapsed ? "rounded-full justify-center" : ""
               } `}
             >
               {/* Icon / title -------------------------------- */}
@@ -75,9 +73,7 @@ const SideBar = () => {
               </span>
               <span
                 className={`text-base ${
-                  theme.isSidebarCollapsed
-                    ? "hidden"
-                    : "ml-10"
+                  theme.isSidebarCollapsed ? "hidden" : "ml-10"
                 }`}
               >
                 {item.title}
