@@ -3,10 +3,12 @@ import { fetchDataFromMockApi } from "../../data/mockApi";
 import MessageList from "./MessageList";
 import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
+import GameHistory from "./GameHistory";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const row = "w-1/2 flex flex-col space-y-14";
 
   useEffect(() => {
     fetchDataFromMockApi()
@@ -22,22 +24,24 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`flex flex-row w-full h-full`}>
+    <div className={`flex flex-row w-full`}>
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
         </p>
       ) : (
         <>
-          <div className="w-1/2 flex flex-col space-y-14">
+          <div className={`${row}`}>
             {/* messages ---------------------------------------------------------------- */}
             <MessageList last4Msgs={data.last4Msg} />
             {/* Game -------------------------------------------------------------------- */}
             <GameBtn />
           </div>
-          <div className="w-1/2 flex flex-col">
+          <div className={`${row} space-y-10`}>
             {/* profile ----------------------------------------------------------------- */}
             <ProfileDetails user={data.user} />
+            {/* game history ------------------------------------------------------------ */}
+            <GameHistory />
           </div>
         </>
       )}
