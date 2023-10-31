@@ -44,7 +44,57 @@ const data = {
             status: 'inGame',
             ischannel: false
         }
-    ]
+    ],
+    last6Games: [
+        {
+            id: 1,
+            username: 'user1',
+            fullName: 'User 1',
+            result : 'win',
+            date: 'Aug 30',
+            time: '10:00',
+        },
+        {
+            id: 2,
+            username: 'user2',
+            fullName: 'User 2',
+            result : 'lose',
+            date: 'Aug 20',
+            time: '11:12',
+        },
+        {
+            id: 3,
+            username: 'user3',
+            fullName: 'User 3',
+            result : 'win',
+            date: 'Aug 19',
+            time: '18:00',
+        },
+        {
+            id: 4,
+            username: 'user4',
+            fullName: 'User 4',
+            result : 'lose',
+            date: 'Aug 15',
+            time: '20:00',
+        },
+        {
+            id: 5,
+            username: 'user5',
+            fullName: 'User 5',
+            result : 'win',
+            date: 'Aug 3',
+            time: '15:0',
+        },
+        {
+            id: 6,
+            username: 'user6',
+            fullName: 'User 6',
+            result : 'lose',
+            date: 'Aug 3',
+            time: '10:00',
+        },
+    ],
 };
 
 export function fetchDataFromMockApi() {

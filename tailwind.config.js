@@ -10,6 +10,7 @@ module.exports = {
         bLight_3: "#97e3f4",
         bLight_4: "#6398a4",
         bLight_5: "#558792",
+        bLight_6: "#90BFE8",
         bDark_1: "#406774",
         bDark_2: "#395f6d",
         bDark_3: "#2a515e",

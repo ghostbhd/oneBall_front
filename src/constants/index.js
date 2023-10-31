@@ -11,6 +11,7 @@ import {TbLogout} from 'react-icons/tb'; // logout icon
 import {FaAngleRight} from 'react-icons/fa'; // arrow icon
 import {BiSolidArrowToRight, BiSolidArrowFromRight} from 'react-icons/bi'; // arrow icon
 import {FaUserFriends} from 'react-icons/fa'; // friends icon
+import {FaRandom} from 'react-icons/fa'; // random icon
 
 export const sidebarItems = [
     {
@@ -55,5 +56,6 @@ export const icons = {
     toRight: FaAngleRight,
     arrowRight: BiSolidArrowToRight,
     arrowLeft: BiSolidArrowFromRight,
-    friends: FaUserFriends
+    friends: FaUserFriends,
+    random: FaRandom,
 }

@@ -4,6 +4,11 @@ import { icons } from "../../constants";
 import style from "../../style";
 
 const MessageList = ({ last4Msgs }) => {
+  const imagebg = ({ img }) => ({
+    backgroundImage: `url('${img}')`,
+    backgroundSize: `cover`,
+    backgroundPosition: `center`,
+  });
   return (
     <div
       className={`
@@ -29,21 +34,22 @@ const MessageList = ({ last4Msgs }) => {
             <li
               key={item.id}
               className="flex flex-wrap w-full h-max rounded-l-[50px] rounded-r-[20px]
-          border-b-2 border-r-2 border-bDark_1 bg-gradient-to-r from-bDark_2 to-bDark_4"
+                border-b-[3px] border-r-[3px] border-bLight_5 bg-bDark_1"
             >
               {/* image ****/}
-              <img
-                src={item.image}
-                alt={"Photo of " + item.username}
-                className={`w-[60px] h-[60px] rounded-full border-collapse border-4
-              ${
-                item.status === "online"
-                  ? style.online
-                  : item.status === "offline"
-                  ? style.offline
-                  : style.inGame
-              }`}
-              />
+              <div
+                className={`w-[62px] h-[62px] rounded-full border-[5px]
+                  ${
+                    item.status === "online"
+                      ? style.online
+                      : item.status === "offline"
+                      ? style.offline
+                      : style.inGame
+                  }`}
+                style={imagebg({ img: item.image })}
+              >
+                {/* <img src={item.image} alt={"Photo of " + item.username} /> */}
+              </div>
               {/* text ****/}
               <div className="flex flex-col w-4/6 ml-4 pr-2">
                 <span className="text-bLight_2 w-full">
