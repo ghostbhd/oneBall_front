@@ -18,4 +18,8 @@ export declare class ChannelService {
     addMemberToChannel(channelId: number, userId: number): Promise<Channel_Membership>;
     sendMessageToChannel(channelId: number, senderId: number, content: string): Promise<Channel_Message>;
     getChannelById(channelId: number): Promise<Channel>;
+    kickUserFromChannel(channelId: number, userId: number, requesterId: number): Promise<void>;
+    getChannelMembers(channelId: number): Promise<Channel_Membership[]>;
+    setUserAsAdmin(channelId: number, userId: number, requesterId: number): Promise<void>;
+    removeUserFromAdmin(channelId: number, userId: number, requesterId: number): Promise<void>;
 }

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { ChannelService } from './channel.service';  // Update this path accordingly
+import { ChannelService } from './channel.service';  
 
 @Controller('channel')
 export class ChannelController {
@@ -25,18 +25,24 @@ export class ChannelController {
         return await this.channelService.sendMessageToChannel(channelId, senderId, content);
     }
 
-    // I'm adding a simple GET endpoint to fetch a channel by its ID. You can expand on this.
     @Get(':channelId')
     async getChannel(@Param('channelId') channelId: number) {
-        return await this.channelService.getChannelById(channelId);  // You need to add `getChannelById` method in your service
+        return await this.channelService.getChannelById(channelId); 
+    }
+    //still need to test this using the frontend 
+    @Put(':channelId/kick/:userId')
+    async kickMember(
+        @Param('channelId') channelId: number,
+        @Param('userId') userId: number,
+        @Body('requesterId') requesterId: number
+    ) {
+        return await this.channelService.kickUserFromChannel(channelId, userId, requesterId);
     }
 
-    // As a placeholder, if you decide to add update and delete operations:
-    // @Put(':channelId')
-    // async updateChannel(@Param('channelId') channelId: number, @Body() updateChannelDto: any) {
-    //     // Implement update logic here or in the service
-    //     return 'Channel updated!';
-    // }
+    @Get(':channelId/members')
+    async getChannelMembers(@Param('channelId') channelId: number) {
+    return await this.channelService.getChannelMembers(channelId);
+    }
 
     // @Delete(':channelId')
     // async deleteChannel(@Param('channelId') channelId: number) {

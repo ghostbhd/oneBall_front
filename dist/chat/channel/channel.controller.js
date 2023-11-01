@@ -31,6 +31,12 @@ let ChannelController = class ChannelController {
     async getChannel(channelId) {
         return await this.channelService.getChannelById(channelId);
     }
+    async kickMember(channelId, userId, requesterId) {
+        return await this.channelService.kickUserFromChannel(channelId, userId, requesterId);
+    }
+    async getChannelMembers(channelId) {
+        return await this.channelService.getChannelMembers(channelId);
+    }
 };
 exports.ChannelController = ChannelController;
 __decorate([
@@ -65,6 +71,22 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ChannelController.prototype, "getChannel", null);
+__decorate([
+    (0, common_1.Put)(':channelId/kick/:userId'),
+    __param(0, (0, common_1.Param)('channelId')),
+    __param(1, (0, common_1.Param)('userId')),
+    __param(2, (0, common_1.Body)('requesterId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Number]),
+    __metadata("design:returntype", Promise)
+], ChannelController.prototype, "kickMember", null);
+__decorate([
+    (0, common_1.Get)(':channelId/members'),
+    __param(0, (0, common_1.Param)('channelId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ChannelController.prototype, "getChannelMembers", null);
 exports.ChannelController = ChannelController = __decorate([
     (0, common_1.Controller)('channel'),
     __metadata("design:paramtypes", [channel_service_1.ChannelService])

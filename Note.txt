@@ -1,0 +1,29 @@
+
++ TO DO :
+
+- do the DM
+- make the chaneels dto and user it
+- make the block entity and implimente it, This way, they will see no more
+    messages from the account they blocked.
+
+- channels can be privete or public , with password or with not : Done
+- make sure that  The channel owner is a channel administrator. They can set other users as
+    administrators. :DONE (still need some tests F)
+
+-A user who is an administrator of a channel can kick, ban or mute (for a
+    limited time) other users, but not the channel owners.
+
+
++ Group things :
+
+- The user should be able to invite other users to play a Pong game through the chat
+interface.
+-  The user should be able to access other players profiles through the chat interface.
+
+
+NOTES:
+read the last thin in chat
+
+add func what are the channels the user are in them
+
+
