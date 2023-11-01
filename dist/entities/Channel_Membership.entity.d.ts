@@ -5,4 +5,6 @@ export declare class Channel_Membership {
     userid: User;
     channelid: Channel;
     DateJoined: string;
+    isAdmin: boolean;
+    muteExpiration: Date;
 }

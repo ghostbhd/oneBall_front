@@ -32,6 +32,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Channel_Membership.prototype, "DateJoined", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: true }),
+    __metadata("design:type", Boolean)
+], Channel_Membership.prototype, "isAdmin", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], Channel_Membership.prototype, "muteExpiration", void 0);
 exports.Channel_Membership = Channel_Membership = __decorate([
     (0, typeorm_1.Entity)()
 ], Channel_Membership);

@@ -10,6 +10,10 @@ export class Channel {
     id: number;
     @Column()
     Channel: string;
+    @Column({ default: false })
+    isPrivate: boolean;
+    @Column({ nullable: true })
+    password: string;
     @OneToMany(() => Channel_Membership, channel_membership => channel_membership.channelid)
     channel_membershipid: Channel_Membership;
     @OneToMany(() => Channel_Message, channel_message => channel_message.channelid)

@@ -26,6 +26,14 @@ __decorate([
     __metadata("design:type", String)
 ], Channel.prototype, "Channel", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], Channel.prototype, "isPrivate", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Channel.prototype, "password", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Channel_Membership_entity_1.Channel_Membership, channel_membership => channel_membership.channelid),
     __metadata("design:type", Channel_Membership_entity_1.Channel_Membership)
 ], Channel.prototype, "channel_membershipid", void 0);

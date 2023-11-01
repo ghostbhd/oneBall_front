@@ -12,5 +12,10 @@ export class Channel_Membership {
     channelid: Channel;
     @Column()
     DateJoined: string;
+    @Column({ default: true })
+    isAdmin: boolean; // Indicates if the user is an administrator of the channel
+  
+    @Column({ nullable: true })
+    muteExpiration: Date; // For implementing temporary mute
     
 }

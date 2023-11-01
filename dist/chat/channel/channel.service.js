@@ -18,6 +18,8 @@ const Message_entity_1 = require("../../entities/Message.entity");
 const user_entity_1 = require("../../entities/user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const common_2 = require("@nestjs/common");
+const common_3 = require("@nestjs/common");
+const common_4 = require("@nestjs/common");
 const user_service_1 = require("../../User/user.service");
 const typeorm_2 = require("typeorm");
 const Chat_entity_1 = require("../../entities/Chat.entity");
@@ -74,6 +76,83 @@ let ChannelService = class ChannelService {
             throw new common_2.NotFoundException('Channel not found');
         }
         return channel;
+    }
+    async kickUserFromChannel(channelId, userId, requesterId) {
+        const channel = await this.channelRepository.findOne({ where: { id: channelId } });
+        const user = await this.userService.findUserById(userId);
+        const requester = await this.userService.findUserById(requesterId);
+        if (!channel || !user || !requester) {
+            throw new common_2.NotFoundException('Channel or User not found');
+        }
+        const membership = await this.Channel_MembershipRepository.findOne({
+            where: { channelid: channel, userid: user },
+        });
+        const requesterMembership = await this.Channel_MembershipRepository.findOne({
+            where: { channelid: channel, userid: requester },
+        });
+        if (!membership) {
+            throw new common_2.NotFoundException('User is not a member of this channel');
+        }
+        if (!requesterMembership) {
+            console.log(user.id);
+            throw new common_2.NotFoundException('Requester is not a member of this channel');
+        }
+        if (!requesterMembership.isAdmin && channel.owner.id !== requester.id) {
+            throw new common_4.UnauthorizedException('Only channel administrators or the owner can kick users');
+        }
+        await this.Channel_MembershipRepository.remove(membership);
+    }
+    async getChannelMembers(channelId) {
+        const channel = await this.channelRepository.findOne({ where: { id: channelId } });
+        if (!channel) {
+            throw new common_2.NotFoundException('Channel not found');
+        }
+        const members = await this.Channel_MembershipRepository.find({
+            where: { channelid: channel },
+            relations: ['userid']
+        });
+        return members;
+    }
+    async setUserAsAdmin(channelId, userId, requesterId) {
+        const channel = await this.channelRepository.findOne({ where: { id: channelId } });
+        const user = await this.userService.findUserById(userId);
+        const requester = await this.userService.findUserById(requesterId);
+        if (!channel || !user || !requester) {
+            throw new common_2.NotFoundException('Channel or User not found');
+        }
+        if (channel.owner.id !== requester.id) {
+            throw new common_4.UnauthorizedException('Only the channel owner can set administrators');
+        }
+        const membership = await this.Channel_MembershipRepository.findOne({
+            where: { channelid: channel, userid: user },
+        });
+        if (!membership) {
+            throw new common_2.NotFoundException('User is not a member of this channel');
+        }
+        membership.isAdmin = true;
+        await this.Channel_MembershipRepository.save(membership);
+    }
+    async removeUserFromAdmin(channelId, userId, requesterId) {
+        const channel = await this.channelRepository.findOne({ where: { id: channelId } });
+        const user = await this.userService.findUserById(userId);
+        const requester = await this.userService.findUserById(requesterId);
+        if (!channel || !user || !requester) {
+            throw new common_2.NotFoundException('Channel or User not found');
+        }
+        if (channel.owner.id !== requester.id) {
+            throw new common_4.UnauthorizedException('Only the channel owner can remove administrators');
+        }
+        const membership = await this.Channel_MembershipRepository.findOne({
+            where: { channelid: channel, userid: user },
+        });
+        if (!membership) {
+            throw new common_2.NotFoundException('User is not a member of this channel');
+        }
+        if (channel.owner.id === user.id) {
+            throw new common_3.BadRequestException('Channel owner cannot be removed from administrators');
+        }
+        membership.isAdmin = false;
+        await this.Channel_MembershipRepository.save(membership);
     }
 };
 exports.ChannelService = ChannelService;
