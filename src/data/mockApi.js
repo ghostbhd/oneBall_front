@@ -105,6 +105,7 @@ const profile = {
     profileInfo: {
         image: '/src/assets/avatar/Strong Baby.jpg',
         fullName: 'User 1',
+        username: 'user1',
         level: 5,
         games: 50,
         win: 37,
