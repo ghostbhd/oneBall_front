@@ -2,7 +2,7 @@ const data = {
     user: {
         id: 1,
         username: 'user1',
-        image: '/src/assets/Strong Baby.jpg',
+        image: '/src/assets/avatar/Strong Baby.jpg',
         status: 'online',
         fullName: 'User 1',
         level: 5.4,
@@ -48,23 +48,23 @@ const data = {
     last6Games: [
         {
             id: 1,
-            username: 'user1',
+            opponent: 'user1',
             fullName: 'User 1',
-            result : 'win',
+            result : 'lose',
             date: 'Aug 30',
             time: '10:00',
         },
         {
             id: 2,
-            username: 'user2',
+            opponent: 'user2',
             fullName: 'User 2',
-            result : 'lose',
+            result : 'win',
             date: 'Aug 20',
             time: '11:12',
         },
         {
             id: 3,
-            username: 'user3',
+            opponent: 'user3',
             fullName: 'User 3',
             result : 'win',
             date: 'Aug 19',
@@ -72,7 +72,7 @@ const data = {
         },
         {
             id: 4,
-            username: 'user4',
+            opponent: 'user4',
             fullName: 'User 4',
             result : 'lose',
             date: 'Aug 15',
@@ -80,7 +80,7 @@ const data = {
         },
         {
             id: 5,
-            username: 'user5',
+            opponent: 'user5',
             fullName: 'User 5',
             result : 'win',
             date: 'Aug 3',
@@ -88,7 +88,7 @@ const data = {
         },
         {
             id: 6,
-            username: 'user6',
+            opponent: 'user6',
             fullName: 'User 6',
             result : 'lose',
             date: 'Aug 3',
@@ -97,10 +97,35 @@ const data = {
     ],
 };
 
+const profile = {
+    editInnfo: {
+        username: 'user1',
+        avatar: '/src/assets/avatar/Strong Baby.jpg',
+    },
+    profileInfo: {
+        image: '/src/assets/avatar/Strong Baby.jpg',
+        fullName: 'User 1',
+        level: 5,
+        games: 50,
+        win: 37,
+        lose: 13,
+        xp: 400,
+        state: 'online',
+    },    
+}
+
 export function fetchDataFromMockApi() {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(data);
+        }, 1000);
+    });
+}
+
+export function profileData() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(profile);
         }, 1000);
     });
 }

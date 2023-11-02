@@ -24,7 +24,7 @@ const GameBtn = () => {
       >
         <div className="w-2/6 flex flex-col items-center text-center">
           <img src="/src/assets/rocket.png" alt="rocket" className="w-full -translate-x-6 -translate-y-14" />
-          <p className="text-3xl -translate-y-6 font-bold text-white">Play random</p>
+          <p className="text-3xl -translate-y-6 font-bold text-white">Play with random</p>
         </div>
         <div className="text-[80pt] w-4/6 flex flex-col items-center text-shadow">
             {<icons.random className="w-full text-bDark_1 m-auto" />}

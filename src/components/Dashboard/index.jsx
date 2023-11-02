@@ -41,7 +41,7 @@ const Dashboard = () => {
             {/* profile ----------------------------------------------------------------- */}
             <ProfileDetails user={data.user} />
             {/* game history ------------------------------------------------------------ */}
-            <GameHistory />
+            <GameHistory last6Games={data.last6Games}/>
           </div>
         </>
       )}
