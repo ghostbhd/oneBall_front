@@ -34,7 +34,7 @@ const Profile = () => {
           </div>
           <div
             className={`w-4/12 h-full bg-gradient-to-b from-org_2/40 from-5% 
-            via-bDark_1/30 to-bDark_1/30 ml-auto ${style.rounded}`}
+            via-bDark_1/50 to-bDark_1/50 ml-auto ${style.rounded}`}
           >
             <Details data={data.profileInfo} />
           </div>

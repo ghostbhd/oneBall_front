@@ -10,6 +10,8 @@ const Details = ({ data }) => {
   });
 
   const starPosition = "absolute -top-8 -right-8 w-[90px] h-[90px]";
+  const pStyle = "text-sm text-bLight_5 leading-[.8]";
+  const spanStyle = "text-2xl block text-bLight_3";
 
   return (
     <div className={`w-full flex flex-col p-10 h-max space-y-4`}>
@@ -24,17 +26,29 @@ const Details = ({ data }) => {
           </p>
         </div>
       </div>
+      {/* xp and progress ------------------------ */}
       <div className="mx-auto w-3/4 flex flex-col">
-        <p className="text-xs text-org_3">{data.xp} xp</p>
-        {/* progress ------------------------ */}
-        <div className="w-full h-4 flex flex-row">
-          <div className="w-11/12 h-2 mt-auto bg-bDark_1 rounded-full">
+        <div className="w-full flex flex-wrap">
+          <p className="text-xs text-org_3 w-full">{data.xp} xp</p>
+          <div className="w-11/12 h-2 my-auto bg-bDark_1 rounded-full">
             <div
               className="h-full bg-gradient-to-r from-org_3 to-org_1 rounded-full"
               style={{ width: `${data.xp / 10}%` }}
             ></div>
           </div>
-          <p className="w-1/12 my-auto text-sm text-right text-org_1 align-top h-max">{data.level + 1}</p>
+          <p className="w-1/12 mb-auto text-sm text-right text-org_1 font-serif">
+            {data.level + 1}
+          </p>
+        </div>
+        <div className="w-3/4 flex flex-col pt-8 space-y-4">
+          <p className={pStyle}>
+            Full Name
+            <span className={spanStyle}>{data.fullName}</span>
+          </p>
+          <p className={pStyle}>
+            Username
+            <span className={spanStyle}>@{data.username}</span>
+          </p>
         </div>
       </div>
     </div>
