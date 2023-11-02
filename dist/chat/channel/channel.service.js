@@ -35,7 +35,7 @@ let ChannelService = class ChannelService {
         this.channelRepository = channelRepository;
         this.Channel_MembershipRepository = Channel_MembershipRepository;
     }
-    async createChannelForUser(ownerId, channelName) {
+    async createChannelForUser(ownerId, channelName, isPrivate, password) {
         const owner = await this.userService.findUserById(ownerId);
         if (!owner) {
             throw new common_2.NotFoundException('User not found');
@@ -43,13 +43,22 @@ let ChannelService = class ChannelService {
         const channel = new Channel_entity_1.Channel();
         channel.Channel = channelName;
         channel.owner = owner;
+        channel.isPrivate = isPrivate;
+        if (isPrivate && password) {
+            channel.password = password;
+        }
         return await this.channelRepository.save(channel);
     }
-    async addMemberToChannel(channelId, userId) {
+    async addMemberToChannel(channelId, userId, channelPassword) {
         const channel = await this.channelRepository.findOne({ where: { id: channelId } });
         const user = await this.userService.findUserById(userId);
         if (!channel || !user) {
             throw new common_2.NotFoundException('Channel or User not found');
+        }
+        if (channel.isPrivate && channel.password) {
+            if (channel.password !== channelPassword) {
+                throw new common_4.UnauthorizedException('Incorrect password');
+            }
         }
         const membership = new Channel_Membership_entity_1.Channel_Membership();
         membership.userid = user;
@@ -153,6 +162,66 @@ let ChannelService = class ChannelService {
         }
         membership.isAdmin = false;
         await this.Channel_MembershipRepository.save(membership);
+    }
+    async banUserFromChannel(channelId, targetUserId, actorUserId) {
+        const membership = await this.Channel_MembershipRepository.findOne({
+            where: {
+                channelid: { id: channelId },
+                userid: { id: targetUserId }
+            }
+        });
+        if (!membership) {
+            throw new Error('User is not a member of this channel.');
+        }
+        if (membership.isAdmin) {
+            throw new Error('Cannot ban the channel owner.');
+        }
+        membership.isBanned = true;
+        membership.bannedBy = actorUserId;
+        await this.Channel_MembershipRepository.save(membership);
+    }
+    async unbanUserFromChannel(channelId, targetUserId) {
+        const membership = await this.Channel_MembershipRepository.findOne({
+            where: {
+                channelid: { id: channelId },
+                userid: { id: targetUserId }
+            }
+        });
+        if (membership && membership.isBanned) {
+            membership.isBanned = false;
+            membership.bannedBy = null;
+            await this.Channel_MembershipRepository.save(membership);
+        }
+    }
+    async muteUserInChannel(channelId, targetUserId, actorUserId, durationMinutes) {
+        const membership = await this.Channel_MembershipRepository.findOne({
+            where: {
+                channelid: { id: channelId },
+                userid: { id: targetUserId }
+            }
+        });
+        if (!membership) {
+            throw new Error('User is not a member of this channel.');
+        }
+        if (membership.isAdmin) {
+            throw new Error('Cannot mute the channel owner.');
+        }
+        membership.muteExpiration = new Date(Date.now() + durationMinutes * 60 * 1000);
+        membership.mutedBy = actorUserId;
+        await this.Channel_MembershipRepository.save(membership);
+    }
+    async unmuteUserInChannel(channelId, targetUserId) {
+        const membership = await this.Channel_MembershipRepository.findOne({
+            where: {
+                channelid: { id: channelId },
+                userid: { id: targetUserId }
+            }
+        });
+        if (membership && membership.muteExpiration) {
+            membership.muteExpiration = null;
+            membership.mutedBy = null;
+            await this.Channel_MembershipRepository.save(membership);
+        }
     }
 };
 exports.ChannelService = ChannelService;

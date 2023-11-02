@@ -27,9 +27,9 @@ export class ChannelService {
         @InjectRepository(Channel_Membership)
         private readonly Channel_MembershipRepository: Repository<Channel_Membership>,
     ) {}
-    // channel.service.ts
 
-async createChannelForUser(ownerId: number, channelName: string): Promise<Channel> {
+
+async createChannelForUser(ownerId: number, channelName: string,isPrivate: boolean, password?: string): Promise<Channel> {
     const owner = await this.userService.findUserById(ownerId);
     if (!owner) {
       throw new NotFoundException('User not found');
@@ -38,17 +38,27 @@ async createChannelForUser(ownerId: number, channelName: string): Promise<Channe
     const channel = new Channel();
     channel.Channel = channelName;
     channel.owner = owner;
-    
+    channel.isPrivate = isPrivate;
+
+    if(isPrivate && password){
+      channel.password = password;
+    }
     return await this.channelRepository.save(channel);
   }
   
-  async addMemberToChannel(channelId: number, userId: number): Promise<Channel_Membership> {
+  async addMemberToChannel(channelId: number, userId: number,  channelPassword?: string): Promise<Channel_Membership> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
     const user = await this.userService.findUserById(userId);    
     
     if (!channel || !user) {
       throw new NotFoundException('Channel or User not found');
     }
+
+    if (channel.isPrivate && channel.password) {
+      if (channel.password !== channelPassword) {
+          throw new UnauthorizedException('Incorrect password');
+      }
+  }
     
     const membership = new Channel_Membership();
     membership.userid = user;
@@ -199,6 +209,92 @@ async removeUserFromAdmin(channelId: number, userId: number, requesterId: number
   membership.isAdmin = false;
   await this.Channel_MembershipRepository.save(membership);
 }
+
+async banUserFromChannel(channelId: number, targetUserId: number, actorUserId: number): Promise<void> {
+  const membership = await this.Channel_MembershipRepository.findOne({
+    where: { 
+        channelid: { id: channelId }, 
+        userid: { id: targetUserId }
+    }
+});
+
+  
+  if (!membership) {
+      throw new Error('User is not a member of this channel.');
+  }
+
+  if (membership.isAdmin) {
+      throw new Error('Cannot ban the channel owner.');
+  }
+
+  membership.isBanned = true;
+  membership.bannedBy = actorUserId;
+
+  await this.Channel_MembershipRepository.save(membership);
+}
+
+async unbanUserFromChannel(channelId: number, targetUserId: number): Promise<void> {
+  const membership = await this.Channel_MembershipRepository.findOne({
+    where: { 
+        channelid: { id: channelId }, 
+        userid: { id: targetUserId }
+    }
+});  
+  if (membership && membership.isBanned) {
+      membership.isBanned = false;
+      membership.bannedBy = null;
+
+      await this.Channel_MembershipRepository.save(membership);
+  }
+}
+
+async muteUserInChannel(channelId: number, targetUserId: number, actorUserId: number, durationMinutes: number): Promise<void> {
+  const membership = await this.Channel_MembershipRepository.findOne({
+    where: { 
+        channelid: { id: channelId }, 
+        userid: { id: targetUserId }
+    }
+});
+  if (!membership) {
+      throw new Error('User is not a member of this channel.');
+  }
+
+  if (membership.isAdmin) {
+      throw new Error('Cannot mute the channel owner.');
+  }
+
+  membership.muteExpiration = new Date(Date.now() + durationMinutes * 60 * 1000);
+  membership.mutedBy = actorUserId;
+
+  await this.Channel_MembershipRepository.save(membership);
+}
+
+async unmuteUserInChannel(channelId: number, targetUserId: number): Promise<void> {
+  const membership = await this.Channel_MembershipRepository.findOne({
+    where: { 
+        channelid: { id: channelId }, 
+        userid: { id: targetUserId }
+    }
+});  
+  if (membership && membership.muteExpiration) {
+      membership.muteExpiration = null;
+      membership.mutedBy = null;
+
+      await this.Channel_MembershipRepository.save(membership);
+  }
+}
+
+// import { cron } from "node-cron";
+
+// cron.schedule("*/5 * * * *", async () => {
+//     const expiredMutes = await this.Channel_MembershipRepository.find({ where: { muteExpiration: LessThan(new Date()) } });
+//     for (const mute of expiredMutes) {
+//         mute.muteExpiration = null;
+//         mute.mutedBy = null;
+//         await this.Channel_MembershipRepository.save(mute);
+//     }
+// });
+
 
 }
 

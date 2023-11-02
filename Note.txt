@@ -6,7 +6,7 @@
 - make the block entity and implimente it, This way, they will see no more
     messages from the account they blocked.
 
-- channels can be privete or public , with password or with not : Done
+- channels can be private or public , with password or with not : Done
 - make sure that  The channel owner is a channel administrator. They can set other users as
     administrators. :DONE (still need some tests F)
 
@@ -22,8 +22,11 @@ interface.
 
 
 NOTES:
-read the last thin in chat
-
+- check the last method in the service 
+- needto add the status codes
 add func what are the channels the user are in them
+
+
+
 
 

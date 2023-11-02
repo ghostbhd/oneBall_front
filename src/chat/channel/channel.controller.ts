@@ -8,7 +8,7 @@ export class ChannelController {
 
     @Post()
     async createChannel(@Body('ownerId') ownerId: number, @Body('channelName') channelName: string) {
-        return await this.channelService.createChannelForUser(ownerId, channelName);
+        return await this.channelService.createChannelForUser(ownerId, channelName, false);
     }
 
     @Post(':channelId/member/:userId')

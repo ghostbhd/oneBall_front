@@ -17,5 +17,14 @@ export class Channel_Membership {
   
     @Column({ nullable: true })
     muteExpiration: Date; // For implementing temporary mute
-    
+
+    @Column({ default: false })
+    isBanned: boolean; // For implementing bans
+
+    @Column({ nullable: true })
+    bannedBy: number; // ID of the user who banned this member
+
+    @Column({ nullable: true })
+    mutedBy: number; // ID of the user who muted this member
 }
+
