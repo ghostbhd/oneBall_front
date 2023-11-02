@@ -40,6 +40,18 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Date)
 ], Channel_Membership.prototype, "muteExpiration", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], Channel_Membership.prototype, "isBanned", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], Channel_Membership.prototype, "bannedBy", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], Channel_Membership.prototype, "mutedBy", void 0);
 exports.Channel_Membership = Channel_Membership = __decorate([
     (0, typeorm_1.Entity)()
 ], Channel_Membership);

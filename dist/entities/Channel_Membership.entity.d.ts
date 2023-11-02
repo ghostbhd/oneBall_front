@@ -7,4 +7,7 @@ export declare class Channel_Membership {
     DateJoined: string;
     isAdmin: boolean;
     muteExpiration: Date;
+    isBanned: boolean;
+    bannedBy: number;
+    mutedBy: number;
 }

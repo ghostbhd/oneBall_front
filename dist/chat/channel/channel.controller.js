@@ -20,7 +20,7 @@ let ChannelController = class ChannelController {
         this.channelService = channelService;
     }
     async createChannel(ownerId, channelName) {
-        return await this.channelService.createChannelForUser(ownerId, channelName);
+        return await this.channelService.createChannelForUser(ownerId, channelName, false);
     }
     async addMember(channelId, userId) {
         return await this.channelService.addMemberToChannel(channelId, userId);
