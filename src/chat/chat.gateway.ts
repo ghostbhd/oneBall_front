@@ -2,7 +2,7 @@ import { WebSocketGateway, SubscribeMessage, MessageBody,WebSocketServer, OnGate
 import { ChatService } from './chat.service';
 import { Socket } from 'socket.io';
 import { Chat } from 'src/entities/Chat.entity';
-import { SendMessageDto } from './chat.dto/add-msg.dtp';
+// import { SendMessageDto } from './chat.dto/add-msg.dtp';
 // import { UpdateChatDto } from './dto/update-chat.dto';
 import { Message } from 'src/entities/Message.entity';
 import { User } from 'src/entities/user.entity';
@@ -28,10 +28,17 @@ export class ChatGateway {
     console.log('Client disconnected:', this.clients);
   }
 
-  @SubscribeMessage('message')
-  handleMessage(client: Socket, message: string): void {
-    this.server.emit('message', message);  // Broadcasting the message to all connected clients
-  }
+  // @SubscribeMessage('message')
+  // handleMessage(client: Socket, message: string): void {
+  //   this.server.emit('message', message);  // Broadcasting the message to all connected clients
+  // }
+
+  @SubscribeMessage('send-message')
+async handleSendMessage(client: Socket, payload: { senderId: number; chatId: number; content: string }): Promise<void> {
+  const message = await this.chatService.sendMessage(payload.senderId, payload.chatId, payload.content);
+  this.server.emit('new-message', message);
+}
+
 }
 //   @SubscribeMessage('findAllChat')
 //   findAll() {

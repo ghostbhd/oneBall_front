@@ -13,6 +13,8 @@
 -A user who is an administrator of a channel can kick, ban or mute (for a
     limited time) other users, but not the channel owners.
 
+-still need to ajust the mute time function 
+
 
 + Group things :
 
@@ -22,6 +24,8 @@ interface.
 
 
 NOTES:
+
+-need to fix why i cant get the chatids (see the chat)
 - check the last method in the service 
 - needto add the status codes
 add func what are the channels the user are in them

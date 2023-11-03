@@ -27,8 +27,9 @@ let ChatGateway = class ChatGateway {
         this.clients--;
         console.log('Client disconnected:', this.clients);
     }
-    handleMessage(client, message) {
-        this.server.emit('message', message);
+    async handleSendMessage(client, payload) {
+        const message = await this.chatService.sendMessage(payload.senderId, payload.chatId, payload.content);
+        this.server.emit('new-message', message);
     }
 };
 exports.ChatGateway = ChatGateway;
@@ -37,11 +38,11 @@ __decorate([
     __metadata("design:type", socket_io_2.Server)
 ], ChatGateway.prototype, "server", void 0);
 __decorate([
-    (0, websockets_1.SubscribeMessage)('message'),
+    (0, websockets_1.SubscribeMessage)('send-message'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, String]),
-    __metadata("design:returntype", void 0)
-], ChatGateway.prototype, "handleMessage", null);
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleSendMessage", null);
 exports.ChatGateway = ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)(),
     __metadata("design:paramtypes", [chat_service_1.ChatService])

@@ -1,4 +1,5 @@
-export declare class SendMessageDto {
+export declare class CreateChatDto {
+    senderId: number;
+    receiverId: number;
     content: string;
-    channelId: string;
 }
