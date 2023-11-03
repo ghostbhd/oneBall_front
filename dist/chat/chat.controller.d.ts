@@ -1,6 +1,10 @@
 import { ChatService } from './chat.service';
+import { CreateChatDto } from './chat.dto/add-msg.dtp';
 export declare class ChatController {
-    private chatService;
+    private readonly chatService;
     constructor(chatService: ChatService);
-    sendDirectMessage(messageDto: any): any;
+    sendMessage(createChatDto: CreateChatDto): Promise<import("../entities/Message.entity").Message>;
+    getMessages(chatId: number): Promise<import("../entities/Message.entity").Message[]>;
+    getChatsForUser(userId: number): Promise<import("../entities/Chat.entity").Chat[]>;
+    getAllChatIds(): Promise<number[]>;
 }

@@ -1,6 +1,5 @@
 import { Message } from 'src/entities/Message.entity';
 import { User } from 'src/entities/user.entity';
-import { SendMessageDto } from './chat.dto/add-msg.dtp';
 import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
 import { Channel } from 'src/entities/Channel.entity';
@@ -12,7 +11,12 @@ export declare class ChatService {
     private readonly channelRepository;
     private readonly Channel_MembershipRepository;
     constructor(messageRepository: Repository<Message>, directMessageRepository: Repository<Chat>, userRepository: Repository<User>, channelRepository: Repository<Channel>, Channel_MembershipRepository: Repository<Channel_Membership>);
-    create(createChatDto: SendMessageDto): string;
+    startChat(senderId: number, receiverId: number): Promise<Chat>;
+    sendMessage(senderId: number, chatId: number, content: string): Promise<Message>;
+    getChatHistory(chatId: number): Promise<Message[]>;
+    listChatsForUser(userId: number): Promise<Chat[]>;
+    getMessages(chatId: number): Promise<Message[]>;
     findAll(): string;
+    getAllChatIds(): Promise<number[]>;
     remove(id: number): string;
 }

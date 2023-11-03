@@ -8,5 +8,9 @@ export declare class ChatGateway {
     private clients;
     handleConnection(): void;
     handleDisconnect(): void;
-    handleMessage(client: Socket, message: string): void;
+    handleSendMessage(client: Socket, payload: {
+        senderId: number;
+        chatId: number;
+        content: string;
+    }): Promise<void>;
 }

@@ -15,22 +15,52 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatController = void 0;
 const common_1 = require("@nestjs/common");
 const chat_service_1 = require("./chat.service");
+const add_msg_dtp_1 = require("./chat.dto/add-msg.dtp");
 let ChatController = class ChatController {
     constructor(chatService) {
         this.chatService = chatService;
     }
-    sendDirectMessage(messageDto) {
-        return this.chatService.create(messageDto);
+    async sendMessage(createChatDto) {
+        return this.chatService.sendMessage(createChatDto.senderId, createChatDto.receiverId, createChatDto.content);
+    }
+    async getMessages(chatId) {
+        return this.chatService.getMessages(chatId);
+    }
+    async getChatsForUser(userId) {
+        return this.chatService.listChatsForUser(userId);
+    }
+    async getAllChatIds() {
+        return this.chatService.getAllChatIds();
     }
 };
 exports.ChatController = ChatController;
 __decorate([
-    (0, common_1.Post)('sendDirectMessage'),
+    (0, common_1.Post)('/send-message'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Object)
-], ChatController.prototype, "sendDirectMessage", null);
+    __metadata("design:paramtypes", [add_msg_dtp_1.CreateChatDto]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "sendMessage", null);
+__decorate([
+    (0, common_1.Get)('/get-messages/:chatId'),
+    __param(0, (0, common_1.Param)('chatId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "getMessages", null);
+__decorate([
+    (0, common_1.Get)('/get-chats/:userId'),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "getChatsForUser", null);
+__decorate([
+    (0, common_1.Get)('/all-chat-ids'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "getAllChatIds", null);
 exports.ChatController = ChatController = __decorate([
     (0, common_1.Controller)('chat'),
     __metadata("design:paramtypes", [chat_service_1.ChatService])

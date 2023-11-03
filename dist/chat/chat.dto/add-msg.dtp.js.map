@@ -1,1 +1,1 @@
-{"version":3,"file":"add-msg.dtp.js","sourceRoot":"","sources":["../../../src/chat/chat.dto/add-msg.dtp.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA+D;AAE/D,MAAa,cAAc;CAM1B;AAND,wCAMC;AAJG;IADC,IAAA,0BAAQ,GAAE;;+CACK;AAGhB;IADC,IAAA,0BAAQ,GAAE;;iDACO"}
+{"version":3,"file":"add-msg.dtp.js","sourceRoot":"","sources":["../../../src/chat/chat.dto/add-msg.dtp.ts"],"names":[],"mappings":";;;AAAA,MAAa,aAAa;CAIzB;AAJD,sCAIC"}

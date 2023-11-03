@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const Message_entity_1 = require("../entities/Message.entity");
 const user_entity_1 = require("../entities/user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
+const common_2 = require("@nestjs/common");
 const typeorm_2 = require("typeorm");
 const Chat_entity_1 = require("../entities/Chat.entity");
 const Channel_entity_1 = require("../entities/Channel.entity");
@@ -29,11 +30,52 @@ let ChatService = class ChatService {
         this.channelRepository = channelRepository;
         this.Channel_MembershipRepository = Channel_MembershipRepository;
     }
-    create(createChatDto) {
-        return 'This action adds a new chat';
+    async startChat(senderId, receiverId) {
+        const newChat = new Chat_entity_1.Chat();
+        const sender = await this.userRepository.findOne({ where: { id: senderId } });
+        const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
+        newChat.userid1 = sender;
+        newChat.userid2 = receiver;
+        newChat.DateStarted = new Date().toISOString();
+        return await this.directMessageRepository.save(newChat);
+    }
+    async sendMessage(senderId, chatId, content) {
+        const newMessage = new Message_entity_1.Message();
+        const sender = await this.userRepository.findOne({ where: { id: senderId } });
+        const chat = await this.directMessageRepository.findOne({ where: { id: chatId } });
+        newMessage.SenderUserID = sender;
+        newMessage.chatid = chat;
+        newMessage.Content = content;
+        newMessage.Timestamp = new Date().toISOString();
+        return await this.messageRepository.save(newMessage);
+    }
+    async getChatHistory(chatId) {
+        return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
+    }
+    async listChatsForUser(userId) {
+        return await this.directMessageRepository.find({
+            where: [
+                { userid1: { id: userId } },
+                { userid2: { id: userId } }
+            ]
+        });
+    }
+    async getMessages(chatId) {
+        const chat = await this.directMessageRepository.findOne({
+            where: { id: chatId },
+            relations: ['messageid']
+        });
+        if (!chat) {
+            throw new common_2.NotFoundException(`Chat with ID ${chatId} not found`);
+        }
+        return chat.messageid;
     }
     findAll() {
         return `This action returns all chat`;
+    }
+    async getAllChatIds() {
+        const chats = await this.directMessageRepository.find();
+        return chats.map(chat => chat.id);
     }
     remove(id) {
         return `This action removes a #${id} chat`;
