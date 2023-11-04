@@ -29,4 +29,12 @@
   background: url("./assets/bg contain.png") no-repeat center center fixed;
 }
 
+.transition-order {
+  transition: order 0.7s ease-in-out;
+}
+
+.text-shadow {
+  text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
 

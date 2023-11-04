@@ -30,7 +30,7 @@ const Profile = () => {
       ) : (
         <>
           <div className={`w-7/12 h-full ${style.blueBlur} ${style.rounded}`}>
-            <EditInfo />
+            <EditInfo data={data.editInnfo}/>
           </div>
           <div
             className={`w-4/12 h-full bg-gradient-to-b from-org_2/40 from-5% 
