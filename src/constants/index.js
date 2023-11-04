@@ -8,11 +8,12 @@ import {MdSettings} from 'react-icons/md'; // settings icon
 import {TbLogout} from 'react-icons/tb'; // logout icon
 
 //other icons
-import {FaAngleRight} from 'react-icons/fa'; // arrow icon
-import {BiSolidArrowToRight, BiSolidArrowFromRight} from 'react-icons/bi'; // arrow icon
+import {FaAngleRight, FaAngleUp, FaAngleDown} from 'react-icons/fa'; // arrow icon
+import {BiSolidArrowToRight, BiSolidArrowFromRight} from 'react-icons/bi'; // arrow from icon
 import {FaUserFriends} from 'react-icons/fa'; // friends icon
 import {FaRandom} from 'react-icons/fa'; // random icon
 import {BsFillStarFill} from 'react-icons/bs'; // star icon
+import {FaCheck} from 'react-icons/fa'; // check icon
 
 export const sidebarItems = [
     {
@@ -60,4 +61,7 @@ export const icons = {
     friends: FaUserFriends,
     random: FaRandom,
     star: BsFillStarFill,
+    check: FaCheck,
+    up: FaAngleUp,
+    down: FaAngleDown
 }

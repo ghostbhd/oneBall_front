@@ -10,7 +10,7 @@ const data = {
         win: 37,
         lose: 13,
     },
-    last4Msg : [
+    last4Msg: [
         {
             id: 1,
             username: 'user1',
@@ -50,7 +50,7 @@ const data = {
             id: 1,
             opponent: 'user1',
             fullName: 'User 1',
-            result : 'lose',
+            result: 'lose',
             date: 'Aug 30',
             time: '10:00',
         },
@@ -58,7 +58,7 @@ const data = {
             id: 2,
             opponent: 'user2',
             fullName: 'User 2',
-            result : 'win',
+            result: 'win',
             date: 'Aug 20',
             time: '11:12',
         },
@@ -66,7 +66,7 @@ const data = {
             id: 3,
             opponent: 'user3',
             fullName: 'User 3',
-            result : 'win',
+            result: 'win',
             date: 'Aug 19',
             time: '18:00',
         },
@@ -74,7 +74,7 @@ const data = {
             id: 4,
             opponent: 'user4',
             fullName: 'User 4',
-            result : 'lose',
+            result: 'lose',
             date: 'Aug 15',
             time: '20:00',
         },
@@ -82,7 +82,7 @@ const data = {
             id: 5,
             opponent: 'user5',
             fullName: 'User 5',
-            result : 'win',
+            result: 'win',
             date: 'Aug 3',
             time: '15:0',
         },
@@ -90,7 +90,7 @@ const data = {
             id: 6,
             opponent: 'user6',
             fullName: 'User 6',
-            result : 'lose',
+            result: 'lose',
             date: 'Aug 3',
             time: '10:00',
         },
@@ -99,6 +99,7 @@ const data = {
 
 const profile = {
     editInnfo: {
+        id: 1,
         username: 'user1',
         avatar: '/src/assets/avatar/Strong Baby.jpg',
     },
@@ -112,7 +113,24 @@ const profile = {
         lose: 13,
         xp: 400,
         state: 'online',
-    },    
+    },
+    gameStatus: {
+        leaderBoard: [
+            {
+                username: 'user1'
+            },
+            {
+                username: 'user2'
+            },
+            {
+                username: 'user3'
+            }
+        ],
+        win: 37,
+        lose: 13,
+        games: 50,
+        acheivement: []
+    }
 }
 
 export function fetchDataFromMockApi() {
