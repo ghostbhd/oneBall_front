@@ -11,6 +11,8 @@ const Dashboard = () => {
   const row = "w-1/2 flex flex-col space-y-14";
 
   useEffect(() => {
+    // fetch("/api/dashboard")
+
     fetchDataFromMockApi()
       .then((data) => {
         console.log(data); // Log the data to check its structure

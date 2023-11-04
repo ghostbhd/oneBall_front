@@ -13,6 +13,18 @@ const EditInfo = ({ data }) => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const acceptedImageTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/svg+xml",
+    ];
+    if (!acceptedImageTypes.includes(file.type)) {
+      alert("Only image files are allowed!");
+      return;
+    }
+
     if (file) {
       setSelectedFile(file.name);
       avatarImages.push(URL.createObjectURL(file));
@@ -24,6 +36,7 @@ const EditInfo = ({ data }) => {
     setSelectedFile(null);
     setSelectedAvatar(data.avatar);
     setUsername("");
+    setMoreAvatars(false);
   };
 
   const imagebg = ({ img }) => ({
@@ -33,7 +46,7 @@ const EditInfo = ({ data }) => {
   });
 
   return (
-    <form action="" className="w-full p-6">
+    <form action="POST" className="w-full p-6">
       {/* head ------------------------------------------------------------------ */}
       <div className={`flex flex-nowrap h-10 relative w-full text-bLight_5`}>
         <span className="h-full flex">
@@ -80,7 +93,9 @@ const EditInfo = ({ data }) => {
             <div
               key={index}
               className={`w-[90px] h-[90px] relative cursor-pointer mx-auto
-                ${style.rounded} ${item === selectedAvatar ? "order-first" : ""} 
+                ${style.rounded} ${
+                item === selectedAvatar ? "order-first" : ""
+              } 
               `}
               style={imagebg({ img: item })}
               onClick={() => setSelectedAvatar(item)}
@@ -90,7 +105,9 @@ const EditInfo = ({ data }) => {
                 <div
                   className={`absolute flex w-full h-full ${style.rounded} bg-bLight_5 bg-opacity-50`}
                 >
-                  {<icons.check className="text-[30pt] m-auto text-org_3 text-shadow" />}
+                  {
+                    <icons.check className="text-[30pt] m-auto text-org_3 text-shadow" />
+                  }
                 </div>
               ) : (
                 ""
@@ -100,7 +117,7 @@ const EditInfo = ({ data }) => {
         </div>
         {/* more avatars button --------------------- */}
         <div
-          className={`w-full flex flex-row text-bLight_5 text-sm p-1.5 bg-gradient-to-r from-bLight_5/50 to-bDark_4/70 rounded-full
+          className={`w-full flex flex-row text-bLight_5 cursor-pointer text-sm p-1.5 bg-gradient-to-r from-bLight_5/50 to-bDark_4/70 rounded-full
           `}
           onClick={() => setMoreAvatars(!moreAvatars)}
         >
@@ -128,8 +145,11 @@ const EditInfo = ({ data }) => {
       </div>
       {/* save and cancel buttons -------- */}
       <div className={`w-full mt-4 flex flex-row space-x-10 items-center`}>
-        <p className="text-org_3 ml-auto cursor-pointer" onClick={reset}>Cancel</p>
-        <input type="submit"
+        <p className="text-org_3 ml-auto cursor-pointer" onClick={reset}>
+          Cancel
+        </p>
+        <input
+          type="submit"
           name="submit"
           id="submit"
           value="Save"
