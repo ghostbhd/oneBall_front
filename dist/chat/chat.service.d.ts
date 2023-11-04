@@ -12,11 +12,12 @@ export declare class ChatService {
     private readonly Channel_MembershipRepository;
     constructor(messageRepository: Repository<Message>, directMessageRepository: Repository<Chat>, userRepository: Repository<User>, channelRepository: Repository<Channel>, Channel_MembershipRepository: Repository<Channel_Membership>);
     startChat(senderId: number, receiverId: number): Promise<Chat>;
-    sendMessage(senderId: number, chatId: number, content: string): Promise<Message>;
+    getChat(sender: User, receiver: User): Promise<Chat>;
+    sendMessage(senderId: number, receiverId: number, content: string): Promise<Message>;
     getChatHistory(chatId: number): Promise<Message[]>;
     listChatsForUser(userId: number): Promise<Chat[]>;
     getMessages(chatId: number): Promise<Message[]>;
-    findAll(): string;
     getAllChatIds(): Promise<number[]>;
-    remove(id: number): string;
+    getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<Chat[]>;
+    sender_msgs_only(senderId: number, receiverId: number): Promise<Message[]>;
 }

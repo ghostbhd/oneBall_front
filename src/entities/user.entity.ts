@@ -22,9 +22,9 @@ export class User {
   friendship_reciver: Friendship[];
   @OneToMany(() => Friendship, friendship => friendship.userid2)
   friendship_sender: Friendship[];
-  @OneToMany(() => Chat, chat => chat.userid1)
+  @OneToMany(() => Chat, chat => chat.sender)
   chatid1: Chat[];
-  @OneToMany(() => Chat, chat => chat.userid2)
+  @OneToMany(() => Chat, chat => chat.receiver)
   chatid2: Chat[];
   @OneToMany(()=> Message, message => message.SenderUserID)
   messageid: Message[];

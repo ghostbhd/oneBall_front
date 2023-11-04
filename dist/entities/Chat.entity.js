@@ -27,11 +27,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User, user => user.chatid1),
     __metadata("design:type", user_entity_1.User)
-], Chat.prototype, "userid1", void 0);
+], Chat.prototype, "sender", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User, user => user.chatid2),
     __metadata("design:type", user_entity_1.User)
-], Chat.prototype, "userid2", void 0);
+], Chat.prototype, "receiver", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Message_entity_1.Message, message => message.chatid),
     __metadata("design:type", Array)
