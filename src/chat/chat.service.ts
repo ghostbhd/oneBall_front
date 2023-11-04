@@ -4,9 +4,8 @@ import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/User/user.service';
 import { NotFoundException } from '@nestjs/common';
+import { Brackets } from 'typeorm';
 import{CreateChatDto} from './chat.dto/add-msg.dtp';
-// import { SendMessageDto } from './chat.dto/add-msg.dtp';
-// import { CreateUserDto } from '../DTOS/create-user.dto';
 import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
 import { Channel} from 'src/entities/Channel.entity';
@@ -18,8 +17,6 @@ export class ChatService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
-    // @InjectRepository(Chat)
-    // private readonly direct: Repository<Chat>,
     @InjectRepository(Chat)
     private readonly directMessageRepository: Repository<Chat>,
     @InjectRepository(User)
@@ -35,17 +32,60 @@ async startChat(senderId: number, receiverId: number): Promise<Chat> {
   const sender = await this.userRepository.findOne({ where: { id: senderId } });
   const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
 
-  newChat.userid1 = sender;
-  newChat.userid2 = receiver;
+    if (!sender) {
+    throw new NotFoundException(`Sender with ID ${senderId} not found`);
+  }
+
+  if (!receiver) {
+    throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
+  }
+  newChat.sender = sender;
+  newChat.receiver = receiver;
   newChat.DateStarted = new Date().toISOString();
 
   return await this.directMessageRepository.save(newChat); 
 }
 
-async sendMessage(senderId: number, chatId: number, content: string): Promise<Message> {
+async getChat(sender: User, receiver: User): Promise<Chat> {
+  // Try to find an existing chat between the sender and receiver
+  let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } });
+
+  // If not found, reverse the roles and try again
+  if (!chat) {
+      chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
+  }
+
+  // If still not found, create a new chat
+  if (!chat) {
+      chat = new Chat();
+      chat.sender = sender;
+      chat.receiver = receiver;
+      chat.DateStarted = new Date().toISOString();
+      await this.directMessageRepository.save(chat);
+  }
+
+  return chat;
+}
+
+async sendMessage(senderId: number, receiverId: number, content: string): Promise<Message> {
   const newMessage = new Message();
   const sender = await this.userRepository.findOne({ where: { id: senderId } });
-  const chat = await this.directMessageRepository.findOne({ where: { id: chatId } });
+  const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
+
+  if (!sender) {
+    throw new NotFoundException(`Sender with ID ${senderId} not found`);
+  }
+
+  if (!receiver) {
+    throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
+  }
+
+  // Logic to fetch or create chat based on sender and receiver
+  const chat = await this.getChat(sender, receiver);
+
+  if (!chat) {
+    throw new NotFoundException(`Chat not found for sender ${senderId} and receiver ${receiverId}`);
+  }
 
   newMessage.SenderUserID = sender;
   newMessage.chatid = chat;
@@ -62,8 +102,8 @@ async getChatHistory(chatId: number): Promise<Message[]> {
 async listChatsForUser(userId: number): Promise<Chat[]> {
   return await this.directMessageRepository.find({
     where: [
-      { userid1: { id: userId } },
-      { userid2: { id: userId } }
+      { sender: { id: userId } },
+      { receiver: { id: userId } }
     ]
   });
   }
@@ -79,16 +119,36 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
     
     return chat.messageid;
 }
-  findAll() {
-    return `This action returns all chat`;
-  }
+
   async getAllChatIds(): Promise<number[]> {
     const chats = await this.directMessageRepository.find();
     return chats.map(chat => chat.id);
   }
   
 
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
-  }
+  async getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<Chat[]> {
+
+    return await this.directMessageRepository.createQueryBuilder("chat")
+      .leftJoinAndSelect("chat.messageid", "message") 
+      .where("(chat.senderId = :senderId AND chat.receiverId = :receiverId) OR (chat.senderId = :receiverId AND chat.receiverId = :senderId)", { senderId, receiverId })
+      .orderBy("message.Timestamp", "DESC") 
+      .getMany();
+}
+
+async sender_msgs_only(senderId: number, receiverId: number): Promise<Message[]> {
+  return await this.messageRepository.createQueryBuilder("message")
+    .innerJoin("message.SenderUserID", "sender") 
+    .innerJoin("message.chatid", "chat")
+    .where(
+      new Brackets(qb => {
+        qb.where("(sender.id = :senderId AND chat.receiverId = :receiverId)")
+          .orWhere("(sender.id = :receiverId AND chat.receiverId = :senderId)")
+      }), 
+      { senderId, receiverId }
+    )
+    .orderBy("message.Timestamp", "DESC")
+    .getMany();
+}
+
+
 }

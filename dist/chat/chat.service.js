@@ -19,6 +19,7 @@ const user_entity_1 = require("../entities/user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const common_2 = require("@nestjs/common");
 const typeorm_2 = require("typeorm");
+const typeorm_3 = require("typeorm");
 const Chat_entity_1 = require("../entities/Chat.entity");
 const Channel_entity_1 = require("../entities/Channel.entity");
 const Channel_Membership_entity_1 = require("../entities/Channel_Membership.entity");
@@ -34,15 +35,45 @@ let ChatService = class ChatService {
         const newChat = new Chat_entity_1.Chat();
         const sender = await this.userRepository.findOne({ where: { id: senderId } });
         const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
-        newChat.userid1 = sender;
-        newChat.userid2 = receiver;
+        if (!sender) {
+            throw new common_2.NotFoundException(`Sender with ID ${senderId} not found`);
+        }
+        if (!receiver) {
+            throw new common_2.NotFoundException(`Receiver with ID ${receiverId} not found`);
+        }
+        newChat.sender = sender;
+        newChat.receiver = receiver;
         newChat.DateStarted = new Date().toISOString();
         return await this.directMessageRepository.save(newChat);
     }
-    async sendMessage(senderId, chatId, content) {
+    async getChat(sender, receiver) {
+        let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } });
+        if (!chat) {
+            chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
+        }
+        if (!chat) {
+            chat = new Chat_entity_1.Chat();
+            chat.sender = sender;
+            chat.receiver = receiver;
+            chat.DateStarted = new Date().toISOString();
+            await this.directMessageRepository.save(chat);
+        }
+        return chat;
+    }
+    async sendMessage(senderId, receiverId, content) {
         const newMessage = new Message_entity_1.Message();
         const sender = await this.userRepository.findOne({ where: { id: senderId } });
-        const chat = await this.directMessageRepository.findOne({ where: { id: chatId } });
+        const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
+        if (!sender) {
+            throw new common_2.NotFoundException(`Sender with ID ${senderId} not found`);
+        }
+        if (!receiver) {
+            throw new common_2.NotFoundException(`Receiver with ID ${receiverId} not found`);
+        }
+        const chat = await this.getChat(sender, receiver);
+        if (!chat) {
+            throw new common_2.NotFoundException(`Chat not found for sender ${senderId} and receiver ${receiverId}`);
+        }
         newMessage.SenderUserID = sender;
         newMessage.chatid = chat;
         newMessage.Content = content;
@@ -55,8 +86,8 @@ let ChatService = class ChatService {
     async listChatsForUser(userId) {
         return await this.directMessageRepository.find({
             where: [
-                { userid1: { id: userId } },
-                { userid2: { id: userId } }
+                { sender: { id: userId } },
+                { receiver: { id: userId } }
             ]
         });
     }
@@ -70,15 +101,27 @@ let ChatService = class ChatService {
         }
         return chat.messageid;
     }
-    findAll() {
-        return `This action returns all chat`;
-    }
     async getAllChatIds() {
         const chats = await this.directMessageRepository.find();
         return chats.map(chat => chat.id);
     }
-    remove(id) {
-        return `This action removes a #${id} chat`;
+    async getDirectMessagesBetweenUsers(senderId, receiverId) {
+        return await this.directMessageRepository.createQueryBuilder("chat")
+            .leftJoinAndSelect("chat.messageid", "message")
+            .where("(chat.senderId = :senderId AND chat.receiverId = :receiverId) OR (chat.senderId = :receiverId AND chat.receiverId = :senderId)", { senderId, receiverId })
+            .orderBy("message.Timestamp", "DESC")
+            .getMany();
+    }
+    async sender_msgs_only(senderId, receiverId) {
+        return await this.messageRepository.createQueryBuilder("message")
+            .innerJoin("message.SenderUserID", "sender")
+            .innerJoin("message.chatid", "chat")
+            .where(new typeorm_2.Brackets(qb => {
+            qb.where("(sender.id = :senderId AND chat.receiverId = :receiverId)")
+                .orWhere("(sender.id = :receiverId AND chat.receiverId = :senderId)");
+        }), { senderId, receiverId })
+            .orderBy("message.Timestamp", "DESC")
+            .getMany();
     }
 };
 exports.ChatService = ChatService;
@@ -89,10 +132,10 @@ exports.ChatService = ChatService = __decorate([
     __param(2, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __param(3, (0, typeorm_1.InjectRepository)(Channel_entity_1.Channel)),
     __param(4, (0, typeorm_1.InjectRepository)(Channel_Membership_entity_1.Channel_Membership)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository,
-        typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_3.Repository,
+        typeorm_3.Repository,
+        typeorm_3.Repository,
+        typeorm_3.Repository,
+        typeorm_3.Repository])
 ], ChatService);
 //# sourceMappingURL=chat.service.js.map

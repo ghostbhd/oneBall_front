@@ -9,10 +9,10 @@ export class Chat {
     @Column()
     DateStarted: string;
     @ManyToOne(() => User, user => user.chatid1)
-    userid1: User;
+    sender: User;
 
     @ManyToOne(() => User, user => user.chatid2)
-    userid2: User;
+    receiver: User;
 
     content: string;
     

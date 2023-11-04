@@ -45,11 +45,11 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "friendship_sender", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Chat_entity_1.Chat, chat => chat.userid1),
+    (0, typeorm_1.OneToMany)(() => Chat_entity_1.Chat, chat => chat.sender),
     __metadata("design:type", Array)
 ], User.prototype, "chatid1", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Chat_entity_1.Chat, chat => chat.userid2),
+    (0, typeorm_1.OneToMany)(() => Chat_entity_1.Chat, chat => chat.receiver),
     __metadata("design:type", Array)
 ], User.prototype, "chatid2", void 0);
 __decorate([

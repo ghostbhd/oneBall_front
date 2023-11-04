@@ -22,9 +22,10 @@ async getChatsForUser(@Param('userId') userId: number) {
     return this.chatService.listChatsForUser(userId);
 }
 
-@Get('/all-chat-ids')
-async getAllChatIds() {
-  return this.chatService.getAllChatIds();
-}
 
+@Get('/conv/:senderId/:receiverId')
+    async getDirectMessagesBetweenUsers(@Param('senderId') senderId: number, @Param('receiverId') receiverId: number) {
+      console.log("senderId: " + senderId + " receiverId: " + receiverId); 
+      return await this.chatService.getDirectMessagesBetweenUsers(senderId, receiverId);
+    }
 }
