@@ -1,4 +1,6 @@
-const data = {
+
+
+const dashboard = {
     user: {
         id: 1,
         username: 'user1',
@@ -101,10 +103,10 @@ const profile = {
     editInnfo: {
         id: 1,
         username: 'user1',
-        avatar: '/src/assets/avatar/Strong Baby.jpg',
+        avatar: '/src/assets/avatar/010534_1346719.gif',
     },
     profileInfo: {
-        image: '/src/assets/avatar/Strong Baby.jpg',
+        image: '/src/assets/avatar/010534_1346719.gif',
         fullName: 'User 1',
         username: 'user1',
         level: 5,
@@ -136,8 +138,8 @@ const profile = {
 export function fetchDataFromMockApi() {
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(data);
-        }, 1000);
+            resolve(dashboard);
+        }, 2000);
     });
 }
 
