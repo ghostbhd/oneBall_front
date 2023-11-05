@@ -15,6 +15,9 @@ import {FaRandom} from 'react-icons/fa'; // random icon
 import {BsFillStarFill} from 'react-icons/bs'; // star icon
 import {FaCheck} from 'react-icons/fa'; // check icon
 
+// chat icons
+import {BiBlock} from 'react-icons/bi'; // block icon
+
 export const sidebarItems = [
     {
         icon: MdSpaceDashboard ,
@@ -64,4 +67,8 @@ export const icons = {
     check: FaCheck,
     up: FaAngleUp,
     down: FaAngleDown
+}
+
+export const chatIcons = {
+    block: BiBlock
 }
