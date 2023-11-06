@@ -54,7 +54,6 @@ export const sidebarItems = [
         title: 'Logout',
         link: '/logout'
     },
-
 ];
 
 export const icons = {
