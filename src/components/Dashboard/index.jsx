@@ -8,7 +8,8 @@ import GameHistory from "./GameHistory";
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const row = "w-1/2 flex flex-col space-y-14";
+
+  const row = "sm:w-1/2 w-full flex flex-col space-y-14";
 
   useEffect(() => {
     // fetch("/api/dashboard")
@@ -26,20 +27,20 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`flex flex-row w-full`}>
+    <div className={`flex sm:flex-row flex-col w-full`}>
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
         </p>
       ) : (
         <>
-          <div className={`${row}`}>
+          <div className={`${row} sm:mt-0 mt-10`}>
             {/* messages ---------------------------------------------------------------- */}
             <MessageList last4Msgs={data.last4Msg} />
             {/* Game -------------------------------------------------------------------- */}
             <GameBtn />
           </div>
-          <div className={`${row} space-y-10`}>
+          <div className={`${row} space-y-10 sm:order-2 order-first`}>
             {/* profile ----------------------------------------------------------------- */}
             <ProfileDetails user={data.user} />
             {/* game history ------------------------------------------------------------ */}
