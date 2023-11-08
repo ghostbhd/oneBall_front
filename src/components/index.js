@@ -6,6 +6,7 @@ import Messages from "./Messages";
 import Stats from "./Stats";
 import Settings from "./Settings";
 import Logout from "./Logout";
+import MSideBar from "./MSideBar";
 
 export {
     SideBar,
@@ -15,5 +16,6 @@ export {
     Messages,
     Stats,
     Settings,
-    Logout
+    Logout,
+    MSideBar,
 }

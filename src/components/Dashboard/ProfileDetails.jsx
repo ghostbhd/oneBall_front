@@ -3,7 +3,7 @@ import style from "../../style";
 import { Link } from "react-router-dom";
 
 const ProfileDetails = ({ user }) => {
-  const imagebg = {
+  const imgBg = {
     backgroundImage: `url('${user.image}')`,
     backgroundSize: `cover`,
     backgroundPosition: `center`,
@@ -16,17 +16,17 @@ const ProfileDetails = ({ user }) => {
     <div className={`flex flex-col relative w-11/12 h-max ${style.boxWidth}`}>
       {/* details --------------------------------------------------------------------------------*/}
       <div
-        className={`w-9/12 flex flex-col h-max p-4 pl-7 left-0 ${style.blueBlur} ${style.rounded}`}
+        className={`md:w-9/12 w-full flex flex-col h-max p-4 pl-7 left-0 ${style.blueBlur} ${style.rounded}`}
       >
         {/* FullName and userName -------------------------------------*/}
-        <p className="w-8/12 text-bLight_3 text-2xl text-center">
+        <p className="sm:w-8/12 w-full text-bLight_3 text-2xl text-center">
           {user.fullName}
           <span className={`block text-lg text-bLight_4`}>
             {user.username}
           </span>
         </p>
         {/* level, games, win, lose  ----------------*/}
-        <div className={`w-8/12 p-8 flex flex-col space-y-4`}>
+        <div className={`sm:w-8/12 w-full sm:p-8 p-2 flex flex-col space-y-4`}>
           <div className="w-full flex mb-2">
             <p className={pStyle}>
               {user.level} <span className={`${spanStyle}`}>Level</span>
@@ -45,7 +45,7 @@ const ProfileDetails = ({ user }) => {
           </div>
         </div>
         {/* link view more to /games */}
-        <div className="w-8/12 text-center justify-center">
+        <div className="sm:w-8/12 w-full text-center justify-center">
           <Link
             to={"/games"}
             className="w-max text-base transition-colors duration-300 text-bLight_5 hover:text-bLight_2 mt-5"
@@ -57,8 +57,8 @@ const ProfileDetails = ({ user }) => {
       {/* image ---------------------------*/}
       <div
         title="profile image"
-        className={`absolute w-52 h-[90%] right-0 ${style.rounded}
-          top-[50%] transform translate-y-[-50%] border-[7px] shadow-3xl
+        className={`sm:block hidden absolute md:w-52 w-36 md:h-[90%] h-full right-0 ${style.rounded}
+          top-[50%] transform translate-y-[-50%] md:border-[7px] border-4 md:shadow-3xl shadow-none
         ${
           user.status === "online"
             ? style.online
@@ -66,7 +66,7 @@ const ProfileDetails = ({ user }) => {
             ? style.offline
             : style.inGame
         }`}
-        style={imagebg}
+        style={imgBg}
       ></div>
     </div>
   );
