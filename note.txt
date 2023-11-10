@@ -1,0 +1,19 @@
+what i need to add in backend :
+-the messeges list 
+-online/not online 
+- block entity
+-hash the passwords(bcrypt )
+
+
+What i need to add in front:
+-readthe chat
+handle the error in the brouser
+check the console
+path  
+
+
+Search :
+ Cross-Origin Resource Sharing (CORS)
+ useEffect and useState
+
+
