@@ -56,7 +56,7 @@ const MessageList = ({ last4Msgs }) => {
                   @{item.username}
                   {item.ischannel ? <span className=""></span> : null}
                 </span>
-                <span className="text-white text-sm truncate">
+                <span className="text-white w-full text-sm truncate">
                   {item.lastMessage}
                 </span>
               </div>

@@ -30,7 +30,7 @@ const App = () => {
 
         {/* content ----------------------------------------------------------------- */}
         <div
-          className={`md:p-6 pb-28 p-6 md:px-10 sm:px-6 overflow-y-auto
+          className={`overflow-y-auto
             ${style.backdropBlur} ${style.transition} 
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}

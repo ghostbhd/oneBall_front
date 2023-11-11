@@ -1,13 +1,9 @@
 import PropTypes from "prop-types";
 import style from "../../style";
 import { Link } from "react-router-dom";
+import { ImgBg } from "../../style";
 
 const ProfileDetails = ({ user }) => {
-  const imgBg = {
-    backgroundImage: `url('${user.image}')`,
-    backgroundSize: `cover`,
-    backgroundPosition: `center`,
-  };
 
   const pStyle = "text-bLight_2 text-[26pt] w-3/12 text-center leading-[.8em]";
   const spanStyle = "block text-bLight_5 text-[12pt]";
@@ -66,7 +62,7 @@ const ProfileDetails = ({ user }) => {
             ? style.offline
             : style.inGame
         }`}
-        style={imgBg}
+        style={ImgBg({ img: user.image })}
       ></div>
     </div>
   );

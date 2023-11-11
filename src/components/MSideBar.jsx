@@ -6,8 +6,8 @@ const MSideBar = () => {
 
   return (
     <div
-      className="md:hidden flex absolute right-0 -bottom-1 z-50 w-full h-max 
-      bg-bDark_3 border-t-2 border-bLight_4 bg-opacity-60 backdrop-blur-3xl"
+      className="md:hidden absolute right-0 -bottom-1 z-50 w-full h-max 
+      bg-bDark_3 border-t-2 border-bLight_4 backdrop-blur-3xl"
     >
       <ul className="flex flex-row justify-around w-full p-4 px-6">
         {phoneBottomBar.map((item) => (

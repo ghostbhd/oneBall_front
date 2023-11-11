@@ -6,10 +6,10 @@ import style from "../../style";
 import PropTypes from "prop-types";
 
 const EditInfo = ({ data }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar);
   const [moreAvatars, setMoreAvatars] = useState(false);
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -72,6 +72,7 @@ const EditInfo = ({ data }) => {
             ""
           )}
         </div>
+
         {/* upload button ---------*/}
         <label
           htmlFor="file-upload"
@@ -85,14 +86,14 @@ const EditInfo = ({ data }) => {
       {/* Avatar selection -------------- */}
       <div className="w-full mt-3 relative space-y-4">
         <div
-          className={`w-full grid grid-cols-5 gap-4 relative overflow-hidden ${
-            moreAvatars ? "h-max" : "h-[90px]"
+          className={`w-full grid md:grid-cols-5 grid-cols-4 gap-4 relative overflow-hidden ${
+            moreAvatars ? "h-max" : "sm:h-[90px] h-[60px]"
           }`}
         >
           {avatarImages.map((item, index) => (
             <div
               key={index}
-              className={`w-[90px] h-[90px] relative cursor-pointer mx-auto
+              className={`md:w-[90px] sm:w-[80px] w-[60px] md:h-[90px] sm:h-[80px] h-[60px] relative cursor-pointer mx-auto
                 ${style.rounded} ${
                 item === selectedAvatar ? "order-first" : ""
               } 

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import style from "../../style";
 import EditInfo from "./EditInfo";
 import Details from "./Details";
+import MDetails from "./MDetails";
 
 const Profile = () => {
   const [data, setData] = useState([]);
@@ -22,14 +23,17 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className={`w-full sm:h-full flex sm:flex-row flex-col`}>
+    <div className={`w-full sm:h-full flex sm:flex-row flex-col md:p-6 pb-28 p-4 md:px-10 sm:px-6`}>
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
         </p>
       ) : (
         <>
-          <div className={`sm:order-1 order-last sm:w-7/12 w-full sm:h-full h-max ${style.blueBlur} ${style.rounded}`}>
+          <div className={`block sm:hidden mb-8 w-full h-max ${style.rounded}`}>
+            <MDetails data={data.profileInfo} />
+          </div>
+          <div className={`sm:w-7/12 w-full sm:h-full h-max ${style.blueBlur} ${style.rounded}`}>
             <EditInfo data={data.editInnfo}/>
           </div>
           <div
