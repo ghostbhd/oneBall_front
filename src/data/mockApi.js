@@ -103,10 +103,10 @@ const profile = {
     editInnfo: {
         id: 1,
         username: 'user1',
-        avatar: '/src/assets/avatar/010534_1346719.gif',
+        avatar: '/src/assets/avatar/Strong Baby.jpg',
     },
     profileInfo: {
-        image: '/src/assets/avatar/010534_1346719.gif',
+        image: '/src/assets/avatar/Strong Baby.jpg',
         fullName: 'User 1',
         username: 'user1',
         level: 5,

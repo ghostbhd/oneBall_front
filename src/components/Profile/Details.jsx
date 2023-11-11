@@ -1,15 +1,9 @@
 import PropTypes from "prop-types";
 import { icons } from "../../constants";
 import style from "../../style";
+import { ImgBg } from "../../style";
 
 const Details = ({ data }) => {
-
-  // image background ------------------------
-  const ImgBg = ({ img }) => ({
-    backgroundImage: `url('${img}')`,
-    backgroundSize: `cover`,
-    backgroundPosition: `center`,
-  });
 
   // position of the star and level ------------------------
   const starPosition = "absolute -top-8 -right-8 w-[90px] h-[90px]";
@@ -18,10 +12,10 @@ const Details = ({ data }) => {
   const spanStyle = "text-2xl block text-bLight_2";
 
   return (
-    <div className={`w-full flex flex-col p-10 h-max space-y-4`}>
+    <div className={`w-full sm:flex hidden flex-col md:p-10 sm:p-2 sm:pt-10 h-max space-y-4`}>
       {/* image ------------------------ */}
       <div
-        className={`w-3/4 h-[350px] flex relative mx-auto border-8 border-org_3 shadow-4xl shadow-org_1 ${style.rounded}`}
+        className={`w-3/4 md:h-[350px] sm:h-[280px] flex relative mx-auto border-8 border-org_3 shadow-4xl shadow-org_1 ${style.rounded}`}
         style={ImgBg({ img: data.image })}
       >
         {/* star icon -------*/}

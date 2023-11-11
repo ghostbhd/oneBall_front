@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const row = "sm:w-1/2 w-full flex flex-col space-y-14";
+  const row = "sm:w-1/2 w-full sm:flex hidden flex-col space-y-14";
 
   useEffect(() => {
     // fetch("/api/dashboard")
@@ -27,23 +27,35 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`flex sm:flex-row flex-col w-full`}>
+    <div className={`flex sm:flex-row flex-col w-full md:p-6 pb-28 p-2 md:px-10 sm:px-6`}>
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
         </p>
       ) : (
         <>
-          <div className={`${row} sm:mt-0 mt-10`}>
+          <div className={`${row}`}>
             {/* messages ---------------------------------------------------------------- */}
             <MessageList last4Msgs={data.last4Msg} />
             {/* Game -------------------------------------------------------------------- */}
             <GameBtn />
           </div>
-          <div className={`${row} space-y-10 sm:order-2 order-first`}>
+          <div className={`${row} space-y-10`}>
             {/* profile ----------------------------------------------------------------- */}
             <ProfileDetails user={data.user} />
             {/* game history ------------------------------------------------------------ */}
+            <GameHistory last6Games={data.last6Games}/>
+          </div>
+
+          {/* In Mobile order ------------------------------------------------------------------ */}
+          <div className="flex sm:hidden flex-col space-y-14">
+            {/* Profile ------------------------------------------------ */}
+            <ProfileDetails user={data.user} />
+            {/* Game --------------------------------------------------- */}
+            <GameBtn />
+            {/* Messages ----------------------------------------------- */}
+            <MessageList last4Msgs={data.last4Msg} />
+            {/* Game history ------------------------------------------- */}
             <GameHistory last6Games={data.last6Games}/>
           </div>
         </>

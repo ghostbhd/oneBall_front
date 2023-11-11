@@ -13,4 +13,10 @@ const style = {
     boxWidth: "w-11/12 mx-auto",
 }
 
+export const ImgBg = ({ img }) => ({
+    backgroundImage: `url('${img}')`,
+    backgroundSize: `cover`,
+    backgroundPosition: `center`,
+});
+
 export default style;
