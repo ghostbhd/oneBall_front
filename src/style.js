@@ -11,7 +11,14 @@ const style = {
     inGame: "border-bLight_3", // .. in game
     transition: "transition-all duration-700",
     boxWidth: "w-11/12 mx-auto",
+    //my chat styles
     activeChatItem: "bg-bDark_1",
+    messageCurrentUser: `
+    text-right bg-blue-500 text-white p-2 rounded-l-lg rounded-tr-lg
+  `,
+  messageOtherUser: `
+    text-left bg-gray-500 text-white p-2 rounded-r-lg rounded-tl-lg
+  `,
 }
 
 export default style;

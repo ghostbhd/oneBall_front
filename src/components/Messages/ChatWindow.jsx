@@ -10,14 +10,11 @@ const ChatWindow = ({ activeChat }) => {
   
     <div className={`w-9/12 ${style.contentW} bg-opacity-60 p-4 flex flex-col`}>
       <div className="flex items-center mb-4">
-        {/* Placeholder for selected user's avatar and name */}
         <img className="w-12 h-12 rounded-full mr-4" src="path_to_avatar" alt="User Name" />
         <h2 className="text-white">User Name</h2>
       </div>
 
-     {/* Message display  */}
       <div className="chat-window">
-      {/* Display messages for the active chat */}
       {activeChatMessages.map((message) => (
         <div key={message.id} className="message">
           <p className="message-text">{message.text}</p>
