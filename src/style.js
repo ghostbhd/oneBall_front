@@ -11,6 +11,7 @@ const style = {
     inGame: "border-bLight_3", // .. in game
     transition: "transition-all duration-700",
     boxWidth: "w-11/12 mx-auto",
+    activeChatItem: "bg-bDark_1",
 }
 
 export default style;
