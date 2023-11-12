@@ -1,7 +1,10 @@
 
 const Games = () => {
   return (
-    <div>Games</div>
+    <div className={``}>
+      
+      
+    </div>
   )
 }
 

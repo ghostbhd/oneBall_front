@@ -1,9 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { sidebarItems } from "../constants";
-import style from "../style";
-import { icons } from "../constants";
+import { sidebarItems, icons } from "../../constants";
+import style from "../../style";
 
-import { useTheme } from "../themeContext";
+import { useTheme } from "../../themeContext";
 
 const SideBar = () => {
   const location = useLocation();

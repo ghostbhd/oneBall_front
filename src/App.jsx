@@ -8,18 +8,21 @@ import {
   Settings,
   Logout,
   MSideBar,
+  NavBar,
 } from "./components";
 import style from "./style";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { useTheme } from "./themeContext";
 
+import { ImgBg } from "./style";
+
 const App = () => {
   const { theme } = useTheme();
 
   return (
     <BrowserRouter>
-      <div className={`app w-full h-full flex flex-row fixed`}>
+      <div className={` w-full h-full flex flex-row fixed`} style={ImgBg({img : "/src/assets/bg contain.png"})}>
         <div
           className={`absolute right-0 top-0 w-full h-full bg-[#0a2028] opacity-50`}
         ></div>
@@ -35,6 +38,10 @@ const App = () => {
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}
         >
+          {/* navbar ----------------------------------------------------------------- */}
+          <NavBar />
+
+          {/* routes ----------------------------------------------------------------- */}
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/games" element={<Games />} />
