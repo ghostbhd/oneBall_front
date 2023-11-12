@@ -1,4 +1,4 @@
-import { phoneBottomBar } from "../constants";
+import { phoneBottomBar } from "../../constants";
 import { Link, useLocation } from "react-router-dom";
 
 const MSideBar = () => {

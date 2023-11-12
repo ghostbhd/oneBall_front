@@ -1,4 +1,3 @@
-import SideBar from "./SideBar";
 import Dashboard from "./Dashboard";
 import Profile from "./Profile";
 import Games from "./Games";
@@ -6,7 +5,7 @@ import Messages from "./Messages";
 import Stats from "./Stats";
 import Settings from "./Settings";
 import Logout from "./Logout";
-import MSideBar from "./MSideBar";
+import {SideBar, MSideBar, NavBar} from "./Bars"
 
 export {
     SideBar,
@@ -18,4 +17,5 @@ export {
     Settings,
     Logout,
     MSideBar,
+    NavBar
 }
