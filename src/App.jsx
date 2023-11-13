@@ -15,6 +15,7 @@ import { useTheme } from "./themeContext";
 
 const App = () => {
   const { theme } = useTheme();
+ 
 
   return (
     <BrowserRouter>

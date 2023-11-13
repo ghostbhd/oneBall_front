@@ -12,13 +12,17 @@ const style = {
     transition: "transition-all duration-700",
     boxWidth: "w-11/12 mx-auto",
     //my chat styles
+    chatsone : "w-11/13 mx-auto",
     activeChatItem: "bg-bDark_1",
     messageCurrentUser: `
-    text-right bg-blue-500 text-white p-2 rounded-l-lg rounded-tr-lg
-  `,
-  messageOtherUser: `
-    text-left bg-gray-500 text-white p-2 rounded-r-lg rounded-tl-lg
-  `,
+      text-right bg-blue-0 text-white p-2 rounded-l-lg rounded-tr-lg`,
+    messageOtherUser: `
+      text-left bg-gray-500 text-white p-2 rounded-r-lg rounded-tl-lg`,
+    messageCurrentUser: "bg-[#FFE268] text-right p-2 rounded-lg float-right clear-both break-words",
+    messageOtherUser: "bg-[#3077A1] text-left p-2 rounded-lg float-left clear-both break-word",
+
+  
 }
 
+// searc about mx-auto
 export default style;

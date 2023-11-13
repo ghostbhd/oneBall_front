@@ -11,7 +11,7 @@ const Messages = () => {
   const [activeChat, setActiveChat] = useState(null);
 
   return (
-    <div className={`flex ${style.boxWidth} ${style.rounded} ${style.blueBlur} overflow-hidden`}>
+    <div className={`flex ${style.chatsone} ${style.rounded} ${style.blueBlur}`}>
       <ChatList activeChat={activeChat} setActiveChat={setActiveChat} />
       <ChatWindow activeChat={activeChat} />
     </div>

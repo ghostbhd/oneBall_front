@@ -12,14 +12,14 @@ const ChatList = ({ activeChat, setActiveChat }) => {
   };
 
   return (
-    <div className={`w-3/12 ${style.sidebarW} overflow-y-auto`}>
+    <div className={`w-3/12 ${style.sidebarW} max-h-screen  overflow-y-auto`}>
       {mockChats.map((chat) => (
         <div 
           key={chat.id} 
-          className={`flex items-center p-3 ${style.transition} hover:bg-opacity-70 ${activeChat === chat.id ? style.activeChatItem : ''}`}
+          className={`flex items-center p-2 ${style.transition} hover:bg-opacity-70 ${activeChat === chat.id ? style.activeChatItem : ''}`}
           onClick={() => handleChatClick(chat.id)}
         >
-          <img className="w-10 h-10 rounded-full mr-4" src={chat.avatar} alt={`${chat.name}`} />
+          <img className="w-10 h-9 rounded-full mr-4" src={chat.avatar} alt={`${chat.name}`} />
           <div>
             <h3 className="text-white">{chat.name}</h3>
             <p className="text-gray-400">{chat.message}</p>
