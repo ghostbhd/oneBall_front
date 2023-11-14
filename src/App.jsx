@@ -15,7 +15,7 @@ import { useTheme } from "./themeContext";
 
 const App = () => {
   const { theme } = useTheme();
- 
+ //! tell anass about overflow-y-auto
 
   return (
     <BrowserRouter>
@@ -26,11 +26,12 @@ const App = () => {
         {/* sidebar ----------------------------------------------------------------- */}
         <SideBar />
 
-        {/* content ----------------------------------------------------------------- */}
+        {/* content ----------------------------------------------------------- */}
         <div
-          className={`p-6 px-10 overflow-y-auto
+          className={`p-6 px-10 
             ${style.backdropBlur} ${style.transition} 
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
+
           `}
         >
           <Routes>
