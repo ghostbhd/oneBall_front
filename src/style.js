@@ -12,7 +12,7 @@ const style = {
     transition: "transition-all duration-700",
     boxWidth: "w-11/12 mx-auto",
     //my chat styles
-    chatContainer: "flex flex-col h-[calc(100vh-60px)]", 
+    chatContainer: "flex flex-col h-[calc(100vh-45px)]", 
     chatsone : "w-11/12 mx-auto",
     activeChatItem: "bg-bDark_1",
     messageCurrentUser: `

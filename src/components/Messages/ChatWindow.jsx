@@ -10,7 +10,7 @@ const ChatWindow = ({ activeChat }) => {
 
 
   return (
-    <div className={`w-9/12 ${style.contentW} flex flex-col h-screen`}>
+    <div className={`w-9/12 ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}
       <div className="flex items-center mb-5">
 
