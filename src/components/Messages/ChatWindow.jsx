@@ -12,15 +12,15 @@ const ChatWindow = ({ activeChat }) => {
   const activeChatMessages = mockMessages.filter(message => message.chatId === activeChat);
 
 
-  // State to keep track of the input message
+
   const [message, setMessage] = useState('');
 
-  // Function to handle message submission
+
   const handleSendMessage = () => {
     if (message.trim()) {
-      // Here you would send your message to the backend or your state management
+
       console.log("Send message:", message);
-      // After sending the message, clear the input field
+      
       setMessage('');
     }
   };

@@ -29,7 +29,7 @@ const Messages = () => {
 
   const handleSearchSubmit = (value) => {
     console.log('Search submitted for:', value);
-    // Add your search logic here using the 'value'
+ 
   };
 
   
@@ -39,9 +39,9 @@ const Messages = () => {
       activeChat={activeChat}
       setActiveChat={setActiveChat}
       chats={filteredChats}
-      onSearch={handleSearch} // Pass the search handler to the ChatList'
-      // onIconClick={handleSearchIconClick} // Pass the search handler to the SearchBar
-      onSearchSubmit={handleSearchSubmit}  // Pass the search submit handler to the SearchBar
+      onSearch={handleSearch} 
+      // onIconClick={handleSearchIconClick} 
+      onSearchSubmit={handleSearchSubmit}  
     />
     <ChatWindow activeChat={activeChat} />
   </div>
