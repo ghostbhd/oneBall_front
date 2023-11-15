@@ -13,7 +13,7 @@ const style = {
     boxWidth: "w-11/12 mx-auto",
     //my chat styles
     chatContainer: "flex flex-col h-[calc(100vh-45px)]", 
-    chatsone : "w-11/12 mx-auto",//!ask the boys about this 
+    chatsone : "w-11/11   h-[calc(100vh-45px)] mx-auto",//!ask the boys about this 
     activeChatItem: "bg-bDark_1",
     messageCurrentUser: `
       text-right bg-blue-0 text-white p-2 rounded-l-lg rounded-tr-lg`,

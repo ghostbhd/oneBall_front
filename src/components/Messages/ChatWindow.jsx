@@ -28,10 +28,10 @@ const ChatWindow = ({ activeChat }) => {
   return (
     <div className={`w-9/12 ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}
-      <div className="flex items-center mb-5">
+      <div className="flex  h-20 items-center bg-bDark_1 mb-5">
 
-        <img className="w-11 h-18 rounded-full mr-5" src="path_to_avatar" alt="User Name" />
-        <h2 className="text-white">User Name</h2>
+        <img className="w-16 h-18  rounded-full  mr-5" src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg" alt="User Name" />
+        <h2 className="text-black">User Name</h2>
       </div>
 
      {/* Message display  */}

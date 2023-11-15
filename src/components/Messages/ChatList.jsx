@@ -20,7 +20,7 @@ const ChatList = ({ activeChat, setActiveChat ,onSearch}) => {
         <SearchBar onSearch={onSearch} />
       </div>
 
-      <div className="h-5/6 overflow-y-auto ">
+      <div className="h-5/5   rounded-b-2xl overflow-y-auto ">
         {mockChats.map((chat) => (
           <div
             key={chat.id}

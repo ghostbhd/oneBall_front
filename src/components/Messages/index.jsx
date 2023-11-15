@@ -21,10 +21,10 @@ const Messages = () => {
   chat.name.toLowerCase().includes(searchTerm.toLowerCase())
   
   );
-  const handleSearchIconClick = () => {
+  // const handleSearchIconClick = () => {
 
-  console.log("Search icon was clicked!");
-  };
+  // console.log("Search icon was clicked!");
+  // };
 
 
   const handleSearchSubmit = (value) => {
