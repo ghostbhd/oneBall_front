@@ -14,13 +14,13 @@ const ChatList = ({ activeChat, setActiveChat ,onSearch}) => {
   };
 
   return (
-    <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>
+    <div className={`w-3/12 flex-grow ${style.sidebarW} ${style.chatListContainer}`}>
 
       <div className={style.searchBar}>
         <SearchBar onSearch={onSearch} />
       </div>
 
-      <div className="h-5/6 overflow-y-auto">
+      <div className="h-5/6 overflow-y-auto ">
         {mockChats.map((chat) => (
           <div
             key={chat.id}
