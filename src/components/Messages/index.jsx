@@ -34,7 +34,7 @@ const Messages = () => {
 
   
   return (
-    <div className={`flex ${style.chatsone} ${style.rounded} ${style.blueBlur}`}>
+    <div className={`flex h-full ${style.chatsone} ${style.rounded} ${style.blueBlur}`}>
     <ChatList
       activeChat={activeChat}
       setActiveChat={setActiveChat}

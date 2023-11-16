@@ -28,7 +28,7 @@ const App = () => {
 
         {/* content ----------------------------------------------------------- */}
         <div
-          className={`p-6 px-10 
+          className={`p-6 px-10 overflow-y-auto
             ${style.backdropBlur} ${style.transition} 
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
 

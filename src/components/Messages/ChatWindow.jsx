@@ -26,20 +26,20 @@ const ChatWindow = ({ activeChat }) => {
   };
 
   return (
-    <div className={`w-9/12 ${style.contentW} ${style.chatContainer}`}>
+    <div className={`w-9/12  ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}
       <div className="flex  h-20 items-center bg-bDark_1 mb-5">
 
         <img className="w-16 h-18  rounded-full  mr-5" src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg" alt="User Name" />
-        <h2 className="text-black">User Name</h2>
+        <h2 className="text-black">hajar</h2>
       </div>
 
      {/* Message display  */}
-      <div className={`flex-grow  flex-col overflow-y-auto ${style.chatWindowMessages}`}>
+      <div className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}>
       {activeChatMessages.map((message) => {
           const isCurrentUserSender = message.senderId === CURRENT_USER_ID;
           return (
-            <div key={message.id} className={`mb-4 ${isCurrentUserSender ? style.messageCurrentUser : style.messageOtherUser}`}>
+            <div key={message.id} className={`mb-5 ${isCurrentUserSender ? style.messageCurrentUser : style.messageOtherUser}`}>
               <p className="text-white">{message.text}</p>
               <span className="text-gray-400">{message.time}</span>
             </div>
