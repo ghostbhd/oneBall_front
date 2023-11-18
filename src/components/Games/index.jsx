@@ -1,7 +1,7 @@
-import style from "../../style";
 import GamesHistory from "./GamesHistory";
 import { useState, useEffect } from "react";
 import { gamesData } from "../../data/mockApi";
+import Buttons from "./Buttons";
 
 const Games = () => {
   const [data, setData] = useState([]);
@@ -21,18 +21,23 @@ const Games = () => {
   }, []);
 
   return (
-    <div className={`w-full md:p-8 md:pt-14 h-full flex`}>
+    <div className={`w-full md:p-8 p-4 md:pt-14 pb-20 h-full flex`}>
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
         </p>
       ) : (
         <>
-          {/* Game details */}
+          {/* Game details -----------------------------------------*/}
           <div
-            className={`w-7/12 h-full overflow-hidden overflow-y-auto ${style.blueBlur} ${style.rounded}`}
-          ></div>
-          {/* Game history */}
+            className={`w-7/12 h-full`}
+          >
+            {/* buttons ----- */}
+            <Buttons />
+            {/* game details --- */}
+
+          </div>
+          {/* Game history --------------------------------------------*/}
           <GamesHistory gamehistory={data.gamesHistory} />
         </>
       )}
