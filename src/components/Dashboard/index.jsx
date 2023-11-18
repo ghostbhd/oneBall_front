@@ -27,7 +27,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className={`flex sm:flex-row flex-col w-full md:p-6 pb-28 p-2 md:px-10 sm:px-6`}>
+    <div className={`flex sm:flex-row flex-col w-full md:p-6 md:pt-10 pb-28 p-2  md:px-10 sm:px-6`}>
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...

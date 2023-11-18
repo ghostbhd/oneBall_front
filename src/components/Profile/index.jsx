@@ -23,7 +23,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className={`w-full sm:h-full flex sm:flex-row flex-col md:p-6 pb-28 p-4 md:px-10 sm:px-6`}>
+    <div className={`w-full sm:h-full flex sm:flex-row flex-col md:pb-4 pb-28 p-4 md:px-10 sm:pt-14`}>
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
