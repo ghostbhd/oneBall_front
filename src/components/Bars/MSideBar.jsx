@@ -7,14 +7,14 @@ const MSideBar = () => {
   return (
     <div
       className="md:hidden absolute right-0 -bottom-1 z-50 w-full h-max 
-      bg-bDark_3 border-t-2 border-bLight_4 backdrop-blur-3xl"
+      bg-bDark_4 border-t-2 border-bLight_4/30 backdrop-blur-3xl"
     >
-      <ul className="flex flex-row justify-around w-full p-4 px-6">
+      <ul className="flex flex-row justify-around w-full p-2 px-6 items-center">
         {phoneBottomBar.map((item) => (
           <li key={item.title}>
             <Link to={item.link}>
               <span
-                className={`text-2xl text-bLight_2 ${
+                className={`text-2xl text-bLight_4 ${
                   location.pathname === item.link ? "text-white text-3xl" : ""
                 }`}
               >

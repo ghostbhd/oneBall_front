@@ -1,5 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+* {
+  /* WebKit-based browsers (e.g., Chrome, Safari) */
+  ::-webkit-scrollbar {
+    width: 5px; /* Width of the scrollbar track */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #395f6d; /* Color of the thumb */
+    border-radius: 8px; /* Rounded thumb */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #204753; /* Thumb color on hover */
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Color of the track */
+  }
+}
+
 .app{background:url("assets/bg contain.png") no-repeat center center fixed}
 .transition-order{transition:order .7s ease-in-out}

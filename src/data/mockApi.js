@@ -135,6 +135,108 @@ const profile = {
     }
 }
 
+const games = {
+    gamesHistory : [
+        {
+            id: 1,
+            opponent: 'user1',
+            fullName: 'User 1',
+            result: 'lose',
+            date: 'Aug 30',
+            time: '10:00',
+        },
+        {
+            id: 2,
+            opponent: 'user2',
+            fullName: 'User 2',
+            result: 'win',
+            date: 'Aug 20',
+            time: '11:12',
+        },
+        {
+            id: 3,
+            opponent: 'user3',
+            fullName: 'User 3',
+            result: 'win',
+            date: 'Aug 19',
+            time: '18:00',
+        },
+        {
+            id: 4,
+            opponent: 'user4',
+            fullName: 'User 4',
+            result: 'lose',
+            date: 'Aug 15',
+            time: '20:00',
+        },
+        {
+            id: 5,
+            opponent: 'user5',
+            fullName: 'User 5',
+            result: 'win',
+            date: 'Aug 3',
+            time: '15:0',
+        },
+        {
+            id: 6,
+            opponent: 'user6',
+            fullName: 'User 6',
+            result: 'lose',
+            date: 'Aug 3',
+            time: '10:00',
+        },
+        {
+            id: 7,
+            opponent: 'user7',
+            fullName: 'User 7',
+            result: 'win',
+            date: 'Aug 30',
+            time: '10:00',
+        },
+        {
+            id: 8,
+            opponent: 'user8',
+            fullName: 'User 8',
+            result: 'win',
+            date: 'Aug 20',
+            time: '11:12',
+        },
+        {
+            id: 9,
+            opponent: 'user9',
+            fullName: 'User 9',
+            result: 'lose',
+            date: 'Aug 19',
+            time: '18:00',
+        },
+        {
+            id: 10,
+            opponent: 'user10',
+            fullName: 'User 10',
+            result: 'lose',
+            date: 'Aug 15',
+            time: '20:00',
+        },
+        {
+            id: 11,
+            opponent: 'user11',
+            fullName: 'User 11',
+            result: 'win',
+            date: 'Aug 3',
+            time: '15:0',
+        },
+        {
+            id: 12,
+            opponent: 'user12',
+            fullName: 'User 12',
+            result: 'lose',
+            date: 'Aug 3',
+            time: '10:00',
+        },
+    ],
+    
+}
+
 export function fetchDataFromMockApi() {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -147,6 +249,14 @@ export function profileData() {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(profile);
+        }, 1000);
+    });
+}
+
+export function gamesData() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(games);
         }, 1000);
     });
 }

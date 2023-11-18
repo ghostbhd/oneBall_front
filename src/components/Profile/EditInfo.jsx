@@ -94,7 +94,7 @@ const EditInfo = ({ data }) => {
             <div
               key={index}
               className={`md:w-[90px] sm:w-[80px] w-[60px] md:h-[90px] sm:h-[80px] h-[60px] relative cursor-pointer mx-auto
-                ${style.rounded} ${
+                rounded-[25px] ${
                 item === selectedAvatar ? "order-first" : ""
               } 
               `}
@@ -104,7 +104,7 @@ const EditInfo = ({ data }) => {
               {/* checked avatar --------------*/}
               {selectedAvatar === item ? (
                 <div
-                  className={`absolute flex w-full h-full ${style.rounded} bg-bLight_5 bg-opacity-50`}
+                  className={`absolute flex w-full h-full rounded-[25px] bg-bLight_5 bg-opacity-50`}
                 >
                   {
                     <icons.check className="text-[30pt] m-auto text-org_3 text-shadow" />

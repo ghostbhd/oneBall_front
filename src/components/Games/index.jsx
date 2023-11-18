@@ -1,11 +1,43 @@
+import style from "../../style";
+import GamesHistory from "./GamesHistory";
+import { useState, useEffect } from "react";
+import { gamesData } from "../../data/mockApi";
 
 const Games = () => {
-  return (
-    <div className={``}>
-      
-      
-    </div>
-  )
-}
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-export default Games
+  useEffect(() => {
+    gamesData()
+      .then((data) => {
+        console.log(data); // Log the data to check its structure
+        setData(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log("Error fetching data", err);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <div className={`w-full md:p-8 md:pt-14 h-full flex`}>
+      {loading ? (
+        <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
+          Loading...
+        </p>
+      ) : (
+        <>
+          {/* Game details */}
+          <div
+            className={`w-7/12 h-full overflow-hidden overflow-y-auto ${style.blueBlur} ${style.rounded}`}
+          ></div>
+          {/* Game history */}
+          <GamesHistory gamehistory={data.gamesHistory} />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Games;

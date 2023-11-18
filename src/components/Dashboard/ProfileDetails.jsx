@@ -12,7 +12,7 @@ const ProfileDetails = ({ user }) => {
     <div className={`flex flex-col relative w-11/12 h-max ${style.boxWidth}`}>
       {/* details --------------------------------------------------------------------------------*/}
       <div
-        className={`md:w-9/12 w-full flex flex-col h-max p-4 pl-7 left-0 ${style.blueBlur} ${style.rounded}`}
+        className={`md:w-10/12 w-full flex flex-col h-max p-4 pl-7 left-0 ${style.blueBlur} ${style.rounded}`}
       >
         {/* FullName and userName -------------------------------------*/}
         <p className="sm:w-8/12 w-full text-bLight_3 text-2xl text-center">

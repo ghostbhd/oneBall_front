@@ -16,51 +16,45 @@ const SideBar = () => {
         ${theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW}`}
     >
       {/* Toggle button ---------------------- */}
-      <div className="absolute bottom-36 right-0">
+      <div className="absolute top-8 right-2">
         <button
           onClick={toggleSidebar}
-          className="text-3xl bg-[#0f2939] rounded-l-full"
+          className="text-2xl"
         >
           {theme.isSidebarCollapsed === true ? (
-            <icons.arrowRight />
+            <icons.toRight />
           ) : (
-            <icons.arrowLeft />
+            <icons.toLeft />
           )}
         </button>
       </div>
       {/* Sidebar items ---------------------- */}
       <ul
-        className={`flex flex-col space-y-7 w-full ${
-          theme.isSidebarCollapsed ? "items-center" : ""
-        }`}
+        className={`flex flex-col space-y-7 w-full items-center justify-center`}
       >
         {/* logo ------------------------ */}
-        <li className="text-[25pt] px-4">
+        <li className={`text-[25pt] px-4 ${theme.isSidebarCollapsed ? "w-max" : "w-full"}`}>
           <Link to={"/"}>{theme.isSidebarCollapsed ? "Pi" : "PiPo"}</Link>
         </li>
         {/* items ------------------------ */}
         {sidebarItems.map((item, index) => (
           <li
             key={item.title}
-            className={` ${
+            className={`${
               index === sidebarItems.length - 3
                 ? "!mb-auto"
                 : index === 0
                 ? "!mt-auto"
                 : ""
-            } ${
-              theme.isSidebarCollapsed ? "flex w-max justify-center" : "w-full"
-            }`}
+            } ${theme.isSidebarCollapsed ? "w-max" : "w-full"}`}
           >
             <Link
               to={item.link}
-              className={`flex flex-row p-2  hover:text-white transition-colors duration-300 ${
+              className={`flex flex-row p-2 items-center ${
                 location.pathname === `${item.link}`
-                  ? `bg-org_3 rounded-3xl text-white`
+                  ? `bg-org_3 rounded-3xl text-white font-bold`
                   : ""
-              } ${
-                theme.isSidebarCollapsed ? "rounded-full justify-center" : ""
-              } `}
+              }`}
             >
               {/* Icon / title -------------------------------- */}
               <span
@@ -71,8 +65,8 @@ const SideBar = () => {
                 {<item.icon />}
               </span>
               <span
-                className={`text-base ${
-                  theme.isSidebarCollapsed ? "hidden" : "ml-10"
+                className={`text-base transform overflow-hidden ${
+                  theme.isSidebarCollapsed ? "w-0" : "w-max ml-8"
                 }`}
               >
                 {item.title}
