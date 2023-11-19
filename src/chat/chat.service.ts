@@ -47,15 +47,15 @@ async startChat(senderId: number, receiverId: number): Promise<Chat> {
 }
 
 async getChat(sender: User, receiver: User): Promise<Chat> {
-  // Try to find an existing chat between the sender and receiver
+
   let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } });
 
-  // If not found, reverse the roles and try again
+  
   if (!chat) {
       chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
   }
 
-  // If still not found, create a new chat
+
   if (!chat) {
       chat = new Chat();
       chat.sender = sender;
@@ -135,20 +135,34 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
       .getMany();
 }
 
-async sender_msgs_only(senderId: number, receiverId: number): Promise<Message[]> {
-  return await this.messageRepository.createQueryBuilder("message")
-    .innerJoin("message.SenderUserID", "sender") 
-    .innerJoin("message.chatid", "chat")
-    .where(
-      new Brackets(qb => {
-        qb.where("(sender.id = :senderId AND chat.receiverId = :receiverId)")
-          .orWhere("(sender.id = :receiverId AND chat.receiverId = :senderId)")
-      }), 
-      { senderId, receiverId }
-    )
-    .orderBy("message.Timestamp", "DESC")
-    .getMany();
+async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
+  const chats = await this.directMessageRepository.find({
+    where: [
+      { sender: { id: userId } },
+      { receiver: { id: userId } }
+    ],
+    relations: ['messageid', 'sender', 'receiver'], 
+  });
+
+  // Map through each chat to construct an object with the desired properties
+  return chats.map(chat => {
+    const lastMessage = chat.messageid[chat.messageid.length - 1]; 
+    return {
+      id: chat.id,
+      name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
+      // avatar: chat.receiver.id === userId ? chat.sender.avatar : chat.receiver.avatar, 
+      lastMessage: lastMessage.Content,
+  
+    };
+  });
 }
 
+// chat.service.ts
+async getChatsByUserId(userId: number): Promise<Chat[]> {
+  return await this.directMessageRepository.find({
+    where: {sender: { id: userId },},
+    relations: ['messageid', 'sender', 'receiver'],
+  });
+}
 
 }

@@ -19,5 +19,6 @@ export declare class ChatService {
     getMessages(chatId: number): Promise<Message[]>;
     getAllChatIds(): Promise<number[]>;
     getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<Chat[]>;
-    sender_msgs_only(senderId: number, receiverId: number): Promise<Message[]>;
+    getLatestMessagesForAllChats(userId: number): Promise<any[]>;
+    getChatsByUserId(userId: number): Promise<Chat[]>;
 }
