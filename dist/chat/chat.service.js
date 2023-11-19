@@ -19,7 +19,6 @@ const user_entity_1 = require("../entities/user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const common_2 = require("@nestjs/common");
 const typeorm_2 = require("typeorm");
-const typeorm_3 = require("typeorm");
 const Chat_entity_1 = require("../entities/Chat.entity");
 const Channel_entity_1 = require("../entities/Channel.entity");
 const Channel_Membership_entity_1 = require("../entities/Channel_Membership.entity");
@@ -112,16 +111,28 @@ let ChatService = class ChatService {
             .orderBy("message.Timestamp", "DESC")
             .getMany();
     }
-    async sender_msgs_only(senderId, receiverId) {
-        return await this.messageRepository.createQueryBuilder("message")
-            .innerJoin("message.SenderUserID", "sender")
-            .innerJoin("message.chatid", "chat")
-            .where(new typeorm_2.Brackets(qb => {
-            qb.where("(sender.id = :senderId AND chat.receiverId = :receiverId)")
-                .orWhere("(sender.id = :receiverId AND chat.receiverId = :senderId)");
-        }), { senderId, receiverId })
-            .orderBy("message.Timestamp", "DESC")
-            .getMany();
+    async getLatestMessagesForAllChats(userId) {
+        const chats = await this.directMessageRepository.find({
+            where: [
+                { sender: { id: userId } },
+                { receiver: { id: userId } }
+            ],
+            relations: ['messageid', 'sender', 'receiver'],
+        });
+        return chats.map(chat => {
+            const lastMessage = chat.messageid[chat.messageid.length - 1];
+            return {
+                id: chat.id,
+                name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
+                lastMessage: lastMessage.Content,
+            };
+        });
+    }
+    async getChatsByUserId(userId) {
+        return await this.directMessageRepository.find({
+            where: { sender: { id: userId }, },
+            relations: ['messageid', 'sender', 'receiver'],
+        });
     }
 };
 exports.ChatService = ChatService;
@@ -132,10 +143,10 @@ exports.ChatService = ChatService = __decorate([
     __param(2, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __param(3, (0, typeorm_1.InjectRepository)(Channel_entity_1.Channel)),
     __param(4, (0, typeorm_1.InjectRepository)(Channel_Membership_entity_1.Channel_Membership)),
-    __metadata("design:paramtypes", [typeorm_3.Repository,
-        typeorm_3.Repository,
-        typeorm_3.Repository,
-        typeorm_3.Repository,
-        typeorm_3.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository])
 ], ChatService);
 //# sourceMappingURL=chat.service.js.map

@@ -28,4 +28,12 @@ async getChatsForUser(@Param('userId') userId: number) {
       console.log("senderId: " + senderId + " receiverId: " + receiverId); 
       return await this.chatService.getDirectMessagesBetweenUsers(senderId, receiverId);
     }
+
+// chat.controller.ts
+@Get('allchats/:userId')
+getChatsByUserId(@Param('userId') userId: number) {
+  return this.chatService.getChatsByUserId(userId);
 }
+
+}
+

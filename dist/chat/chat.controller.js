@@ -33,6 +33,9 @@ let ChatController = class ChatController {
         console.log("senderId: " + senderId + " receiverId: " + receiverId);
         return await this.chatService.getDirectMessagesBetweenUsers(senderId, receiverId);
     }
+    getChatsByUserId(userId) {
+        return this.chatService.getChatsByUserId(userId);
+    }
 };
 exports.ChatController = ChatController;
 __decorate([
@@ -64,6 +67,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], ChatController.prototype, "getDirectMessagesBetweenUsers", null);
+__decorate([
+    (0, common_1.Get)('allchats/:userId'),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], ChatController.prototype, "getChatsByUserId", null);
 exports.ChatController = ChatController = __decorate([
     (0, common_1.Controller)('chat'),
     __metadata("design:paramtypes", [chat_service_1.ChatService])

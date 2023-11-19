@@ -14,5 +14,5 @@ export class Message {
     Content: string;
     @Column()
     Timestamp: string;
-
+    
 }

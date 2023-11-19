@@ -7,4 +7,5 @@ export declare class ChatController {
     getMessages(chatId: number): Promise<import("../entities/Message.entity").Message[]>;
     getChatsForUser(userId: number): Promise<import("../entities/Chat.entity").Chat[]>;
     getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<import("../entities/Chat.entity").Chat[]>;
+    getChatsByUserId(userId: number): Promise<import("../entities/Chat.entity").Chat[]>;
 }

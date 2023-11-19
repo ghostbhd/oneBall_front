@@ -6,8 +6,9 @@ export declare class ChatGateway {
     constructor(chatService: ChatService);
     server: Server;
     private clients;
-    handleConnection(): void;
+    handleConnection(client: Socket, ...args: any[]): void;
     handleDisconnect(): void;
+    handleRequestLatestMessages(client: Socket, userId: number): Promise<void>;
     handleSendMessage(client: Socket, payload: {
         senderId: number;
         chatId: number;
