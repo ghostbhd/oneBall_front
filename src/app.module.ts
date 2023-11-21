@@ -25,6 +25,6 @@ import { ChannelModule } from './chat/channel/channel.module';
     ChannelModule,
   ],
   providers: [ChatGateway],
-  // exports: [TypeOrmModule],
+  exports: [TypeOrmModule],
 })
 export class AppModule {}

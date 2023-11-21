@@ -36,6 +36,7 @@ exports.AppModule = AppModule = __decorate([
             channel_module_1.ChannelModule,
         ],
         providers: [chat_gateway_1.ChatGateway],
+        exports: [typeorm_1.TypeOrmModule],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

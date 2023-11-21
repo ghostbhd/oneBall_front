@@ -1,62 +1,55 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody,WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { Socket } from 'socket.io';
-import { Chat } from 'src/entities/Chat.entity';
-// import { SendMessageDto } from './chat.dto/add-msg.dtp';
-// import { UpdateChatDto } from './dto/update-chat.dto';
-import { Message } from 'src/entities/Message.entity';
-import { User } from 'src/entities/user.entity';
-import { UserService } from 'src/User/user.service';
-import { CreateUserDto } from '../DTOS/create-user.dto';
-import { Server } from 'socket.io';
+import { Socket, Server } from 'socket.io';
 
 @WebSocketGateway({ cors: true })
-export class ChatGateway {
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly chatService: ChatService) {}
 
   @WebSocketServer() server: Server;
+  private connectedClients: Set<string> = new Set();
 
-  private clients: number = 0;
+  handleConnection(client: Socket) {
+    if (this.connectedClients.has(client.id)) {
+      console.log(`Duplicate connection attempt: ${client.id}`);
+      return;
+    }
 
- 
-  handleConnection(client: Socket, ...args: any[]) {
-  
-    console.log(`Client connected: ${client.id}`);
-    
+    this.connectedClients.add(client.id);
+    console.log(`Client connected: ${client.id}, total clients: ${this.connectedClients.size}`);
     client.emit('connection', 'Successfully connected to server');
-    const testMessage = { id: 1, content: 'This is a test message.', sender: 'TestSender', chatId: 1, avatar: 'path/to/avatar.jpg' };
-    client.emit('latest-messages', [testMessage]);
-
   }
 
-  handleDisconnect() {
-    this.clients--;
-    console.log('Client disconnected:', this.clients);
-    
+  handleDisconnect(client: Socket) {
+    this.connectedClients.delete(client.id);
+    console.log(`Client disconnected: ${client.id}, total clients: ${this.connectedClients.size}`);
   }
-
+  
   @SubscribeMessage('request-latest-messages')
   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
     const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
     client.emit('latest-messages', latestMessages);
   }
-
-@SubscribeMessage('send-message')
-async handleSendMessage(client: Socket, payload: { senderId: number; chatId: number; content: string }): Promise<void> {
-  const message = await this.chatService.sendMessage(payload.senderId, payload.chatId, payload.content);
   
- 
-  this.server.emit('new-message', message);
-}
-}
-//   @SubscribeMessage('findAllChat')
-//   findAll() {
-//     return this.chatService.findAll();
-//   }
+  @SubscribeMessage('send-message')
+  async handleSendMessage(client: Socket, payload: { senderId: number; receiverId: number; content: string }): Promise<void> {
+    try {
+      console.log(`Sending message from ${payload.senderId} to receiver ${payload.receiverId}`);
+      const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
+      console.log('Message saved:', message);
+      this.server.emit('new-message', message);
+      client.emit('message-sent-ack', { status: 'success', messageId: message.id });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      client.emit('message-sent', { status: 'error', error: error.message });
+    }
+  }
 
 
-//   @SubscribeMessage('removeChat')
-//   remove(@MessageBody() id: number) {
-//     return this.chatService.remove(id);
-//   }
-// }
+}

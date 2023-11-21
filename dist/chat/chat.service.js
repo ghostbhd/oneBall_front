@@ -77,7 +77,16 @@ let ChatService = class ChatService {
         newMessage.chatid = chat;
         newMessage.Content = content;
         newMessage.Timestamp = new Date().toISOString();
-        return await this.messageRepository.save(newMessage);
+        try {
+            console.log(`Attempting to save message from ${senderId} to ${receiverId}`);
+            const savedMessage = await this.messageRepository.save(newMessage);
+            console.log(`Message saved with ID: ${savedMessage.id}`);
+            return savedMessage;
+        }
+        catch (error) {
+            console.error('Error saving message:', error);
+            throw error;
+        }
     }
     async getChatHistory(chatId) {
         return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
