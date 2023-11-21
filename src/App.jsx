@@ -12,10 +12,14 @@ import style from "./style";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { useTheme } from "./themeContext";
+// import io from 'socket.io-client';
+
+
+// const socket = io('http://localhost:3009');
 
 const App = () => {
   const { theme } = useTheme();
- //! tell anass about overflow-y-auto
+
 
   return (
     <BrowserRouter>

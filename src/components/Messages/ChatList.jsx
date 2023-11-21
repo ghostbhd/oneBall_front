@@ -7,20 +7,25 @@ import io from 'socket.io-client';
 
 console.log("-----------1-------------------");
 
+const socket = io('http://localhost:3009'); // Persist the socket connection outside of the useEffect
+
 const ChatList = ({ activeChat, setActiveChat, onSearch }) => {
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    const socket = io('http://localhost:3009');
-
+    socket.emit('request-latest-messages', 1);
+    // Listen for the "connection" event
     socket.on('connection', data => {
       console.log(data);
     });
 
+    // Listen for the "latest-messages" event
+    
     socket.on('latest-messages', updatedChats => {
+      console.log("Received latest messages 1:", updatedChats);
       setChats(updatedChats);
     });
-
+    // Listen for the "new-message" event
     socket.on('new-message', newMessage => {
       setChats((prevChats) => {
         const chatToUpdateIndex = prevChats.findIndex(chat => chat.id === newMessage.chatId);
@@ -32,20 +37,18 @@ const ChatList = ({ activeChat, setActiveChat, onSearch }) => {
         return prevChats;
       });
     });
-
+    
     // Emit a request for the latest messages
-    socket.emit('request-latest-messages',2); // i need to Replace with actual user ID
-  
+
+    // Cleanup function
     return () => {
       socket.off('connection');
       socket.off('latest-messages');
       socket.off('new-message');
-      socket.disconnect();
-      
+      // socket.disconnect();
+      // Do not disconnect the socket here
     };
   }, []);
-  
-
 
   const handleChatClick = (chatId) => {
     setActiveChat(chatId);
