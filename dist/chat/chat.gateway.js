@@ -13,35 +13,46 @@ exports.ChatGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const chat_service_1 = require("./chat.service");
 const socket_io_1 = require("socket.io");
-const socket_io_2 = require("socket.io");
 let ChatGateway = class ChatGateway {
     constructor(chatService) {
         this.chatService = chatService;
-        this.clients = 0;
+        this.connectedClients = new Set();
     }
-    handleConnection(client, ...args) {
-        console.log(`Client connected: ${client.id}`);
+    handleConnection(client) {
+        if (this.connectedClients.has(client.id)) {
+            console.log(`Duplicate connection attempt: ${client.id}`);
+            return;
+        }
+        this.connectedClients.add(client.id);
+        console.log(`Client connected: ${client.id}, total clients: ${this.connectedClients.size}`);
         client.emit('connection', 'Successfully connected to server');
-        const testMessage = { id: 1, content: 'This is a test message.', sender: 'TestSender', chatId: 1, avatar: 'path/to/avatar.jpg' };
-        client.emit('latest-messages', [testMessage]);
     }
-    handleDisconnect() {
-        this.clients--;
-        console.log('Client disconnected:', this.clients);
+    handleDisconnect(client) {
+        this.connectedClients.delete(client.id);
+        console.log(`Client disconnected: ${client.id}, total clients: ${this.connectedClients.size}`);
     }
     async handleRequestLatestMessages(client, userId) {
         const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
         client.emit('latest-messages', latestMessages);
     }
     async handleSendMessage(client, payload) {
-        const message = await this.chatService.sendMessage(payload.senderId, payload.chatId, payload.content);
-        this.server.emit('new-message', message);
+        try {
+            console.log(`Sending message from ${payload.senderId} to receiver ${payload.receiverId}`);
+            const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
+            console.log('Message saved:', message);
+            this.server.emit('new-message', message);
+            client.emit('message-sent-ack', { status: 'success', messageId: message.id });
+        }
+        catch (error) {
+            console.error('Error sending message:', error);
+            client.emit('message-sent', { status: 'error', error: error.message });
+        }
     }
 };
 exports.ChatGateway = ChatGateway;
 __decorate([
     (0, websockets_1.WebSocketServer)(),
-    __metadata("design:type", socket_io_2.Server)
+    __metadata("design:type", socket_io_1.Server)
 ], ChatGateway.prototype, "server", void 0);
 __decorate([
     (0, websockets_1.SubscribeMessage)('request-latest-messages'),

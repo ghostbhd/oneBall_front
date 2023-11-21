@@ -1,17 +1,17 @@
+import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { Socket } from 'socket.io';
-import { Server } from 'socket.io';
-export declare class ChatGateway {
+import { Socket, Server } from 'socket.io';
+export declare class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly chatService;
     constructor(chatService: ChatService);
     server: Server;
-    private clients;
-    handleConnection(client: Socket, ...args: any[]): void;
-    handleDisconnect(): void;
+    private connectedClients;
+    handleConnection(client: Socket): void;
+    handleDisconnect(client: Socket): void;
     handleRequestLatestMessages(client: Socket, userId: number): Promise<void>;
     handleSendMessage(client: Socket, payload: {
         senderId: number;
-        chatId: number;
+        receiverId: number;
         content: string;
     }): Promise<void>;
 }

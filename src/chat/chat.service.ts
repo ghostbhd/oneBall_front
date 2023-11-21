@@ -91,9 +91,19 @@ async sendMessage(senderId: number, receiverId: number, content: string): Promis
   newMessage.chatid = chat;
   newMessage.Content = content;
   newMessage.Timestamp = new Date().toISOString();
-
-  return await this.messageRepository.save(newMessage);
+//   console.log("---------------//////////////------------------");
+// console.log(newMessage);
+try {
+  console.log(`Attempting to save message from ${senderId} to ${receiverId}`);
+  const savedMessage = await this.messageRepository.save(newMessage);
+  console.log(`Message saved with ID: ${savedMessage.id}`);
+  return savedMessage;
+} catch (error) {
+  console.error('Error saving message:', error);
+  throw error;
 }
+}
+
 
 async getChatHistory(chatId: number): Promise<Message[]> {
   return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
@@ -144,7 +154,7 @@ async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
     relations: ['messageid', 'sender', 'receiver'], 
   });
 
-  // Map through each chat to construct an object with the desired properties
+
   return chats.map(chat => {
     const lastMessage = chat.messageid[chat.messageid.length - 1]; 
     return {
@@ -157,7 +167,7 @@ async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
   });
 }
 
-// chat.service.ts
+
 async getChatsByUserId(userId: number): Promise<Chat[]> {
   return await this.directMessageRepository.find({
     where: {sender: { id: userId },},
