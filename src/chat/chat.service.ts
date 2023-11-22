@@ -80,7 +80,7 @@ async sendMessage(senderId: number, receiverId: number, content: string): Promis
     throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
   }
 
-  // Logic to fetch or create chat based on sender and receiver
+
   const chat = await this.getChat(sender, receiver);
 
   if (!chat) {

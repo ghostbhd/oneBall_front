@@ -8,10 +8,4 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     private connectedClients;
     handleConnection(client: Socket): void;
     handleDisconnect(client: Socket): void;
-    handleRequestLatestMessages(client: Socket, userId: number): Promise<void>;
-    handleSendMessage(client: Socket, payload: {
-        senderId: number;
-        receiverId: number;
-        content: string;
-    }): Promise<void>;
 }
