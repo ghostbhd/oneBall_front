@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { icons } from "../../constants";
 
 const GameBtn = () => {
+  
   const linkStyle = "w-full h-50 p-4 flex flex-row bg-gradient-to-r shadow-4xl " + style.rounded;
   const divContainerStyle =
     "md:w-2/6 w-3/6 flex flex-col items-center text-center";

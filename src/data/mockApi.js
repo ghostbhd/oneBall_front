@@ -223,7 +223,7 @@ const games = {
             fullName: 'User 11',
             result: 'win',
             date: 'Aug 3',
-            time: '15:0',
+            time: '15:00',
         },
         {
             id: 12,

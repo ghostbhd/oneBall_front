@@ -5,7 +5,7 @@ const style = {
     contentW: "md:w-10/12 w-full", // when sidebar is expanded
     contentW2: "md:w-11/12 w-full", // when sidebar is collapsed
     blueBlur: "bg-bDark_1 sm:bg-opacity-60 bg-opacity-30 backdrop-blur-3xl",
-    rounded: "rounded-[40px]",
+    rounded: "rounded-[30px]",
     online: "border-org_3", // if user is online
     offline: "border-[#999]", // .. offline
     inGame: "border-bLight_3", // .. in game
