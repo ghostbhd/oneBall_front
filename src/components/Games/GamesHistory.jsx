@@ -4,28 +4,29 @@ import PropTypes from "prop-types";
 const GamesHistory = ({ gamehistory }) => {
   return (
     <div
-      className={`w-[38%] h-full ml-auto flex flex-col overflow-hidden px-1 ${style.rounded}`}
+      className={`w-[38%] h-full ml-auto flex flex-col px-1 ${style.rounded}`}
     >
       {/* head ---------------------- */}
-      <div className="h-[10%] w-full flex flex-col items-center">
+      <div className="h-max w-full flex flex-col items-center">
         <p
-          className={`text-bLight_5 text-lg m-auto p-2 w-full bg-bDark_4 border-2 border-bDark_1/60 ${style.rounded}`}
+          className={`text-bLight_5 text-lg mb-auto p-2 w-full bg-bDark_4 rounded-full`}
         >
           History
         </p>
       </div>
       {/* body ---------------------- */}
       <div
-        className={`h-[88%] ${style.rounded} w-full overflow-hidden mt-auto`}
+        className={`h-auto ${style.rounded} w-full overflow-hidden mt-2`}
       >
         <ul
           className={`h-full w-full flex flex-col overflow-y-scroll
-        ${style.rounded} ${style.blueBlur} !bg-opacity-30`}
+          ${style.rounded} ${style.blueBlur} !bg-opacity-30`}
         >
           {gamehistory &&
           Array.isArray(gamehistory) &&
           gamehistory.length > 0 ? ( // if is array and has items
-            gamehistory.map((item) => ( // map items
+            // map items
+            gamehistory.map((item) => (
               <li
                 key={item.id}
                 className={`w-full flex flex-row text-bLight_4 align-middle

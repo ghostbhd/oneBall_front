@@ -38,7 +38,7 @@ const GameHistory = ({ last6Games }) => {
               key={item.id}
               className={`w-full flex flex-row text-bLight_4 align-middle
                 bg-bDark_4 p-4 mt-3 ${style.rounded}
-                ${index % 2 ? "bg-bDark_3" : "bg-bDark_4"}
+                ${index % 2 ? "bg-bDark_2/50" : "bg-bDark_4"}
               `}
             >
               {/* opponent ----------- */}
