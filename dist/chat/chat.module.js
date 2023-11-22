@@ -15,6 +15,7 @@ const Message_entity_1 = require("../entities/Message.entity");
 const Chat_entity_1 = require("../entities/Chat.entity");
 const user_entity_1 = require("../entities/user.entity");
 const Channel_entity_1 = require("../entities/Channel.entity");
+const chat_controller_1 = require("./chat.controller");
 const Channel_Membership_entity_1 = require("../entities/Channel_Membership.entity");
 let ChatModule = class ChatModule {
 };
@@ -25,6 +26,7 @@ exports.ChatModule = ChatModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([Message_entity_1.Message, Chat_entity_1.Chat, user_entity_1.User, Channel_entity_1.Channel, Channel_Membership_entity_1.Channel_Membership]),
         ],
         providers: [chat_service_1.ChatService, chat_gateway_1.ChatGateway],
+        controllers: [chat_controller_1.ChatController],
         exports: [chat_service_1.ChatService, typeorm_1.TypeOrmModule],
     })
 ], ChatModule);

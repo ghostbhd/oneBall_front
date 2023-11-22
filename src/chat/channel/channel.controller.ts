@@ -29,7 +29,7 @@ export class ChannelController {
     async getChannel(@Param('channelId') channelId: number) {
         return await this.channelService.getChannelById(channelId); 
     }
-    //still need to test this using the frontend 
+    //i still need to test this using the frontend 
     @Put(':channelId/kick/:userId')
     async kickMember(
         @Param('channelId') channelId: number,

@@ -5,17 +5,21 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
+
 import { ChatService } from './chat.service';
 import { Socket, Server } from 'socket.io';
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+
   constructor(private readonly chatService: ChatService) {}
 
   @WebSocketServer() server: Server;
   private connectedClients: Set<string> = new Set();
+  
 
   handleConnection(client: Socket) {
+    
     if (this.connectedClients.has(client.id)) {
       console.log(`Duplicate connection attempt: ${client.id}`);
       return;
@@ -31,25 +35,37 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(`Client disconnected: ${client.id}, total clients: ${this.connectedClients.size}`);
   }
   
-  @SubscribeMessage('request-latest-messages')
-  async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
-    const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
-    client.emit('latest-messages', latestMessages);
-  }
+//   @SubscribeMessage('request-latest-messages')
+//   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
+//     const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
+//     client.emit('latest-messages', latestMessages);
+//   }
   
-  @SubscribeMessage('send-message')
-  async handleSendMessage(client: Socket, payload: { senderId: number; receiverId: number; content: string }): Promise<void> {
-    try {
-      console.log(`Sending message from ${payload.senderId} to receiver ${payload.receiverId}`);
-      const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
-      console.log('Message saved:', message);
-      this.server.emit('new-message', message);
-      client.emit('message-sent-ack', { status: 'success', messageId: message.id });
-    } catch (error) {
-      console.error('Error sending message:', error);
-      client.emit('message-sent', { status: 'error', error: error.message });
-    }
-  }
+//   @SubscribeMessage('request-direct-messages')
+// async handleRequestDirectMessages(client: Socket, payload: { senderId: number; receiverId: number }): Promise<void> {
+//   const messages = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
+//   client.emit('direct-messages-response', messages);
+// }
+//   // @SubscribeMessage('join-chat')
+//   // handleJoinChat(client: Socket, payload: { chatId: number }) {
+//   //   const { chatId } = payload;
+//   //   client.join(`chat_${chatId}`);
+//   // }
 
+//   // @SubscribeMessage('leave-chat')
+//   // handleLeaveChat(client: Socket, payload: { chatId: number }) {
+//   //   const { chatId } = payload;
+//   //   client.leave(`chat_${chatId}`);
+//   // }
 
+//   @SubscribeMessage('send-message')
+//   async handleSendMessage(client: Socket, payload: { senderId: number; chatId: number; content: string }) {
+//     // Save message to the database using ChatService
+//     const message = await this.chatService.sendMessage(payload.senderId, payload.chatId, payload.content);
+    
+//     // Emit the message to all clients in the chat room
+//     this.server.to(`chat_${payload.chatId}`).emit('new-message', message);
+//   }
+
+  
 }

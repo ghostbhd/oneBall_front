@@ -15,7 +15,7 @@ import { Channel_Membership} from 'src/entities/Channel_Membership.entity';
     TypeOrmModule.forFeature([Message, Chat, User, Channel, Channel_Membership]),
   ],
   providers: [ChatService, ChatGateway], 
-  // controllers: [ChatController],
+  controllers: [ChatController],
   exports: [ChatService, TypeOrmModule],
 })
 export class ChatModule {}
