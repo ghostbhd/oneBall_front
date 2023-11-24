@@ -94,9 +94,7 @@ const EditInfo = ({ data }) => {
             <div
               key={index}
               className={`md:w-[90px] sm:w-[80px] w-[60px] md:h-[90px] sm:h-[80px] h-[60px] relative cursor-pointer mx-auto
-                rounded-[25px] ${
-                item === selectedAvatar ? "order-first" : ""
-              } 
+                rounded-[25px] ${item === selectedAvatar ? "order-first" : ""} 
               `}
               style={imagebg({ img: item })}
               onClick={() => setSelectedAvatar(item)}
