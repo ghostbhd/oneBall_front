@@ -4,6 +4,7 @@ import style from "../../style";
 import EditInfo from "./EditInfo";
 import Details from "./Details";
 import MDetails from "./MDetails";
+import FriendRequests from "./FriendRequests";
 
 const Profile = () => {
   const [data, setData] = useState([]);
@@ -33,8 +34,9 @@ const Profile = () => {
           <div className={`block sm:hidden mb-8 w-full h-max ${style.rounded}`}>
             <MDetails data={data.profileInfo} />
           </div>
-          <div className={`sm:w-7/12 w-full sm:h-full h-max ${style.blueBlur} ${style.rounded}`}>
+          <div className={`sm:w-7/12 w-full sm:h-full overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}>
             <EditInfo data={data.editInnfo}/>
+            <FriendRequests />
           </div>
           <div
             className={`sm:w-4/12 w-full sm:h-full bg-gradient-to-b from-org_2/40 from-5% 

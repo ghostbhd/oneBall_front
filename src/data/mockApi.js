@@ -135,6 +135,29 @@ const profile = {
     }
 }
 
+
+const frindRequest = [
+    {
+        id: 1,
+        username: 'user1',
+        image: 'https://picsum.photos/200/200',
+        fullName: 'User 1',
+    },
+    {
+        id: 2,
+        username: 'user2',
+        image: 'https://picsum.photos/200/200',
+        fullName: 'User 2',
+    },
+    {
+        id: 3,
+        username: 'user3',
+        image: 'https://picsum.photos/200/200',
+        fullName: 'User 3',
+    },
+    
+]
+
 const games = {
     gamesHistory : [
         {
@@ -257,6 +280,14 @@ export function gamesData() {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(games);
+        }, 1000);
+    });
+}
+
+export function friendRequestData() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(frindRequest);
         }, 1000);
     });
 }
