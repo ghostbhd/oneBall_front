@@ -26,6 +26,7 @@ let ChatGateway = class ChatGateway {
     async handleRequestLatestMessages(client, userId) {
         const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
         console.log(`Latest messages requested for user ${userId}`);
+        console.log(`Latest messages: ${JSON.stringify(latestMessages)}`);
         client.emit('latest-messages', latestMessages);
     }
     async handleRequestDirectMessages(client, payload) {
