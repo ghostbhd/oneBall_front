@@ -2,70 +2,68 @@ import {
   WebSocketGateway,
   SubscribeMessage,
   WebSocketServer,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
+
 } from '@nestjs/websockets';
 
 import { ChatService } from './chat.service';
 import { Socket, Server } from 'socket.io';
 
-@WebSocketGateway({ cors: true })
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+@WebSocketGateway({ cors: {
+  origin: '*',
+    },
+})
+export class ChatGateway  {
 
   constructor(private readonly chatService: ChatService) {}
-
   @WebSocketServer() server: Server;
-  private connectedClients: Set<string> = new Set();
-  
 
-  handleConnection(client: Socket) {
-    
-    if (this.connectedClients.has(client.id)) {
-      console.log(`Duplicate connection attempt: ${client.id}`);
-      return;
-    }
+  // @SubscribeMessage('testi')
+  async handleConnection(client: Socket) {
 
-    this.connectedClients.add(client.id);
-    console.log(`Client connected: ${client.id}, total clients: ${this.connectedClients.size}`);
-    client.emit('connection', 'Successfully connected to server');
+    console.log(`Client connected: ${client.id}`);
   }
 
-  handleDisconnect(client: Socket) {
-    this.connectedClients.delete(client.id);
-    console.log(`Client disconnected: ${client.id}, total clients: ${this.connectedClients.size}`);
+  async handleDisconnect(client: Socket) {
+
+    console.log(`Client disconnected: ${client.id}`);
+  }
+
+  @SubscribeMessage('request-latest-messages')
+  async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
+    const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
+    console.log(`Latest messages requested for user ${userId}`);
+    client.emit('latest-messages', latestMessages);
   }
   
-//   @SubscribeMessage('request-latest-messages')
-//   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
-//     const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
-//     client.emit('latest-messages', latestMessages);
-//   }
+  @SubscribeMessage('request-direct-messages')
+async handleRequestDirectMessages(client: Socket, payload: { senderId: number; receiverId: number }): Promise<void> {
+  const messages = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
+  console.log(`Direct messages requested between senderId: ${payload.senderId} and receiverId: ${payload.receiverId}`);
+  client.emit('direct-messages-response', messages);
+}
+
+@SubscribeMessage('join-chat')
+handleJoinChat(client: Socket, payload: { chatId: number }) {
+  client.join(`chat_room${payload.chatId}`);
+  console.log(`Client ${client.id} joined chat room: chat_room${payload.chatId}`);
+}
+
+@SubscribeMessage('leave-chat')
+handleLeaveChat(client: Socket, payload: { chatId: number }) {
+  client.leave(`chat_room${payload.chatId}`);
+  console.log(`Client ${client.id} left chat room: chat_room${payload.chatId}`);
+}
+
+@SubscribeMessage('send-message')
+// Inside your ChatGateway
+async handleSendMessage(client: Socket, payload: { senderId: number; receiverId: number; content: string }) {
+  const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
+  console.log(`Message from senderId: ${payload.senderId} to receiverId: ${payload.receiverId} with content: ${payload.content}`);
   
-//   @SubscribeMessage('request-direct-messages')
-// async handleRequestDirectMessages(client: Socket, payload: { senderId: number; receiverId: number }): Promise<void> {
-//   const messages = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
-//   client.emit('direct-messages-response', messages);
-// }
-//   // @SubscribeMessage('join-chat')
-//   // handleJoinChat(client: Socket, payload: { chatId: number }) {
-//   //   const { chatId } = payload;
-//   //   client.join(`chat_${chatId}`);
-//   // }
+  // Emit directly to a client for testing purposes
+  client.emit('new-message', message);
+}
 
-//   // @SubscribeMessage('leave-chat')
-//   // handleLeaveChat(client: Socket, payload: { chatId: number }) {
-//   //   const { chatId } = payload;
-//   //   client.leave(`chat_${chatId}`);
-//   // }
-
-//   @SubscribeMessage('send-message')
-//   async handleSendMessage(client: Socket, payload: { senderId: number; chatId: number; content: string }) {
-//     // Save message to the database using ChatService
-//     const message = await this.chatService.sendMessage(payload.senderId, payload.chatId, payload.content);
-    
-//     // Emit the message to all clients in the chat room
-//     this.server.to(`chat_${payload.chatId}`).emit('new-message', message);
-//   }
 
   
 }

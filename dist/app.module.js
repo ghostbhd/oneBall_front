@@ -19,7 +19,6 @@ const Channel_Message_entity_1 = require("./entities/Channel_Message.entity");
 const Friendship_entity_1 = require("./entities/Friendship.entity");
 const auth_module_1 = require("./auth/auth.module");
 const user_module_1 = require("./User/user.module");
-const chat_gateway_1 = require("./chat/chat.gateway");
 const chat_module_1 = require("./chat/chat.module");
 const channel_module_1 = require("./chat/channel/channel.module");
 let AppModule = class AppModule {
@@ -35,7 +34,6 @@ exports.AppModule = AppModule = __decorate([
             chat_module_1.ChatModule,
             channel_module_1.ChannelModule,
         ],
-        providers: [chat_gateway_1.ChatGateway],
         exports: [typeorm_1.TypeOrmModule],
     })
 ], AppModule);

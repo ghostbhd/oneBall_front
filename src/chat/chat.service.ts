@@ -80,7 +80,6 @@ async sendMessage(senderId: number, receiverId: number, content: string): Promis
     throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
   }
 
-
   const chat = await this.getChat(sender, receiver);
 
   if (!chat) {
@@ -91,8 +90,6 @@ async sendMessage(senderId: number, receiverId: number, content: string): Promis
   newMessage.chatid = chat;
   newMessage.Content = content;
   newMessage.Timestamp = new Date().toISOString();
-//   console.log("---------------//////////////------------------");
-// console.log(newMessage);
 try {
   console.log(`Attempting to save message from ${senderId} to ${receiverId}`);
   const savedMessage = await this.messageRepository.save(newMessage);
