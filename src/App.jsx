@@ -9,19 +9,18 @@ import {
   Logout,
 } from "./components";
 import style from "./style";
+import { SocketProvider } from './Socketio'; 
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { useTheme } from "./themeContext";
-// import io from 'socket.io-client';
 
-
-// const socket = io('http://localhost:3009');
 
 const App = () => {
   const { theme } = useTheme();
 
 
   return (
+    <SocketProvider> 
     <BrowserRouter>
       <div className={`app w-full h-full flex flex-row fixed`}>
         <div
@@ -50,6 +49,7 @@ const App = () => {
         </div>
       </div>
     </BrowserRouter>
+    </SocketProvider>
   );
 };
 

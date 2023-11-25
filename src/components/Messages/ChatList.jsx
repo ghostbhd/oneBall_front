@@ -1,71 +1,81 @@
 import React from 'react';
 import style from "../../style";
 import  { useState, useEffect } from 'react';
-import SearchBar from '/home/hajar/Desktop/front/src/components/Messages/searchBar.jsx';
-import io from 'socket.io-client';
+import SearchBar from './searchBar.jsx';
+import ChatWindow from './ChatWindow.jsx';
+import { MdGroupAdd } from "react-icons/md";
+import ChannelCreation from './ChannelCreation.jsx';
+import { useSocket } from '../../Socketio.jsx';
 
 
-console.log("-----------1-------------------");
+const CURRENT_USER_ID = 1;
 
-const socket = io('http://localhost:3009'); // Persist the socket connection outside of the useEffect
 
-const ChatList = ({ activeChat, setActiveChat, onSearch }) => {
+const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
   const [chats, setChats] = useState([]);
+  const socket = useSocket();
 
   useEffect(() => {
-    socket.emit('request-latest-messages', 1);
-    // Listen for the "connection" event
-    socket.on('connection', data => {
-      console.log(data);
-    });
+    if (socket == null) return;
+    // console.log("server is running");
 
-    // Listen for the "latest-messages" event
-    
-    socket.on('latest-messages', updatedChats => {
-      console.log("Received latest messages 1:", updatedChats);
+    // Request for the latest messages
+    socket.emit('request-latest-messages', CURRENT_USER_ID); 
+
+    // Listening for latest messages
+    socket.on('latest-messages', (updatedChats) => {
       setChats(updatedChats);
     });
-    // Listen for the "new-message" event
-    socket.on('new-message', newMessage => {
-      setChats((prevChats) => {
-        const chatToUpdateIndex = prevChats.findIndex(chat => chat.id === newMessage.chatId);
-        if (chatToUpdateIndex >= 0) {
-          const updatedChats = [...prevChats];
-          updatedChats[chatToUpdateIndex].lastMessage = newMessage.content;
-          return updatedChats;
-        }
-        return prevChats;
-      });
-    });
-    
-    // Emit a request for the latest messages
 
-    // Cleanup function
-    return () => {
-      socket.off('connection');
-      socket.off('latest-messages');
-      socket.off('new-message');
-      // socket.disconnect();
-      // Do not disconnect the socket here
+   
+    const handleNewMessage = (newMessage) => {
+
+      const chatExists = chats.some(chat => chat.id === newMessage.chatId);
+    
+      if (!chatExists) {
+  
+        const newChat = {
+          id: newMessage.chatId,
+          name: `User ${newMessage.senderId}`, 
+          lastMessage: newMessage.content,
+        };
+        setChats(prevChats => [...prevChats, newChat]);
+      } else {
+     
+        setChats(prevChats => prevChats.map(chat =>
+          chat.id === newMessage.chatId ? { ...chat, lastMessage: newMessage.content } : chat
+        ));
+      }
     };
-  }, []);
+    
+
+    socket.on('new-message', handleNewMessage);
+
+    
+    return () => {
+      socket.off('latest-messages');
+      socket.off('new-message', handleNewMessage);
+    };
+  }, [socket, chats]);
 
   const handleChatClick = (chatId) => {
     setActiveChat(chatId);
+    socket.emit('request-direct-messages', { senderId: chatId, receiverId: CURRENT_USER_ID });
   };
 
+
   return (
-    <div className={`w-3/12 flex-grow  ${style.sidebarW} ${style.chatListContainer}`}>{/*cp courner sntg*/}
-      <div className={style.searchBar}>
-        <SearchBar onSearch={onSearch} />
-      </div>
-      <div className="h-5/5 rounded-b-2xl overflow-y-auto">
+    <div className={`w-3/12 flex-grow ${style.sidebarW} ${style.chatListContainer}`}>
+    <div className={style.searchBar}>
+      <SearchBar onSearch={onSearch} onChannelIconClick={onIconClick} />
+    </div>
+    <div className="h-5/5 rounded-b-2xl flex-grow overflow-y-auto">
       {chats.map((chat) => (
-  <div
-    key={chat.id}
-    className={`flex items-center p-2 ${style.transition} hover:bg-opacity-70 ${activeChat === chat.id ? style.activeChatItem : ''}`}
-    onClick={() => handleChatClick(chat.id)}
-  >
+        <div
+          key={chat.id}
+          className={`flex items-center p-2 ${style.transition} hover:bg-opacity-70 ${activeChat === chat.id ? style.activeChatItem : ''}`}
+          onClick={() => handleChatClick(chat.id)}
+        >
     {/*! Wrapper div with relative positioning */}
     <div className="relative">
       {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
@@ -75,7 +85,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch }) => {
     </div>
     <div>
       <h3 className="text-white px-3">{chat.name}</h3>
-      <p className="text-gray-400 px-3">{chat.lastMessage}</p>
+      <p className="text-gray-400 px-3">{chat.lastMessage}</p> 
     </div>
   </div>
 ))}

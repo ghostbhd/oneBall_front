@@ -2,8 +2,9 @@
 import style from '/home/hajar/Desktop/front/src/style.js';
 import { BiSearchAlt } from "react-icons/bi";
 import React, { useState } from 'react'; 
+import { MdGroupAdd } from "react-icons/md"; 
 
-const SearchBar = ({ onSearch, onSearchSubmit }) => {
+const SearchBar = ({ onSearch, onSearchSubmit,onChannelIconClick }) => {
     const [inputValue, setInputValue] = useState(''); 
   
 
@@ -31,6 +32,7 @@ const SearchBar = ({ onSearch, onSearchSubmit }) => {
           >
             <BiSearchAlt />
           </button>
+          <MdGroupAdd onClick={onChannelIconClick} className="text-2xl  m-1  cursor-pointer" /> {/* Add the channel icon here */}
         </div>
       );
     };
