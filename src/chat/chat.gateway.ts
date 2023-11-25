@@ -32,6 +32,7 @@ export class ChatGateway  {
   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
     const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
     console.log(`Latest messages requested for user ${userId}`);
+    console.log(`Latest messages: ${JSON.stringify(latestMessages)}`);
     client.emit('latest-messages', latestMessages);
   }
   

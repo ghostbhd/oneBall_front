@@ -151,15 +151,12 @@ async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
     relations: ['messageid', 'sender', 'receiver'], 
   });
 
-
   return chats.map(chat => {
-    const lastMessage = chat.messageid[chat.messageid.length - 1]; 
+    const lastMessage = chat.messageid[chat.messageid.length - 1];
     return {
       id: chat.id,
       name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
-      // avatar: chat.receiver.id === userId ? chat.sender.avatar : chat.receiver.avatar, 
-      lastMessage: lastMessage.Content,
-  
+      lastMessage: lastMessage ? lastMessage.Content : '',
     };
   });
 }

@@ -133,7 +133,7 @@ let ChatService = class ChatService {
             return {
                 id: chat.id,
                 name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
-                lastMessage: lastMessage.Content,
+                lastMessage: lastMessage ? lastMessage.Content : '',
             };
         });
     }
