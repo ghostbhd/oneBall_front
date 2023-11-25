@@ -16,20 +16,35 @@ const socket_io_1 = require("socket.io");
 let ChatGateway = class ChatGateway {
     constructor(chatService) {
         this.chatService = chatService;
-        this.connectedClients = new Set();
     }
-    handleConnection(client) {
-        if (this.connectedClients.has(client.id)) {
-            console.log(`Duplicate connection attempt: ${client.id}`);
-            return;
-        }
-        this.connectedClients.add(client.id);
-        console.log(`Client connected: ${client.id}, total clients: ${this.connectedClients.size}`);
-        client.emit('connection', 'Successfully connected to server');
+    async handleConnection(client) {
+        console.log(`Client connected: ${client.id}`);
     }
-    handleDisconnect(client) {
-        this.connectedClients.delete(client.id);
-        console.log(`Client disconnected: ${client.id}, total clients: ${this.connectedClients.size}`);
+    async handleDisconnect(client) {
+        console.log(`Client disconnected: ${client.id}`);
+    }
+    async handleRequestLatestMessages(client, userId) {
+        const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
+        console.log(`Latest messages requested for user ${userId}`);
+        client.emit('latest-messages', latestMessages);
+    }
+    async handleRequestDirectMessages(client, payload) {
+        const messages = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
+        console.log(`Direct messages requested between senderId: ${payload.senderId} and receiverId: ${payload.receiverId}`);
+        client.emit('direct-messages-response', messages);
+    }
+    handleJoinChat(client, payload) {
+        client.join(`chat_room${payload.chatId}`);
+        console.log(`Client ${client.id} joined chat room: chat_room${payload.chatId}`);
+    }
+    handleLeaveChat(client, payload) {
+        client.leave(`chat_room${payload.chatId}`);
+        console.log(`Client ${client.id} left chat room: chat_room${payload.chatId}`);
+    }
+    async handleSendMessage(client, payload) {
+        const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
+        console.log(`Message from senderId: ${payload.senderId} to receiverId: ${payload.receiverId} with content: ${payload.content}`);
+        client.emit('new-message', message);
     }
 };
 exports.ChatGateway = ChatGateway;
@@ -37,8 +52,41 @@ __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], ChatGateway.prototype, "server", void 0);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('request-latest-messages'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Number]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleRequestLatestMessages", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('request-direct-messages'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleRequestDirectMessages", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('join-chat'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", void 0)
+], ChatGateway.prototype, "handleJoinChat", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('leave-chat'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", void 0)
+], ChatGateway.prototype, "handleLeaveChat", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('send-message'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleSendMessage", null);
 exports.ChatGateway = ChatGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)({ cors: true }),
+    (0, websockets_1.WebSocketGateway)({ cors: {
+            origin: '*',
+        },
+    }),
     __metadata("design:paramtypes", [chat_service_1.ChatService])
 ], ChatGateway);
 //# sourceMappingURL=chat.gateway.js.map
