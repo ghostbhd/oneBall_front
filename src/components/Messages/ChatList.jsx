@@ -27,13 +27,11 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
       setChats(updatedChats);
     });
 
-   
     const handleNewMessage = (newMessage) => {
-
       const chatExists = chats.some(chat => chat.id === newMessage.chatId);
     
       if (!chatExists) {
-  
+        // New chat session, add it to the list
         const newChat = {
           id: newMessage.chatId,
           name: `User ${newMessage.senderId}`, 
@@ -41,17 +39,15 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
         };
         setChats(prevChats => [...prevChats, newChat]);
       } else {
-     
+        // Existing chat, update last message
         setChats(prevChats => prevChats.map(chat =>
           chat.id === newMessage.chatId ? { ...chat, lastMessage: newMessage.content } : chat
         ));
       }
     };
-    
-
     socket.on('new-message', handleNewMessage);
 
-    
+    // Cleanup on component unmount
     return () => {
       socket.off('latest-messages');
       socket.off('new-message', handleNewMessage);
