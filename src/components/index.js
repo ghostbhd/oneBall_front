@@ -6,6 +6,7 @@ import Stats from "./Stats";
 import Settings from "./Settings";
 import Logout from "./Logout";
 import {SideBar, MSideBar, NavBar} from "./Bars"
+import UserProfile from "./UserProfile";
 
 export {
     SideBar,
@@ -17,5 +18,6 @@ export {
     Settings,
     Logout,
     MSideBar,
-    NavBar
+    NavBar,
+    UserProfile
 }

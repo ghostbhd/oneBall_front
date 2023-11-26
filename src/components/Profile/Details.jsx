@@ -33,7 +33,7 @@ const Details = ({ data }) => {
           {/* xp ------------------------ */}
           <p className="text-xs text-org_3 w-full">{data.xp} xp</p>
           {/* progress bar ---------------- */}
-          <div className="w-11/12 h-2 my-auto bg-bDark_1 rounded-full">
+          <div className="w-11/12 h-2 my-auto bg-bDark_1/40 rounded-full">
             <div
               className="h-full bg-gradient-to-r from-org_3 to-org_1 rounded-full"
               style={{ width: `${data.xp / 10}%` }}
