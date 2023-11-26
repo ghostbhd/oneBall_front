@@ -1,10 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* scrollbar ---------------------------- */
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-thumb{background-color:#254d5a;border-radius:8px;}
-::-webkit-scrollbar-thumb:hover{background-color:#395f6d;width:10px;}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background-color:#254d5a;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background-color:#395f6d;width:10px}
 ::-webkit-scrollbar-track{background:0 0}
 .app{background:url("assets/bg contain.png") no-repeat center center fixed}

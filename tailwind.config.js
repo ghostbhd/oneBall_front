@@ -17,17 +17,18 @@ module.exports = {
         bDark_4: "#204753",
         org_1: "#ffe268",
         org_2: "#ffb037",
-        org_3: "#ea8d00"
+        org_3: "#ea8d00",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
       },
       boxShadow: {
-        '3xl': '0 25px 50px -12px rgb(0 0 0 / 0.5)',
-        '4xl': '0 0px 100px -12px rgb(0 0 0 / 0.4)',
-        'btn': '0 0px 50px -12px rgb(0 0 0 / 0.3)',
-        'sBar': '20px 0 40px -12px rgb(0 0 0 / 0.4)',
-      }
+        "3xl": "0 25px 50px -12px rgb(0 0 0 / 0.5)",
+        "4xl": "0 0px 100px -12px rgb(0 0 0 / 0.4)",
+        "5xl": "-4px 4px 40px -12px rgb(0 0 0 / 1)",
+        btn: "0 0px 50px -12px rgb(0 0 0 / 0.3)",
+        sBar: "20px 0 40px -12px rgb(0 0 0 / 0.4)",
+      },
     },
     screens: {
       xs: "480px",
@@ -39,4 +40,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

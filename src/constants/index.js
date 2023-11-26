@@ -13,7 +13,7 @@ import { BiSolidArrowToRight, BiSolidArrowFromRight } from "react-icons/bi"; // 
 import { FaUserFriends } from "react-icons/fa"; // friends icon
 import { FaRandom } from "react-icons/fa"; // random icon
 import { BsFillStarFill } from "react-icons/bs"; // star icon
-import { FaCheck } from "react-icons/fa"; // check icon
+import { FaCheck, FaXmark } from "react-icons/fa6"; // check and X icon
 import { IoNotifications } from "react-icons/io5"; // notifications icon
 
 import { BsChevronRight, BsChevronLeft } from "react-icons/bs";
@@ -110,6 +110,7 @@ export const icons = { // All needed icons
   random: FaRandom,
   star: BsFillStarFill,
   check: FaCheck,
+  xmark: FaXmark,
   up: FaAngleUp,
   down: FaAngleDown,
   notifications: IoNotifications,

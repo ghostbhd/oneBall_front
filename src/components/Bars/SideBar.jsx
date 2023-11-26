@@ -12,15 +12,12 @@ const SideBar = () => {
   return (
     <div
       className={`md:flex hidden h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-50
-        ${style.blueBlur} ${style.transition}
+        ${style.blueBlur}
         ${theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW}`}
     >
       {/* Toggle button ---------------------- */}
       <div className="absolute top-8 right-2">
-        <button
-          onClick={toggleSidebar}
-          className="text-2xl"
-        >
+        <button onClick={toggleSidebar} className="text-2xl">
           {theme.isSidebarCollapsed === true ? (
             <icons.toRight />
           ) : (
@@ -33,7 +30,11 @@ const SideBar = () => {
         className={`flex flex-col space-y-7 w-full items-center justify-center`}
       >
         {/* logo ------------------------ */}
-        <li className={`text-[25pt] px-4 ${theme.isSidebarCollapsed ? "w-max" : "w-full"}`}>
+        <li
+          className={`text-[25pt] px-4 ${
+            theme.isSidebarCollapsed ? "w-max" : "w-full"
+          }`}
+        >
           <Link to={"/"}>{theme.isSidebarCollapsed ? "Pi" : "PiPo"}</Link>
         </li>
         {/* items ------------------------ */}
@@ -56,7 +57,7 @@ const SideBar = () => {
                   : ""
               }`}
             >
-              {/* Icon / title -------------------------------- */}
+              {/* Icon ---------- */}
               <span
                 className={`${
                   theme.isSidebarCollapsed ? "text-2xl" : "text-xl"
@@ -64,9 +65,11 @@ const SideBar = () => {
               >
                 {<item.icon />}
               </span>
+
+              {/* title ---- */}
               <span
-                className={`text-base transform overflow-hidden ${
-                  theme.isSidebarCollapsed ? "w-0" : "w-max ml-8"
+                className={`text-base overflow-hidden w-max ${
+                  theme.isSidebarCollapsed ? "hidden" : "ml-8"
                 }`}
               >
                 {item.title}

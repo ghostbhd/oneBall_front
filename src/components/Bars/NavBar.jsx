@@ -1,18 +1,14 @@
 import { icons } from "../../constants";
-import style from "../../style";
 import { useState, useEffect, useRef } from "react";
 
 const NavBar = () => {
-  const [showNotifications, setShowNotifications] = useState(false);
-  const notificationRef = useRef(null);
+  const [showNotif, setShowNotif] = useState(false);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        notificationRef.current &&
-        !notificationRef.current.contains(event.target)
-      ) {
-        setShowNotifications(false);
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotif(false);
       }
     };
 
@@ -21,31 +17,29 @@ const NavBar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [notifRef]);
+
 
   return (
     <div
-      className={`sm:w-4/12 w-max pr-10 h-max flex flex-row fixed z-50 sm:top-1 top-0 sm:right-2 right-0`}
+      className={`sm:w-4/12 w-max pr-10 h-auto flex flex-row fixed z-50 sm:top-1 top-0 sm:right-2 right-0`}
     >
-      <div className="w-max relative h-max ml-auto">
+      <div className="w-max relative ml-auto">
         {/* notification icon ------- */}
         <div
+          ref={notifRef}
           className="text-xl text-bLight_5 ml-auto p-2 bg-bDark_4 rounded-full border-2 border-bLight_5/50 cursor-pointer"
-          onClick={() => setShowNotifications((prev) => !prev)}
+          onClick={() => setShowNotif(!showNotif)}
         >
           {<icons.notifications />}
         </div>
 
         {/* notification badge --------- */}
         <div
-          ref={notificationRef}
-          className={`absolute right-full overflow-hidden top-1/3 w-80 h-max bg-bDark_4 p-2 transform transition-all duration-500 ${
-            style.rounded
-          } ${
-            showNotifications
-              ? "translate-y-0 translate-x-0 opacity-100"
-              : "-translate-y-6 translate-x-6 opacity-0 pointer-events-none"
-          }`}
+          ref={notifRef}
+          className={`absolute -right-4 h-max text-bLight_4 top-full w-80 bg-bDark_4 p-2 transform transition-all duration-500
+            rounded-3xl shadow-5xl translate-y-2
+          ${!showNotif ? "hidden" : ""}`}
         >
           {/* badge content */}
           <ul className="w-full">

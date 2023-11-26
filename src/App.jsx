@@ -9,6 +9,7 @@ import {
   Logout,
   MSideBar,
   NavBar,
+  UserProfile,
 } from "./components";
 import style from "./style";
 
@@ -36,7 +37,7 @@ const App = () => {
         {/* content ----------------------------------------------------------------- */}
         <div
           className={`overflow-y-auto
-            ${style.backdropBlur} ${style.transition} 
+            ${style.backdropBlur}
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}
         >
@@ -50,6 +51,7 @@ const App = () => {
             <Route path="/stats" element={<Stats />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/profile/:username" element={<UserProfile />}/>
           </Routes>
         </div>
       </div>
