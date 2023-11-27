@@ -25,22 +25,18 @@ let ChatGateway = class ChatGateway {
     }
     async handleRequestLatestMessages(client, userId) {
         const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
-        console.log(`Latest messages requested for user ${userId}`);
-        console.log(`Latest messages: ${JSON.stringify(latestMessages)}`);
         client.emit('latest-messages', latestMessages);
     }
-    async handleRequestDirectMessages(client, payload) {
-        const messages = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
-        console.log(`Direct messages requested between senderId: ${payload.senderId} and receiverId: ${payload.receiverId}`);
-        client.emit('direct-messages-response', messages);
+    async handleRequestMessagesForChat(client, payload) {
+        const chatData = await this.chatService.getMessagesForChat(payload.chatId);
+        client.emit('messages-for-chat-response', chatData);
+        console.log(`Messages requested for chat ${payload.chatId}`);
     }
     handleJoinChat(client, payload) {
         client.join(`chat_room${payload.chatId}`);
-        console.log(`Client ${client.id} joined chat room: chat_room${payload.chatId}`);
     }
     handleLeaveChat(client, payload) {
         client.leave(`chat_room${payload.chatId}`);
-        console.log(`Client ${client.id} left chat room: chat_room${payload.chatId}`);
     }
     async handleSendMessage(client, payload) {
         const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
@@ -60,11 +56,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleRequestLatestMessages", null);
 __decorate([
-    (0, websockets_1.SubscribeMessage)('request-direct-messages'),
+    (0, websockets_1.SubscribeMessage)('request-messages-for-chat'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
-], ChatGateway.prototype, "handleRequestDirectMessages", null);
+], ChatGateway.prototype, "handleRequestMessagesForChat", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('join-chat'),
     __metadata("design:type", Function),

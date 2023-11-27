@@ -90,6 +90,7 @@ async sendMessage(senderId: number, receiverId: number, content: string): Promis
   newMessage.chatid = chat;
   newMessage.Content = content;
   newMessage.Timestamp = new Date().toISOString();
+  console.log(`time ${newMessage.Timestamp}`);
 try {
   console.log(`Attempting to save message from ${senderId} to ${receiverId}`);
   const savedMessage = await this.messageRepository.save(newMessage);
@@ -114,7 +115,7 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
     ]
   });
   }
-
+  
   async getMessages(chatId: number): Promise<Message[]> {
     const chat = await this.directMessageRepository.findOne({ 
       where: { id: chatId },
@@ -123,25 +124,66 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
     if (!chat) {
         throw new NotFoundException(`Chat with ID ${chatId} not found`);
     }
-    
     return chat.messageid;
 }
-
   async getAllChatIds(): Promise<number[]> {
     const chats = await this.directMessageRepository.find();
     return chats.map(chat => chat.id);
   }
   
 
-  async getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<Chat[]> {
+  async getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<any> {
+    // Find the chat session between the two users
+    const chat = await this.directMessageRepository.findOne({
+      where: {
+        sender: { id: senderId },
+        receiver: { id: receiverId },
+      },
+      relations: ['messageid'],
+    });
+  
+    // If the chat session exists, return the messages
+    if (chat) {
+      return {
+        id: chat.id,
+        messages: chat.messageid,
+        sender: chat.sender,
+        // ... include other properties you need
+      };
+    }
+  
+    // If the chat session doesn't exist, you might want to handle it differently
+    // For example, return an empty messages array or throw an error
+    return { messages: [] };
+  }
+  
 
-    return await this.directMessageRepository.createQueryBuilder("chat")
-      .leftJoinAndSelect("chat.messageid", "message") 
-      .where("(chat.senderId = :senderId AND chat.receiverId = :receiverId) OR (chat.senderId = :receiverId AND chat.receiverId = :senderId)", { senderId, receiverId })
-      .orderBy("message.Timestamp", "DESC") 
-      .getMany();
-}
+  async getMessagesForChat(chatId: number): Promise<any> {
+    // Find the chat session by chat ID
+    const chat = await this.directMessageRepository.findOne({
+      where: { id: chatId },
+      relations: ['messageid', 'messageid.SenderUserID', 'sender', 'receiver'],
+    });
+  
+    // If the chat session exists, return the messages along with sender and receiver details
+    if (chat) {
+      return {
+        id: chat.id,
+        messages: chat.messageid.map(message => ({
+          id: message.id,
+          content: message.Content,
+          timestamp: message.Timestamp,
+          senderId: message.SenderUserID.id, // Assuming SenderUserID relation is correctly configured
+        })),
+        // Access sender and receiver from the chat relation
+        chatSenderId: chat.sender.id,
+        chatReceiverId: chat.receiver.id,
+      };
+    }
 
+    return { messages: [] };
+  }
+  
 async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
   const chats = await this.directMessageRepository.find({
     where: [
@@ -157,6 +199,8 @@ async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
       id: chat.id,
       name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
       lastMessage: lastMessage ? lastMessage.Content : '',
+      //here i need to add the channel name
+      //need to add the avatar of the user and the status
     };
   });
 }
