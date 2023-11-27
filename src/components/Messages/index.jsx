@@ -19,7 +19,7 @@ const Messages = () => {
     setSearchTerm(query);
   };
   
-  // console.log(latestMessages);
+
   const filteredChats = latestMessages.filter((chat) =>
     chat.name && chat.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
