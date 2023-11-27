@@ -7,9 +7,8 @@ export declare class ChatGateway {
     handleConnection(client: Socket): Promise<void>;
     handleDisconnect(client: Socket): Promise<void>;
     handleRequestLatestMessages(client: Socket, userId: number): Promise<void>;
-    handleRequestDirectMessages(client: Socket, payload: {
-        senderId: number;
-        receiverId: number;
+    handleRequestMessagesForChat(client: Socket, payload: {
+        chatId: number;
     }): Promise<void>;
     handleJoinChat(client: Socket, payload: {
         chatId: number;

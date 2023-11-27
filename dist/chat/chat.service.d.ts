@@ -18,7 +18,8 @@ export declare class ChatService {
     listChatsForUser(userId: number): Promise<Chat[]>;
     getMessages(chatId: number): Promise<Message[]>;
     getAllChatIds(): Promise<number[]>;
-    getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<Chat[]>;
+    getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<any>;
+    getMessagesForChat(chatId: number): Promise<any>;
     getLatestMessagesForAllChats(userId: number): Promise<any[]>;
     getChatsByUserId(userId: number): Promise<Chat[]>;
 }

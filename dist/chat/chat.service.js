@@ -77,6 +77,7 @@ let ChatService = class ChatService {
         newMessage.chatid = chat;
         newMessage.Content = content;
         newMessage.Timestamp = new Date().toISOString();
+        console.log(`time ${newMessage.Timestamp}`);
         try {
             console.log(`Attempting to save message from ${senderId} to ${receiverId}`);
             const savedMessage = await this.messageRepository.save(newMessage);
@@ -114,11 +115,41 @@ let ChatService = class ChatService {
         return chats.map(chat => chat.id);
     }
     async getDirectMessagesBetweenUsers(senderId, receiverId) {
-        return await this.directMessageRepository.createQueryBuilder("chat")
-            .leftJoinAndSelect("chat.messageid", "message")
-            .where("(chat.senderId = :senderId AND chat.receiverId = :receiverId) OR (chat.senderId = :receiverId AND chat.receiverId = :senderId)", { senderId, receiverId })
-            .orderBy("message.Timestamp", "DESC")
-            .getMany();
+        const chat = await this.directMessageRepository.findOne({
+            where: {
+                sender: { id: senderId },
+                receiver: { id: receiverId },
+            },
+            relations: ['messageid'],
+        });
+        if (chat) {
+            return {
+                id: chat.id,
+                messages: chat.messageid,
+                sender: chat.sender,
+            };
+        }
+        return { messages: [] };
+    }
+    async getMessagesForChat(chatId) {
+        const chat = await this.directMessageRepository.findOne({
+            where: { id: chatId },
+            relations: ['messageid', 'messageid.SenderUserID', 'sender', 'receiver'],
+        });
+        if (chat) {
+            return {
+                id: chat.id,
+                messages: chat.messageid.map(message => ({
+                    id: message.id,
+                    content: message.Content,
+                    timestamp: message.Timestamp,
+                    senderId: message.SenderUserID.id,
+                })),
+                chatSenderId: chat.sender.id,
+                chatReceiverId: chat.receiver.id,
+            };
+        }
+        return { messages: [] };
     }
     async getLatestMessagesForAllChats(userId) {
         const chats = await this.directMessageRepository.find({

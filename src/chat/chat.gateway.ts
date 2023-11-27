@@ -31,28 +31,37 @@ export class ChatGateway  {
   @SubscribeMessage('request-latest-messages')
   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
     const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
-    console.log(`Latest messages requested for user ${userId}`);
-    console.log(`Latest messages: ${JSON.stringify(latestMessages)}`);
+    // console.log(`Latest messages requested for user ${userId}`);
+    // console.log(`Latest messages: ${JSON.stringify(latestMessages)}`);
     client.emit('latest-messages', latestMessages);
   }
   
-  @SubscribeMessage('request-direct-messages')
-async handleRequestDirectMessages(client: Socket, payload: { senderId: number; receiverId: number }): Promise<void> {
-  const messages = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
-  console.log(`Direct messages requested between senderId: ${payload.senderId} and receiverId: ${payload.receiverId}`);
-  client.emit('direct-messages-response', messages);
-}
+  // @SubscribeMessage('request-direct-messages')
+  // async handleRequestDirectMessages(client: Socket, payload: { senderId: number; receiverId: number }): Promise<void> {
+  //   const chatData = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
+
+  //   client.emit('direct-messages-response', chatData);
+  //   console.log(`Direct messages requested between users ${payload.senderId} and ${payload.receiverId}`);
+  // }
+  
+  @SubscribeMessage('request-messages-for-chat')
+  async handleRequestMessagesForChat(client: Socket, payload: { chatId: number }): Promise<void> {
+    const chatData = await this.chatService.getMessagesForChat(payload.chatId);
+  
+    client.emit('messages-for-chat-response', chatData);
+    console.log(`Messages requested for chat ${payload.chatId}`);
+  }
 
 @SubscribeMessage('join-chat')
 handleJoinChat(client: Socket, payload: { chatId: number }) {
   client.join(`chat_room${payload.chatId}`);
-  console.log(`Client ${client.id} joined chat room: chat_room${payload.chatId}`);
+  // console.log(`Client ${client.id} joined chat room: chat_room${payload.chatId}`);
 }
 
 @SubscribeMessage('leave-chat')
 handleLeaveChat(client: Socket, payload: { chatId: number }) {
   client.leave(`chat_room${payload.chatId}`);
-  console.log(`Client ${client.id} left chat room: chat_room${payload.chatId}`);
+  // console.log(`Client ${client.id} left chat room: chat_room${payload.chatId}`);
 }
 
 @SubscribeMessage('send-message')
@@ -64,7 +73,5 @@ async handleSendMessage(client: Socket, payload: { senderId: number; receiverId:
   // Emit directly to a client for testing purposes
   client.emit('new-message', message);
 }
-
-
   
 }
