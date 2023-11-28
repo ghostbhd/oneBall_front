@@ -14,6 +14,7 @@ export declare class User {
     chatid1: Chat[];
     chatid2: Chat[];
     messageid: Message[];
+    receivedMessages: Message[];
     channel_membershipid: Channel_Membership;
     channel_messageid: Channel_Message;
     ownedChannels: Channel[];

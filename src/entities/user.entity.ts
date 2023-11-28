@@ -28,6 +28,8 @@ export class User {
   chatid2: Chat[];
   @OneToMany(()=> Message, message => message.SenderUserID)
   messageid: Message[];
+  @OneToMany(() => Message, message => message.ReceiverUserID)
+  receivedMessages: Message[];
   @OneToMany(() => Channel_Membership, channel_members => channel_members.userid)
   channel_membershipid: Channel_Membership;
   @OneToMany(() => Channel_Message, channel_message => channel_message.SenderUserid)

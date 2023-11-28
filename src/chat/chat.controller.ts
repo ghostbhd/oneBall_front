@@ -7,10 +7,10 @@ export class ChatController {
     constructor(private readonly chatService: ChatService) {}
 
     
-    @Post('/send-message')
-    async sendMessage(@Body() createChatDto: CreateChatDto) {
-        return this.chatService.sendMessage(createChatDto.senderId, createChatDto.receiverId, createChatDto.content);
-    }
+    // @Post('/send-message')
+    // async sendMessage(@Body() createChatDto: CreateChatDto) {
+    //     return this.chatService.sendMessage(createChatDto.senderId, createChatDto.receiverId, createChatDto.content);
+    // }
     
     @Get('/get-messages/:chatId')
 async getMessages(@Param('chatId') chatId: number) {
@@ -23,11 +23,11 @@ async getChatsForUser(@Param('userId') userId: number) {
 }
 
 
-@Get('/conv/:senderId/:receiverId')
-    async getDirectMessagesBetweenUsers(@Param('senderId') senderId: number, @Param('receiverId') receiverId: number) {
-      console.log("senderId: " + senderId + " receiverId: " + receiverId); 
-      return await this.chatService.getDirectMessagesBetweenUsers(senderId, receiverId);
-    }
+// @Get('/conv/:senderId/:receiverId')
+//     async getDirectMessagesBetweenUsers(@Param('senderId') senderId: number, @Param('receiverId') receiverId: number) {
+//       console.log("senderId: " + senderId + " receiverId: " + receiverId); 
+//       return await this.chatService.getDirectMessagesBetweenUsers(senderId, receiverId);
+//     }
 
 
 @Get('allchats/:userId')

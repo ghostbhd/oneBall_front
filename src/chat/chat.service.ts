@@ -87,6 +87,7 @@ async sendMessage(senderId: number, receiverId: number, content: string): Promis
   }
 
   newMessage.SenderUserID = sender;
+
   newMessage.chatid = chat;
   newMessage.Content = content;
   newMessage.Timestamp = new Date().toISOString();
@@ -115,7 +116,6 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
     ]
   });
   }
-  
   async getMessages(chatId: number): Promise<Message[]> {
     const chat = await this.directMessageRepository.findOne({ 
       where: { id: chatId },
@@ -181,6 +181,7 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
       };
     }
 
+  
     return { messages: [] };
   }
   
