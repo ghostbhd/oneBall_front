@@ -13,18 +13,20 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
   const [chats, setChats] = useState([]);
 
   const socket = useSocket();
-
+  // console.log("server is running");
   useEffect(() => {
     if (socket == null) return;
 
     socket.emit("request-latest-messages", CURRENT_USER_ID);
-    
+
+    // Listening for latest messages
     socket.on("latest-messages", (chatsFromServer) => {
-      const sortedChats = chatsFromServer.sort((a, b) => {
+      let sortedChats = chatsFromServer.sort((a, b) => {
         return (
           new Date(b.lastMessage.timestamp) - new Date(a.lastMessage.timestamp)
         );
       });
+      sortedChats = sortedChats.reverse();
       setChats(sortedChats);
     });
     const handleNewMessage = (newMessage) => {
@@ -54,36 +56,33 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
             },
           ];
         }
-        
+
         // Sort chats based on the timestamp
         updatedChats.sort(
           (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-          );
-          
-          return updatedChats;
-        });
-      };
-      
-      socket.on("new-message", handleNewMessage);
-      
-      // Cleanup on component unmount
-      return () => {
-        socket.off("latest-messages");
-        // console.log(`chat`, chats);
-      socket.off("new-message", handleNewMessage);
+        );
+
+        return updatedChats;
+      });
     };
 
+    socket.on("new-message", handleNewMessage);
 
+    // Cleanup on component unmount
+    return () => {
+      socket.off("latest-messages");
+      // console.log(`chat`, chats);
+      socket.off("new-message", handleNewMessage);
+    };
   }, [socket, chats]);
-
-
 
   const handleChatClick = (chatId) => {
     setActiveChat(chatId);
     socket.emit("request-messages-for-chat", {
-      chatId: chatId,
+      chatId,
     });
   };
+
   return (
     <div
       className={`w-3/12 flex-grow ${style.sidebarW} ${style.chatListContainer}`}

@@ -17,14 +17,15 @@ const ChatWindow = ({ activeChat }) => {
 
   useEffect(() => {
     if (socket == null) return;
+    // if (!activeChat) {
+    //   // Handle the case where there is no active chat selected
+    //   console.error("No active chat selected");
+    //   return;
+    // }
 
     // Emit event to join the chat and request messages
     socket.emit("join-chat", { chatId: activeChat });
-    console.log(`Joining chat ${activeChat}`);
-    // socket.emit('request-direct-messages', {
-    //   receiverId: CURRENT_USER_ID,
-    //   senderId: activeChat
-    // });
+    console.log(`active chat is ${activeChat}`);
 
     // Event listener for new messages
     const handleNewMessage = (newMessage) => {
@@ -52,20 +53,22 @@ const ChatWindow = ({ activeChat }) => {
     };
   }, [activeChat, socket]);
 
-  console.log("activeChat", activeChat);
   const handleSendMessage = () => {
     if (message.trim()) {
-      console.log(`Sending message: ${message}`);
+      console.log(`Sending message to chat id: ${activeChat}`);
       socket.emit("send-message", {
         content: message,
-        senderId: activeChat,
-        receiverId: CURRENT_USER_ID,
-        chatId: activeChat, // Here i need to make sure this is the ID of the chat session
+        
+        chatId: activeChat, // Only need to send the chatId now
       });
-      console.log("chat id in handleSendMessage", chatId);
+      console.log(`MSG chat is ${message}`);
       setMessage("");
     }
   };
+
+  const sortedMessages = [...messages].sort(
+    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+  );
 
   return (
     <div className={`w-9/12  ${style.contentW} ${style.chatContainer}`}>
@@ -94,7 +97,7 @@ const ChatWindow = ({ activeChat }) => {
       <div
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >
-        {messages.map((message) => {
+        {sortedMessages.map((message) => {
           const isCurrentUserSender = message.senderId === CURRENT_USER_ID;
           return (
             <div
@@ -106,6 +109,7 @@ const ChatWindow = ({ activeChat }) => {
               }`}
             >
               <p className="text-white">{message.content}</p>
+              {/* Format the timestamp as needed */}
               <span className="text-gray-400">
                 {new Date(message.timestamp).toLocaleTimeString()}
               </span>

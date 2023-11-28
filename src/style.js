@@ -19,7 +19,7 @@ const style = {
       text-right bg-blue-0 text-white p-2 rounded-l-lg rounded-tr-lg`,
     messageOtherUser: `
       text-left bg-gray-500 text-white p-2 rounded-r-lg rounded-tl-lg`,
-    messageCurrentUser: "bg-[#FFE268] text-right p-2 float-right clear-both break-words",
+    messageCurrentUser: "bg-[#FFE268] text-right p-2 rounded-lg float-right clear-both break-words",
     messageOtherUser: "bg-[#3077A1] text-left p-2 rounded-lg float-left clear-both break-word",
     chatWindowMessages: "flex-1 overflow-y-auto", // for the messages container
     chatListContainer: "flex flex-col overflow-y-auto", // This will make sure your chat list can scroll independently of the search bar
