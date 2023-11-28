@@ -29,6 +29,10 @@ __decorate([
     __metadata("design:type", user_entity_1.User)
 ], Message.prototype, "SenderUserID", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, user => user.receivedMessages),
+    __metadata("design:type", user_entity_1.User)
+], Message.prototype, "ReceiverUserID", void 0);
+__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Message.prototype, "Content", void 0);

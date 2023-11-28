@@ -73,5 +73,15 @@ async handleSendMessage(client: Socket, payload: { senderId: number; receiverId:
   // Emit directly to a client for testing purposes
   client.emit('new-message', message);
 }
+
+// @SubscribeMessage('send-message')
+// // Inside your ChatGateway
+// async handleSendMessage(client: Socket, payload: { senderId: number; receiverId: number; content: string }) {
+//   const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
+//   console.log(`Message from senderId: ${payload.senderId} to receiverId: ${payload.receiverId} with content: ${payload.content}`);
+  
+//   // Emit directly to a client for testing purposes
+//   client.emit('new-message', message);
+// }
   
 }

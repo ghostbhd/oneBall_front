@@ -15,13 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatController = void 0;
 const common_1 = require("@nestjs/common");
 const chat_service_1 = require("./chat.service");
-const add_msg_dtp_1 = require("./chat.dto/add-msg.dtp");
 let ChatController = class ChatController {
     constructor(chatService) {
         this.chatService = chatService;
-    }
-    async sendMessage(createChatDto) {
-        return this.chatService.sendMessage(createChatDto.senderId, createChatDto.receiverId, createChatDto.content);
     }
     async getMessages(chatId) {
         return this.chatService.getMessages(chatId);
@@ -29,22 +25,11 @@ let ChatController = class ChatController {
     async getChatsForUser(userId) {
         return this.chatService.listChatsForUser(userId);
     }
-    async getDirectMessagesBetweenUsers(senderId, receiverId) {
-        console.log("senderId: " + senderId + " receiverId: " + receiverId);
-        return await this.chatService.getDirectMessagesBetweenUsers(senderId, receiverId);
-    }
     getChatsByUserId(userId) {
         return this.chatService.getChatsByUserId(userId);
     }
 };
 exports.ChatController = ChatController;
-__decorate([
-    (0, common_1.Post)('/send-message'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [add_msg_dtp_1.CreateChatDto]),
-    __metadata("design:returntype", Promise)
-], ChatController.prototype, "sendMessage", null);
 __decorate([
     (0, common_1.Get)('/get-messages/:chatId'),
     __param(0, (0, common_1.Param)('chatId')),
@@ -59,14 +44,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ChatController.prototype, "getChatsForUser", null);
-__decorate([
-    (0, common_1.Get)('/conv/:senderId/:receiverId'),
-    __param(0, (0, common_1.Param)('senderId')),
-    __param(1, (0, common_1.Param)('receiverId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
-    __metadata("design:returntype", Promise)
-], ChatController.prototype, "getDirectMessagesBetweenUsers", null);
 __decorate([
     (0, common_1.Get)('allchats/:userId'),
     __param(0, (0, common_1.Param)('userId')),

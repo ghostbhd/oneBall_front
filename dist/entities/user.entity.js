@@ -57,6 +57,10 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "messageid", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => Message_entity_1.Message, message => message.ReceiverUserID),
+    __metadata("design:type", Array)
+], User.prototype, "receivedMessages", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Channel_Membership_entity_1.Channel_Membership, channel_members => channel_members.userid),
     __metadata("design:type", Channel_Membership_entity_1.Channel_Membership)
 ], User.prototype, "channel_membershipid", void 0);

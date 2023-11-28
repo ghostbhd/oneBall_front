@@ -10,6 +10,8 @@ export class Message {
     chatid: Chat;
     @ManyToOne(()=> User, user => user.messageid)
     SenderUserID: User;
+    @ManyToOne(() => User, user => user.receivedMessages)
+    ReceiverUserID: User;
     @Column()
     Content: string;
     @Column()
