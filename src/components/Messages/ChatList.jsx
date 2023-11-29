@@ -29,6 +29,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
       sortedChats = sortedChats.reverse();
       setChats(sortedChats);
     });
+
     const handleNewMessage = (newMessage) => {
       setChats((prevChats) => {
         let updatedChats = [...prevChats];
@@ -65,16 +66,33 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
         return updatedChats;
       });
     };
-
     socket.on("new-message", handleNewMessage);
 
-    // Cleanup on component unmount
+    socket.on("search-user-response", (response) => {
+      if (response.chatId) {
+        setActiveChat(response.chatId);
+        socket.emit("request-messages-for-chat", { chatId: response.chatId });
+      } else if (response.error) {
+        console.error("Search error:", response.error);
+        alert('User Not Found');
+      }
+    });
+
     return () => {
       socket.off("latest-messages");
-      // console.log(`chat`, chats);
       socket.off("new-message", handleNewMessage);
+      socket.off("search-user-response");
     };
   }, [socket, chats]);
+
+  const handleSearchSubmit = (searchTerm) => {
+    if (searchTerm.trim()) {
+      socket.emit("search-user", {
+        username: searchTerm,
+        currentUserId: CURRENT_USER_ID,
+      });
+    }
+  };
 
   const handleChatClick = (chatId) => {
     setActiveChat(chatId);
@@ -88,7 +106,11 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
       className={`w-3/12 flex-grow ${style.sidebarW} ${style.chatListContainer}`}
     >
       <div className={style.searchBar}>
-        <SearchBar onSearch={onSearch} onChannelIconClick={onIconClick} />
+        <SearchBar
+          onSearch={onSearch}
+          onChannelIconClick={onIconClick}
+          onSearchSubmit={handleSearchSubmit}
+        />
       </div>
       <div className="h-5/5 rounded-b-2xl flex-grow overflow-y-auto">
         {chats.map((chat) => (

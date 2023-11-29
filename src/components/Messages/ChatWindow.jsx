@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import style from "../../style";
-import { useRef } from "react";
 import { IoIosSend } from "react-icons/io";
 import { FiMoreVertical } from "react-icons/fi";
 import { useSocket } from "../../Socketio.jsx";
@@ -12,8 +11,32 @@ const ChatWindow = ({ activeChat }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [showOptions, setShowOptions] = useState(false);
-  const socketRef = useRef();
+
   const socket = useSocket();
+
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+     
+      const newMessage = {
+        content: message,
+        timestamp: new Date().toISOString(), 
+        senderId: CURRENT_USER_ID,
+        chatId: activeChat,
+        
+      };
+
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      socket.emit("send-message", {
+        content: message,
+        chatId: activeChat,
+      });
+
+      // Clear the input field
+      setMessage("");
+    }
+  };
 
   useEffect(() => {
     if (socket == null) return;
@@ -53,18 +76,7 @@ const ChatWindow = ({ activeChat }) => {
     };
   }, [activeChat, socket]);
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      console.log(`Sending message to chat id: ${activeChat}`);
-      socket.emit("send-message", {
-        content: message,
-        
-        chatId: activeChat, // Only need to send the chatId now
-      });
-      console.log(`MSG chat is ${message}`);
-      setMessage("");
-    }
-  };
+
 
   const sortedMessages = [...messages].sort(
     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
