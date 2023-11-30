@@ -30,7 +30,7 @@ const Games = () => {
         <>
           {/* Game details -----------------------------------------*/}
           <div
-            className={`w-7/12 h-full`}
+            className={`w-8/12 h-full`}
           >
             {/* buttons ----- */}
             <Buttons />
