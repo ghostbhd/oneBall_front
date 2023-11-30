@@ -7,13 +7,12 @@ import { useSocket } from "../../Socketio.jsx";
 
 const CURRENT_USER_ID = 1;
 
-const ChatWindow = ({ activeChat }) => {
+const ChatWindow = ({ activeChat, activeChatUser }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [showOptions, setShowOptions] = useState(false);
 
   const socket = useSocket();
-
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -40,11 +39,7 @@ const ChatWindow = ({ activeChat }) => {
 
   useEffect(() => {
     if (socket == null) return;
-    // if (!activeChat) {
-    //   // Handle the case where there is no active chat selected
-    //   console.error("No active chat selected");
-    //   return;
-    // }
+  
 
     // Emit event to join the chat and request messages
     socket.emit("join-chat", { chatId: activeChat });
@@ -56,6 +51,7 @@ const ChatWindow = ({ activeChat }) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
+    
     socket.on("new-message", handleNewMessage);
 
     // Event listener for response to messages for a chat request
@@ -82,16 +78,17 @@ const ChatWindow = ({ activeChat }) => {
     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
   );
 
+  console.log(`active chat user is ${activeChatUser}`);
   return (
     <div className={`w-9/12  ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}
       <div className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5">
         <img
           className="w-16 h-18  rounded-full  mr-5"
-          src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"
-          alt="User Name"
-        />
-        <h2 className="text-black">hajar</h2>
+          src={activeChatUser?.avatar || "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"} // Use the avatar from activeChatUser
+          alt={activeChatUser?.name || "Default Name"} 
+          />
+        <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
         {/* {!isChannel && ( // Conditionally render the more icon if it's not a channel
           <div className="relative">
             <FiMoreVertical onClick={handleOptionToggle} className="cursor-pointer" />
@@ -111,6 +108,7 @@ const ChatWindow = ({ activeChat }) => {
       >
         {sortedMessages.map((message) => {
           const isCurrentUserSender = message.senderId === CURRENT_USER_ID;
+          console.log(`sender id is message.senderId`);
           return (
             <div
               key={message.id}

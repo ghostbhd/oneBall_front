@@ -9,7 +9,7 @@ import { useSocket } from "../../Socketio.jsx";
 
 const CURRENT_USER_ID = 1;
 
-const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
+const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveChatUser}) => {
   const [chats, setChats] = useState([]);
 
   const socket = useSocket();
@@ -66,6 +66,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
         return updatedChats;
       });
     };
+
     socket.on("new-message", handleNewMessage);
 
     socket.on("search-user-response", (response) => {
@@ -78,6 +79,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
       }
     });
 
+    // console.log(chats);
     return () => {
       socket.off("latest-messages");
       socket.off("new-message", handleNewMessage);
@@ -86,7 +88,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
   }, [socket, chats]);
 
   const handleSearchSubmit = (searchTerm) => {
-    if (searchTerm.trim()) {
+    if (searchTerm.trim()) { //here i nee to protect the user from searching for himself by username
       socket.emit("search-user", {
         username: searchTerm,
         currentUserId: CURRENT_USER_ID,
@@ -94,8 +96,13 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick }) => {
     }
   };
 
-  const handleChatClick = (chatId) => {
+  const handleChatClick = (chatId, chats) => {
     setActiveChat(chatId);
+  //   setActiveChatUser({
+  //     id: chats.id,
+  //     name: chats.name,
+  //     lastMessage: chats.lastMessage,
+  // });
     socket.emit("request-messages-for-chat", {
       chatId,
     });

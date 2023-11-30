@@ -11,6 +11,7 @@ import { useSocket } from '/home/hajar/Desktop/front/src/Socketio.jsx';
 
 const Messages = () => {
   const [activeChat, setActiveChat] = useState(null);
+  const [activeChatUser, setActiveChatUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
    const [latestMessages, setLatestMessages] = useState([]);
    const [showChannelCreation, setShowChannelCreation] = useState(false);
@@ -43,12 +44,13 @@ const Messages = () => {
       <ChatList
         activeChat={activeChat}
         setActiveChat={setActiveChat}
+        setActiveChatUser={setActiveChatUser}
         chats={filteredChats}
         onSearch={handleSearch}
         onIconClick={toggleChannelCreationModal} 
         onSearchSubmit={handleSearchSubmit}
       />
-      <ChatWindow activeChat={activeChat} />
+      <ChatWindow  activeChat={activeChat} activeChatUser={activeChatUser}  />
 
       {showChannelCreation && ( 
         <ChannelCreation onClose={toggleChannelCreationModal} />
