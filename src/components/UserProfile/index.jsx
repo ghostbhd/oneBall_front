@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { userProfileData } from "../../data/mockApi";
+import UserInfo from "./UserInfo";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
@@ -20,11 +21,13 @@ const UserProfile = () => {
 
   return (
     <div className={`w-full h-full flex p-6 pt-16`}>
-      {/* User details row */}
-      <div className="flex flex-col w-8/12 h-full bg-bDark_1/40"></div>
-      {/* User game status */}
+      {/* User details row --------------------------*/}
+      <div className="flex flex-col w-8/12 h-full">
+        {/* user Infr ----- */}
+        <UserInfo data={data} />
+      </div>
+      {/* User game status ------------------------------*/}
       <div className={`flex flex-col w-[30%] h-full bg-bDark_1/40 ml-auto`}>
-        {data.username}
       </div>
     </div>
   );

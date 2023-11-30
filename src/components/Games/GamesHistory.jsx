@@ -4,20 +4,14 @@ import PropTypes from "prop-types";
 const GamesHistory = ({ gamehistory }) => {
   return (
     <div
-      className={`w-[38%] h-full ml-auto flex flex-col px-1 ${style.rounded}`}
+      className={`w-[30%] h-full ml-auto flex flex-col p-2 ${style.blueBlur} ${style.rounded}`}
     >
       {/* head ---------------------- */}
       <div className="h-max w-full flex flex-col items-center">
-        <p
-          className={`text-bLight_5 text-lg mb-auto p-2 w-full bg-bDark_4 rounded-full`}
-        >
-          History
-        </p>
+        <p className={`text-bLight_4 text-lg mb-auto p-2 w-full`}>History</p>
       </div>
       {/* body ---------------------- */}
-      <div
-        className={`h-auto ${style.rounded} w-full overflow-hidden mt-2`}
-      >
+      <div className={`h-auto ${style.rounded} w-full overflow-hidden mt-2`}>
         <ul
           className={`h-full w-full flex flex-col overflow-y-scroll
           ${style.rounded} ${style.blueBlur} !bg-opacity-30`}
@@ -30,7 +24,7 @@ const GamesHistory = ({ gamehistory }) => {
               <li
                 key={item.id}
                 className={`w-full flex flex-row text-bLight_4 align-middle
-                bg-bDark_4/70 p-4 border-b-2 border-bDark_3`}
+                bg-bLight_5/20 p-4 border-b-2 border-bDark_3`}
               >
                 {/* opponent ----------- */}
                 <span className="my-auto leading-[0.8] text-lest text-bLight_2 w-2/6 ">
