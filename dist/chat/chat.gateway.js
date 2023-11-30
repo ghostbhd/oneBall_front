@@ -13,15 +13,11 @@ exports.ChatGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const chat_service_1 = require("./chat.service");
 const socket_io_1 = require("socket.io");
+const user_service_1 = require("../User/user.service");
 let ChatGateway = class ChatGateway {
-    constructor(chatService) {
+    constructor(chatService, userService) {
         this.chatService = chatService;
-    }
-    async handleConnection(client) {
-        console.log(`Client connected: ${client.id}`);
-    }
-    async handleDisconnect(client) {
-        console.log(`Client disconnected: ${client.id}`);
+        this.userService = userService;
     }
     async handleRequestLatestMessages(client, userId) {
         const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
@@ -38,10 +34,32 @@ let ChatGateway = class ChatGateway {
     handleLeaveChat(client, payload) {
         client.leave(`chat_room${payload.chatId}`);
     }
-    async handleSendMessage(client, payload) {
-        const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
-        console.log(`Message from senderId: ${payload.senderId} to receiverId: ${payload.receiverId} with content: ${payload.content}`);
-        client.emit('new-message', message);
+    async handleSendMessage(client, payload, callback) {
+        try {
+            const message = await this.chatService.sendMessage(payload.chatId, payload.content);
+            this.server.to(`chat_room${payload.chatId}`).emit('new-message', message);
+            if (callback && typeof callback === 'function') {
+                callback({ success: true, messageId: message.id });
+            }
+        }
+        catch (error) {
+            if (callback && typeof callback === 'function') {
+                callback({ success: false, error: error.message });
+            }
+            else {
+                console.error('Error sending message:', error);
+            }
+        }
+    }
+    async handleSearchUser(client, payload) {
+        try {
+            const currentUser = await this.userService.findUserById(payload.currentUserId);
+            const chat = await this.chatService.findOrCreateChat(currentUser, payload.username);
+            client.emit('search-user-response', { chatId: chat.id });
+        }
+        catch (error) {
+            client.emit('search-user-response', { chatId: null, error: error.message });
+        }
     }
 };
 exports.ChatGateway = ChatGateway;
@@ -76,14 +94,21 @@ __decorate([
 __decorate([
     (0, websockets_1.SubscribeMessage)('send-message'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object, Function]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleSendMessage", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('search-user'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleSearchUser", null);
 exports.ChatGateway = ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ cors: {
             origin: '*',
         },
     }),
-    __metadata("design:paramtypes", [chat_service_1.ChatService])
+    __metadata("design:paramtypes", [chat_service_1.ChatService,
+        user_service_1.UserService])
 ], ChatGateway);
 //# sourceMappingURL=chat.gateway.js.map

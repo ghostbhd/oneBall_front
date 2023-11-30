@@ -13,7 +13,7 @@ export declare class ChatService {
     constructor(messageRepository: Repository<Message>, directMessageRepository: Repository<Chat>, userRepository: Repository<User>, channelRepository: Repository<Channel>, Channel_MembershipRepository: Repository<Channel_Membership>);
     startChat(senderId: number, receiverId: number): Promise<Chat>;
     getChat(sender: User, receiver: User): Promise<Chat>;
-    sendMessage(senderId: number, receiverId: number, content: string): Promise<Message>;
+    sendMessage(chatId: number, content: string): Promise<Message>;
     getChatHistory(chatId: number): Promise<Message[]>;
     listChatsForUser(userId: number): Promise<Chat[]>;
     getMessages(chatId: number): Promise<Message[]>;
@@ -22,4 +22,5 @@ export declare class ChatService {
     getMessagesForChat(chatId: number): Promise<any>;
     getLatestMessagesForAllChats(userId: number): Promise<any[]>;
     getChatsByUserId(userId: number): Promise<Chat[]>;
+    findOrCreateChat(currentUser: User, targetUsername: string): Promise<Chat>;
 }
