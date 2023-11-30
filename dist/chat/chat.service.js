@@ -59,35 +59,26 @@ let ChatService = class ChatService {
         }
         return chat;
     }
-    async sendMessage(senderId, receiverId, content) {
-        const newMessage = new Message_entity_1.Message();
-        const sender = await this.userRepository.findOne({ where: { id: senderId } });
-        const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
-        if (!sender) {
-            throw new common_2.NotFoundException(`Sender with ID ${senderId} not found`);
-        }
-        if (!receiver) {
-            throw new common_2.NotFoundException(`Receiver with ID ${receiverId} not found`);
-        }
-        const chat = await this.getChat(sender, receiver);
+    async sendMessage(chatId, content) {
+        const chat = await this.directMessageRepository.findOne({
+            where: { id: chatId },
+            relations: ['sender', 'receiver'],
+        });
         if (!chat) {
-            throw new common_2.NotFoundException(`Chat not found for sender ${senderId} and receiver ${receiverId}`);
+            throw new common_2.NotFoundException(`Chat with ID ${chatId} not found`);
         }
-        newMessage.SenderUserID = sender;
+        const newMessage = new Message_entity_1.Message();
         newMessage.chatid = chat;
+        newMessage.SenderUserID = chat.sender;
+        newMessage.ReceiverUserID = chat.receiver;
         newMessage.Content = content;
         newMessage.Timestamp = new Date().toISOString();
-        console.log(`time ${newMessage.Timestamp}`);
-        try {
-            console.log(`Attempting to save message from ${senderId} to ${receiverId}`);
-            const savedMessage = await this.messageRepository.save(newMessage);
-            console.log(`Message saved with ID: ${savedMessage.id}`);
-            return savedMessage;
-        }
-        catch (error) {
-            console.error('Error saving message:', error);
-            throw error;
-        }
+        console.log(`receiver :${chat.sender}`);
+        console.log(`sender :${chat.receiver}`);
+        console.log(`Attempting to save message in chat ${chatId}`);
+        const savedMessage = await this.messageRepository.save(newMessage);
+        console.log(`Message saved with ID: ${savedMessage.id}`);
+        return savedMessage;
     }
     async getChatHistory(chatId) {
         return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
@@ -159,7 +150,9 @@ let ChatService = class ChatService {
             ],
             relations: ['messageid', 'sender', 'receiver'],
         });
-        return chats.map(chat => {
+        return chats
+            .filter(chat => chat.messageid && chat.messageid.length > 0)
+            .map(chat => {
             const lastMessage = chat.messageid[chat.messageid.length - 1];
             return {
                 id: chat.id,
@@ -173,6 +166,31 @@ let ChatService = class ChatService {
             where: { sender: { id: userId }, },
             relations: ['messageid', 'sender', 'receiver'],
         });
+    }
+    async findOrCreateChat(currentUser, targetUsername) {
+        const targetUser = await this.userRepository.findOne({
+            where: { username: targetUsername },
+        });
+        if (currentUser.username === targetUsername) {
+            throw new Error("Cannot create a chat with yourself.");
+        }
+        if (!targetUser) {
+            throw new common_2.NotFoundException('User not found');
+        }
+        let chat = await this.directMessageRepository.findOne({
+            where: [
+                { sender: currentUser, receiver: targetUser },
+                { sender: targetUser, receiver: currentUser },
+            ],
+        });
+        if (!chat) {
+            chat = new Chat_entity_1.Chat();
+            chat.sender = currentUser;
+            chat.receiver = targetUser;
+            chat.DateStarted = new Date().toISOString();
+            await this.directMessageRepository.save(chat);
+        }
+        return chat;
     }
 };
 exports.ChatService = ChatService;

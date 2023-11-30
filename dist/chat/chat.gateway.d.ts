@@ -1,11 +1,11 @@
 import { ChatService } from './chat.service';
 import { Socket, Server } from 'socket.io';
+import { UserService } from 'src/User/user.service';
 export declare class ChatGateway {
     private readonly chatService;
-    constructor(chatService: ChatService);
+    private readonly userService;
+    constructor(chatService: ChatService, userService: UserService);
     server: Server;
-    handleConnection(client: Socket): Promise<void>;
-    handleDisconnect(client: Socket): Promise<void>;
     handleRequestLatestMessages(client: Socket, userId: number): Promise<void>;
     handleRequestMessagesForChat(client: Socket, payload: {
         chatId: number;
@@ -17,8 +17,11 @@ export declare class ChatGateway {
         chatId: number;
     }): void;
     handleSendMessage(client: Socket, payload: {
-        senderId: number;
-        receiverId: number;
+        chatId: number;
         content: string;
+    }, callback?: (confirmation: any) => void): Promise<void>;
+    handleSearchUser(client: Socket, payload: {
+        username: string;
+        currentUserId: number;
     }): Promise<void>;
 }

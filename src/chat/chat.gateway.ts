@@ -7,6 +7,8 @@ import {
 
 import { ChatService } from './chat.service';
 import { Socket, Server } from 'socket.io';
+import { UserService } from 'src/User/user.service';
+
 
 @WebSocketGateway({ cors: {
   origin: '*',
@@ -14,20 +16,11 @@ import { Socket, Server } from 'socket.io';
 })
 export class ChatGateway  {
 
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService,
+    private readonly userService: UserService,) {}
   @WebSocketServer() server: Server;
 
-  // @SubscribeMessage('testi')
-  async handleConnection(client: Socket) {
-
-    console.log(`Client connected: ${client.id}`);
-  }
-
-  async handleDisconnect(client: Socket) {
-
-    console.log(`Client disconnected: ${client.id}`);
-  }
-
+  
   @SubscribeMessage('request-latest-messages')
   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
     const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
@@ -65,23 +58,34 @@ handleLeaveChat(client: Socket, payload: { chatId: number }) {
 }
 
 @SubscribeMessage('send-message')
-// Inside your ChatGateway
-async handleSendMessage(client: Socket, payload: { senderId: number; receiverId: number; content: string }) {
-  const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
-  console.log(`Message from senderId: ${payload.senderId} to receiverId: ${payload.receiverId} with content: ${payload.content}`);
-  
-  // Emit directly to a client for testing purposes
-  client.emit('new-message', message);
+async handleSendMessage(client: Socket, payload: { chatId: number; content: string }, callback?: (confirmation: any) => void) {
+  try {
+    const message = await this.chatService.sendMessage(payload.chatId, payload.content);
+    this.server.to(`chat_room${payload.chatId}`).emit('new-message', message);
+
+    if (callback && typeof callback === 'function') {
+      callback({ success: true, messageId: message.id });
+    }
+  } catch (error) {
+    if (callback && typeof callback === 'function') {
+      callback({ success: false, error: error.message });
+    } else {
+      console.error('Error sending message:', error);
+    }
+  }
 }
 
-// @SubscribeMessage('send-message')
-// // Inside your ChatGateway
-// async handleSendMessage(client: Socket, payload: { senderId: number; receiverId: number; content: string }) {
-//   const message = await this.chatService.sendMessage(payload.senderId, payload.receiverId, payload.content);
-//   console.log(`Message from senderId: ${payload.senderId} to receiverId: ${payload.receiverId} with content: ${payload.content}`);
-  
-//   // Emit directly to a client for testing purposes
-//   client.emit('new-message', message);
-// }
+
+@SubscribeMessage('search-user')
+async handleSearchUser(client: Socket, payload: { username: string, currentUserId: number }): Promise<void> {
+  try {
+    const currentUser = await this.userService.findUserById(payload.currentUserId);
+    const chat = await this.chatService.findOrCreateChat(currentUser, payload.username);
+    client.emit('search-user-response', { chatId: chat.id });
+  } catch (error) {
+    client.emit('search-user-response', { chatId: null, error: error.message });
+  }
+}
+
   
 }
