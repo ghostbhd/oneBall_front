@@ -16,7 +16,9 @@ import { BsFillStarFill } from "react-icons/bs"; // star icon
 import { FaCheck, FaXmark } from "react-icons/fa6"; // check and X icon
 import { IoNotifications } from "react-icons/io5"; // notifications icon
 
-import { BsChevronRight, BsChevronLeft } from "react-icons/bs";
+import { BsChevronRight, BsChevronLeft } from "react-icons/bs"; // chevron icon
+import { MdOutlineAdd } from "react-icons/md"; // add icon
+
 
 
 // chat icons
@@ -116,6 +118,8 @@ export const icons = { // All needed icons
   notifications: IoNotifications,
   chevronRight: BsChevronRight,
   chevronLeft: BsChevronLeft,
+  add: MdOutlineAdd,
+  gameController: IoGameController,
 };
 
 export const chatIcons = {

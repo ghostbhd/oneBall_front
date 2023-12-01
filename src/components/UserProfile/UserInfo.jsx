@@ -2,6 +2,7 @@ import { ImgBg } from "../../style";
 import style from "../../style";
 import PropTypes from "prop-types";
 import { icons } from "../../constants";
+import Buttons from "./Buttons";
 
 const UserInfo = ({ data }) => {
   const starPosition = "absolute -top-3 -right-5 w-12 h-12";
@@ -24,7 +25,7 @@ const UserInfo = ({ data }) => {
         <div className="flex flex-col space-y-2 items-center">
           <div
             style={ImgBg({ img: data.image })}
-            className={`w-32 h-32 ${style.rounded} relative`}
+            className={`w-32 h-32 ${style.rounded} relative shadow-xl`}
           >
             {/* star icon -----------------------*/}
             {<icons.star className={`${starPosition} text-org_3/80`} />}
@@ -35,24 +36,26 @@ const UserInfo = ({ data }) => {
               </p>
             </div>
           </div>
-          {/* state --------------------------------------- */}
-          <div className={`flex flex-row w-full items-center`}>
-            <span
-              className={`w-2 h-2 rounded-full ml-auto mr-2 ${
-                data.state === "Online"
-                  ? "bg-org_2"
-                  : data.state === "InGame"
-                  ? "bg-bLight_3"
-                  : "bg-gray-500"
-              }`}
-            ></span>
-            <p className="text-white/60 text-xs mr-auto">{data.state}</p>
+          {/* xp and progress ------------------------ */}
+          <div className="w-32 flex mt-auto flex-wrap items-center">
+            {/* progress bar ---------------- */}
+            <div className="w-11/12 flex h-2 bg-org_3/20 rounded-full">
+              <div
+                className="h-full bg-gradient-to-r from-org_3  to-org_1 rounded-full"
+                style={{ width: `${data.xp / 10}%` }}
+              ></div>
+            </div>
+            {/* Next level ------------------------ */}
+            <p className="w-1/12 ml-auto  text-sm text-right text-org_1">
+              {data.level + 1}
+            </p>
           </div>
         </div>
+
         {/* user info ------------------------------------------- */}
         <div className="flex flex-col h-32">
           <p
-            className={`text-xl ${
+            className={`text-xl w-max ${
               data.state === "Online"
                 ? "text-org_1/80"
                 : data.state === "InGame"
@@ -73,23 +76,23 @@ const UserInfo = ({ data }) => {
           >
             @{data.username}
           </p>
-          {/* xp and progress ------------------------ */}
-          <div className="w-32 flex mt-auto flex-wrap items-center">
-            {/* xp ------------------------ */}
-            <p className="text-xs text-org_2 w-full">{data.xp} xp</p>
-            {/* progress bar ---------------- */}
-            <div className="w-11/12 flex h-2 bg-org_3/20 rounded-full">
-              <div
-                className="h-full bg-gradient-to-r from-org_3 to-org_1 rounded-full"
-                style={{ width: `${data.xp / 10}%` }}
-              ></div>
-            </div>
-            {/* Next level ------------------------ */}
-            <p className="w-1/12 mb-auto text-sm text-right text-org_1">
-              {data.level + 1}
-            </p>
+          {/* state --------------------------------------- */}
+          <div className={`flex flex-row items-center mt-auto`}>
+            <span
+              className={`w-2 h-2 rounded-full mr-2 ${
+                data.state === "Online"
+                  ? "bg-org_2"
+                  : data.state === "InGame"
+                  ? "bg-bLight_3"
+                  : "bg-gray-500"
+              }`}
+            ></span>
+            <p className="text-white/60 text-xs mr-auto">{data.state}</p>
           </div>
         </div>
+
+        {/* buttons --------------------------------------------- */}
+        <Buttons data={data} />
       </div>
     </div>
   );
@@ -100,3 +103,10 @@ UserInfo.propTypes = {
 };
 
 export default UserInfo;
+
+// case possible for friend page button
+// case 1: friend = true, friendRequest = false, friendRequistSent = false => show unfriend button
+// case 2: friend = false, friendRequest = false, friendRequistSent = false => show add friend button
+// case 3: friend = false, friendRequest = true, friendRequistSent = false => show accept button and decline button
+// case 4: friend = false, friendRequest = false, friendRequistSent = true => show cancel request button
+// case 5: friend = false, friendRequest = true, friendRequistSent = true => show cancel request button
