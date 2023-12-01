@@ -166,7 +166,7 @@ const userprofile = {
   xp: 200,
   state: "Online", // Online, InGame, Offline(2 Hours ago, yesterday, 2 days ago, last month, 1 year ago ...)
   position: 23,
-  friend: true,
+  friend: false,
   friendRequest: false,
   friendRequestSent: false,
   last6Games: [
