@@ -5,6 +5,7 @@ import style from "../../style";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from 'react-router-dom';
 
 const EditInfo = ({ data }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -12,10 +13,52 @@ const EditInfo = ({ data }) => {
   const [moreAvatars, setMoreAvatars] = useState(false);
   const [username, setUsername] = useState(null);
   const [fileTosend, setSelectedFileTosend] = useState(null); 
-  const handleSubmit = (e) => {
+
+
+  const loadImage = async (path) => {
+    const response = await fetch(path);
+    const arrayBuffer = await response.arrayBuffer();
+    const binaryString = new TextDecoder().decode(arrayBuffer);
+    // console.log( "jsssssssssssssson" +  binaryString);
+    return binaryString;
+  };
+
+const loadImageAsFile = async (path) => {
+    const imagePath = path;
+
+    const response = await fetch(imagePath);
+    const blob = await response.blob();
+
+    // Extract the file name from the path
+    const fileName = imagePath.split('/').pop();
+
+    // Create a File object
+    const file = new File([blob], fileName, { type: blob.type });
+
+    setSelectedFileTosend(file);
+  };
+
+  const  history = useNavigate ();
+  const handleRedirect = (url) => {
+    history(url);
+  }
+
+  const handleSubmit = async (e) => {
+
     e.preventDefault();
+    console.log(
+      selectedAvatar
+    )
+    
     const formData = new FormData();
     formData.append('username', username);
+    // await loadImageAsFile(selectedAvatar);
+    if (fileTosend == null)
+    {
+      console.log("hello my friend");
+      formData.append('filepath', selectedAvatar)
+    }
+    console.log( "jsssssssssssssson" +  fileTosend);
     formData.append('file', fileTosend);
     const headers = new Headers();
     const jwtCookie = document.cookie
@@ -25,7 +68,10 @@ const EditInfo = ({ data }) => {
         const jwt = jwtCookie.split('=')[1];
     headers.append('Authorization', `Bearer ${jwt}`)
    }   // /* alert */("Only image files are allowed!");
-    const response = fetch('http://localhost:3009/upload', {
+    else {
+       handleRedirect('/Auth'); 
+      }
+    const response = await fetch('http://localhost:3009/upload', {
       method: 'POST',
       body: formData,
       headers: headers,
@@ -42,6 +88,7 @@ const EditInfo = ({ data }) => {
     console.error('Error during file upload:', error);
   })
       console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
+    window.location.reload();
   }; 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -58,14 +105,16 @@ const EditInfo = ({ data }) => {
       return;
     }
        
-      console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
+      console.log('heeeeeeeeeeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiiiiieeeeeeeeeeeeeeeeeeeeer');
+      // console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
     if (file) {
       console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
       setSelectedFile(file.name);
       setSelectedFileTosend(file);
       avatarImages.push(URL.createObjectURL(file));
-      console.log(avatarImages);
+      // console.log(avatarImages);
       setSelectedAvatar(avatarImages[avatarImages.length - 1]);
+      console.log( "----------->" + selectedAvatar);
     }
   };
 
@@ -91,7 +140,7 @@ const EditInfo = ({ data }) => {
   });
 
   return (
-    <form action="POST" className="w-full p-6">
+    <form action="POST" className="w-full p-6" onSubmit = {handleSubmit} >
       {/* head ------------------------------------------------------------------ */}
       <div className={`flex flex-nowrap h-10 relative w-full text-bLight_5`}>
         <span className="h-full flex">
@@ -199,7 +248,6 @@ const EditInfo = ({ data }) => {
           id="submit"
           value="Save"
           className={`bg-org_3 text-org_1 p-3 px-10 rounded-full cursor-pointer`}
-          onClick={handleSubmit}
         />
       </div>
     </form>
