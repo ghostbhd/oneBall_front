@@ -160,16 +160,16 @@ const userprofile = {
   fullName: "Anass ghost",
   image: "/src/assets/avatar/Deadpool.jpg",
   level: 2,
-  games: 20,
-  win: 10,
-  lose: 10,
   xp: 200,
-  state: "Online", // Online, InGame, Offline(2 Hours ago, yesterday, 2 days ago, last month, 1 year ago ...)
   position: 23,
+  games: 20,
+  lose: 10,
+  win: 10,
+  state: "Online", // Online, InGame, Offline(2 Hours ago, yesterday, 2 days ago, last month, 1 year ago ...)
   friend: false,
-  friendRequest: false,
+  friendRequest: true,
   friendRequestSent: false,
-  last6Games: [
+  gamesHistory: [
     {
       id: 1,
       opponent: "user1",

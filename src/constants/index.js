@@ -18,6 +18,12 @@ import { IoNotifications } from "react-icons/io5"; // notifications icon
 
 import { BsChevronRight, BsChevronLeft } from "react-icons/bs"; // chevron icon
 import { MdOutlineAdd } from "react-icons/md"; // add icon
+import { MdGamepad } from "react-icons/md"; // gamepad icon
+import { IoPersonRemoveSharp, IoPersonAddSharp } from "react-icons/io5"; // remove/add person icon
+import { TbMessagePlus } from "react-icons/tb"; // send message icon
+import { MdBlockFlipped } from "react-icons/md"; // block icon
+import { MdPersonAddDisabled } from "react-icons/md"; // cancel request icon
+
 
 
 
@@ -119,7 +125,12 @@ export const icons = { // All needed icons
   chevronRight: BsChevronRight,
   chevronLeft: BsChevronLeft,
   add: MdOutlineAdd,
-  gameController: IoGameController,
+  gameController: MdGamepad,
+  addPerson: IoPersonAddSharp,
+  removePerson: IoPersonRemoveSharp,
+  cancelRequest: MdPersonAddDisabled,
+  sendMessage: TbMessagePlus,
+  block: MdBlockFlipped,
 };
 
 export const chatIcons = {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 import { userProfileData } from "../../data/mockApi";
 import UserInfo from "./UserInfo";
+import UserGamesHistory from "./UserGamesHistory";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
@@ -36,9 +37,9 @@ const UserProfile = () => {
             <UserInfo data={data} />
           </div>
           {/* User game status ------------------------------*/}
-          <div
-            className={`flex flex-col w-[30%] h-full bg-bDark_1/40 ml-auto`}
-          ></div>
+          <div className={`flex flex-col w-[30%] h-full ml-auto`}>
+            <UserGamesHistory gamehistory={data.gamesHistory} />
+          </div>
         </>
       )}
     </div>
