@@ -8,8 +8,11 @@ const UserInfo = ({ data }) => {
   const starPosition = "absolute -top-3 -right-5 w-12 h-12";
 
   return (
-    <div
-      className={`w-full h-max flex relative overflow-hidden bg-gradient-to-r 
+    <div className={`w-full h-max flex relative overflow-hidden`}>
+      {/* content ----------------------------- */}
+      <div className={`w-full h-max flex flex-row space-x-8`}>
+        <div
+          className={`flex flex-row space-x-8 w-max p-4 bg-gradient-to-r 
       ${
         data.state === "Online"
           ? "from-org_3/30 to-org_1/20"
@@ -18,76 +21,75 @@ const UserInfo = ({ data }) => {
           : "from-gray-500/30 to-gray-400/30"
       }
       ${style.rounded}`}
-    >
-      {/* content ----------------------------- */}
-      <div className={`w-full p-4 h-max flex flex-row space-x-8`}>
-        {/* avatar ------------------------------------------- */}
-        <div className="flex flex-col space-y-2 items-center">
-          <div
-            style={ImgBg({ img: data.image })}
-            className={`w-32 h-32 ${style.rounded} relative shadow-xl`}
-          >
-            {/* star icon -----------------------*/}
-            {<icons.star className={`${starPosition} text-org_3/80`} />}
-            {/* level -----------*/}
-            <div className={`flex ${starPosition}`}>
-              <p className={`text-sm w-max m-auto font-bold text-org_1`}>
-                {data.level}.{data.xp / 100}
+        >
+          {/* avatar ------------------------------------------- */}
+          <div className="flex flex-col space-y-2 items-center">
+            <div
+              style={ImgBg({ img: data.image })}
+              className={`w-32 h-32 ${style.rounded} relative shadow-xl`}
+            >
+              {/* star icon -----------------------*/}
+              {<icons.star className={`${starPosition} text-org_3/80`} />}
+              {/* level -----------*/}
+              <div className={`flex ${starPosition}`}>
+                <p className={`text-sm w-max m-auto font-bold text-org_1`}>
+                  {data.level}.{data.xp / 100}
+                </p>
+              </div>
+            </div>
+            {/* xp and progress ------------------------ */}
+            <div className="w-32 flex mt-auto flex-wrap items-center">
+              {/* progress bar ---------------- */}
+              <div className="w-11/12 flex h-2 bg-org_3/20 rounded-full">
+                <div
+                  className="h-full bg-gradient-to-r from-org_3  to-org_1 rounded-full"
+                  style={{ width: `${data.xp / 10}%` }}
+                ></div>
+              </div>
+              {/* Next level ------------------------ */}
+              <p className="w-1/12 ml-auto  text-sm text-right text-org_1">
+                {data.level + 1}
               </p>
             </div>
           </div>
-          {/* xp and progress ------------------------ */}
-          <div className="w-32 flex mt-auto flex-wrap items-center">
-            {/* progress bar ---------------- */}
-            <div className="w-11/12 flex h-2 bg-org_3/20 rounded-full">
-              <div
-                className="h-full bg-gradient-to-r from-org_3  to-org_1 rounded-full"
-                style={{ width: `${data.xp / 10}%` }}
-              ></div>
-            </div>
-            {/* Next level ------------------------ */}
-            <p className="w-1/12 ml-auto  text-sm text-right text-org_1">
-              {data.level + 1}
-            </p>
-          </div>
-        </div>
 
-        {/* user info ------------------------------------------- */}
-        <div className="flex flex-col h-32">
-          <p
-            className={`text-xl w-max ${
-              data.state === "Online"
-                ? "text-org_1/80"
-                : data.state === "InGame"
-                ? "text-bLight_3"
-                : "text-gray-400"
-            }`}
-          >
-            {data.fullName}
-          </p>
-          <p
-            className={`${
-              data.state === "Online"
-                ? "text-org_1/60"
-                : data.state === "InGame"
-                ? "text-bLight_3/80"
-                : "text-gray-400/80"
-            }`}
-          >
-            @{data.username}
-          </p>
-          {/* state --------------------------------------- */}
-          <div className={`flex flex-row items-center mt-auto`}>
-            <span
-              className={`w-2 h-2 rounded-full mr-2 ${
+          {/* user info ------------------------------------------- */}
+          <div className="flex flex-col h-32">
+            <p
+              className={`text-xl w-max ${
                 data.state === "Online"
-                  ? "bg-org_2"
+                  ? "text-org_1/80"
                   : data.state === "InGame"
-                  ? "bg-bLight_3"
-                  : "bg-gray-500"
+                  ? "text-bLight_3"
+                  : "text-gray-400"
               }`}
-            ></span>
-            <p className="text-white/60 text-xs mr-auto">{data.state}</p>
+            >
+              {data.fullName}
+            </p>
+            <p
+              className={`${
+                data.state === "Online"
+                  ? "text-org_1/60"
+                  : data.state === "InGame"
+                  ? "text-bLight_3/80"
+                  : "text-gray-400/80"
+              }`}
+            >
+              @{data.username}
+            </p>
+            {/* state --------------------------------------- */}
+            <div className={`flex flex-row items-center mt-auto`}>
+              <span
+                className={`w-2 h-2 rounded-full mr-2 ${
+                  data.state === "Online"
+                    ? "bg-org_2"
+                    : data.state === "InGame"
+                    ? "bg-bLight_3"
+                    : "bg-gray-500"
+                }`}
+              ></span>
+              <p className="text-white/60 text-xs mr-auto">{data.state}</p>
+            </div>
           </div>
         </div>
 
