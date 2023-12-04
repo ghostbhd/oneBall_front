@@ -42,9 +42,11 @@ const Buttons = ({ data }) => {
           <div className={`flex flex-row space-x-4`}>
             <div className={`${button} bg-bDark_4 text-bLight_3`}>
               <p className={`${text} `}>Accept</p>
+              <div  className={`${icon} !text-base`}>{<icons.check/>}</div>
             </div>
             <div className={`${button} bg-bLight_4 text-bDark_3`}>
               <p className={`${text} `}>Decline</p>
+              <div className={`${icon} !text-base`}>{<icons.xmark />}</div>
             </div>
           </div>
         ) : data.friendRequestSent ? (
