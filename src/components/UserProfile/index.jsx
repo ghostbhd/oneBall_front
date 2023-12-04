@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { userProfileData } from "../../data/mockApi";
 import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
+import GameDetails from "./GameDetails";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
@@ -31,12 +32,14 @@ const UserProfile = () => {
       ) : (
         <>
           {/* User details row --------------------------*/}
-
-          <div className="flex flex-col w-8/12 h-full">
+          <div className="flex flex-col w-8/12 h-full space-y-6">
             {/* user Infr ----- */}
             <UserInfo data={data} />
+            {/* user game details ----- */}
+            <GameDetails data={data} />
           </div>
-          {/* User game status ------------------------------*/}
+
+          {/* User game history ------------------------------*/}
           <div className={`flex flex-col w-[30%] h-full ml-auto`}>
             <UserGamesHistory gamehistory={data.gamesHistory} />
           </div>
