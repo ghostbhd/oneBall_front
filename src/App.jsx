@@ -7,6 +7,8 @@ import {
   Stats,
   Settings,
   Logout,
+  Auth,
+  CallBack,
 } from "./components";
 import style from "./style";
 import { SocketProvider } from "./Socketio";
@@ -36,6 +38,8 @@ const App = () => {
           `}
           >
             <Routes>
+              <Route path="/Auth" element={<Auth />} />
+              <Route path="/CallBack" element={<CallBack />} />
               <Route path="/" element={<Dashboard />} />
               <Route path="/games" element={<Games />} />
               <Route path="/messages" element={<Messages />} />

@@ -4,27 +4,39 @@ import MessageList from "./MessageList";
 import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
+// import { headers } from "../../jwt_token";
+import  { getHeaders } from "../../jwt_token";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const row = "w-1/2 flex flex-col space-y-14";
-
+  
   useEffect(() => {
     // fetch("/api/dashboard")
-
-    fetchDataFromMockApi()
-      .then((data) => {
-        console.log(data); // Log the data to check its structure
-        setData(data);
-        setLoading(false);
+    
+    // fetchDataFromMockApi()
+    const headers = getHeaders();
+   
+    fetch('http://localhost:3009/dashboard', {
+      method: 'GET',
+      headers: headers,
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();}
+      })
+    .then((data) => {
+      console.log(data); // Log the data to check its structure
+      setData(data);
+      setLoading(false);
       })
       .catch((err) => {
         console.log("Error fetching data", err);
         setLoading(false);
       });
-  }, []);
-
+    }, []);
+    
   return (
     <div className={`flex flex-row w-full`}>
       {loading ? (

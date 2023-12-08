@@ -6,6 +6,8 @@ import Messages from "./Messages";
 import Stats from "./Stats";
 import Settings from "./Settings";
 import Logout from "./Logout";
+import Auth from "./Authentication/index"
+import CallBack from "./Authentication/CallBack"
 
 export {
     SideBar,
@@ -15,5 +17,8 @@ export {
     Messages,
     Stats,
     Settings,
-    Logout
+    Logout,
+    Auth,
+    CallBack,
+    
 }

@@ -93,13 +93,13 @@ const ChatWindow = ({ activeChat, activeChatUser }) => {
           <div className="relative">
             <FiMoreVertical onClick={handleOptionToggle} className="cursor-pointer" />
             {showOptions && (
-              // <div className="absolute right-0 bg-white shadow-lg rounded-lg p-2">
-              //   <button onClick={handleBlockUser} className="block text-left p-2 hover:bg-gray-200 w-full">Block</button>
-              //   <button onClick={handleInviteToGame} className="block text-left p-2 hover:bg-gray-200 w-full">Invite to game</button>
-              // </div>
-            )} */}
-        {/* </div> */}
-        {/* )} */}
+              <div className="absolute right-0 bg-white shadow-lg rounded-lg p-2">
+                <button onClick={handleBlockUser} className="block text-left p-2 hover:bg-gray-200 w-full">Block</button>
+                <button onClick={handleInviteToGame} className="block text-left p-2 hover:bg-gray-200 w-full">Invite to game</button>
+              </div>
+            )} }
+        </div>
+         )} */}
       </div>
 
       {/* Message display  */}
