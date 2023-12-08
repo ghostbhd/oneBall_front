@@ -4,17 +4,17 @@ import PropTypes from "prop-types";
 const UserGamesHistory = ({ gamehistory }) => {
   return (
     <div
-      className={`w-full h-full ml-auto flex flex-col p-2 ${style.blueBlur} ${style.rounded}`}
+      className={`w-full h-full flex flex-col p-2 ${style.blueBlur} ${style.rounded}`}
     >
       {/* head ---------------------- */}
-      <div className="h-max w-full flex flex-col items-center">
+      <div className="w-full flex">
         <p className={`text-bLight_4 text-lg mb-auto p-2 w-full`}>History</p>
       </div>
       {/* body ---------------------- */}
       <div className={`h-auto ${style.rounded} w-full overflow-hidden mt-2`}>
         <ul
-          className={`h-full w-full flex flex-col overflow-y-scroll
-          ${style.rounded} ${style.blueBlur} !bg-opacity-30`}
+          className={`h-full w-full flex flex-col overflow-y-auto space-y-1
+            ${style.rounded} !bg-opacity-30`}
         >
           {gamehistory &&
           Array.isArray(gamehistory) &&
@@ -24,7 +24,7 @@ const UserGamesHistory = ({ gamehistory }) => {
               <li
                 key={item.id}
                 className={`w-full flex flex-row text-bLight_4 align-middle
-                bg-bLight_5/20 p-4 border-b-2 border-bDark_3`}
+                bg-bDark_1/50 p-4`}
               >
                 {/* opponent ----------- */}
                 <span className="my-auto leading-[0.8] text-lest text-bLight_2 w-2/6 ">
@@ -44,8 +44,8 @@ const UserGamesHistory = ({ gamehistory }) => {
 
                 {/* date/time ----------- */}
                 <div className="w-2/6 flex">
-                  <span className="my-auto ml-auto text-center text-bLight_2 w-max leading-[.8]">
-                    {item.time}{" "}
+                  <span className="my-auto ml-auto text-right text-bLight_3 w-max leading-[.7]">
+                    {item.time}
                     <span className="block text-sm text-bLight_4">
                       {item.date}
                     </span>

@@ -4,27 +4,29 @@ import style from "../../style";
 import { icons } from "../../constants";
 
 const Buttons = ({ data }) => {
-  const button = `flex p-3 rounded-xl w-max items-center cursor-pointer`;
-  const text = `font-bold`;
-  const icon = `text-xl ml-2`;
+  const button = `flex sm:p-3 p-2 rounded-xl w-max items-center cursor-pointer`;
+  const text = `font-bold sm:block hidden`;
+  const icon = `text-xl sm:ml-2 sm:mx-0 mx-4`;
 
   return (
     <div
-      className={`w-full flex flex-col px-5 bg-bLight_2/30 p-4 ${style.rounded}`}
+      className={`w-full flex flex-col space-y-6 sm:px-5 px-3 ${style.blueBlur} p-4 ${style.rounded}`}
     >
-      {/* start game button ----------------------------------------- */}
+      {/* challenge button ----------------------------------------- */}
       <Link
         to={"/game"}
-        className={`w-full flex flex-row justify-center items-center p-3 
+        className={`w-full flex flex-row justify-center items-center sm:p-3 p-2
               rounded-xl bg-bLight_1`}
       >
         <p className={` ml-auto text-bDark_3 font-bold`}>Challenge</p>
-        <div className={`text-3xl text-bDark_3 ml-auto`}>
+        <div className={`sm:text-3xl text-2xl text-bDark_3 ml-auto`}>
           {<icons.gameController />}
         </div>
       </Link>
 
-      <div className={`flex flex-row text-sm w-full mt-auto justify-between`}>
+      <div
+        className={`flex flex-row text-sm w-full sm:!mt-auto justify-between`}
+      >
         {!data.friend && !data.friendRequest && !data.friendRequestSent ? (
           // Add friend button ---------------------------
           <div className={`${button} bg-bDark_4 text-bLight_3`}>
@@ -42,7 +44,7 @@ const Buttons = ({ data }) => {
           <div className={`flex flex-row space-x-4`}>
             <div className={`${button} bg-bDark_4 text-bLight_3`}>
               <p className={`${text} `}>Accept</p>
-              <div  className={`${icon} !text-base`}>{<icons.check/>}</div>
+              <div className={`${icon} !text-base`}>{<icons.check />}</div>
             </div>
             <div className={`${button} bg-bLight_4 text-bDark_3`}>
               <p className={`${text} `}>Decline</p>

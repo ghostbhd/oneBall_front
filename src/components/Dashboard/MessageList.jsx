@@ -2,17 +2,13 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { icons } from "../../constants";
 import style from "../../style";
+import { ImgBg } from "../../style";
 
 const MessageList = ({ last4Msgs }) => {
-  const imagebg = ({ img }) => ({
-    backgroundImage: `url('${img}')`,
-    backgroundSize: `cover`,
-    backgroundPosition: `center`,
-  });
   return (
     <div
       className={`
-        h-max p-5 px-6 bg-opacity-30 shadow-2xl 
+        h-max p-5 px-6 shadow-4xl relative
         ${style.blueBlur} ${style.rounded} ${style.boxWidth}
       `}
     >
@@ -33,11 +29,13 @@ const MessageList = ({ last4Msgs }) => {
           last4Msgs.map((item) => (
             <li
               key={item.id}
-              className="flex flex-wrap w-full h-max rounded-l-[50px] rounded-r-[20px]
-                border-b-[3px] border-r-[3px] border-bLight_5 bg-bDark_1"
+              className="flex flex-wrap w-full h-max rounded-full bg-bLight_5/60"
             >
               {/* image ****/}
-              <div
+              <Link
+                key={item.username}
+                to={"/profile/" + item.username}
+                style={ImgBg({ img: item.image })}
                 className={`w-[62px] h-[62px] rounded-full border-[5px]
                   ${
                     item.status === "online"
@@ -46,10 +44,7 @@ const MessageList = ({ last4Msgs }) => {
                       ? style.offline
                       : style.inGame
                   }`}
-                style={imagebg({ img: item.image })}
-              >
-                {/* <img src={item.image} alt={"Photo of " + item.username} /> */}
-              </div>
+              ></Link>
               {/* text ****/}
               <div className="flex flex-col w-4/6 ml-4 pr-2">
                 <span className="text-bLight_2 w-full">

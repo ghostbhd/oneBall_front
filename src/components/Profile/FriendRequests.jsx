@@ -2,6 +2,7 @@ import { friendRequestData } from "../../data/mockApi";
 import { useEffect, useState } from "react";
 import { ImgBg } from "../../style";
 import { icons } from "../../constants";
+import { Link } from "react-router-dom";
 
 const FriendRequests = () => {
   const [data, setData] = useState([]);
@@ -61,10 +62,12 @@ const FriendRequests = () => {
             `}
           >
             {/* user image ------- */}
-            <div
+            <Link
+              key={item.username}
+              to={"/profile/" + item.username}
               className={`w-20 h-20 rounded-full`}
               style={ImgBg({ img: item.image })}
-            ></div>
+            ></Link>
             {/* username and fullName ---- */}
             <p title={item.fullName} className={`text-bLight_2 text-sm w-full text-center truncate`}>{item.fullName}</p>
             <p className={`text-bLight_2/80 text-xs w-full text-center truncate`}>@{item.username}</p>

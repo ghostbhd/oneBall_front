@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { ImgBg } from "../../style";
 
 const ProfileDetails = ({ user }) => {
-
   const pStyle = "text-bLight_2 text-[26pt] w-3/12 text-center leading-[.8em]";
   const spanStyle = "block text-bLight_5 text-[12pt]";
 
@@ -17,9 +16,7 @@ const ProfileDetails = ({ user }) => {
         {/* FullName and userName -------------------------------------*/}
         <p className="sm:w-8/12 w-full text-bLight_3 text-2xl text-center">
           {user.fullName}
-          <span className={`block text-lg text-bLight_4`}>
-            {user.username}
-          </span>
+          <span className={`block text-lg text-bLight_4`}>{user.username}</span>
         </p>
         {/* level, games, win, lose  ----------------*/}
         <div className={`sm:w-8/12 w-full sm:p-8 p-2 flex flex-col space-y-4`}>
@@ -43,8 +40,9 @@ const ProfileDetails = ({ user }) => {
         {/* link view more to /games */}
         <div className="sm:w-8/12 w-full text-center justify-center">
           <Link
-            to={"/games"}
-            className="w-max text-base transition-colors duration-300 text-bLight_5 hover:text-bLight_2 mt-5"
+            to={"/stats"}
+            className="w-max text-base transition-colors duration-300 
+              text-bLight_5 hover:text-bLight_2 mt-5"
           >
             view more
           </Link>
@@ -53,7 +51,9 @@ const ProfileDetails = ({ user }) => {
       {/* image ---------------------------*/}
       <div
         title="profile image"
-        className={`sm:block hidden absolute md:w-52 w-36 md:h-[90%] h-full right-0 ${style.rounded}
+        className={`sm:block hidden absolute md:w-52 w-36 md:h-[90%] h-full right-0 ${
+          style.rounded
+        }
           top-[50%] transform translate-y-[-50%] md:border-[7px] border-4 md:shadow-3xl shadow-none
         ${
           user.status === "online"

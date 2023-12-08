@@ -5,40 +5,44 @@ import { icons } from "../../constants";
 import Buttons from "./Buttons";
 
 const UserInfo = ({ data }) => {
-  const starPosition = "absolute -top-3 -right-5 w-12 h-12";
+  const starPosition =
+    "absolute -top-3 sm:-right-5 -right-2 sm:w-12 sm:h-12 w-8 h-8";
 
   return (
     <div className={`w-full h-max flex relative overflow-hidden`}>
       {/* content ----------------------------- */}
-      <div className={`w-full h-max flex flex-row space-x-8`}>
+      <div className={`w-full h-max flex sm:flex-row flex-col sm:space-y-0 space-y-4 sm:space-x-8`}>
         <div
-          className={`flex flex-row space-x-8 w-max p-4 bg-gradient-to-r 
-      ${
-        data.state === "Online"
-          ? "from-org_3/30 to-org_1/20"
-          : data.state === "InGame"
-          ? "from-bLight_3/30 to-bLight_1/30"
-          : "from-gray-500/30 to-gray-400/30"
-      }
-      ${style.rounded}`}
+          className={`flex flex-row space-x-8 sm:w-max w-full p-4 bg-gradient-to-r 
+            ${
+              data.state === "Online"
+                ? "from-org_3/30 to-org_1/20"
+                : data.state === "InGame"
+                ? "from-bLight_3/30 to-bLight_1/30"
+                : "from-gray-500/30 to-gray-400/30"
+            }
+            ${style.rounded}
+          `}
         >
           {/* avatar ------------------------------------------- */}
           <div className="flex flex-col space-y-2 items-center">
             <div
               style={ImgBg({ img: data.image })}
-              className={`w-32 h-32 ${style.rounded} relative shadow-xl`}
+              className={`sm:w-32 sm:h-32 h-24 w-24 ${style.rounded} relative shadow-xl`}
             >
               {/* star icon -----------------------*/}
               {<icons.star className={`${starPosition} text-org_3/80`} />}
               {/* level -----------*/}
               <div className={`flex ${starPosition}`}>
-                <p className={`text-sm w-max m-auto font-bold text-org_1`}>
+                <p
+                  className={`sm:text-sm text-xs w-max m-auto font-bold text-org_1`}
+                >
                   {data.level}.{data.xp / 100}
                 </p>
               </div>
             </div>
             {/* xp and progress ------------------------ */}
-            <div className="w-32 flex mt-auto flex-wrap items-center">
+            <div className="sm:w-32 w-24 flex mt-auto flex-wrap items-center">
               {/* progress bar ---------------- */}
               <div className="w-11/12 flex h-2 bg-org_3/20 rounded-full">
                 <div
@@ -47,16 +51,16 @@ const UserInfo = ({ data }) => {
                 ></div>
               </div>
               {/* Next level ------------------------ */}
-              <p className="w-1/12 ml-auto  text-sm text-right text-org_1">
+              <p className="w-1/12 ml-auto  sm:text-sm text-xs text-right text-org_1">
                 {data.level + 1}
               </p>
             </div>
           </div>
 
           {/* user info ------------------------------------------- */}
-          <div className="flex flex-col h-32">
+          <div className="flex flex-col sm:h-32 h-24">
             <p
-              className={`text-xl w-max ${
+              className={`sm:text-xl text-base w-max ${
                 data.state === "Online"
                   ? "text-org_1/80"
                   : data.state === "InGame"
