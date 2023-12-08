@@ -6,10 +6,10 @@ export class ChannelController {
 
     constructor(private readonly channelService: ChannelService) {}
 
-    @Post()
-    async createChannel(@Body('ownerId') ownerId: number, @Body('channelName') channelName: string) {
-        return await this.channelService.createChannelForUser(ownerId, channelName, false);
-    }
+    // @Post()
+    // async createChannel(@Body('ownerId') ownerId: number, @Body('channelName') channelName: string) {
+    //     return await this.channelService.createChannelForUser(ownerId, channelName, false);
+    // }
 
     @Post(':channelId/member/:userId')
     async addMember(@Param('channelId') channelId: number, @Param('userId') userId: number) {

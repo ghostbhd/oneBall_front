@@ -9,10 +9,11 @@ import { Message } from './entities/Message.entity';
 import { Channel_Message } from './entities/Channel_Message.entity';
 import { Friendship } from './entities/Friendship.entity';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './User/user.module';
+import { UserModule } from './user/user.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { ChatModule } from './chat/chat.module';
 import { ChannelModule } from './chat/channel/channel.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 
 @Module({
@@ -23,6 +24,7 @@ import { ChannelModule } from './chat/channel/channel.module';
     AuthModule,
     ChatModule,
     ChannelModule,
+    DashboardModule,
   ],
   exports: [TypeOrmModule],
 })

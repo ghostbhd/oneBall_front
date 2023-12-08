@@ -6,7 +6,7 @@ import { Channel } from 'src/entities/Channel.entity';
 import { Channel_Membership } from 'src/entities/Channel_Membership.entity';
 import { User } from 'src/entities/user.entity';
 import { Message } from 'src/entities/Message.entity';
-import { UserModule } from 'src/User/user.module';
+import { UserModule } from 'src/user/user.module';
 import { ChatModule } from '../chat.module';
 
 @Module({

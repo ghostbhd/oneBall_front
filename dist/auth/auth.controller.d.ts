@@ -1,8 +1,18 @@
-import { AuthDto } from 'src/DTOS/auth.dto';
 import { AuthService } from './auth.service';
+import { Response } from 'express';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    signup(body: AuthDto): Promise<import("../entities/user.entity").User>;
-    signin(body: AuthDto): Promise<import("../entities/user.entity").User>;
+    loging(): {
+        msg: string;
+    };
+    googleLoginCallback(req: any, res: Response): Promise<{
+        fff: string;
+    }>;
+    loginng(): {
+        msg: string;
+    };
+    FortyTwoLoginCallback(req: any, res: Response): Promise<{
+        fff: string;
+    }>;
 }

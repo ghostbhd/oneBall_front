@@ -7,7 +7,7 @@ import { Chat } from 'src/entities/Chat.entity';
 import { User } from 'src/entities/user.entity';
 import { Channel} from 'src/entities/Channel.entity';
 import { ChatController } from './chat.controller';
-import { UserService } from 'src/User/user.service';
+import { UserService } from 'src/user/user.service';
 import { Channel_Membership} from 'src/entities/Channel_Membership.entity';
 
 

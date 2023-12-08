@@ -18,9 +18,10 @@ const Message_entity_1 = require("./entities/Message.entity");
 const Channel_Message_entity_1 = require("./entities/Channel_Message.entity");
 const Friendship_entity_1 = require("./entities/Friendship.entity");
 const auth_module_1 = require("./auth/auth.module");
-const user_module_1 = require("./User/user.module");
+const user_module_1 = require("./user/user.module");
 const chat_module_1 = require("./chat/chat.module");
 const channel_module_1 = require("./chat/channel/channel.module");
+const dashboard_module_1 = require("./dashboard/dashboard.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -33,6 +34,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             chat_module_1.ChatModule,
             channel_module_1.ChannelModule,
+            dashboard_module_1.DashboardModule,
         ],
         exports: [typeorm_1.TypeOrmModule],
     })

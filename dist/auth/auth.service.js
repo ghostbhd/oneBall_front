@@ -11,29 +11,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const user_service_1 = require("../User/user.service");
+const user_service_1 = require("../user/user.service");
+const jwt_1 = require("@nestjs/jwt");
 let AuthService = class AuthService {
-    constructor(userservice) {
+    constructor(userservice, jwtService) {
         this.userservice = userservice;
+        this.jwtService = jwtService;
     }
-    async signup(username, email, pass) {
-        const user = await this.userservice.findUserByUn(username);
-        if (user)
-            throw new common_1.UnauthorizedException();
-        return (this.userservice.createUser(username, email, ""));
-    }
-    async signin(username, pass) {
-        const user = await this.userservice.findUserByUn(username);
-        if (!user) {
-            console.log("======== hello =========");
-            throw new common_1.UnauthorizedException();
+    async login(profile) {
+        if (await this.userservice.findUserByUn(profile.username) != null) {
+            const user = await this.userservice.findUserByUn(profile.username);
+            console.log("======== user found =========");
+            console.log("here is the return of findUserByUn----->>"
+                + JSON.stringify(user));
+            return (user);
         }
+        console.log("======== creating new user =========");
+        const user = await this.userservice.createUser(profile.username, profile.email, profile.avatar);
         return (user);
+    }
+    async create_jwt(profile) {
+        const payload = { name: profile.username, sub: profile.email };
+        console.log("the plyload is==================>" + JSON.stringify(payload));
+        ;
+        return (this.jwtService.signAsync(payload));
     }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService, jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

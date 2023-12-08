@@ -27,4 +27,3 @@ export class Channel_Membership {
     @Column({ nullable: true })
     mutedBy: number; // ID of the user who muted this member
 }
-

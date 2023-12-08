@@ -19,9 +19,6 @@ let ChannelController = class ChannelController {
     constructor(channelService) {
         this.channelService = channelService;
     }
-    async createChannel(ownerId, channelName) {
-        return await this.channelService.createChannelForUser(ownerId, channelName, false);
-    }
     async addMember(channelId, userId) {
         return await this.channelService.addMemberToChannel(channelId, userId);
     }
@@ -39,14 +36,6 @@ let ChannelController = class ChannelController {
     }
 };
 exports.ChannelController = ChannelController;
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)('ownerId')),
-    __param(1, (0, common_1.Body)('channelName')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String]),
-    __metadata("design:returntype", Promise)
-], ChannelController.prototype, "createChannel", null);
 __decorate([
     (0, common_1.Post)(':channelId/member/:userId'),
     __param(0, (0, common_1.Param)('channelId')),

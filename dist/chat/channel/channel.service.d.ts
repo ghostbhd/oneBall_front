@@ -1,6 +1,6 @@
 import { Message } from 'src/entities/Message.entity';
 import { User } from 'src/entities/user.entity';
-import { UserService } from 'src/User/user.service';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
 import { Channel } from 'src/entities/Channel.entity';
@@ -14,7 +14,7 @@ export declare class ChannelService {
     private readonly channelRepository;
     private readonly Channel_MembershipRepository;
     constructor(messageRepository: Repository<Message>, userService: UserService, directMessageRepository: Repository<Chat>, userRepository: Repository<User>, channelRepository: Repository<Channel>, Channel_MembershipRepository: Repository<Channel_Membership>);
-    createChannelForUser(ownerId: number, channelName: string, isPrivate: boolean, password?: string): Promise<Channel>;
+    createChannelForUser(ownerId: number, channelName: string, channelType: string): Promise<Channel>;
     addMemberToChannel(channelId: number, userId: number, channelPassword?: string): Promise<Channel_Membership>;
     sendMessageToChannel(channelId: number, senderId: number, content: string): Promise<Channel_Message>;
     getChannelById(channelId: number): Promise<Channel>;

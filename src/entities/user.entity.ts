@@ -12,12 +12,12 @@ import { Channel } from "./Channel.entity";
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({unique: true})
   username: string;
   @Column()
   email: string;
-  @Column()
-  pass: string;
+  @Column({ nullable: true})
+  Avatar: string;
   @OneToMany(() => Friendship, friendship => friendship.userid1)
   friendship_reciver: Friendship[];
   @OneToMany(() => Friendship, friendship => friendship.userid2)
@@ -37,3 +37,4 @@ export class User {
   @OneToMany(() => Channel, channel => channel.owner)
   ownedChannels: Channel[];
 }
+//! add status ,and the avatar

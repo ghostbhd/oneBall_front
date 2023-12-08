@@ -13,7 +13,7 @@ exports.ChatGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const chat_service_1 = require("./chat.service");
 const socket_io_1 = require("socket.io");
-const user_service_1 = require("../User/user.service");
+const user_service_1 = require("../user/user.service");
 let ChatGateway = class ChatGateway {
     constructor(chatService, userService) {
         this.chatService = chatService;
