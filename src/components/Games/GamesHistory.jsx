@@ -13,8 +13,8 @@ const GamesHistory = ({ gamehistory }) => {
       {/* body ---------------------- */}
       <div className={`h-auto ${style.rounded} w-full overflow-hidden mt-2`}>
         <ul
-          className={`h-full w-full flex flex-col overflow-y-scroll
-          ${style.rounded} ${style.blueBlur} !bg-opacity-30`}
+          className={`h-full w-full flex flex-col overflow-y-auto space-y-1
+          ${style.rounded}`}
         >
           {gamehistory &&
           Array.isArray(gamehistory) &&
@@ -24,7 +24,7 @@ const GamesHistory = ({ gamehistory }) => {
               <li
                 key={item.id}
                 className={`w-full flex flex-row text-bLight_4 align-middle
-                bg-bLight_5/20 p-4 border-b-2 border-bDark_3`}
+                bg-bDark_1/50 p-4`}
               >
                 {/* opponent ----------- */}
                 <span className="my-auto leading-[0.8] text-lest text-bLight_2 w-2/6 ">

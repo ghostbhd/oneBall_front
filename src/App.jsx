@@ -23,9 +23,12 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <div className={` w-full h-full flex flex-row fixed`} style={ImgBg({img : "/src/assets/bg contain.png"})}>
+      <div
+        className={`w-full h-full flex flex-row fixed`}
+        style={ImgBg({ img: "/src/assets/bg contain.png" })}
+      >
         <div
-          className={`absolute right-0 top-0 w-full h-full bg-[#0a2028] opacity-50`}
+          className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60`}
         ></div>
         {/* sidebar ----------------------------------------------------------------- */}
         <SideBar />
@@ -36,12 +39,11 @@ const App = () => {
 
         {/* content ----------------------------------------------------------------- */}
         <div
-          className={`overflow-y-auto
+          className={`flex flex-wrap overflow-y-auto relative
             ${style.backdropBlur}
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}
         >
-
           {/* routes ----------------------------------------------------------------- */}
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -51,7 +53,7 @@ const App = () => {
             <Route path="/stats" element={<Stats />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/profile/:username" element={<UserProfile />}/>
+            <Route path="/profile/:username" element={<UserProfile />} />
           </Routes>
         </div>
       </div>

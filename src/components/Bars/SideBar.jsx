@@ -12,7 +12,7 @@ const SideBar = () => {
   return (
     <div
       className={`md:flex hidden h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-50
-        ${style.blueBlur}
+        ${style.barBlueBlur}
         ${theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW}`}
     >
       {/* Toggle button ---------------------- */}
@@ -52,7 +52,7 @@ const SideBar = () => {
             <Link
               to={item.link}
               className={`flex flex-row p-2 items-center ${
-                location.pathname === `${item.link}`
+                location.pathname === `${item.link}` || location.pathname === `${item.link}/`
                   ? `bg-org_3 rounded-3xl text-white font-bold`
                   : ""
               }`}

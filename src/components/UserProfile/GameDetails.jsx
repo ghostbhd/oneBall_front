@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import style from "../../style";
 
 const GameDetails = ({ data }) => {
-  const statDiv = `w-1/3 flex p-4 rounded-2xl text-bLight_4 font-bold items-center ${style.blueBlur}`;
-  const statNumber = `m-auto mr-4 text-3xl`;
+  const statDiv = `w-1/3 flex sm:p-4 p-2 rounded-2xl text-bLight_4 font-bold items-center ${style.blueBlur}`;
+  const statNumber = `m-auto mr-4 sm:text-4xl text-3xl`;
   const statText = `mr-auto`;
 
   return (

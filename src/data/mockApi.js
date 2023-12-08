@@ -14,7 +14,7 @@ const dashboard = {
     {
       id: 1,
       username: "user1",
-      image: "https://picsum.photos/200/200",
+      image: "/src/assets/avatar/Swagboysteve on instagram BABY RAPHAEL (TMNT).jpg",
       lastMessage: "Hello",
       status: "online",
       ischannel: false,
@@ -137,20 +137,20 @@ const profile = {
 const frindRequest = [
   {
     id: 1,
-    username: "user1",
-    image: "https://picsum.photos/200/200",
-    fullName: "User 1",
+    username: "anass",
+    image: "/src/assets/avatar/Deadpool.jpg",
+    fullName: "Anass ghost",
   },
   {
     id: 2,
     username: "user2",
-    image: "https://picsum.photos/200/200",
+    image: "/src/assets/avatar/Swagboysteve on instagram BABY RAPHAEL (TMNT).jpg",
     fullName: "User 2",
   },
   {
     id: 3,
     username: "user3",
-    image: "https://picsum.photos/200/200",
+    image: "/src/assets/avatar/Join and have fun.jpg",
     fullName: "User 3",
   },
 ];

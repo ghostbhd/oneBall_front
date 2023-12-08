@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { icons } from "../../constants";
 import style from "../../style";
 import PropTypes from "prop-types";
+import { ImgBg } from "../../style";
 
 const EditInfo = ({ data }) => {
   const [selectedFile, setSelectedFile] = useState("");
@@ -39,11 +40,7 @@ const EditInfo = ({ data }) => {
     setMoreAvatars(false);
   };
 
-  const imagebg = ({ img }) => ({
-    backgroundImage: `url('${img}')`,
-    backgroundSize: `cover`,
-    backgroundPosition: `center`,
-  });
+  
 
   return (
     <form action="POST" className="w-full p-6">
@@ -96,7 +93,7 @@ const EditInfo = ({ data }) => {
               className={`md:w-[90px] sm:w-[80px] w-[60px] md:h-[90px] sm:h-[80px] h-[60px] relative cursor-pointer mx-auto
                 rounded-[25px] ${item === selectedAvatar ? "order-first" : ""} 
               `}
-              style={imagebg({ img: item })}
+              style={ImgBg({ img: item })}
               onClick={() => setSelectedAvatar(item)}
             >
               {/* checked avatar --------------*/}
