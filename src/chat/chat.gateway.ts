@@ -7,7 +7,7 @@ import {
 
 import { ChatService } from './chat.service';
 import { Socket, Server } from 'socket.io';
-import { UserService } from 'src/User/user.service';
+import { UserService } from 'src/user/user.service';
 
 
 @WebSocketGateway({ cors: {

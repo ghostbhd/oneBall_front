@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 import { UnauthorizedException } from '@nestjs/common';
-import { UserService } from 'src/User/user.service';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
 import { Channel} from 'src/entities/Channel.entity';
@@ -29,23 +29,33 @@ export class ChannelService {
     ) {}
 
 
-async createChannelForUser(ownerId: number, channelName: string,isPrivate: boolean, password?: string): Promise<Channel> {
-    const owner = await this.userService.findUserById(ownerId);
-    if (!owner) {
-      throw new NotFoundException('User not found');
+    async createChannelForUser( ownerId: number,channelName: string,channelType: string,): Promise<Channel> {
+      const owner = await this.userService.findUserById(ownerId);
+      if (!owner) {
+        throw new NotFoundException('User not found');
+      }
+    
+      const channel = new Channel();
+      channel.Channel = channelName;
+      channel.owner = owner;
+    
+      switch (channelType) {
+        case 'public':
+          channel.isPrivate = false;
+          break;
+        case 'private':
+          channel.isPrivate = true;
+          break;
+        case 'protected':
+          channel.isPrivate = true;
+          break;
+        default:
+          throw new BadRequestException('Invalid channel type');
+      }
+    
+      return await this.channelRepository.save(channel);
     }
     
-    const channel = new Channel();
-    channel.Channel = channelName;
-    channel.owner = owner;
-    channel.isPrivate = isPrivate;
-
-    if(isPrivate && password){
-      channel.password = password;
-    }
-    return await this.channelRepository.save(channel);
-  }
-  
   async addMemberToChannel(channelId: number, userId: number,  channelPassword?: string): Promise<Channel_Membership> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
     const user = await this.userService.findUserById(userId);    
@@ -172,7 +182,8 @@ async setUserAsAdmin(channelId: number, userId: number, requesterId: number): Pr
   if (!membership) {
     throw new NotFoundException('User is not a member of this channel');
   }
-
+//! check that the requested member is not the owner
+//! allow any admin to set other users as administrators 
   // Set the user as an administrator
   membership.isAdmin = true;
   await this.Channel_MembershipRepository.save(membership);
@@ -283,6 +294,8 @@ async unmuteUserInChannel(channelId: number, targetUserId: number): Promise<void
       await this.Channel_MembershipRepository.save(membership);
   }
 }
+
+//! if the mute duration has collapsed, set the user as unmuted and create the message, otherwise throw ...chi tkherbi9a 
 
 // import { cron } from "node-cron";
 

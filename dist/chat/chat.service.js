@@ -30,35 +30,6 @@ let ChatService = class ChatService {
         this.channelRepository = channelRepository;
         this.Channel_MembershipRepository = Channel_MembershipRepository;
     }
-    async startChat(senderId, receiverId) {
-        const newChat = new Chat_entity_1.Chat();
-        const sender = await this.userRepository.findOne({ where: { id: senderId } });
-        const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
-        if (!sender) {
-            throw new common_2.NotFoundException(`Sender with ID ${senderId} not found`);
-        }
-        if (!receiver) {
-            throw new common_2.NotFoundException(`Receiver with ID ${receiverId} not found`);
-        }
-        newChat.sender = sender;
-        newChat.receiver = receiver;
-        newChat.DateStarted = new Date().toISOString();
-        return await this.directMessageRepository.save(newChat);
-    }
-    async getChat(sender, receiver) {
-        let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } });
-        if (!chat) {
-            chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
-        }
-        if (!chat) {
-            chat = new Chat_entity_1.Chat();
-            chat.sender = sender;
-            chat.receiver = receiver;
-            chat.DateStarted = new Date().toISOString();
-            await this.directMessageRepository.save(chat);
-        }
-        return chat;
-    }
     async sendMessage(chatId, content) {
         const chat = await this.directMessageRepository.findOne({
             where: { id: chatId },
@@ -80,9 +51,6 @@ let ChatService = class ChatService {
         console.log(`Message saved with ID: ${savedMessage.id}`);
         return savedMessage;
     }
-    async getChatHistory(chatId) {
-        return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
-    }
     async listChatsForUser(userId) {
         return await this.directMessageRepository.find({
             where: [
@@ -100,10 +68,6 @@ let ChatService = class ChatService {
             throw new common_2.NotFoundException(`Chat with ID ${chatId} not found`);
         }
         return chat.messageid;
-    }
-    async getAllChatIds() {
-        const chats = await this.directMessageRepository.find();
-        return chats.map(chat => chat.id);
     }
     async getDirectMessagesBetweenUsers(senderId, receiverId) {
         const chat = await this.directMessageRepository.findOne({

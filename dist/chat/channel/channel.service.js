@@ -20,7 +20,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const common_2 = require("@nestjs/common");
 const common_3 = require("@nestjs/common");
 const common_4 = require("@nestjs/common");
-const user_service_1 = require("../../User/user.service");
+const user_service_1 = require("../../user/user.service");
 const typeorm_2 = require("typeorm");
 const Chat_entity_1 = require("../../entities/Chat.entity");
 const Channel_entity_1 = require("../../entities/Channel.entity");
@@ -35,7 +35,7 @@ let ChannelService = class ChannelService {
         this.channelRepository = channelRepository;
         this.Channel_MembershipRepository = Channel_MembershipRepository;
     }
-    async createChannelForUser(ownerId, channelName, isPrivate, password) {
+    async createChannelForUser(ownerId, channelName, channelType) {
         const owner = await this.userService.findUserById(ownerId);
         if (!owner) {
             throw new common_2.NotFoundException('User not found');
@@ -43,9 +43,18 @@ let ChannelService = class ChannelService {
         const channel = new Channel_entity_1.Channel();
         channel.Channel = channelName;
         channel.owner = owner;
-        channel.isPrivate = isPrivate;
-        if (isPrivate && password) {
-            channel.password = password;
+        switch (channelType) {
+            case 'public':
+                channel.isPrivate = false;
+                break;
+            case 'private':
+                channel.isPrivate = true;
+                break;
+            case 'protected':
+                channel.isPrivate = true;
+                break;
+            default:
+                throw new common_3.BadRequestException('Invalid channel type');
         }
         return await this.channelRepository.save(channel);
     }

@@ -26,39 +26,39 @@ export class ChatService {
     
 
 
-async startChat(senderId: number, receiverId: number): Promise<Chat> {
-  const newChat = new Chat();
-  const sender = await this.userRepository.findOne({ where: { id: senderId } });
-  const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
-    if (!sender) {
-    throw new NotFoundException(`Sender with ID ${senderId} not found`);
-  }
-  if (!receiver) {
-    throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
-  }
-  newChat.sender = sender;
-  newChat.receiver = receiver;
-  newChat.DateStarted = new Date().toISOString();
-  return await this.directMessageRepository.save(newChat); 
-}
+// async startChat(senderId: number, receiverId: number): Promise<Chat> {
+//   const newChat = new Chat();
+//   const sender = await this.userRepository.findOne({ where: { id: senderId } });
+//   const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
+//     if (!sender) {
+//     throw new NotFoundException(`Sender with ID ${senderId} not found`);
+//   }
+//   if (!receiver) {
+//     throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
+//   }
+//   newChat.sender = sender;
+//   newChat.receiver = receiver;
+//   newChat.DateStarted = new Date().toISOString();
+//   return await this.directMessageRepository.save(newChat); 
+// }
 
 
 
-async getChat(sender: User, receiver: User): Promise<Chat> {
+// async getChat(sender: User, receiver: User): Promise<Chat> {
 
-  let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } })
-  if (!chat) {
-      chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
-  }
-  if (!chat) {
-      chat = new Chat();
-      chat.sender = sender;
-      chat.receiver = receiver;
-      chat.DateStarted = new Date().toISOString();
-      await this.directMessageRepository.save(chat);
-  }
-  return chat;
-}
+//   let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } })
+//   if (!chat) {
+//       chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
+//   }
+//   if (!chat) {
+//       chat = new Chat();
+//       chat.sender = sender;
+//       chat.receiver = receiver;
+//       chat.DateStarted = new Date().toISOString();
+//       await this.directMessageRepository.save(chat);
+//   }
+//   return chat;
+// }
 
 
 
@@ -90,9 +90,9 @@ async sendMessage(chatId: number, content: string): Promise<Message> {
   return savedMessage;
 }
 
-async getChatHistory(chatId: number): Promise<Message[]> {
-  return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
-}
+// async getChatHistory(chatId: number): Promise<Message[]> {
+//   return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
+// }
 
 
 async listChatsForUser(userId: number): Promise<Chat[]> {
@@ -117,10 +117,10 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
 }
 
 
-  async getAllChatIds(): Promise<number[]> {
-    const chats = await this.directMessageRepository.find();
-    return chats.map(chat => chat.id);
-  }
+  // async getAllChatIds(): Promise<number[]> {
+  //   const chats = await this.directMessageRepository.find();
+  //   return chats.map(chat => chat.id);
+  // }
   
   
   async getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<any> {

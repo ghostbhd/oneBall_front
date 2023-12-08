@@ -8,7 +8,7 @@ export declare class User {
     id: number;
     username: string;
     email: string;
-    pass: string;
+    Avatar: string;
     friendship_reciver: Friendship[];
     friendship_sender: Friendship[];
     chatid1: Chat[];

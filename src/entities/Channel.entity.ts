@@ -20,6 +20,6 @@ export class Channel {
     Channel_messageid: Channel_Message;
     @ManyToOne(() => User)
     owner: User;
-    
 
 }
+//! priavcy (public , protected , private), unique channel name 

@@ -16,7 +16,7 @@ const Chat_entity_1 = require("../entities/Chat.entity");
 const user_entity_1 = require("../entities/user.entity");
 const Channel_entity_1 = require("../entities/Channel.entity");
 const chat_controller_1 = require("./chat.controller");
-const user_service_1 = require("../User/user.service");
+const user_service_1 = require("../user/user.service");
 const Channel_Membership_entity_1 = require("../entities/Channel_Membership.entity");
 let ChatModule = class ChatModule {
 };

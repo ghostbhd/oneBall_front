@@ -15,7 +15,7 @@ const Channel_entity_1 = require("../../entities/Channel.entity");
 const Channel_Membership_entity_1 = require("../../entities/Channel_Membership.entity");
 const user_entity_1 = require("../../entities/user.entity");
 const Message_entity_1 = require("../../entities/Message.entity");
-const user_module_1 = require("../../User/user.module");
+const user_module_1 = require("../../user/user.module");
 const chat_module_1 = require("../chat.module");
 let ChannelModule = class ChannelModule {
 };

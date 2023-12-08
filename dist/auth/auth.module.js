@@ -10,15 +10,25 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
-const user_module_1 = require("../User/user.module");
+const user_module_1 = require("../user/user.module");
+const passport_config_1 = require("./passport-config");
+const jwt_1 = require("@nestjs/jwt");
+const jwt_strategy_1 = require("./jwt.strategy");
+const passport_fortytow_strategy_1 = require("./passport.fortytow.strategy");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
-        imports: [user_module_1.UserModule],
+        imports: [user_module_1.UserModule, jwt_1.JwtModule.register({
+                secret: "secre of mine",
+                signOptions: { expiresIn: '600000s' },
+            })],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService],
+        providers: [passport_config_1.GoogleStrategy,
+            { provide: 'AUTH_SERVICE',
+                useClass: auth_service_1.AuthService }, auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, passport_fortytow_strategy_1.FortyTwoStrategy,],
+        exports: [auth_service_1.AuthService],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

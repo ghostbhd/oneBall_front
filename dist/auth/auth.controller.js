@@ -14,34 +14,76 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const auth_dto_1 = require("../DTOS/auth.dto");
 const auth_service_1 = require("./auth.service");
+const passport_1 = require("@nestjs/passport");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    signup(body) {
-        return this.authService.signup(body.username, body.email, body.pass);
+    loging() {
+        console.log("I m here mother f.....");
+        return ({ msg: "the authentication is done well ;)" });
     }
-    signin(body) {
-        return this.authService.signin(body.username, body.pass);
+    async googleLoginCallback(req, res) {
+        console.log("profile here ===========" + (req));
+        const accessToken = await this.authService.create_jwt({
+            email: req.user.profile.emails[0].value,
+            username: req.user.profile.emails[0].value.split("@")[0] + "_g",
+            avatar: req.user.profile.photos[0].value
+        });
+        res.cookie('accessToken', accessToken);
+        res.redirect("http://localhost:5173/CallBack");
+        return ({ fff: 'ddddd' });
+    }
+    loginng() {
+        console.log("I m here mother f.....");
+        return ({ msg: "the authentication is done well ;)" });
+    }
+    async FortyTwoLoginCallback(req, res) {
+        console.log("profile here ===========");
+        const accessToken = await this.authService.create_jwt({
+            email: req.user.profile.emails[0].value,
+            username: req.user.profile.emails[0].value.split("@")[0] + "_42",
+            avatar: req.user.profile.photos[0].value
+        });
+        res.cookie('accessToken', accessToken);
+        res.redirect("http://localhost:5173/CallBack");
+        return ({ fff: 'ddddd' });
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)('signup'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)('login/google'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.AuthDto]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], AuthController.prototype, "signup", null);
+], AuthController.prototype, "loging", null);
 __decorate([
-    (0, common_1.Post)('signin'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)('google/callback'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.AuthDto]),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "googleLoginCallback", null);
+__decorate([
+    (0, common_1.Get)('login/FortyTwo'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('FortyTwo')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], AuthController.prototype, "signin", null);
+], AuthController.prototype, "loginng", null);
+__decorate([
+    (0, common_1.Get)('FortyTwo/callback'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('FortyTwo')),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "FortyTwoLoginCallback", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
