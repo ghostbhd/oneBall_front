@@ -31,7 +31,8 @@ let AuthService = class AuthService {
         return (user);
     }
     async create_jwt(profile) {
-        const payload = { name: profile.username, sub: profile.email };
+        const user = await this.userservice.findUserByUn(profile.username);
+        const payload = { name: profile.username, sub: profile.email, id: user.id };
         console.log("the plyload is==================>" + JSON.stringify(payload));
         ;
         return (this.jwtService.signAsync(payload));

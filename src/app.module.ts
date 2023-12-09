@@ -14,6 +14,8 @@ import { ChatGateway } from './chat/chat.gateway';
 import { ChatModule } from './chat/chat.module';
 import { ChannelModule } from './chat/channel/channel.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { profile } from 'console';
+import { ProfiledataModule } from './profiledata/profiledata.module';
 
 
 @Module({
@@ -25,6 +27,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     ChatModule,
     ChannelModule,
     DashboardModule,
+    ProfiledataModule,
   ],
   exports: [TypeOrmModule],
 })

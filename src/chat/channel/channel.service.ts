@@ -29,7 +29,7 @@ export class ChannelService {
     ) {}
 
 
-    async createChannelForUser( ownerId: number,channelName: string,channelType: string,): Promise<Channel> {
+  async createChannelForUser( ownerId: number,channelName: string,channelType: string,): Promise<Channel> {
       const owner = await this.userService.findUserById(ownerId);
       if (!owner) {
         throw new NotFoundException('User not found');
@@ -52,7 +52,7 @@ export class ChannelService {
         default:
           throw new BadRequestException('Invalid channel type');
       }
-    
+
       return await this.channelRepository.save(channel);
     }
     
