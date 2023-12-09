@@ -22,6 +22,7 @@ const user_module_1 = require("./user/user.module");
 const chat_module_1 = require("./chat/chat.module");
 const channel_module_1 = require("./chat/channel/channel.module");
 const dashboard_module_1 = require("./dashboard/dashboard.module");
+const profiledata_module_1 = require("./profiledata/profiledata.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,6 +36,7 @@ exports.AppModule = AppModule = __decorate([
             chat_module_1.ChatModule,
             channel_module_1.ChannelModule,
             dashboard_module_1.DashboardModule,
+            profiledata_module_1.ProfiledataModule,
         ],
         exports: [typeorm_1.TypeOrmModule],
     })
