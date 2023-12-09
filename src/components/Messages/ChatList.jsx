@@ -6,18 +6,19 @@ import ChatWindow from "./ChatWindow.jsx";
 import { MdGroupAdd } from "react-icons/md";
 import ChannelCreation from "./ChannelCreation.jsx";
 import { useSocket } from "../../Socketio.jsx";
+import { getHeaders } from "../../jwt_token.jsx";
 
-const CURRENT_USER_ID = 1;
 
-const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveChatUser}) => {
+const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveChatUser, decodedToken}) => {
   const [chats, setChats] = useState([]);
 
   const socket = useSocket();
+
   // console.log("server is running");
   useEffect(() => {
     if (socket == null) return;
 
-    socket.emit("request-latest-messages", CURRENT_USER_ID);
+    socket.emit("request-latest-messages", decodedToken.id);
 
     // Listening for latest messages
     socket.on("latest-messages", (chatsFromServer) => {
@@ -85,13 +86,13 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveC
       socket.off("new-message", handleNewMessage);
       socket.off("search-user-response");
     };
-  }, [socket, chats]);
+  }, [socket,chats]);
 
   const handleSearchSubmit = (searchTerm) => {
-    if (searchTerm.trim()) { //here i nee to protect the user from searching for himself by username
+    if (searchTerm.trim()) {
       socket.emit("search-user", {
         username: searchTerm,
-        currentUserId: CURRENT_USER_ID,
+        currentUserId: decodedToken.id,
       });
     }
   };

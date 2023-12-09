@@ -1,22 +1,27 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-const nav = (url) => {
-    const history = useNavigate();
-    const handleRedirect = (url) => {
-      history(url);
-    };
-    handleRedirect(url);
-  }
+import { useState } from 'react';
 
-export function  getHeaders() {
-  const headers = new Headers();
-  const jwtCookie = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('accessToken='));
+export   const   getHeaders=() => {
+  const history = useNavigate();
+    const handleRedirect = (url) => {
+          history(url);}
+          const headers = new Headers();
+          var jwttt;
+
+
+    const jwtCookie = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('accessToken='));
+    jwttt = jwtCookie;
     if (jwtCookie) {
       const jwt = jwtCookie.split('=')[1];
       headers.append('Authorization', `Bearer ${jwt}`);
     } else {
-      nav('/Auth');
+      handleRedirect('/Auth');
+
     }
-    return headers;
+
+
+    return {headers, jwttt};
   };

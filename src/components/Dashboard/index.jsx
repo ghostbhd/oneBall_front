@@ -5,6 +5,8 @@ import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
 // import { headers } from "../../jwt_token";
+import { useNavigate } from 'react-router-dom';
+
 import  { getHeaders } from "../../jwt_token";
 
 const Dashboard = () => {
@@ -12,12 +14,27 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const row = "w-1/2 flex flex-col space-y-14";
   
+  // const history = useNavigate();
+  // const handleRedirect = (url) => {
+  //   history(url);
+  // };
+  const headers = getHeaders().headers;
   useEffect(() => {
     // fetch("/api/dashboard")
     
     // fetchDataFromMockApi()
-    const headers = getHeaders();
-   
+
+
+    // const headers = new Headers();
+    // const jwtCookie = document.cookie
+    //     .split('; ')
+    //     .find((row) => row.startsWith('accessToken='));
+    //   if (jwtCookie) {
+    //     const jwt = jwtCookie.split('=')[1];
+    //     headers.append('Authorization', `Bearer ${jwt}`);
+    //   } else {
+    //     handleRedirect('/Auth');
+    //   }
     fetch('http://localhost:3009/dashboard', {
       method: 'GET',
       headers: headers,

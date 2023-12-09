@@ -4,9 +4,8 @@ import React, { useState } from 'react';
 import io from 'socket.io-client'; // Import the WebSocket library
 import { useSocket } from "../../Socketio.jsx";
 
-const CURRENT_USER_ID = 1; 
 
-const ChannelCreation = ({ onClose }) => {
+const ChannelCreation = ({ onClose , decodedToken}) => {
   const [channelName, setChannelName] = useState('');
   const [channelType, setChannelType] = useState('public'); // Default to public
   const [password, setPassword] = useState('');
@@ -21,7 +20,7 @@ const ChannelCreation = ({ onClose }) => {
 
     try {
       const channel = await createChannelForUser(
-        CURRENT_USER_ID, // Pass the user ID or fetch it from your context
+        decodedToken.id, // Pass the user ID or fetch it from your context
         channelName,
         channelType,
         channelType === 'protected' ? password : ''

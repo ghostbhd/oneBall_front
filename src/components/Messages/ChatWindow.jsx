@@ -5,14 +5,14 @@ import { IoIosSend } from "react-icons/io";
 import { FiMoreVertical } from "react-icons/fi";
 import { useSocket } from "../../Socketio.jsx";
 
-const CURRENT_USER_ID = 1;
 
-const ChatWindow = ({ activeChat, activeChatUser }) => {
+const ChatWindow = ({ activeChat, activeChatUser , decodedToken}) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [showOptions, setShowOptions] = useState(false);
 
   const socket = useSocket();
+
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -20,7 +20,7 @@ const ChatWindow = ({ activeChat, activeChatUser }) => {
       const newMessage = {
         content: message,
         timestamp: new Date().toISOString(), 
-        senderId: CURRENT_USER_ID,
+        senderId: decodedToken.id,
         chatId: activeChat,
         
       };
@@ -64,13 +64,19 @@ const ChatWindow = ({ activeChat, activeChatUser }) => {
       }
     });
 
+    const ids = messages.map(msg => msg.id);
+    const uniqueIds = new Set(ids);
+    if (ids.length !== uniqueIds.size) {
+      console.error('Non-unique IDs detected', ids);
+    }
     // Cleanup on unmount
     return () => {
       socket.off("new-message", handleNewMessage);
       socket.off("messages-for-chat-response");
       socket.emit("leave-chat", { chatId: activeChat });
     };
-  }, [activeChat, socket]);
+
+  }, [activeChat, socket, messages]);
 
 
 
@@ -107,8 +113,8 @@ const ChatWindow = ({ activeChat, activeChatUser }) => {
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >
         {sortedMessages.map((message) => {
-          const isCurrentUserSender = message.senderId === CURRENT_USER_ID;
-          console.log(`sender id is message.senderId`);
+          const isCurrentUserSender = message.senderId === decodedToken.id;
+          console.log(`sender id is message.senderId, ${message.senderId} and decodedToken.id is ${decodedToken.id}`);
           return (
             <div
               key={message.id}

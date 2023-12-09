@@ -12,7 +12,7 @@ const SearchBar = ({ onChannelIconClick }) => {
 
   const handleSearchSubmit = () => {
     if (inputValue.trim()) {
-      // Emit the search event to the server
+    //   // Emit the search event to the server
       socket.emit("search-user", {
         username: inputValue,
         currentUserId: CURRENT_USER_ID,

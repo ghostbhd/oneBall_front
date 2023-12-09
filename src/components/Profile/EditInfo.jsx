@@ -1,16 +1,95 @@
 import { avatarImages } from "./avatarImages";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { icons } from "../../constants";
 import style from "../../style";
 import PropTypes from "prop-types";
+import Cookies from "js-cookie";
+import { useDropzone } from "react-dropzone";
+import { useNavigate } from 'react-router-dom';
 
 const EditInfo = ({ data }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar);
   const [moreAvatars, setMoreAvatars] = useState(false);
   const [username, setUsername] = useState(null);
+  const [fileTosend, setSelectedFileTosend] = useState(null); 
 
+
+  const loadImage = async (path) => {
+    const response = await fetch(path);
+    const arrayBuffer = await response.arrayBuffer();
+    const binaryString = new TextDecoder().decode(arrayBuffer);
+    // console.log( "jsssssssssssssson" +  binaryString);
+    return binaryString;
+  };
+
+const loadImageAsFile = async (path) => {
+    const imagePath = path;
+
+    const response = await fetch(imagePath);
+    const blob = await response.blob();
+
+    // Extract the file name from the path
+    const fileName = imagePath.split('/').pop();
+
+    // Create a File object
+    const file = new File([blob], fileName, { type: blob.type });
+
+    setSelectedFileTosend(file);
+  };
+
+  const  history = useNavigate ();
+  const handleRedirect = (url) => {
+    history(url);
+  }
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+    console.log(
+      selectedAvatar
+    )
+    
+    const formData = new FormData();
+    formData.append('username', username);
+    // await loadImageAsFile(selectedAvatar);
+    if (fileTosend == null)
+    {
+      console.log("hello my friend");
+      formData.append('filepath', selectedAvatar)
+    }
+    console.log( "jsssssssssssssson" +  fileTosend);
+    formData.append('file', fileTosend);
+    const headers = new Headers();
+    const jwtCookie = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('accessToken='));
+      if (jwtCookie) {
+        const jwt = jwtCookie.split('=')[1];
+    headers.append('Authorization', `Bearer ${jwt}`)
+   }   // /* alert */("Only image files are allowed!");
+    else {
+       handleRedirect('/Auth'); 
+      }
+    const response = await fetch('http://localhost:3009/upload', {
+      method: 'POST',
+      body: formData,
+      headers: headers,
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();}
+        })
+      .then((data) => {
+        console.log("this the result of the fetch..." + data.accessToken);
+    Cookies.set('accessToken', data.accessToken);
+    })
+   .catch ((error) => {
+    console.error('Error during file upload:', error);
+  })
+      console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
+    window.location.reload();
+  }; 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const acceptedImageTypes = [
@@ -20,15 +99,22 @@ const EditInfo = ({ data }) => {
       "image/gif",
       "image/svg+xml",
     ];
+    console.log(file);
     if (!acceptedImageTypes.includes(file.type)) {
       alert("Only image files are allowed!");
       return;
     }
-
+       
+      console.log('heeeeeeeeeeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiiiiieeeeeeeeeeeeeeeeeeeeer');
+      // console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
     if (file) {
+      console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
       setSelectedFile(file.name);
+      setSelectedFileTosend(file);
       avatarImages.push(URL.createObjectURL(file));
+      // console.log(avatarImages);
       setSelectedAvatar(avatarImages[avatarImages.length - 1]);
+      console.log( "----------->" + selectedAvatar);
     }
   };
 
@@ -38,15 +124,23 @@ const EditInfo = ({ data }) => {
     setUsername("");
     setMoreAvatars(false);
   };
-
+  const SaveAvatar = (e) => {
+    // e.preventDefault();
+    // const file = e.target.files[0];
+    // console.log("uuuuuuuu"+ file)
+      // console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer' + file.json());
+      // avatarImages.push(URL.createObjectURL(e));
+      setSelectedAvatar(e);
+      setSelectedFileTosend(e);
+  }
   const imagebg = ({ img }) => ({
-    backgroundImage: `url('${img}')`,
+        backgroundImage: `url('${img}')`,
     backgroundSize: `cover`,
     backgroundPosition: `center`,
   });
 
   return (
-    <form action="POST" className="w-full p-6">
+    <form action="POST" className="w-full p-6" onSubmit = {handleSubmit} >
       {/* head ------------------------------------------------------------------ */}
       <div className={`flex flex-nowrap h-10 relative w-full text-bLight_5`}>
         <span className="h-full flex">

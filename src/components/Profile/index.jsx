@@ -3,13 +3,24 @@ import { useEffect, useState } from "react";
 import style from "../../style";
 import EditInfo from "./EditInfo";
 import Details from "./Details";
+import { getHeaders } from "../../jwt_token";
 
 const Profile = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
+  const headers = getHeaders().headers;
   useEffect(() => {
-    profileData()
+    // profileData()
+    fetch('http://localhost:3009/profileData', {
+      method: 'GET',
+      headers: headers,
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();}
+      })
       .then((data) => {
         console.log(data); // Log the data to check its structure
         setData(data);
