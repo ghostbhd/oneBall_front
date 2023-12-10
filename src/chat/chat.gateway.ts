@@ -58,22 +58,20 @@ handleLeaveChat(client: Socket, payload: { chatId: number }) {
 }
 
 @SubscribeMessage('send-message')
-async handleSendMessage(client: Socket, payload: { chatId: number; content: string }, callback?: (confirmation: any) => void) {
+async handleSendMessage(client: Socket, payload: { chatId: number; content: string }) {
   try {
+    console.log("Before sending ->", payload.content);
     const message = await this.chatService.sendMessage(payload.chatId, payload.content);
-    this.server.to(`chat_room${payload.chatId}`).emit('new-message', message);
 
-    if (callback && typeof callback === 'function') {
-      callback({ success: true, messageId: message.id });
-    }
+    // Emit the message only to the sender client
+    client.emit('new-message', message);
+
+    console.log("After sending ->", payload.content);
   } catch (error) {
-    if (callback && typeof callback === 'function') {
-      callback({ success: false, error: error.message });
-    } else {
-      console.error('Error sending message:', error);
-    }
+    console.error('Error sending message:', error);
   }
 }
+
 
 
 @SubscribeMessage('search-user')
