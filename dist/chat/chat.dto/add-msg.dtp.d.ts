@@ -1,0 +1,5 @@
+export declare class CreateChatDto {
+    senderId: number;
+    receiverId: number;
+    content: string;
+}

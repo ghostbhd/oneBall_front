@@ -76,8 +76,8 @@ async sendMessage(chatId: number, content: string): Promise<Message> {
   // Create and save the new message
   const newMessage = new Message();
   newMessage.chatid = chat;
-  newMessage.SenderUserID = chat.sender; // Assuming the sender is always the chat initiator
-  newMessage.ReceiverUserID = chat.receiver; // The other user in the chat
+  newMessage.SenderUserID = chat.sender; 
+  newMessage.ReceiverUserID = chat.receiver; 
   newMessage.Content = content;
   newMessage.Timestamp = new Date().toISOString();
 

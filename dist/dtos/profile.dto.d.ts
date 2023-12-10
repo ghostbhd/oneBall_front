@@ -1,0 +1,5 @@
+export declare class profile {
+    email: string;
+    username: string;
+    avatar: string;
+}
