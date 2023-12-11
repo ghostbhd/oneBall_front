@@ -1,5 +1,6 @@
 import { icons } from "../../constants";
 import { useState, useEffect, useRef } from "react";
+import style from "../../style";
 
 const NavBar = () => {
   const [showNotif, setShowNotif] = useState(false);
@@ -21,15 +22,22 @@ const NavBar = () => {
 
   return (
     <div
-      className={`sm:w-4/12 w-max pr-10 h-auto flex absolute flex-row z-40 top-0 right-0 p-1`}
+      className={`sm:w-4/12 md:w-max w-full md:pr-10 h-auto absolute z-40 top-0 right-0 md:p-1 
+        md:bg-transparent bg-bDark_4/90
+      `}
     >
-      <div className="w-max relative ml-auto">
+      <div className="md:w-max w-full relative flex flex-row items-center p-2 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
         {/* notification icon ------- */}
         <div
-          className={`text-xl text-bLight_5 ml-auto p-2 bg-bDark_4 rounded-full border-2 border-bLight_5/50 cursor-pointer`}
+          className={`text-3xl text-bLight_5 md:ml-auto cursor-pointer`}
           onClick={() => setShowNotif(true)}
         >
           {<icons.notifications />}
+        </div>
+
+        {/* menu icon -------------- */}
+        <div className={`md:hidden text-3xl text-bLight_5 ml-auto cursor-pointer`}>
+          {<icons.menu />}
         </div>
       </div>
 
@@ -37,7 +45,7 @@ const NavBar = () => {
       <div
         ref={notifRef}
         className={`absolute flex flex-col right-0 h-screen z-50 text-bLight_4 top-0 w-80 
-          border-l-2 border-bLight_4/40 p-2 bg-bDark_5/60 backdrop-blur-3xl shadow-4xl
+          border-l-2 border-bLight_4/40 p-2 bg-bDark_5/60 !backdrop-blur-3xl shadow-4xl
           ${!showNotif ? "hidden" : ""}
         `}
       >

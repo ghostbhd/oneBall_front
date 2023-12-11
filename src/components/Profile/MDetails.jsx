@@ -44,7 +44,9 @@ const MDetails = ({ data }) => {
       </div>
 
       {/* xp and progress ------------------------ */}
-      <div className={`w-full flex flex-wrap p-2 px-6 mt-2 rounded-b-[20px] ${style.blueBlur}`}>
+      <div
+        className={`w-full flex flex-wrap p-2 px-6 mt-2 rounded-b-[20px] ${style.blueBlur}`}
+      >
         {/* xp ------------------------ */}
         <p className="text-xs text-org_3 w-full">{data.xp} xp</p>
         {/* progress bar ---------------- */}

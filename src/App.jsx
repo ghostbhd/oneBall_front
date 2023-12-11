@@ -25,10 +25,10 @@ const App = () => {
     <BrowserRouter>
       <div
         className={`w-full h-full flex flex-row fixed`}
-        style={ImgBg({ img: "/src/assets/bg contain.png" })}
+        style={ImgBg({ img: "/src/assets/gaming center.jpg" })}
       >
         <div
-          className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60`}
+          className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60 ${style.backdropBlur}`}
         ></div>
         {/* sidebar ----------------------------------------------------------------- */}
         <SideBar />
@@ -40,7 +40,6 @@ const App = () => {
         {/* content ----------------------------------------------------------------- */}
         <div
           className={`flex flex-wrap overflow-y-auto relative
-            ${style.backdropBlur}
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}
         >

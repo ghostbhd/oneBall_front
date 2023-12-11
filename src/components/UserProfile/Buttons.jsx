@@ -14,7 +14,7 @@ const Buttons = ({ data }) => {
     >
       {/* challenge button ----------------------------------------- */}
       <Link
-        to={"/game"}
+        to={"/games"}
         className={`w-full flex flex-row justify-center items-center sm:p-3 p-2
               rounded-xl bg-bLight_1`}
       >
