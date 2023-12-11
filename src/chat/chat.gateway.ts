@@ -10,25 +10,24 @@ import { Socket, Server } from 'socket.io';
 import { UserService } from 'src/user/user.service';
 
 
-@WebSocketGateway({ cors: {
-  origin: '*',
-    },
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
 })
-export class ChatGateway  {
+export class ChatGateway {
 
   constructor(private readonly chatService: ChatService,
-    private readonly userService: UserService,) {}
+    private readonly userService: UserService,) { }
   @WebSocketServer() server: Server;
 
-  
+
   @SubscribeMessage('request-latest-messages')
   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
     const latestMessages = await this.chatService.getLatestMessagesForAllChats(userId);
-    // console.log(`Latest messages requested for user ${userId}`);
-    // console.log(`Latest messages: ${JSON.stringify(latestMessages)}`);
     client.emit('latest-messages', latestMessages);
   }
-  
+
   // @SubscribeMessage('request-direct-messages')
   // async handleRequestDirectMessages(client: Socket, payload: { senderId: number; receiverId: number }): Promise<void> {
   //   const chatData = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
@@ -36,54 +35,51 @@ export class ChatGateway  {
   //   client.emit('direct-messages-response', chatData);
   //   console.log(`Direct messages requested between users ${payload.senderId} and ${payload.receiverId}`);
   // }
-  
+
   @SubscribeMessage('request-messages-for-chat')
   async handleRequestMessagesForChat(client: Socket, payload: { chatId: number }): Promise<void> {
     const chatData = await this.chatService.getMessagesForChat(payload.chatId);
-  
+
     client.emit('messages-for-chat-response', chatData);
     console.log(`Messages requested for chat ${payload.chatId}`);
   }
 
-@SubscribeMessage('join-chat')
-handleJoinChat(client: Socket, payload: { chatId: number }) {
-  client.join(`chat_room${payload.chatId}`);
-  // console.log(`Client ${client.id} joined chat room: chat_room${payload.chatId}`);
-}
-
-@SubscribeMessage('leave-chat')
-handleLeaveChat(client: Socket, payload: { chatId: number }) {
-  client.leave(`chat_room${payload.chatId}`);
-  // console.log(`Client ${client.id} left chat room: chat_room${payload.chatId}`);
-}
-
-@SubscribeMessage('send-message')
-async handleSendMessage(client: Socket, payload: { chatId: number; content: string }) {
-  try {
-    console.log("Before sending ->", payload.content);
-    const message = await this.chatService.sendMessage(payload.chatId, payload.content);
-
-    // Emit the message only to the sender client
-    client.emit('new-message', message);
-
-    console.log("After sending ->", payload.content);
-  } catch (error) {
-    console.error('Error sending message:', error);
+  @SubscribeMessage('join-chat')
+  handleJoinChat(client: Socket, payload: { chatId: number }) {
+    client.join(`chat_room${payload.chatId}`);
   }
-}
 
-
-
-@SubscribeMessage('search-user')
-async handleSearchUser(client: Socket, payload: { username: string, currentUserId: number }): Promise<void> {
-  try {
-    const currentUser = await this.userService.findUserById(payload.currentUserId);
-    const chat = await this.chatService.findOrCreateChat(currentUser, payload.username);
-    client.emit('search-user-response', { chatId: chat.id });
-  } catch (error) {
-    client.emit('search-user-response', { chatId: null, error: error.message });
+  @SubscribeMessage('leave-chat')
+  handleLeaveChat(client: Socket, payload: { chatId: number }) {
+    client.leave(`chat_room${payload.chatId}`);
   }
-}
 
-  
+  @SubscribeMessage('send-message')
+  async handleSendMessage(client: Socket, payload: { chatId: number; content: string ; senderId:number ; receiverid: number}) {
+    try {
+      console.log("Before sending ->", payload.content);
+      const sender = await this.userService.findUserById(payload.senderId);
+      const receiver = await this.userService.findUserById(payload.receiverid);
+      const message = await this.chatService.sendMessage(payload.chatId, payload.content, sender, receiver);
+
+      client.emit('new-message', message);
+
+      console.log("After sending ->", payload.content);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  }
+
+
+  @SubscribeMessage('search-user')
+  async handleSearchUser(client: Socket, payload: { username: string, currentUserId: number }): Promise<void> {
+    try {
+      const currentUser = await this.userService.findUserById(payload.currentUserId);
+      const chat = await this.chatService.findOrCreateChat(currentUser, payload.username);
+      client.emit('search-user-response', { chatId: chat.id });
+    } catch (error) {
+      client.emit('search-user-response', { chatId: null, error: error.message });
+    }
+  }
+
 }
