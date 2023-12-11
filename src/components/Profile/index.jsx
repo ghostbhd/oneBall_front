@@ -25,7 +25,7 @@ const Profile = () => {
 
   return (
     <div
-      className={`w-full sm:h-full flex sm:flex-row flex-col md:pb-4 pb-28 p-4 md:px-10 sm:pt-14`}
+      className={`w-full sm:h-full space-x-8 flex sm:flex-row flex-col md:pb-4 pb-16 p-4 md:px-10 sm:pt-14 pt-16`}
     >
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
@@ -40,7 +40,7 @@ const Profile = () => {
 
           {/* Edit info and friend requests ------------------- */}
           <div
-            className={`sm:w-7/12 w-full sm:h-full relative overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}
+            className={`sm:w-8/12 w-full sm:h-full relative overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}
           >
             <EditInfo data={data.editInnfo} />
             <FriendRequests />
@@ -48,8 +48,8 @@ const Profile = () => {
 
           {/* Details -------------------------------------- */}
           <div
-            className={`sm:w-4/12 w-full sm:h-full bg-gradient-to-b from-org_2/40 from-5%
-            via-bDark_1/50 to-bDark_1/50 ml-auto ${style.rounded}`}
+            className={`sm:w-4/12 w-full sm:h-full bg-gradient-to-b from-org_1/40 from-5% shadow-4xl
+            via-bDark_1/50 to-bLight_5/20 ml-auto ${style.rounded} backdrop-blur-xl`}
           >
             <Details data={data.profileInfo} />
           </div>

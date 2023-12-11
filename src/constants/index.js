@@ -23,7 +23,7 @@ import { IoPersonRemoveSharp, IoPersonAddSharp } from "react-icons/io5"; // remo
 import { TbMessagePlus } from "react-icons/tb"; // send message icon
 import { MdBlockFlipped } from "react-icons/md"; // block icon
 import { MdPersonAddDisabled } from "react-icons/md"; // cancel request icon
-
+import { TiThMenu } from "react-icons/ti"; // menu icon
 
 
 
@@ -131,6 +131,7 @@ export const icons = { // All needed icons
   cancelRequest: MdPersonAddDisabled,
   sendMessage: TbMessagePlus,
   block: MdBlockFlipped,
+  menu: TiThMenu,
 };
 
 export const chatIcons = {

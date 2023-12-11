@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 
 const Buttons = () => {
   const container = "flex w-1/2";
-  const button = `flex p-4 items-center w-11/12 justify-around rounded-3xl
-  bg-gradient-to-r shadow-btn`;
-  const icon = "text-5xl text-white";
-  const text = "text-2xl";
+  const button = `flex flex-row gap-6 p-4 items-center w-full 
+  rounded-4xl bg-gradient-to-r shadow-btn justify-center`;
+
+  const icon = "md:text-5xl sm:text-4xl text-3xl text-white";
+  const text = "md:text-2xl sm:text-xl text-base";
 
   return (
-    <div className={`flex flex-row w-full`}>
+    <div className={`flex flex-row gap-8 w-full`}>
       {/* with friend button */}
       <div className={container}>
         <Link
@@ -22,7 +23,7 @@ const Buttons = () => {
       </div>
       {/* with random button */}
       <div className={container}>
-      <Link
+        <Link
           to={"/games"}
           className={` ${button} ml-auto from-bLight_5 to-white shadow-bLight_3`}
         >

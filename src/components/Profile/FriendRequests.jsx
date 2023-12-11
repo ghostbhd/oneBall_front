@@ -52,13 +52,13 @@ const FriendRequests = () => {
         <p className={`text-bLight_4`}>Friend Requests</p>
       </div>
 
-      <ul className="w-full pb-6 h-max relative overflow-x-auto flex flex-row space-x-4">
+      <ul className="w-full pb-6 h-max relative overflow-x-auto flex flex-row gap-6">
         {data.map((item) => (
           // friend request item -----------------------------------------------------------------
           <li
             key={item.id}
             className={`flex flex-col items-center relative w-32 z-50 shadow-xl 
-              bg-gradient-to-bl from-bLight_5/50 to-bLight_5/10 p-4 rounded-2xl
+              bg-gradient-to-bl from-bLight_5/50 to-bLight_5/10 p-2 rounded-2xl
             `}
           >
             {/* user image ------- */}
