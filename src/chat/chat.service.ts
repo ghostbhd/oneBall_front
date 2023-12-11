@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
-import { Channel} from 'src/entities/Channel.entity';
-import { Channel_Membership} from 'src/entities/Channel_Membership.entity';
+import { Channel } from 'src/entities/Channel.entity';
+import { Channel_Membership } from 'src/entities/Channel_Membership.entity';
 
 
 @Injectable()
@@ -22,107 +22,109 @@ export class ChatService {
     private readonly channelRepository: Repository<Channel>,
     @InjectRepository(Channel_Membership)
     private readonly Channel_MembershipRepository: Repository<Channel_Membership>,
-) {}
-    
-
-
-// async startChat(senderId: number, receiverId: number): Promise<Chat> {
-//   const newChat = new Chat();
-//   const sender = await this.userRepository.findOne({ where: { id: senderId } });
-//   const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
-//     if (!sender) {
-//     throw new NotFoundException(`Sender with ID ${senderId} not found`);
-//   }
-//   if (!receiver) {
-//     throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
-//   }
-//   newChat.sender = sender;
-//   newChat.receiver = receiver;
-//   newChat.DateStarted = new Date().toISOString();
-//   return await this.directMessageRepository.save(newChat); 
-// }
+  ) { }
 
 
 
-// async getChat(sender: User, receiver: User): Promise<Chat> {
+  // async startChat(senderId: number, receiverId: number): Promise<Chat> {
+  //   const newChat = new Chat();
+  //   const sender = await this.userRepository.findOne({ where: { id: senderId } });
+  //   const receiver = await this.userRepository.findOne({ where: { id: receiverId } });
+  //     if (!sender) {
+  //     throw new NotFoundException(`Sender with ID ${senderId} not found`);
+  //   }
+  //   if (!receiver) {
+  //     throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
+  //   }
+  //   newChat.sender = sender;
+  //   newChat.receiver = receiver;
+  //   newChat.DateStarted = new Date().toISOString();
+  //   return await this.directMessageRepository.save(newChat); 
+  // }
 
-//   let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } })
-//   if (!chat) {
-//       chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
-//   }
-//   if (!chat) {
-//       chat = new Chat();
-//       chat.sender = sender;
-//       chat.receiver = receiver;
-//       chat.DateStarted = new Date().toISOString();
-//       await this.directMessageRepository.save(chat);
-//   }
-//   return chat;
-// }
+
+
+  // async getChat(sender: User, receiver: User): Promise<Chat> {
+
+  //   let chat = await this.directMessageRepository.findOne({ where: { sender: sender, receiver: receiver } })
+  //   if (!chat) {
+  //       chat = await this.directMessageRepository.findOne({ where: { sender: receiver, receiver: sender } });
+  //   }
+  //   if (!chat) {
+  //       chat = new Chat();
+  //       chat.sender = sender;
+  //       chat.receiver = receiver;
+  //       chat.DateStarted = new Date().toISOString();
+  //       await this.directMessageRepository.save(chat);
+  //   }
+  //   return chat;
+  // }
 
 
 
-async sendMessage(chatId: number, content: string): Promise<Message> {
-  // Find the chat session by chatId
-  const chat = await this.directMessageRepository.findOne({
-    where: { id: chatId },
-    relations: ['sender', 'receiver'],
-  });
+  async sendMessage(chatId: number, content: string, sender:User, receiver:User): Promise<Message> {
 
-  if (!chat) {
-    throw new NotFoundException(`Chat with ID ${chatId} not found`);
+    const chat = await this.directMessageRepository.findOne({
+      where: { id: chatId },
+      relations: ['sender', 'receiver'],
+    });
+
+    if (!chat) {
+      throw new NotFoundException(`Chat with ID ${chatId} not found`);
+    }
+
+
+    // Create and save the new message
+    const newMessage = new Message();
+    newMessage.chatid = chat;
+    newMessage.SenderUserID = sender;
+    newMessage.ReceiverUserID = receiver;
+    newMessage.Content = content;
+    newMessage.Timestamp = new Date().toISOString();
+
+    console.log(`receiver :${sender}`);
+    console.log(`sender :${receiver}`);
+    console.log(`Attempting to save message in chat ${chatId}`);
+    const savedMessage = await this.messageRepository.save(newMessage);
+    console.log(`Message saved with ID: ${savedMessage.id}`);
+
+    return savedMessage;
   }
 
-  // Create and save the new message
-  const newMessage = new Message();
-  newMessage.chatid = chat;
-  newMessage.SenderUserID = chat.sender; 
-  newMessage.ReceiverUserID = chat.receiver; 
-  newMessage.Content = content;
-  newMessage.Timestamp = new Date().toISOString();
-
-  console.log(`receiver :${chat.sender }`);
-  console.log(`sender :${chat.receiver }`);
-  console.log(`Attempting to save message in chat ${chatId}`);
-  const savedMessage = await this.messageRepository.save(newMessage);
-  console.log(`Message saved with ID: ${savedMessage.id}`);
-  
-  return savedMessage;
-}
-
-// async getChatHistory(chatId: number): Promise<Message[]> {
-//   return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
-// }
+  // async getChatHistory(chatId: number): Promise<Message[]> {
+  //   return await this.messageRepository.find({ where: { chatid: { id: chatId } }, order: { Timestamp: 'DESC' } });
+  // }
 
 
-async listChatsForUser(userId: number): Promise<Chat[]> {
-  return await this.directMessageRepository.find({
-    where: [
-      { sender: { id: userId } },
-      { receiver: { id: userId } }
-    ]
-  });
+  async listChatsForUser(userId: number): Promise<Chat[]> {
+    return await this.directMessageRepository.find({
+      where: [
+        { sender: { id: userId } },
+        { receiver: { id: userId } }
+      ]
+    });
   }
 
 
   async getMessages(chatId: number): Promise<Message[]> {
-    const chat = await this.directMessageRepository.findOne({ 
+    const chat = await this.directMessageRepository.findOne({
       where: { id: chatId },
-      relations: ['messageid']});
-    
+      relations: ['messageid']
+    });
+
     if (!chat) {
-        throw new NotFoundException(`Chat with ID ${chatId} not found`);
+      throw new NotFoundException(`Chat with ID ${chatId} not found`);
     }
     return chat.messageid;
-}
+  }
 
 
   // async getAllChatIds(): Promise<number[]> {
   //   const chats = await this.directMessageRepository.find();
   //   return chats.map(chat => chat.id);
   // }
-  
-  
+
+
   async getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<any> {
     const chat = await this.directMessageRepository.findOne({
       where: {
@@ -131,18 +133,18 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
       },
       relations: ['messageid'],
     });
-  
+
     if (chat) {
       return {
         id: chat.id,
         messages: chat.messageid,
         sender: chat.sender,
-     
+
       };
     }
     return { messages: [] };
   }
-  
+
 
   async getMessagesForChat(chatId: number): Promise<any> {
     // Find the chat session by chat ID
@@ -150,7 +152,7 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
       where: { id: chatId },
       relations: ['messageid', 'messageid.SenderUserID', 'sender', 'receiver'],
     });
-  
+
     if (chat) {
       return {
         id: chat.id,
@@ -158,81 +160,81 @@ async listChatsForUser(userId: number): Promise<Chat[]> {
           id: message.id,
           content: message.Content,
           timestamp: message.Timestamp,
-          senderId: message.SenderUserID.id, 
+          senderId: message.SenderUserID.id,
         })),
         chatSenderId: chat.sender.id,
         chatReceiverId: chat.receiver.id,
       };
     }
-  
+
     return { messages: [] };
   }
-  
-
-async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
-  const chats = await this.directMessageRepository.find({
-    where: [
-      { sender: { id: userId } },
-      { receiver: { id: userId } }
-    ],
-    relations: ['messageid', 'sender', 'receiver'], 
-  });
-
-  return chats
-  .filter(chat => chat.messageid && chat.messageid.length > 0)
-  .map(chat => {
-    const lastMessage = chat.messageid[chat.messageid.length - 1];
-    return {
-      id: chat.id,
-      name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
-      lastMessage: lastMessage ? lastMessage.Content : '',
-      
-      //here i need to add the channel name
-      //need to add the avatar of the user and the status
-    };
-});
-}
-
-async getChatsByUserId(userId: number): Promise<Chat[]> {
-  return await this.directMessageRepository.find({
-    where: {sender: { id: userId },},
-    relations: ['messageid', 'sender', 'receiver'],
-  });
-}
 
 
+  async getLatestMessagesForAllChats(userId: number): Promise<any[]> {
+    const chats = await this.directMessageRepository.find({
+      where: [
+        { sender: { id: userId } },
+        { receiver: { id: userId } }
+      ],
+      relations: ['messageid', 'sender', 'receiver'],
+    });
 
-async findOrCreateChat(currentUser: User, targetUsername: string): Promise<Chat> {
-  const targetUser = await this.userRepository.findOne({ 
-    where: { username: targetUsername },
-  });
+    return chats
+      .filter(chat => chat.messageid && chat.messageid.length > 0)
+      .map(chat => {
+        const lastMessage = chat.messageid[chat.messageid.length - 1];
+        return {
+          id: chat.id,
+          name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
+          lastMessage: lastMessage ? lastMessage.Content : '',
 
-  if (currentUser.username === targetUsername) {
-    throw new Error("Cannot create a chat with yourself.");
-  }
-  
-  if (!targetUser) {
-    throw new NotFoundException('User not found');
+          //here i need to add the channel name
+          //need to add the avatar of the user and the status
+        };
+      });
   }
 
-  let chat = await this.directMessageRepository.findOne({
-    where: [
-      { sender: currentUser, receiver: targetUser },
-      { sender: targetUser, receiver: currentUser },
-    ],
-  });
-
-  if (!chat) {
-    chat = new Chat();
-    chat.sender = currentUser;
-    chat.receiver = targetUser;
-    chat.DateStarted = new Date().toISOString();
-
-    await this.directMessageRepository.save(chat);
+  async getChatsByUserId(userId: number): Promise<Chat[]> {
+    return await this.directMessageRepository.find({
+      where: { sender: { id: userId }, },
+      relations: ['messageid', 'sender', 'receiver'],
+    });
   }
 
-  return chat;
-}
+
+
+  async findOrCreateChat(currentUser: User, targetUsername: string): Promise<Chat> {
+    const targetUser = await this.userRepository.findOne({
+      where: { username: targetUsername },
+    });
+
+    if (currentUser.username === targetUsername) {
+      throw new Error("Cannot create a chat with yourself.");
+    }
+
+    if (!targetUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    let chat = await this.directMessageRepository.findOne({
+      where: [
+        { sender: currentUser, receiver: targetUser },
+        { sender: targetUser, receiver: currentUser },
+      ],
+    });
+
+    if (!chat) {
+      chat = new Chat();
+      chat.sender = currentUser;
+      chat.receiver = targetUser;
+      chat.DateStarted = new Date().toISOString();
+
+      await this.directMessageRepository.save(chat);
+    }
+
+    return chat;
+  }
 
 
 }
