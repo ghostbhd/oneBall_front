@@ -28,13 +28,6 @@ export class ChatGateway {
     client.emit('latest-messages', latestMessages);
   }
 
-  // @SubscribeMessage('request-direct-messages')
-  // async handleRequestDirectMessages(client: Socket, payload: { senderId: number; receiverId: number }): Promise<void> {
-  //   const chatData = await this.chatService.getDirectMessagesBetweenUsers(payload.senderId, payload.receiverId);
-
-  //   client.emit('direct-messages-response', chatData);
-  //   console.log(`Direct messages requested between users ${payload.senderId} and ${payload.receiverId}`);
-  // }
 
   @SubscribeMessage('request-messages-for-chat')
   async handleRequestMessagesForChat(client: Socket, payload: { chatId: number }): Promise<void> {
@@ -60,6 +53,9 @@ export class ChatGateway {
       console.log("Before sending ->", payload.content);
       const sender = await this.userService.findUserById(payload.senderId);
       const receiver = await this.userService.findUserById(payload.receiverid);
+      console.log("the sendr id  in getway",sender);
+      console.log("the receiver id in getway",receiver);
+
       const message = await this.chatService.sendMessage(payload.chatId, payload.content, sender, receiver);
 
       client.emit('new-message', message);
