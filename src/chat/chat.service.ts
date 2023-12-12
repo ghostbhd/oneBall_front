@@ -73,14 +73,13 @@ export class ChatService {
       throw new NotFoundException(`Chat with ID ${chatId} not found`);
     }
 
-
-    // Create and save the new message
     const newMessage = new Message();
     newMessage.chatid = chat;
     newMessage.SenderUserID = sender;
     newMessage.ReceiverUserID = receiver;
     newMessage.Content = content;
     newMessage.Timestamp = new Date().toISOString();
+    
 
     console.log(`receiver :${sender}`);
     console.log(`sender :${receiver}`);
@@ -147,7 +146,7 @@ export class ChatService {
 
 
   async getMessagesForChat(chatId: number): Promise<any> {
-    // Find the chat session by chat ID
+    
     const chat = await this.directMessageRepository.findOne({
       where: { id: chatId },
       relations: ['messageid', 'messageid.SenderUserID', 'sender', 'receiver'],
@@ -180,17 +179,23 @@ export class ChatService {
       relations: ['messageid', 'sender', 'receiver'],
     });
 
+
     return chats
-      .filter(chat => chat.messageid && chat.messageid.length > 0)
-      .map(chat => {
+    .filter(chat => chat.messageid && chat.messageid.length > 0)
+    .map(chat => {
         const lastMessage = chat.messageid[chat.messageid.length - 1];
+        const receiveravatar =chat.receiver.Avatar;
+        const senderavatar =chat.sender.Avatar;
+      const senderflag=chat.sender.id;
         return {
           id: chat.id,
           name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
           lastMessage: lastMessage ? lastMessage.Content : '',
+          receiveravatar: receiveravatar,
+          senderavatar:senderavatar,
+          senderflag:senderflag,
 
-          //here i need to add the channel name
-          //need to add the avatar of the user and the status
+
         };
       });
   }
