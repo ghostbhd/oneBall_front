@@ -1,23 +1,25 @@
-import style from "/home/hajar/Desktop/front/src/style.js";
+import style from "../../style";
 import { BiSearchAlt } from "react-icons/bi";
 import React, { useState } from "react";
 import { MdGroupAdd } from "react-icons/md";
 import { useSocket } from "../../Socketio.jsx";
 
 
-const SearchBar = ({ onChannelIconClick }) => {
+const SearchBar = ({ onChannelIconClick ,currentUserToken,setActiveChatUser}) => {
   const [inputValue, setInputValue] = useState("");
-  const socket = useSocket(); // Get the socket instance
-  const CURRENT_USER_ID = 1; // Make sure to retrieve this from the appropriate context
+  
+  const socket = useSocket();
+
 
   const handleSearchSubmit = () => {
     if (inputValue.trim()) {
+
     //   // Emit the search event to the server
       socket.emit("search-user", {
         username: inputValue,
-        currentUserId: CURRENT_USER_ID,
+        currentUserId: currentUserToken.id,
       });
-      setInputValue(""); // Clear the input field after submitting
+      setInputValue(""); 
     }
     
   };

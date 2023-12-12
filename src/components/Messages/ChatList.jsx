@@ -9,19 +9,20 @@ import { useSocket } from "../../Socketio.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
 
 
-const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveChatUser, decodedToken}) => {
+const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick, setActiveChatUser, currentUserToken }) => {
   const [chats, setChats] = useState([]);
-
+  const [sender_id, setsenderflag] = useState(null);
   const socket = useSocket();
 
   // console.log("server is running");
   useEffect(() => {
     if (socket == null) return;
 
-    socket.emit("request-latest-messages", decodedToken.id);
+    socket.emit("request-latest-messages", currentUserToken.id);
 
     // Listening for latest messages
     socket.on("latest-messages", (chatsFromServer) => {
+
       let sortedChats = chatsFromServer.sort((a, b) => {
         return (
           new Date(b.lastMessage.timestamp) - new Date(a.lastMessage.timestamp)
@@ -45,6 +46,10 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveC
             ...updatedChats[chatIndex],
             lastMessage: newMessage.content,
             timestamp: newMessage.Timestamp,
+            senderId: newMessage.senderId,
+            receiveravatar: newMessage.receiveravatar,
+            senderavatar: newMessage.senderavatar,
+            senderflag:senderflag,
           };
         } else {
           // Add new chat if it doesn't exist
@@ -55,11 +60,14 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveC
               name: `User ${newMessage.senderId}`,
               lastMessage: newMessage.content,
               timestamp: newMessage.Timestamp,
+              senderId: newMessage.senderId,
+              receiveravatar: newMessage.receiveravatar,
+              senderavatar: newMessage.senderavatar,
+              senderflag : newMessage.senderflag,
             },
           ];
         }
 
-        // Sort chats based on the timestamp
         updatedChats.sort(
           (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
         );
@@ -73,6 +81,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveC
     socket.on("search-user-response", (response) => {
       if (response.chatId) {
         setActiveChat(response.chatId);
+
         socket.emit("request-messages-for-chat", { chatId: response.chatId });
       } else if (response.error) {
         console.error("Search error:", response.error);
@@ -86,24 +95,23 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveC
       socket.off("new-message", handleNewMessage);
       socket.off("search-user-response");
     };
-  }, [socket,chats]);
+  }, [socket, chats]);
 
   const handleSearchSubmit = (searchTerm) => {
     if (searchTerm.trim()) {
       socket.emit("search-user", {
         username: searchTerm,
-        currentUserId: decodedToken.id,
+        currentUserId: currentUserToken.id,
       });
     }
   };
 
+
+
   const handleChatClick = (chatId, chats) => {
     setActiveChat(chatId);
-  //   setActiveChatUser({
-  //     id: chats.id,
-  //     name: chats.name,
-  //     lastMessage: chats.lastMessage,
-  // });
+    console.log('Chat ID clicked:', chatId);
+    console.log('Chat data:', chats);
     socket.emit("request-messages-for-chat", {
       chatId,
     });
@@ -117,6 +125,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveC
         <SearchBar
           onSearch={onSearch}
           onChannelIconClick={onIconClick}
+          currentUserToken={currentUserToken}
           onSearchSubmit={handleSearchSubmit}
         />
       </div>
@@ -124,28 +133,25 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick ,setActiveC
         {chats.map((chat) => (
           <div
             key={chat.id}
-            className={`flex items-center p-2 ${
-              style.transition
-            } hover:bg-opacity-70 ${
-              activeChat === chat.id ? style.activeChatItem : ""
-            }`}
+            className={`flex items-center p-2 ${style.transition
+              } hover:bg-opacity-70 ${activeChat === chat.id ? style.activeChatItem : ""
+              }`}
             onClick={() => handleChatClick(chat.id)}
           >
             {/*! Wrapper div with relative positioning */}
             <div className="relative">
               {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
               <span
-                className={`absolute w-12 h-12 rounded-full border-[3px] ${
-                  chat.status === "online"
+                className={`absolute w-12 h-12 rounded-full border-[3px] ${chat.status === "online"
                     ? style.online
                     : chat.status === "offline"
-                    ? style.offline
-                    : style.inGame
-                }`}
+                      ? style.offline
+                      : style.inGame
+                  }`}
               ></span>
               <img
                 className="w-12 h-12 rounded-full "
-                src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"
+                src={ chat.senderflag  === currentUserToken.id? chat.receiveravatar : chat.senderavatar}
                 alt={`${chat.name}`}
               />
             </div>

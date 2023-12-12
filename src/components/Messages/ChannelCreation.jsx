@@ -5,7 +5,7 @@ import io from 'socket.io-client'; // Import the WebSocket library
 import { useSocket } from "../../Socketio.jsx";
 
 
-const ChannelCreation = ({ onClose , decodedToken}) => {
+const ChannelCreation = ({ onClose, currentUserToken }) => {
   const [channelName, setChannelName] = useState('');
   const [channelType, setChannelType] = useState('public'); // Default to public
   const [password, setPassword] = useState('');
@@ -20,7 +20,7 @@ const ChannelCreation = ({ onClose , decodedToken}) => {
 
     try {
       const channel = await createChannelForUser(
-        decodedToken.id, // Pass the user ID or fetch it from your context
+        currentUserToken.id, // Pass the user ID or fetch it from your context
         channelName,
         channelType,
         channelType === 'protected' ? password : ''

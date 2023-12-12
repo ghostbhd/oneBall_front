@@ -6,70 +6,84 @@ import { FiMoreVertical } from "react-icons/fi";
 import { useSocket } from "../../Socketio.jsx";
 
 
-const ChatWindow = ({ activeChat, activeChatUser , decodedToken}) => {
+const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [showOptions, setShowOptions] = useState(false);
+  const [received, setreceived] = useState(null);
+
 
   const socket = useSocket();
 
 
+  console.log("message ->", received);
+
+  console.log("*************************");
+
   const handleSendMessage = () => {
     if (message.trim()) {
-     
       const newMessage = {
-        content: message,
-        timestamp: new Date().toISOString(), 
-        senderId: decodedToken.id,
-        chatId: activeChat,
-        
-      };
 
+        content: message,
+        timestamp: new Date().toISOString(),
+        senderId: currentUserToken.id,
+        recieverId: received,
+        chatId: activeChat,
+
+      };
+      console.log('Sending message:', newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       socket.emit("send-message", {
-        content: message,
         chatId: activeChat,
-      });
+        content: message,
+        senderId: currentUserToken.id,
+        recieverId: received,
+     
 
-      // Clear the input field
+
+
+      });
       setMessage("");
     }
   };
 
   useEffect(() => {
     if (socket == null) return;
-  
 
-    // Emit event to join the chat and request messages
     socket.emit("join-chat", { chatId: activeChat });
     console.log(`active chat is ${activeChat}`);
 
-    // Event listener for new messages
+
     const handleNewMessage = (newMessage) => {
       if (newMessage.chatId === activeChat) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
-    
+
     socket.on("new-message", handleNewMessage);
 
-    // Event listener for response to messages for a chat request
     socket.on("messages-for-chat-response", (chatData) => {
-      console.log("Chat data received:", chatData);
+      console.log("Chat data received:", chatData.chatReceiverId);
+
       if (chatData && Array.isArray(chatData.messages)) {
+        console.log("Chat data received:", chatData);
+
+    
+        setreceived(chatData.chatReceiverId);
+
         setMessages(chatData.messages);
+
+        const ids = chatData.messages.map((msg) => msg.id);
+        const uniqueIds = new Set(ids);
+        if (ids.length !== uniqueIds.size) {
+          console.error("Non-unique IDs detected", ids);
+        }
       } else {
         console.error("Incorrect chat data format received:", chatData);
       }
     });
 
-    const ids = messages.map(msg => msg.id);
-    const uniqueIds = new Set(ids);
-    if (ids.length !== uniqueIds.size) {
-      console.error('Non-unique IDs detected', ids);
-    }
-    // Cleanup on unmount
+
     return () => {
       socket.off("new-message", handleNewMessage);
       socket.off("messages-for-chat-response");
@@ -81,6 +95,7 @@ const ChatWindow = ({ activeChat, activeChatUser , decodedToken}) => {
 
 
   const sortedMessages = [...messages].sort(
+
     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
   );
 
@@ -92,19 +107,19 @@ const ChatWindow = ({ activeChat, activeChatUser , decodedToken}) => {
         <img
           className="w-16 h-18  rounded-full  mr-5"
           src={activeChatUser?.avatar || "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"} // Use the avatar from activeChatUser
-          alt={activeChatUser?.name || "Default Name"} 
-          />
+          alt={activeChatUser?.name || "Default Name"}
+        />
         <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
         {/* {!isChannel && ( // Conditionally render the more icon if it's not a channel
           <div className="relative">
-            <FiMoreVertical onClick={handleOptionToggle} className="cursor-pointer" />
-            {showOptions && (
-              <div className="absolute right-0 bg-white shadow-lg rounded-lg p-2">
-                <button onClick={handleBlockUser} className="block text-left p-2 hover:bg-gray-200 w-full">Block</button>
-                <button onClick={handleInviteToGame} className="block text-left p-2 hover:bg-gray-200 w-full">Invite to game</button>
-              </div>
+          <FiMoreVertical onClick={handleOptionToggle} className="cursor-pointer" />
+          {showOptions && (
+            <div className="absolute right-0 bg-white shadow-lg rounded-lg p-2">
+            <button onClick={handleBlockUser} className="block text-left p-2 hover:bg-gray-200 w-full">Block</button>
+            <button onClick={handleInviteToGame} className="block text-left p-2 hover:bg-gray-200 w-full">Invite to game</button>
+            </div>
             )} }
-        </div>
+            </div>
          )} */}
       </div>
 
@@ -113,16 +128,19 @@ const ChatWindow = ({ activeChat, activeChatUser , decodedToken}) => {
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >
         {sortedMessages.map((message) => {
-          const isCurrentUserSender = message.senderId === decodedToken.id;
-          console.log(`sender id is message.senderId, ${message.senderId} and decodedToken.id is ${decodedToken.id}`);
+          console.log('Message ID:', message.id);
+          console.log('Sender ID:', message.senderId);
+          console.log('Receiver ID:', currentUserToken.id); 
+          console.log('Content:', message.content);
+          console.log('Timestamp:', message.timestamp);
+          console.log(`sender id is message.senderId, ${message.senderId} and currentUserToken.id is ${currentUserToken.id}`);
           return (
             <div
               key={message.id}
-              className={`mb-5 ${
-                isCurrentUserSender
+              className={`mb-5 ${message.senderId === currentUserToken.id
                   ? style.messageCurrentUser
                   : style.messageOtherUser
-              }`}
+                }`}
             >
               <p className="text-white">{message.content}</p>
               {/* Format the timestamp as needed */}

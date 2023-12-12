@@ -1,13 +1,14 @@
 import React from "react";
 import ChatList from "./ChatList.jsx";
 import ChatWindow from "./ChatWindow.jsx";
-import style from "/home/hajar/Desktop/front/src/style.js";
+import style from "../../style";
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import ChannelCreation from "./ChannelCreation.jsx";
-import { useSocket } from "/home/hajar/Desktop/front/src/Socketio.jsx";
+import { useSocket } from "../../Socketio.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
 import * as jwtDecode from "jwt-decode";
+import SearchBar from "./searchBar.jsx";
 
 const Messages = () => {
   const [activeChat, setActiveChat] = useState(null);
@@ -17,8 +18,8 @@ const Messages = () => {
   const [showChannelCreation, setShowChannelCreation] = useState(false);
 
   const token = getHeaders().jwttt;
-  const decodedToken = jwtDecode.jwtDecode(token);
-  console.log("current user id is ", decodedToken.id);
+  const currentUserToken = jwtDecode.jwtDecode(token);
+  console.log("current user id is ", currentUserToken.id);
 
   const handleSearch = (query) => {
     setSearchTerm(query);
@@ -47,7 +48,7 @@ const Messages = () => {
       {" "}
       {/* Add relative here for modal positioning */}
       <ChatList
-        decodedToken={decodedToken}
+        currentUserToken={currentUserToken}
         activeChat={activeChat}
         setActiveChat={setActiveChat}
         setActiveChatUser={setActiveChatUser}
@@ -59,12 +60,15 @@ const Messages = () => {
       <ChatWindow
         activeChat={activeChat}
         activeChatUser={activeChatUser}
-        decodedToken={decodedToken}
+        currentUserToken={currentUserToken}
       />
+      {/* <SearchBar
+        currentUserToken={currentUserToken}
+      /> */}
       {showChannelCreation && (
         <ChannelCreation
           onClose={toggleChannelCreationModal}
-          decodedToken={decodedToken}
+          currentUserToken={currentUserToken}
         />
       )}
     </div>

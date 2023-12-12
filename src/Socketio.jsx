@@ -10,8 +10,7 @@ const SocketContext = createContext(null);
 // Hook to enable any component to access the socket context
 export const useSocket = () => useContext(SocketContext);
 
-// Provider component that wraps your app and makes socket object ...
-// ... available to any child component that calls useSocket().
+
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
 
