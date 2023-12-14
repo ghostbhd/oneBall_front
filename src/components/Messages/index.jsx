@@ -4,6 +4,7 @@ import ChatWindow from "./ChatWindow.jsx";
 import style from "../../style";
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
+import ChannelWindow from "./ChannelWindow.jsx";
 import ChannelCreation from "./ChannelCreation.jsx";
 import { useSocket } from "../../Socketio.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
@@ -62,9 +63,11 @@ const Messages = () => {
         activeChatUser={activeChatUser}
         currentUserToken={currentUserToken}
       />
-      {/* <SearchBar
+      <ChannelWindow
+        activeChannel={activeChat}
         currentUserToken={currentUserToken}
-      /> */}
+        // setActiveChannelMembers={setActiveChannelMembers}
+      />
       {showChannelCreation && (
         <ChannelCreation
           onClose={toggleChannelCreationModal}

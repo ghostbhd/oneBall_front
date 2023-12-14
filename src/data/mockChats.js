@@ -156,6 +156,19 @@ export const mockMessages = [
 //                 }`}
 //               ></span>
 //               <img
+//                 classNam{/*! Wrapper div with relative positioning */}
+//             <div className="relative">
+//               {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
+//               <span
+//                 className={`absolute w-12 h-12 rounded-full border-[3px] ${
+//                   chat.status === "online"
+//                     ? style.online
+//                     : chat.status === "offline"
+//                     ? style.offline
+//                     : style.inGame
+//                 }`}
+//               ></span>
+//               <img
 //                 className="w-12 h-12 rounded-full "
 //                 src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"
 //                 alt={`${chat.name}`}
@@ -175,7 +188,14 @@ export const mockMessages = [
 // export default ChatList;
 
 // The ID of the current user, for demonstration purposes
-const CURRENT_USER_ID = 1;
+//     </div>
+//   );
+// };
+
+// export default ChatList;
+
+// The ID of the current user, for demonstration purposes
+
 
 
 

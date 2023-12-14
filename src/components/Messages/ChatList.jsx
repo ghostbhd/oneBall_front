@@ -49,7 +49,8 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick, setActiveC
             senderId: newMessage.senderId,
             receiveravatar: newMessage.receiveravatar,
             senderavatar: newMessage.senderavatar,
-            senderflag:senderflag,
+            senderflag:newMessage.senderflag,
+            receiverflag:newMessage.receiverflag,
           };
         } else {
           // Add new chat if it doesn't exist
@@ -64,6 +65,7 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick, setActiveC
               receiveravatar: newMessage.receiveravatar,
               senderavatar: newMessage.senderavatar,
               senderflag : newMessage.senderflag,
+              receiverflag:newMessage.receiverflag,
             },
           ];
         }

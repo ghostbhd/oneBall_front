@@ -38,10 +38,6 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
         content: message,
         senderId: currentUserToken.id,
         recieverId: received,
-     
-
-
-
       });
       setMessage("");
     }
