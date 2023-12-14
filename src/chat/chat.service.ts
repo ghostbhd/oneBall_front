@@ -80,6 +80,7 @@ export class ChatService {
     newMessage.Content = content;
     newMessage.Timestamp = new Date().toISOString();
     
+    
 
     console.log(`receiver :${sender}`);
     console.log(`sender :${receiver}`);
@@ -186,7 +187,9 @@ export class ChatService {
         const lastMessage = chat.messageid[chat.messageid.length - 1];
         const receiveravatar =chat.receiver.Avatar;
         const senderavatar =chat.sender.Avatar;
-      const senderflag=chat.sender.id;
+        const senderflag=chat.sender.id;
+        const receiverflag= chat.receiver.id;
+
         return {
           id: chat.id,
           name: chat.receiver.id === userId ? chat.sender.username : chat.receiver.username,
@@ -194,8 +197,7 @@ export class ChatService {
           receiveravatar: receiveravatar,
           senderavatar:senderavatar,
           senderflag:senderflag,
-
-
+          receiverflag:receiverflag,
         };
       });
   }

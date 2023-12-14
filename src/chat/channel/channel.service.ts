@@ -29,7 +29,7 @@ export class ChannelService {
     ) {}
 
 
-  async createChannelForUser( ownerId: number,channelName: string,channelType: string,): Promise<Channel> {
+  async createChannelForUser( ownerId: number,channelName: string,channelType: string,  password?: string): Promise<Channel> {
       const owner = await this.userService.findUserById(ownerId);
       if (!owner) {
         throw new NotFoundException('User not found');
@@ -38,16 +38,27 @@ export class ChannelService {
       const channel = new Channel();
       channel.Channel = channelName;
       channel.owner = owner;
-    
+      console.log("channel name ",channel.Channel );
+      console.log("channel owner",channel.owner );
+      console.log("Received channel type:", channelType); 
       switch (channelType) {
         case 'public':
-          channel.isPrivate = false;
+          channel.public = true;
+          console.log("create channel3",channel.public);
           break;
         case 'private':
-          channel.isPrivate = true;
+          channel.private = true;
+          console.log(" create channel4",channel.private);
+
           break;
         case 'protected':
-          channel.isPrivate = true;
+          channel.protected = true;
+          console.log(" create channel5",channel.protected);
+
+          channel.password = password;
+          console.log(" create channel6",channel.password);
+        
+
           break;
         default:
           throw new BadRequestException('Invalid channel type');
@@ -64,7 +75,7 @@ export class ChannelService {
       throw new NotFoundException('Channel or User not found');
     }
 
-    if (channel.isPrivate && channel.password) {
+    if (channel.protected && channel.password) {
       if (channel.password !== channelPassword) {
           throw new UnauthorizedException('Incorrect password');
       }
@@ -92,7 +103,7 @@ export class ChannelService {
     message.Content = content;
     message.Timestamp = new Date().toISOString();
     
-    return await this.messageRepository.save(message);  // Ensure you have injected messageRepository
+    return await this.messageRepository.save(message); 
   }
 
   async getChannelById(channelId: number): Promise<Channel> {
@@ -105,6 +116,7 @@ export class ChannelService {
 
   
 }
+
 async kickUserFromChannel(channelId: number, userId: number, requesterId: number): Promise<void> {
   const channel = await this.channelRepository.findOne({ where: { id: channelId } });
   const user = await this.userService.findUserById(userId);
