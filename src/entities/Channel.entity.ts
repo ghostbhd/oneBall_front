@@ -11,7 +11,11 @@ export class Channel {
     @Column()
     Channel: string;
     @Column({ default: false })
-    isPrivate: boolean;
+    public: boolean;
+    @Column({ default: false })
+    private: boolean;
+    @Column({ default: false })
+    protected: boolean;
     @Column({ nullable: true })
     password: string;
     @OneToMany(() => Channel_Membership, channel_membership => channel_membership.channelid)
