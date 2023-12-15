@@ -8,6 +8,7 @@ import {
 import { ChatService } from './chat.service';
 import { Socket, Server } from 'socket.io';
 import { UserService } from 'src/user/user.service';
+// import { SocketService } from './channel/socket.service';
 
 
 @WebSocketGateway({
@@ -18,9 +19,15 @@ import { UserService } from 'src/user/user.service';
 export class ChatGateway {
 
   constructor(private readonly chatService: ChatService,
-    private readonly userService: UserService,) { }
+    private readonly userService: UserService,
+   ) { }
   @WebSocketServer() server: Server;
 
+    // onConnection(client: Socket) {
+    //   // this.socketService.insert(client.id, userId(jwt))
+    // }
+
+    
 
   @SubscribeMessage('request-latest-messages')
   async handleRequestLatestMessages(client: Socket, userId: number): Promise<void> {
@@ -31,6 +38,7 @@ export class ChatGateway {
 
   @SubscribeMessage('request-messages-for-chat')
   async handleRequestMessagesForChat(client: Socket, payload: { chatId: number }): Promise<void> {
+    // console.log("chat here ->", payload.chatId);
     const chatData = await this.chatService.getMessagesForChat(payload.chatId);
 
     client.emit('messages-for-chat-response', chatData);
@@ -59,6 +67,7 @@ export class ChatGateway {
       const message = await this.chatService.sendMessage(payload.chatId, payload.content, sender, receiver);
 
       client.emit('new-message', message);
+
 
       console.log("After sending ->", payload.content);
     } catch (error) {
