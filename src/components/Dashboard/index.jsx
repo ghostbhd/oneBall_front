@@ -5,6 +5,8 @@ import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
 import { useNavigate } from 'react-router-dom';
+// import jwt_decode from 'jsonwebtoken';
+import * as jwtDecode from 'jwt-decode';
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -22,6 +24,8 @@ const Dashboard = () => {
       .find((row) => row.startsWith('accessToken='));
       if (jwtCookie) {
         const jwt = jwtCookie.split('=')[1];
+      const jj = jwtDecode.jwtDecode(jwt);
+      console.log("the paylod is ================>", jj);
         headers.append('Authorization', `Bearer ${jwt}`)
       }
       else {
