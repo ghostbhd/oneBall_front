@@ -31,6 +31,10 @@ const App = () => {
       {/* <div>  */}
       {/* </div> */}
       <div className={`flex-1 app w-full h-full flex flex-row fixed`}>
+          <Routes>
+            <Route path="/Auth" element={<Auth />} />
+            <Route path="/CallBack" element={<CallBack />} />
+          </Routes>
         <div
           className={`absolute right-0 top-0 w-full h-full bg-[#0a2028] opacity-50`}
         ></div>
@@ -45,8 +49,8 @@ const App = () => {
           `}
         >
           <Routes>
-            <Route path="/Auth" element={<Auth />} />
-            <Route path="/CallBack" element={<CallBack />} />
+            {/* <Route path="/Auth" element={<Auth />} /> */}
+            {/* <Route path="/CallBack" element={<CallBack />} /> */}
             <Route path="/" element={<Dashboard />} />
             <Route path="/games" element={<Games />} />
             <Route path="/messages" element={<Messages />} />

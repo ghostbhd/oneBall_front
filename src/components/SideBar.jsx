@@ -12,7 +12,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`flex h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-50
+      className={`flex h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-20
         ${style.blueBlur} ${style.transition}
         ${theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW}`}
     >
