@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { userProfileData } from "../../data/mockApi";
 import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
@@ -8,7 +8,8 @@ import GameDetails from "./GameDetails";
 const UserProfile = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const { username } = useParams();
+  const { username } = useParams();
+  console.log(username);
 
   useEffect(() => {
     // fetch(`http://localhost:3000/api/profile/${username}`) // Fetch the data from the API

@@ -1,5 +1,5 @@
 const style = {
-  backdropBlur: "backdrop-blur-[0px]",
+  backdropBlur: "backdrop-blur-[20px]",
   sidebarW: "w-2/12", // when sidebar is expanded
   sidebarW2: "w-1/12", // when sidebar is collapsed
   contentW: "md:w-10/12 w-full", // when sidebar is expanded

@@ -25,7 +25,7 @@ const App = () => {
     <BrowserRouter>
       <div
         className={`w-full h-full flex flex-row fixed`}
-        style={ImgBg({ img: "/src/assets/gaming center.jpg" })}
+        style={ImgBg({ img: "/src/assets/bg contain.png" })}
       >
         <div
           className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60 ${style.backdropBlur}`}
