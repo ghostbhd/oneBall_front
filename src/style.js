@@ -21,9 +21,16 @@ const style = {
       text-left bg-gray-500 text-white p-2 rounded-r-lg rounded-tl-lg`,
     messageCurrentUser: "bg-[#FFE268] text-right p-2 rounded-lg float-right clear-both break-words",
     messageOtherUser: "bg-[#3077A1] text-left p-2 rounded-lg float-left clear-both break-word",
-    chatWindowMessages: "flex-1 overflow-y-auto", // for the messages container
-    chatListContainer: "flex flex-col overflow-y-auto", // This will make sure your chat list can scroll independently of the search bar
+    chatWindowMessages: "flex-1 overflow-y-auto", 
+    chatListContainer: "flex flex-col overflow-y-auto", 
     searchBar: "p-2",
+
+
+    tabContainer: "  w-full flex justify-center items-center bg-bLight_4 p-1/2 rounded-full",
+    tabUnderline: "absolute bottom-0 h-full bg-white rounded-full transition-all duration-300",
+    tab: "z-10 py-2 px-6 focus:outline-none",
+    tabActive: "text-org_2",
+    tabInactive: "text-bDark_4",
 
 }
 

@@ -7,12 +7,20 @@ import { MdGroupAdd } from "react-icons/md";
 import ChannelCreation from "./ChannelCreation.jsx";
 import { useSocket } from "../../Socketio.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
+import SlidingTabBar from './SlidingTabBar.jsx';
 
 
-const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick, setActiveChatUser, currentUserToken }) => {
+
+
+
+const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick, setActiveChatUser, currentUserToken,onTabSelected }) => {
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
   const socket = useSocket();
+
+  // const handleTabSelection = (selectedTabId) => {
+  //   // Here you will handle switching between DMs and Channels based on the selectedTabId
+  // };
 
   // console.log("server is running");
   useEffect(() => {
@@ -99,14 +107,6 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick, setActiveC
     };
   }, [socket, chats]);
 
-  const handleSearchSubmit = (searchTerm) => {
-    if (searchTerm.trim()) {
-      socket.emit("search-user", {
-        username: searchTerm,
-        currentUserId: currentUserToken.id,
-      });
-    }
-  };
 
 
 
@@ -119,24 +119,26 @@ const ChatList = ({ activeChat, setActiveChat, onSearch, onIconClick, setActiveC
     });
   };
 
+  // const handleTabSelected = (tabId) => {
+  //   // Logic to switch between displaying DMs and Channels
+  //   if (tabId === 'dms') {
+  //     // Set state to show DMs
+  //   } else if (tabId === 'channels') {
+  //     // Set state to show Channels
+  //   }
+  // };
+
   return (
     <div
       className={`w-3/12 flex-grow ${style.sidebarW} ${style.chatListContainer}`}
     >
-      <div className={style.searchBar}>
-        <SearchBar
-          onSearch={onSearch}
-          onChannelIconClick={onIconClick}
-          currentUserToken={currentUserToken}
-          onSearchSubmit={handleSearchSubmit}
-        />
-      </div>
+
       <div className="h-5/5 rounded-b-2xl flex-grow overflow-y-auto">
         {chats.map((chat) => (
           <div
             key={chat.id}
-            className={`flex items-center p-2 ${style.transition
-              } hover:bg-opacity-70 ${activeChat === chat.id ? style.activeChatItem : ""
+            className={`flex items-center p-2 rounded-l-[50px] rounded-r-[20px] ${style.transition
+              } hover:bg-opacity-70 rounded-lg shadow-2xl  ${activeChat === chat.id ? style.activeChatItem : ""
               }`}
             onClick={() => handleChatClick(chat.id)}
           >

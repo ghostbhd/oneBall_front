@@ -25,7 +25,7 @@ const SearchBar = ({ onChannelIconClick ,currentUserToken,setActiveChatUser}) =>
   };
 
   return (
-    <div className={`flex items-center`}>
+    <div className={`py-2 flex items-center`}>
       {" "}
       {/* Add your style class names */}
       <input
