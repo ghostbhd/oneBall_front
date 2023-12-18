@@ -19,6 +19,8 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [latestMessages, setLatestMessages] = useState([]);
   const [showChannelCreation, setShowChannelCreation] = useState(false);
   const [activeTab, setActiveTab] = useState("dms");
+  const [activeChannel, setActiveChannel] = useState(null);
+  // const [WindowAvatar, setWindowAvatar] = useState(null);
 
   const handleSearchSubmit = (searchTerm) => {
     if (searchTerm.trim()) {
@@ -84,7 +86,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
             setActiveChat={setActiveChat}
             setActiveChatUser={setActiveChatUser}
             chats={filteredChats}
-            // onSearch={handleSearch}
+            // WindowAvatar={SetWindowAvatar}
             // onIconClick={toggleChannelCreationModal}
             // onSearchSubmit={handleSearchSubmit}
             // onTabSelected={handleTabSelected}
@@ -94,16 +96,19 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
         )}
       </div>
 
-      <ChatWindow
-        activeChat={activeChat}
-        activeChatUser={activeChatUser}
-        currentUserToken={currentUserToken}
-      />
-      <ChannelWindow
-        activeChannel={activeChat}
-        currentUserToken={currentUserToken}
-        // setActiveChannelMembers={setActiveChannelMembers}
-      />
+      {activeChat ? (
+        <ChatWindow
+          activeChat={activeChat}
+          activeChatUser={activeChatUser}
+          currentUserToken={currentUserToken}
+        />
+      ) : activeChannel ? (
+        <ChannelWindow
+          activeChannel={activeChannel}
+          currentUserToken={currentUserToken}
+        />
+      ) : null}
+
       {showChannelCreation && (
         <ChannelCreation
           onClose={toggleChannelCreationModal}
