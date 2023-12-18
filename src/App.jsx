@@ -10,6 +10,8 @@ import {
   MSideBar,
   NavBar,
   UserProfile,
+  Auth,
+  CallBack
 } from "./components";
 import style from "./style";
 
@@ -27,6 +29,13 @@ const App = () => {
         className={`w-full h-full flex flex-row fixed`}
         style={ImgBg({ img: "/src/assets/bg contain.png" })}
       >
+        {/* Authentication ---------------------------------------------------------- */}
+        <Routes>
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/callback" element={<CallBack />} />
+        </Routes>
+
+        {/* backdrop ----------------------------------------------------------------- */}
         <div
           className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60 ${style.backdropBlur}`}
         ></div>

@@ -24,6 +24,9 @@ import { TbMessagePlus } from "react-icons/tb"; // send message icon
 import { MdBlockFlipped } from "react-icons/md"; // block icon
 import { MdPersonAddDisabled } from "react-icons/md"; // cancel request icon
 import { TiThMenu } from "react-icons/ti"; // menu icon
+import { FcGoogle } from "react-icons/fc"; // google icon
+
+import FortyTwo  from '../assets/42.svg'; // 42 logo
 
 
 
@@ -132,6 +135,8 @@ export const icons = { // All needed icons
   sendMessage: TbMessagePlus,
   block: MdBlockFlipped,
   menu: TiThMenu,
+  google: FcGoogle,
+  fortyTwo: FortyTwo,
 };
 
 export const chatIcons = {
