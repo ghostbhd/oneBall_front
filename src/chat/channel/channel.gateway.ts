@@ -1,5 +1,3 @@
-// channel.gateway.ts
-
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { ChatService } from '../chat.service';
 import { Socket, Server } from 'socket.io';
