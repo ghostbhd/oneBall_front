@@ -22,14 +22,14 @@ const NavBar = () => {
 
   return (
     <div
-      className={`sm:w-4/12 md:w-max w-full md:pr-10 h-auto absolute z-40 top-0 right-0 md:p-1 
+      className={`md:w-4/12 w-full md:pr-10 h-auto absolute z-40 top-0 right-0 md:p-1 
         md:bg-transparent bg-bDark_4/90
       `}
     >
-      <div className="md:w-max w-full relative flex flex-row items-center p-2 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
+      <div className="md:w-max w-full relative flex flex-row items-center p-1 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
         {/* notification icon ------- */}
         <div
-          className={`text-3xl text-bLight_5 md:ml-auto cursor-pointer`}
+          className={`text-2xl text-bDark_4 md:ml-auto cursor-pointer p-2 bg-bLight_4/70 rounded-full`}
           onClick={() => setShowNotif(true)}
         >
           {<icons.notifications />}
@@ -44,8 +44,8 @@ const NavBar = () => {
       {/* notification badge --------- */}
       <div
         ref={notifRef}
-        className={`absolute flex flex-col right-0 h-screen z-50 text-bLight_4 top-0 w-80 
-          border-l-2 border-bLight_4/40 p-2 bg-bDark_5/60 !backdrop-blur-3xl shadow-4xl
+        className={`absolute flex flex-col right-0 h-screen z-50 text-bLight_2 top-0 w-80 
+          border-l-2 border-bLight_5/20 p-2 bg-bDark_5/10 !backdrop-blur-[100px] shadow-4xl
           ${!showNotif ? "hidden" : ""}
         `}
       >
@@ -60,11 +60,11 @@ const NavBar = () => {
         </div>
 
         {/* items ---------------- */}
-        <ul className="w-full h-full flex flex-col space-y-2 overflow-y-auto">
-          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-xl`}>
+        <ul className="w-full h-full flex flex-col gap-2 overflow-y-auto">
+          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-2xl`}>
             test
           </li>
-          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-xl`}>
+          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-2xl`}>
             test
           </li>
         </ul>

@@ -7,6 +7,8 @@ import Settings from "./Settings";
 import Logout from "./Logout";
 import {SideBar, MSideBar, NavBar} from "./Bars"
 import UserProfile from "./UserProfile";
+import Auth from "./Authentication/index"
+import CallBack from "./Authentication/CallBack"
 
 export {
     SideBar,
@@ -19,5 +21,7 @@ export {
     Logout,
     MSideBar,
     NavBar,
-    UserProfile
+    UserProfile,
+    Auth,
+    CallBack
 }
