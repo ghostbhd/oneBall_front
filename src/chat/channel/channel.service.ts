@@ -69,23 +69,23 @@ export class ChannelService {
 
 
   async getUserChannels(userId: number): Promise<Channel[]> {
-
     const publicAndProtectedChannels = await this.channelRepository.find({
       where: [{ public: true }, { protected: true }],
     });
   
-    
-    const privateChannels = await this.channelRepository.createQueryBuilder('channel')
-      .innerJoin('channel.channel_membershipid', 'membership')
-      .where('membership.userid = :userId', { userId })
-      .andWhere('channel.private = true')
-      .getMany();
+    const privateChannels = await this.channelRepository.find({
+      where: {
+        owner: { id: userId },
+        private: true,
+      },
+    });
   
-    
     const channels = [...publicAndProtectedChannels, ...privateChannels];
   
     return channels;
   }
+  
+  
   
   async addMemberToChannel(channelId: number, userId: number, channelPassword?: string): Promise<Channel_Membership> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
@@ -106,7 +106,7 @@ export class ChannelService {
     membership.channelid = channel;
     membership.DateJoined = new Date().toISOString();
 
-    return await this.Channel_MembershipRepository.save(membership);  // Ensure you have injected membershipRepository
+    return await this.Channel_MembershipRepository.save(membership); 
   }
 
   async sendMessageToChannel(channelId: number, senderId: number, content: string): Promise<Channel_Message> {

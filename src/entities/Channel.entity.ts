@@ -8,7 +8,7 @@ import { User } from "./user.entity";
 export class Channel {
     @PrimaryGeneratedColumn()
     id: number;
-    @Column()
+    @Column()//{unique: true}
     Channel: string;
     @Column({ default: false })
     public: boolean;
@@ -26,4 +26,4 @@ export class Channel {
     owner: User;
 
 }
-//! priavcy (public , protected , private), unique channel name 
+
