@@ -29,7 +29,7 @@ const ChatList = ({
 
     socket.emit("request-latest-messages", currentUserToken.id);
 
-    // Listening for latest messages
+
     socket.on("latest-messages", (chatsFromServer) => {
       let sortedChats = chatsFromServer.sort((a, b) => {
         return (

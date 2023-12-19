@@ -93,6 +93,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
           />
         ) : (
           <div>Channels zone</div>
+          //here wher the channels list should be
         )}
       </div>
 
