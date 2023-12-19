@@ -121,41 +121,48 @@ const ChatList = ({
 
   return (
     <div className="h-5/5 rounded-b-2xl flex-grow overflow-y-auto">
-      {chats.map((chat) => (
-        <div
-          key={chat.id}
-          className={`flex items-center p-2 rounded-l-[50px] rounded-r-[20px] ${style.transition
-            } hover:bg-opacity-70 rounded-lg shadow-2xl  ${activeChat === chat.id ? style.activeChatItem : ""
+    {chats.map((chat) => (
+      <div
+        key={chat.id}
+        className={`flex items-center p-2 rounded-l-[50px] rounded-r-[20px] ${
+          style.transition
+        } hover:bg-opacity-70 rounded-lg shadow-2xl  ${
+          activeChat === chat.id ? style.activeChatItem : ""
+        }`}
+        onClick={() => handleChatClick(chat.id)}
+      >
+        {/*! Wrapper div with relative positioning */}
+        <div className="relative">
+          {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
+          <span
+            className={`absolute w-12 h-12 rounded-full border-[3px] ${
+              chat.status === "online"
+                ? style.online
+                : chat.status === "offline"
+                ? style.offline
+                : style.inGame
             }`}
-          onClick={() => handleChatClick(chat.id)}
-        >
-          <div className="relative">
-            <span
-              className={`absolute w-12 h-12 rounded-full border-[3px] ${chat.status === "online"
-                  ? style.online
-                  : chat.status === "offline"
-                    ? style.offline
-                    : style.inGame
-                }`}
-            ></span>
-            <img
-              className="w-12 h-12 rounded-full "
-              src={
-                chat.senderflag === currentUserToken.id
-                  ? chat.receiveravatar
-                  : chat.senderavatar
-              }
-              alt={`${chat.name}`}
-            />
-          </div>
-          <div>
-            <h3 className="text-white px-3">{chat.name}</h3>
-            <p className="text-gray-400 px-3">{chat.lastMessage}</p>
-          </div>
+          ></span>
+          <img
+            className="w-12 h-12 rounded-full "
+            src={
+              chat.senderflag === currentUserToken.id
+                ? chat.receiveravatar
+                : chat.senderavatar
+            }
+            alt={`${chat.name}`}
+          />
         </div>
-      ))}
-    </div>
-  );
+        <div>
+          <h3 className="text-white px-3">{chat.name}</h3>
+          <p className="text-gray-400 px-3">{chat.lastMessage}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+);
 };
 
+
 export default ChatList;
+
