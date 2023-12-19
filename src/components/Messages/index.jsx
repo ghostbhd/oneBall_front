@@ -3,14 +3,13 @@ import ChatList from "./ChatList.jsx";
 import ChatWindow from "./ChatWindow.jsx";
 import style from "../../style";
 import { useState, useEffect } from "react";
-import io from "socket.io-client";
 import ChannelWindow from "./ChannelWindow.jsx";
 import ChannelCreation from "./ChannelCreation.jsx";
-import { useSocket } from "../../Socketio.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
 import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
+import ChannelList from "./ChannelList.jsx";
 
 const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeChat, setActiveChat] = useState(null);
@@ -32,7 +31,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   };
 
   const handleTabSelected = (tabId) => {
-    setActiveTab(tabId); // Update the active tab state
+    setActiveTab(tabId); 
   };
   const token = getHeaders().jwttt;
   const currentUserToken = jwtDecode.jwtDecode(token);
@@ -42,26 +41,16 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
     setSearchTerm(query);
   };
 
-  // const handleTabChange = (tab) => {
-  //   setActiveTab(tab);
-  //   // Logic to switch between DMs and Channels
-  // };
-
   const filteredChats = latestMessages.filter(
     (chat) =>
       chat.name && chat.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const handleSearchIconClick = () => {
-    console.log("Search icon was clicked!");
-  };
+ 
 
   const toggleChannelCreationModal = () => {
     setShowChannelCreation(!showChannelCreation);
   };
 
-  // const handleSearchSubmit = (value) => {
-  //   console.log("Search submitted for:", value);
-  // };
 
   return (
     <div
@@ -87,14 +76,14 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
             setActiveChatUser={setActiveChatUser}
             chats={filteredChats}
             // WindowAvatar={SetWindowAvatar}
-            // onIconClick={toggleChannelCreationModal}
-            // onSearchSubmit={handleSearchSubmit}
-            // onTabSelected={handleTabSelected}
           />
         ) : (
-          <div>Channels zone</div>
-          //here wher the channels list should be
+          <ChannelList
+          currentUserToken={currentUserToken}
+          setActiveChannel= {setActiveChannel}
+          />
         )}
+        
       </div>
 
       {activeChat ? (
@@ -107,6 +96,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
         <ChannelWindow
           activeChannel={activeChannel}
           currentUserToken={currentUserToken}
+          
         />
       ) : null}
 

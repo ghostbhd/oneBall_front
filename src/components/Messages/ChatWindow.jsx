@@ -106,17 +106,6 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
           alt={activeChatUser?.name || "Default Name"}
         />
         <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
-        {/* {!isChannel && ( // Conditionally render the more icon if it's not a channel
-          <div className="relative">
-          <FiMoreVertical onClick={handleOptionToggle} className="cursor-pointer" />
-          {showOptions && (
-            <div className="absolute right-0 bg-white shadow-lg rounded-lg p-2">
-            <button onClick={handleBlockUser} className="block text-left p-2 hover:bg-gray-200 w-full">Block</button>
-            <button onClick={handleInviteToGame} className="block text-left p-2 hover:bg-gray-200 w-full">Invite to game</button>
-            </div>
-            )} }
-            </div>
-         )} */}
       </div>
 
       {/* Message display  */}
@@ -124,12 +113,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >
         {sortedMessages.map((message) => {
-          console.log('Message ID:', message.id);
-          console.log('Sender ID:', message.senderId);
-          console.log('Receiver ID:', currentUserToken.id); 
-          console.log('Content:', message.content);
-          console.log('Timestamp:', message.timestamp);
-          console.log(`sender id is message.senderId, ${message.senderId} and currentUserToken.id is ${currentUserToken.id}`);
+
           return (
             <div
               key={message.id}

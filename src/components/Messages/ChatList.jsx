@@ -9,6 +9,7 @@ import { useSocket } from "../../Socketio.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
 
+
 const ChatList = ({
   activeChat,
   setActiveChat,
@@ -49,7 +50,7 @@ const ChatList = ({
         );
 
         if (chatIndex > -1) {
-          
+
           updatedChats[chatIndex] = {
             ...updatedChats[chatIndex],
             lastMessage: newMessage.content,
@@ -61,7 +62,7 @@ const ChatList = ({
             receiverflag: newMessage.receiverflag,
           };
         } else {
-         
+
           updatedChats = [
             ...updatedChats,
             {
@@ -123,24 +124,19 @@ const ChatList = ({
       {chats.map((chat) => (
         <div
           key={chat.id}
-          className={`flex items-center p-2 rounded-l-[50px] rounded-r-[20px] ${
-            style.transition
-          } hover:bg-opacity-70 rounded-lg shadow-2xl  ${
-            activeChat === chat.id ? style.activeChatItem : ""
-          }`}
+          className={`flex items-center p-2 rounded-l-[50px] rounded-r-[20px] ${style.transition
+            } hover:bg-opacity-70 rounded-lg shadow-2xl  ${activeChat === chat.id ? style.activeChatItem : ""
+            }`}
           onClick={() => handleChatClick(chat.id)}
         >
-          {/*! Wrapper div with relative positioning */}
           <div className="relative">
-            {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
             <span
-              className={`absolute w-12 h-12 rounded-full border-[3px] ${
-                chat.status === "online"
+              className={`absolute w-12 h-12 rounded-full border-[3px] ${chat.status === "online"
                   ? style.online
                   : chat.status === "offline"
-                  ? style.offline
-                  : style.inGame
-              }`}
+                    ? style.offline
+                    : style.inGame
+                }`}
             ></span>
             <img
               className="w-12 h-12 rounded-full "
