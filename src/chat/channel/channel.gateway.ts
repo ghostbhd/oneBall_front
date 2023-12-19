@@ -25,11 +25,9 @@ export class ChannelGateway {
     const channelName = channelData.channelName;
     const channelType = channelData.channelType;
     const password = channelData.password;
-  
 
     const newchannel = await this.channelService.createChannelForUser(ownerId, channelName, channelType, password);
     this.server.emit('newChannelCreated', newchannel);
   }
   
-
 }
