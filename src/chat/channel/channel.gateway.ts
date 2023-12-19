@@ -29,5 +29,19 @@ export class ChannelGateway {
     const newchannel = await this.channelService.createChannelForUser(ownerId, channelName, channelType, password);
     this.server.emit('newChannelCreated', newchannel);
   }
+
+  @SubscribeMessage('getUserChannels') 
+  async handleGetUserChannels(client: Socket, userId: number) {
+    try {
+
+        console.log("in handleGetUserChannels handler");
   
+      const userChannels = await this.channelService.getUserChannels(userId);
+      // console.log("****", userChannels);
+      client.emit('userChannels', userChannels);
+    } catch (error) {
+
+      console.error('Error fetching user channels:', error);
+    }
+  }
 }
