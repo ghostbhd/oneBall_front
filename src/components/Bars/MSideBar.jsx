@@ -6,7 +6,7 @@ const MSideBar = () => {
 
   return (
     <div
-      className="md:hidden absolute right-0 -bottom-1 z-50 w-full h-max 
+      className="md:hidden absolute right-0 -bottom-1 z-20 w-full h-max 
       bg-bDark_4 border-t-2 border-bLight_4/30 backdrop-blur-3xl"
     >
       <ul className="flex flex-row justify-around w-full p-2 px-6 items-center">

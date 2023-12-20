@@ -63,7 +63,7 @@ const App = () => {
         {/* content ----------------------------------------------------------------- */}
         <animated.div
           style={fadeInAnimation}
-          className={`flex flex-wrap overflow-y-auto relative lg:px-60
+          className={`flex flex-wrap overflow-y-auto relative xl:px-60
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}
         >
