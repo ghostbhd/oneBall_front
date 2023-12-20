@@ -84,13 +84,13 @@ const EditInfo = ({ data }) => {
       <div className="w-full mt-3 relative space-y-4">
         <div
           className={`w-full grid md:grid-cols-5 grid-cols-4 gap-4 relative overflow-hidden ${
-            moreAvatars ? "h-max" : "sm:h-[90px] h-[60px]"
+            moreAvatars ? "h-max" : "lg:h-28 sm:h-[90px] h-[60px]"
           }`}
         >
           {avatarImages.map((item, index) => (
             <div
               key={index}
-              className={`md:w-[90px] sm:w-[80px] w-[60px] md:h-[90px] sm:h-[80px] h-[60px] relative cursor-pointer mx-auto
+              className={`md:w-[90px] sm:w-[80px] lg:w-28 lg:h-28 w-[60px] md:h-[90px] sm:h-[80px] h-[60px] relative cursor-pointer mx-auto
                 rounded-[25px] ${item === selectedAvatar ? "order-first" : ""} 
               `}
               style={ImgBg({ img: item })}

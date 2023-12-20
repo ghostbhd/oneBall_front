@@ -11,17 +11,31 @@ import {
   NavBar,
   UserProfile,
   Auth,
-  CallBack
+  CallBack,
 } from "./components";
 import style from "./style";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSpring, animated } from "react-spring";
+
 import { useTheme } from "./themeContext";
 
 import { ImgBg } from "./style";
 
 const App = () => {
   const { theme } = useTheme();
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  const fadeInAnimation = useSpring({
+    opacity: isVisible ? 1 : 0,
+    transform: isVisible ? "translateY(0)" : "translateY(20px)",
+  });
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   return (
     <BrowserRouter>
@@ -47,8 +61,9 @@ const App = () => {
         <NavBar />
 
         {/* content ----------------------------------------------------------------- */}
-        <div
-          className={`flex flex-wrap overflow-y-auto relative
+        <animated.div
+          style={fadeInAnimation}
+          className={`flex flex-wrap overflow-y-auto relative lg:px-60
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}
         >
@@ -63,7 +78,7 @@ const App = () => {
             <Route path="/logout" element={<Logout />} />
             <Route path="/profile/:username" element={<UserProfile />} />
           </Routes>
-        </div>
+        </animated.div>
       </div>
     </BrowserRouter>
   );
