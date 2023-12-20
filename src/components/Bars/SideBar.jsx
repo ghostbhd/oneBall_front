@@ -27,7 +27,7 @@ const SideBar = () => {
       </div>
       {/* Sidebar items ---------------------- */}
       <ul
-        className={`flex flex-col space-y-7 w-full items-center justify-center`}
+        className={`flex flex-col space-y-7 lg:space-y-12 w-full items-center justify-center`}
       >
         {/* logo ------------------------ */}
         <li
@@ -60,7 +60,7 @@ const SideBar = () => {
               {/* Icon ---------- */}
               <span
                 className={`${
-                  theme.isSidebarCollapsed ? "text-2xl" : "text-xl"
+                  theme.isSidebarCollapsed ? "text-2xl lg:text-3xl" : "text-xl lg:text-2xl"
                 }`}
               >
                 {<item.icon />}

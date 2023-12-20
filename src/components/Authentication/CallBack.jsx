@@ -17,7 +17,7 @@ const CallBack = () => {
   // console.log(response);
   console.log("heeeeeeeeeeeellllllllllloooooooooooooooooooo")
   const handleRedirect = () => {
-  history('/profile');
+  history('/');
   };
    useEffect(() => {
     // Call handleRedirect when the component mounts
