@@ -17,7 +17,6 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
 
   console.log("message ->", received);
 
-  console.log("*************************");
 
   const handleSendMessage = () => {
     if (message.trim()) {

@@ -1,109 +1,155 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoIosSend } from "react-icons/io";
 import { useSocket } from "../../Socketio.jsx";
 import style from "../../style";
 import { HiUserGroup } from "react-icons/hi";
 
 const ChannelWindow = ({ activeChannel, currentUserToken }) => {
-  // const [messages, setMessages] = useState([]);
-  // const [message, setMessage] = useState("");
-  // const [channelMembers, setChannelMembers] = useState([]);
-  // const socket = useSocket();
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const [channelPassword, setChannelPassword] = useState("");
+  const [isMember, setIsMember] = useState(false);
 
-  // useEffect(() => {
-  //   if (!activeChannel) return;
+  const socket = useSocket();
+  const messageContainerRef = useRef(null);
+  console.log("*************************");
 
-    // Fetch channel members and initialize the messages here
-    // You should have a way to retrieve the members and messages for the active channel
-    // Replace the code below with your actual data fetching logic
+  const handleSendMessagee = () => {
+    if (newMessage.trim() !== "") {
+      socket.emit("sendMessageToChannel", {
+        channelId: activeChannel,
+        senderId: currentUserToken.id,
+        content: newMessage,
+      });
 
-    // Fetch channel members
-  //   fetchChannelMembers(activeChannel.id);
+      console.log("Sending message:", newMessage);
+      setNewMessage("");
+    }
+  };
+  
+  useEffect(() => {
+    if (activeChannel) {
+      socket.emit("getChannelMessages", activeChannel);
+    }
+    
+    socket.on("channelMessages", (data) => {
+      if (data && Array.isArray(data.messages)) {
+          setMessages(data.messages);
+      } else {
+          console.error("Received invalid format for channelMessages", data);
+          setMessages([]); 
+      }
+      // console.log("channelMessages", channelMessages);
+      if (messageContainerRef.current) {
+        messageContainerRef.current.scrollTop =
+          messageContainerRef.current.scrollHeight;
+      }
+    });
+    
+socket.on("newChannelMessage", (newMessage) => {
+  console.log("newChannelMessage", newMessage);
+  setMessages((prevMessages) => [...prevMessages, newMessage]);
+});
+    // Check if the user is a member of the channel
+    socket.emit("checkChannelMembership", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+    });
 
-    // Fetch channel messages
-  //   fetchChannelMessages(activeChannel.id);
-  // }, [activeChannel]);
+    socket.on("channelMembershipStatus", (status) => {
+      setIsMember(status);
+      console.log("channelMembershipStatus", status);
+    });
 
-  // const fetchChannelMembers = (channelId) => {
-    // Use an API request or socket event to fetch channel members
-    // Update the channelMembers state with the fetched data
-  // };
+    return () => {
+      socket.off("channelMessages");
+      socket.off("channelMembershipStatus");
+      socket.off("newChannelMessage");
+    };
+  }, [socket, activeChannel]);
 
-  // const fetchChannelMessages = (channelId) => {
-    // Use an API request or socket event to fetch channel messages
-    // Update the messages state with the fetched data
-  // };
+  const handleJoinChannel = () => {
+    if (!isMember) {
+      if (showPasswordInput) {
+        // Join with provided password
+        console.log("--------------------------------");
+        socket.emit("joinChannel", {
+          channelId: activeChannel,
+          userId: currentUserToken.id,
+          password: channelPassword,
+        });
+      } else {
+        // Show password input for protected channels
+        setShowPasswordInput(true);
+      }
+    }
+  };
 
-  // const handleSendMessage = () => {
-  //   if (message.trim()) {
-  //     const newMessage = {
-  //       content: message,
-  //       timestamp: new Date().toISOString(),
-  //       senderId: currentUserToken.id,
-  //       channelId: activeChannel.id,
-  //     };
-
-      // Send the message to the server using sockets or an API
-  //     sendMessageToServer(newMessage);
-
-      // Update the local state with the new message
-  //     setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-      // Clear the message input
-  //     setMessage("");
-  //   }
-  // };
-
-  // const sendMessageToServer = (newMessage) => {
-    // Send the message to the server using sockets or an API
-    // You should have a mechanism for sending messages to the server
-  // };
-
-  // return (
-  //   <div className={`w-9/12 ${style.contentW} ${style.chatContainer}`}>
-  //     {/* Channel header */}
-  //     <div className="flex h-20 items-center rounded-t-lg bg-bDark_1 mb-5">
-  //       <div className="w-16 h-18 rounded-full mr-5">
-  //         {/* You can replace this with the channel avatar */}
-  //         <HiUserGroup />
-  //       </div>
-  //       <h2 className="text-black">{activeChannel?.name || "Default Channel"}</h2>
-  //     </div>
-
-  //     {/* Message display */}
-  //     <div className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}>
-  //       {messages.map((message) => (
-  //         <div
-  //           key={message.id}
-  //           className={`mb-5 ${
-  //             message.senderId === currentUserToken.id
-  //               ? style.messageCurrentUser
-  //               : style.messageOtherUser
-  //           }`}
-  //         >
-  //           <p className="text-white">{message.content}</p>
-  //           <span className="text-gray-400">
-  //             {new Date(message.timestamp).toLocaleTimeString()}
-  //           </span>
-  //         </div>
-  //       ))}
-  //     </div>
-
-  //     {/* Message input */}
-  //     <div className="flex items-center mt-auto p-2">
-  //       <input
-  //         className="w-full p-2 rounded-l-lg"
-  //         placeholder="Type a message..."
-  //         value={message}
-  //         onChange={(e) => setMessage(e.target.value)}
-  //         onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-  //       />
-  //       <button onClick={handleSendMessage} className="bg-indigo-300 p-3 rounded-r-lg">
-  //         <IoIosSend />
-  //       </button>
-  //     </div>
-  //   </div>
-  // );
+  return (
+    <div className={`w-9/12  ${style.contentW} ${style.chatContainer}`}>
+      <div
+        className={`flex justify-between h-20 items-center rounded-t-lg bg-bDark_1 mb-5 `}
+      >
+        <h2 className="text-white">{activeChannel}</h2>
+        {isMember ? (
+          <span className="text-green-500">Member</span>
+        ) : (
+          <button
+            onClick={handleJoinChannel}
+            className={`px-3 py-1 ${style.joinButton}`}
+          >
+            {showPasswordInput ? "Joined" : "Join Channel"}
+          </button>
+        )}
+      </div>
+      <div
+        className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
+        ref={messageContainerRef}
+      >
+        {Array.isArray(messages) && messages.length === 0 ? (
+          <p>No messages yet.</p> 
+        ) : (
+          console.log("Rendering messages, type of messages:", typeof messages),
+          Array.isArray(messages) &&  messages.map((message) => (
+            <div
+              key={message.id}
+              className={`my-2 p-2 rounded-lg max-w-[80%] ${
+                message.id === currentUserToken.id
+                  ? style.messageOtherUser
+                  : style.messageCurrentUser
+              }`}
+            >
+              <div className={`flex items-center mb-1 ${style.messageHeader}`}>
+                <img
+                  src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"
+                  alt={ currentUserToken.id}
+                  className="w-8 h-8 rounded-full mr-2"
+                />
+                <span className="text-gray-400">{}</span>
+              </div>
+              <p>{message.Content}</p>
+            </div>
+          ))
+        )}
+      </div>
+      <div className="flex items-center mt-auto p-2">
+        <input
+          className="w-full p-2 rounded-l-lg"
+          placeholder="Type a message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleSendMessagee()}
+        />
+        <button
+          onClick={handleSendMessagee}
+          className="bg-indigo-300 p-3 rounded-r-lg"
+        >
+          <IoIosSend />
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default ChannelWindow;

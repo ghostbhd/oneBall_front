@@ -11,12 +11,13 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
         socket.emit("getUserChannels", currentUserToken.id);
 
         socket.on("userChannels", (userChannels) => {
+
             console.log("Received userChannels:", userChannels);
             setChannels(userChannels);
         });
 
         socket.on("newChannelCreated", (newChannel) => {
-            // Add the new channel to the existing channels state
+           
             setChannels((prevChannels) => [...prevChannels, newChannel]);
           });
 
@@ -25,8 +26,10 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
         };
     }, [socket, currentUserToken.id]);
 
-    const handleChannelClick = (id) => {
-        setActiveChannel(id);
+    const handleChannelClick = (activeChannel) => {
+
+        setActiveChannel(activeChannel);
+        console.log("active channel is => ", activeChannel);
 
     };
 

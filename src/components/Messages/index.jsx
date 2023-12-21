@@ -86,13 +86,13 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
         
       </div>
 
-      {activeChat ? (
+      {activeChat && activeTab === "dms"? (
         <ChatWindow
           activeChat={activeChat}
           activeChatUser={activeChatUser}
           currentUserToken={currentUserToken}
         />
-      ) : activeChannel ? (
+      ) : activeChannel && activeTab === "channels"? (
         <ChannelWindow
           activeChannel={activeChannel}
           currentUserToken={currentUserToken}
