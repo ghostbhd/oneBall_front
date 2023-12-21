@@ -40,7 +40,7 @@ export class ChatGateway {
   async handleRequestMessagesForChat(client: Socket, payload: { chatId: number }): Promise<void> {
     // console.log("chat here ->", payload.chatId);
     const chatData = await this.chatService.getMessagesForChat(payload.chatId);
-
+      
     client.emit('messages-for-chat-response', chatData);
     console.log(`Messages requested for chat ${payload.chatId}`);
   }

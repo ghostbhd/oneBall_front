@@ -15,11 +15,9 @@ import { Channel_Message } from 'src/entities/Channel_Message.entity';
 @Injectable()
 export class ChannelService {
   constructor(
-    @InjectRepository(Message)
-    private readonly messageRepository: Repository<Message>,
+    @InjectRepository(Channel_Message)
+    private readonly Channel_MRepository: Repository<Channel_Message>,
     private readonly userService: UserService,
-    @InjectRepository(Chat)
-    private readonly directMessageRepository: Repository<Chat>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Channel)
@@ -68,6 +66,21 @@ export class ChannelService {
   }
 
 
+  async joinChannel(channelId: number, userId: number, password?: string): Promise<void> {
+    const channel = await this.getChannelById(channelId);
+    
+    if (!channel) {
+      throw new NotFoundException('Channel not found');
+    }
+  
+    if (channel.public || (channel.protected && channel.password === password)) {
+      await this.addMemberToChannel(channelId, userId, password);
+    } else {
+      throw new UnauthorizedException('Invalid channel access');
+    }
+  }
+  
+
   async getUserChannels(userId: number): Promise<Channel[]> {
     const publicAndProtectedChannels = await this.channelRepository.find({
       where: [{ public: true }, { protected: true }],
@@ -75,7 +88,7 @@ export class ChannelService {
   
     const privateChannels = await this.channelRepository.find({
       where: {
-        owner: { id: userId },
+        owner: { id: userId }, 
         private: true,
       },
     });
@@ -85,7 +98,20 @@ export class ChannelService {
     return channels;
   }
   
+
+  async getChannelMessages(channelId: number): Promise<Channel_Message[]> {
+    const channel = await this.getChannelById(channelId);
   
+    if (!channel) {
+      throw new NotFoundException('Channel not found');
+    }
+  
+    return await this.Channel_MRepository.find({
+      where: { channelid: channel },
+      order: { Timestamp: 'ASC' }, 
+    });
+  }
+
   
   async addMemberToChannel(channelId: number, userId: number, channelPassword?: string): Promise<Channel_Membership> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
@@ -113,6 +139,8 @@ export class ChannelService {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
     const sender = await this.userService.findUserById(senderId);
 
+    // const receiver = await this.userService.findUserById();
+
     if (!channel || !sender) {
       throw new NotFoundException('Channel or User not found');
     }
@@ -123,7 +151,7 @@ export class ChannelService {
     message.Content = content;
     message.Timestamp = new Date().toISOString();
 
-    return await this.messageRepository.save(message);
+    return await this.Channel_MRepository.save(message);
   }
 
   async getChannelById(channelId: number): Promise<Channel> {
@@ -159,7 +187,7 @@ export class ChannelService {
     }
 
     if (!requesterMembership) {
-      console.log(user.id);
+      // console.log(user.id);
       throw new NotFoundException('Requester is not a member of this channel');
     }
 
