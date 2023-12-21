@@ -4,17 +4,27 @@ import MessageList from "./MessageList";
 import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
+import { getHeaders } from "../../jwt_token";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const row = "sm:w-1/2 w-full sm:flex hidden flex-col space-y-20";
+  
+  // Headers for fetch ----------------
+  const headers = getHeaders().headers;
 
   useEffect(() => {
-    // fetch("/api/dashboard")
-
-    fetchDataFromMockApi()
+    fetch('http://localhost:3009/dashboard', {
+      method: 'GET',
+      headers: headers,
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();}
+        })
+    // fetchDataFromMockApi()
       .then((data) => {
         console.log(data); // Log the data to check its structure
         setData(data);

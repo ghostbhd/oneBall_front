@@ -5,7 +5,8 @@ import { icons } from "../../constants";
 
 const Auth = () => {
   // buttons style --------------------------------------------------
-  const btn = `p-2 xl:p-4 rounded-lg flex flex-row items-center w-full text-sm xl:text-base`;
+  const btn = `p-2 xl:p-4 rounded-lg flex flex-row items-center 
+              w-full text-sm xl:text-base cursor-pointer`;
 
   // buttons container responsive style -----------------------------
   const containerM = `md:ml-auto md:mr-8`;
