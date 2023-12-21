@@ -1,28 +1,12 @@
-async sendMessage(chatId: number, content: string): Promise<Message> {
-  // Find the chat session by chatId
-  const chat = await this.directMessageRepository.findOne({
-    where: { id: chatId },
-    relations: ['sender', 'receiver'],
-  });
+what i still need:
 
-  if (!chat) {
-    throw new NotFoundException(`Chat with ID ${chatId} not found`);
-  }
+-fix the send msgs / join to channel / msgs display (if there  is poss for avatar , username...)
 
-  // Create and save the new message
-  const newMessage = new Message();
-  newMessage.chatid = chat;
-  newMessage.SenderUserID = chat.sender; // Assuming the sender is always the chat initiator
-  newMessage.ReceiverUserID = chat.receiver; // The other user in the chat
-  newMessage.Content = content;
-  newMessage.Timestamp = new Date().toISOString();
+public / private/ protected :add the password holder and the check if its corect 
 
-  console.log(`Attempting to save message in chat ${chatId}`);
-  const savedMessage = await this.messageRepository.save(newMessage);
-  console.log(`Message saved with ID: ${savedMessage.id}`);
-  
-  return savedMessage;
-}
+
+Mute / kick / block 
+
 
 
 

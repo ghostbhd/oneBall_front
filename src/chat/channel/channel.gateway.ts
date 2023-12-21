@@ -2,7 +2,7 @@ import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/web
 import { ChatService } from '../chat.service';
 import { Socket, Server } from 'socket.io';
 import { UserService } from 'src/user/user.service';
-import{ChannelService} from './channel.service';
+import { ChannelService } from './channel.service';
 
 @WebSocketGateway({
   cors: {
@@ -13,8 +13,7 @@ import{ChannelService} from './channel.service';
 export class ChannelGateway {
 
   constructor(private readonly channelService: ChannelService,
-    private readonly userService: UserService,)
-     { }
+    private readonly userService: UserService,) { }
   @WebSocketServer() server: Server;
 
 
@@ -30,12 +29,10 @@ export class ChannelGateway {
     this.server.emit('newChannelCreated', newchannel);
   }
 
-  @SubscribeMessage('getUserChannels') 
+  @SubscribeMessage('getUserChannels')
   async handleGetUserChannels(client: Socket, userId: number) {
     try {
 
-        console.log("in handleGetUserChannels handler");
-  
       const userChannels = await this.channelService.getUserChannels(userId);
       // console.log("****", userChannels);
       client.emit('userChannels', userChannels);
@@ -44,4 +41,49 @@ export class ChannelGateway {
       console.error('Error fetching user channels:', error);
     }
   }
+
+
+  @SubscribeMessage('joinChannel')
+  async handleJoinChannel(client: Socket, data: { channelId: number, userId: number, password?: string }) {
+    const { channelId, userId, password } = data;
+
+    try {
+      await this.channelService.joinChannel(channelId, userId, password);
+      const messages = await this.channelService.getChannelMessages(channelId);
+      console.log("****************in join channel*******************")
+      console.log("messages", messages);
+      client.join(`channel-${channelId}`);
+      this.server.to(`channel-${channelId}`).emit('channelMessages', { channelId, messages });
+    } catch (error) {
+      console.error('Error joining channel:', error);
+    }
+  }
+
+  @SubscribeMessage('getChannelMessages')
+  async handleGetChannelMessages(client: Socket, channelId: number) {
+    try {
+      const messages = await this.channelService.getChannelMessages(channelId);
+      console.log("messages", messages);
+      client.emit('channelMessages', { channelId, messages });
+    } catch (error) {
+      console.error('Error fetching channel messages:', error);
+    }
+  }
+
+
+  @SubscribeMessage('sendMessageToChannel')
+  async handleSendMessageToChannel(client: Socket, data: { channelId: number, senderId: number, content: string }) {
+    const { channelId, senderId, content } = data;
+
+    try {
+      const newMessage = await this.channelService.sendMessageToChannel(channelId, senderId, content);
+      console.log("newMessage", newMessage);
+      this.server.to(`channel-${channelId}`).emit('newChannelMessage', newMessage);
+    } catch (error) {
+      console.error('Error sending message to channel:', error);
+    }
+  }
+
+
+
 }
