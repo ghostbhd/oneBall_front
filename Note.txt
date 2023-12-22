@@ -1,4 +1,4 @@
-what i still need:
+what i stdivill need:
 
 -fix the send msgs / join to channel / msgs display (if there  is poss for avatar , username...)
 

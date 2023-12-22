@@ -99,18 +99,30 @@ export class ChannelService {
   }
   
 
-  async getChannelMessages(channelId: number): Promise<Channel_Message[]> {
+  async getChannelMessages(channelId: number): Promise<any[]> {
     const channel = await this.getChannelById(channelId);
   
     if (!channel) {
       throw new NotFoundException('Channel not found');
     }
   
-    return await this.Channel_MRepository.find({
+    const messages = await this.Channel_MRepository.find({
       where: { channelid: channel },
-      order: { Timestamp: 'ASC' }, 
+      relations: ["SenderUserid"], // Include related User entity
+      order: { Timestamp: 'ASC' },
     });
+  
+    // Map messages to include user details
+    return messages.map(message => ({
+      id: message.id,
+      Content: message.Content,
+      Timestamp: message.Timestamp,
+      senderId: message.SenderUserid.id,
+      username: message.SenderUserid.username,
+      avatar: message.SenderUserid.Avatar
+    }));
   }
+  
 
   
   async addMemberToChannel(channelId: number, userId: number, channelPassword?: string): Promise<Channel_Membership> {
@@ -135,24 +147,40 @@ export class ChannelService {
     return await this.Channel_MembershipRepository.save(membership); 
   }
 
-  async sendMessageToChannel(channelId: number, senderId: number, content: string): Promise<Channel_Message> {
+  async sendMessageToChannel(channelId: number, senderId: number, content: string): Promise<any> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
     const sender = await this.userService.findUserById(senderId);
-
-    // const receiver = await this.userService.findUserById();
 
     if (!channel || !sender) {
       throw new NotFoundException('Channel or User not found');
     }
 
-    const message = new Channel_Message();
-    message.channelid = channel;
-    message.SenderUserid = sender;
-    message.Content = content;
-    message.Timestamp = new Date().toISOString();
+    // Create a new message entity
+    const newMessage = new Channel_Message();
+    newMessage.channelid = channel;
+    newMessage.SenderUserid = sender;
+    newMessage.Content = content;
+    newMessage.Timestamp = new Date().toISOString();
 
-    return await this.Channel_MRepository.save(message);
-  }
+    // Save the new message
+    const savedMessage = await this.Channel_MRepository.save(newMessage);
+
+    // Fetch the complete message with sender details
+    const completeMessage = await this.Channel_MRepository.findOne({
+        where: { id: savedMessage.id },
+        relations: ["SenderUserid"]
+    });
+
+    // Map the message to include user details
+    return {
+        id: completeMessage.id,
+        Content: completeMessage.Content,
+        Timestamp: completeMessage.Timestamp,
+        senderId: completeMessage.SenderUserid.id,
+        username: completeMessage.SenderUserid.username,
+        avatar: completeMessage.SenderUserid.Avatar
+    };
+}
 
   async getChannelById(channelId: number): Promise<Channel> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
