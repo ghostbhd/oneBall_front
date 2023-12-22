@@ -33,6 +33,11 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
       socket.emit("getChannelMessages", activeChannel);
     }
     
+    
+    socket.on("newChannelMessage", (newMessage) => {
+      console.log("newChannelMessage", newMessage);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.messages)) {
           setMessages(data.messages);
@@ -47,10 +52,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
       }
     });
     
-socket.on("newChannelMessage", (newMessage) => {
-  console.log("newChannelMessage", newMessage);
-  setMessages((prevMessages) => [...prevMessages, newMessage]);
-});
     // Check if the user is a member of the channel
     socket.emit("checkChannelMembership", {
       channelId: activeChannel,
@@ -115,18 +116,18 @@ socket.on("newChannelMessage", (newMessage) => {
             <div
               key={message.id}
               className={`my-2 p-2 rounded-lg max-w-[80%] ${
-                message.id === currentUserToken.id
-                  ? style.messageOtherUser
-                  : style.messageCurrentUser
+                message.senderId === currentUserToken.id
+                  ? style.messageCurrentUser
+                  : style.messageOtherUser
               }`}
             >
               <div className={`flex items-center mb-1 ${style.messageHeader}`}>
                 <img
-                  src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"
+                  src={message.avatar}
                   alt={ currentUserToken.id}
                   className="w-8 h-8 rounded-full mr-2"
                 />
-                <span className="text-gray-400">{}</span>
+                <span className="text-gray-400">{message.username}</span>
               </div>
               <p>{message.Content}</p>
             </div>

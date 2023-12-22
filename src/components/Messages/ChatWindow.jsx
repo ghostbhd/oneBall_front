@@ -4,7 +4,7 @@ import style from "../../style";
 import { IoIosSend } from "react-icons/io";
 import { FiMoreVertical } from "react-icons/fi";
 import { useSocket } from "../../Socketio.jsx";
-
+import {Link} from "react-router-dom";
 
 const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   const [messages, setMessages] = useState([]);
@@ -98,14 +98,14 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   return (
     <div className={`w-9/12  ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}
-      <div className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5">
+      <Link className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5" to={"/profile/"}>
         <img
           className="w-16 h-18  rounded-full  mr-5"
           src={activeChatUser?.avatar || "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"} // Use the avatar from activeChatUser
           alt={activeChatUser?.name || "Default Name"}
         />
         <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
-      </div>
+      </Link>
 
       {/* Message display  */}
       <div
