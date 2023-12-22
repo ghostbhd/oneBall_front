@@ -37,4 +37,4 @@ export class User {
   @OneToMany(() => Channel, channel => channel.owner)
   ownedChannels: Channel[];
 }
-//! add status ,and the avatar
+//! add status 
