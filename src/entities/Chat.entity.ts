@@ -9,13 +9,10 @@ export class Chat {
     @Column()
     DateStarted: string;
     @ManyToOne(() => User, user => user.chatid1)
-    sender: User;
+    userid1: User;
 
     @ManyToOne(() => User, user => user.chatid2)
-    receiver: User;
-
-    content: string;
-    
+    userid2: User;
     @OneToMany(() => Message, message => message.chatid)
     messageid: Message[];
 }
