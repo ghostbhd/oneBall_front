@@ -5,12 +5,12 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 export class Friendship {
     @PrimaryGeneratedColumn()
     id: number;
-    @ManyToOne(() => User,(user) => user.friendship_sender)
-    userid1: User;
     @ManyToOne(() => User,(user) => user.friendship_reciver)
+    userid1: User;
+    @ManyToOne(() => User,(user) => user.friendship_sender)
     userid2: User;
-    @Column({nullable: true})
+    @Column()
     Status: string;
-    @Column({nullable: true})
+    @Column()
     DateAdded: string;
 }

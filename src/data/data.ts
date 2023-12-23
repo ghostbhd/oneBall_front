@@ -1,52 +1,10 @@
 import { UserService } from "src/user/user.service"
 import { HttpException, Injectable } from "@nestjs/common"
-import { FriendService } from "src/friend/friend.service";
 
 @Injectable()
 export class Dataprofile {
-  constructor (
-    private readonly friendService: FriendService,
-    private readonly userService: UserService)
+  constructor (private readonly userService: UserService)
   {}
-
-  async getUserprofile (username1: string, username2: string) {
-    
-    var friend: boolean = false;
-    var friendRequest: boolean = false;
-    var friendRequestSent: boolean = false;
-    if (username2 == undefined || username1 == undefined)
-      throw new HttpException("error ", 404)
-    console.log("the usernames ", username1, "the second username ", username2)
-    const user1 = await this.userService.findUserByUn(username1);
-    const user2 = await this.userService.findUserByUn(username2);
-    console.log("the usernames ", user1)
-    console.log("the second username ", user2)
-    if (user2 == null || user1 == null)
-      throw new HttpException("the user not found", 404);
-    const friendU = await this.friendService.findOne(username1)
-    console.log("000000000000000000000>>>>>>>>>>>>>>>>>>> ", friendU)
-    if (friendU && friendU.Status === "accepted")
-      friend = true;
-    else if (friendU && friendU.Status === "pending", user1.friendship_sender.find(() => friendU))
-      friendRequest = true;
-    else if (friendU && friendU.Status === "pending", user1.friendship_reciver.find(() => friendU))
-      friendRequestSent = true;
-    console.log("is it friend =======> ", friend, "is it friend request=====> ", friendRequest,
-      "is it friendRequestSent=====> ", friendRequestSent);
-    const profileUser = {
-       username: user2.username,
-       fullName: user2.username,
-       image: user2.Avatar,
-       friend: friend,
-       friendRequest: friendRequest,
-       friendRequestSent: friendRequestSent,
-    }
-    return ("")
-  }
-
-
-
-
   async getInfoprofile (username: string) {
     const user = await this.userService.findUserByUn(username);
     console.log("his this the user===>" + JSON.stringify(user));
@@ -93,6 +51,9 @@ export class DatadaShboard  {
   async getInfodashboard (username: string) {
       
     const user = await this.userService.findUserByUn(username);
+    if (user == null)
+        throw new HttpException("the user not found", 404);
+    console.log("username is +=", username);
     console.log("his this the user===>" + JSON.stringify(user));
     return ({
       user: {
