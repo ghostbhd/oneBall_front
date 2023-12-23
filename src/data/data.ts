@@ -1,5 +1,5 @@
 import { UserService } from "src/user/user.service"
-import { Injectable } from "@nestjs/common"
+import { HttpException, Injectable } from "@nestjs/common"
 
 @Injectable()
 export class Dataprofile {
@@ -51,6 +51,9 @@ export class DatadaShboard  {
   async getInfodashboard (username: string) {
       
     const user = await this.userService.findUserByUn(username);
+    if (user == null)
+        throw new HttpException("the user not found", 404);
+    console.log("username is +=", username);
     console.log("his this the user===>" + JSON.stringify(user));
     return ({
       user: {
