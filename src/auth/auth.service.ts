@@ -1,6 +1,6 @@
 import { Injectable} from '@nestjs/common';
-import { UserService } from '../user/user.service';
-import { profile } from '../dtos/profile.dto';
+import { UserService } from 'src/user/user.service';
+import { profile } from 'src/dtos/profile.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -20,8 +20,7 @@ export class AuthService {
     return (user);
   }
   async create_jwt (profile: profile): Promise<string> {
-    const user = await this.userservice.findUserByUn(profile.username);
-    const payload = {name: profile.username, sub: profile.email, id: user.id};
+    const payload = {name: profile.username, sub: profile.email};
     console.log("the plyload is==================>" + JSON.stringify(payload));;
     return (
        this.jwtService.signAsync(payload)
