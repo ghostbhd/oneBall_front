@@ -20,10 +20,9 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async findUserByUn(username: string): Promise<User | undefined> {
-    console.log("the user name is 00000>> ", username)
+  async findUserByUn(username: string): Promise<User> {
       // console.log(await this.userRepository.findOne({where : {username: username}}));
-    return  await this.userRepository.findOne({where : {username: username}, relations: ['friendship_sender', 'friendship_reciver']});
+    return  await this.userRepository.findOne({where : {username: username}});
   }
 
   async deleteUser(): Promise<void> {
