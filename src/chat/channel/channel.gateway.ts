@@ -3,6 +3,7 @@ import { ChatService } from '../chat.service';
 import { Socket, Server } from 'socket.io';
 import { UserService } from 'src/user/user.service';
 import { ChannelService } from './channel.service';
+import { subscribe } from 'diagnostics_channel';
 
 @WebSocketGateway({
   cors: {
