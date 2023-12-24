@@ -5,22 +5,22 @@ import { Message } from './Message.entity';
 import { Channel_Membership } from './Channel_Membership.entity';
 import { Channel_Message } from './Channel_Message.entity';
 import { StringifyOptions } from 'querystring';
-import { Channel } from "./Channel.entity";
-
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({unique: true})
+  @Column({ unique: true})
   username: string;
   @Column()
   email: string;
   @Column({ nullable: true})
   Avatar: string;
-  @OneToMany(() => Friendship, friendship => friendship.userid1)
-  friendship_reciver: Friendship[];
+  @Column({default: false})
+  is_twofactor: boolean;
   @OneToMany(() => Friendship, friendship => friendship.userid2)
+  friendship_reciver: Friendship[];
+  @OneToMany(() => Friendship, friendship => friendship.userid1)
   friendship_sender: Friendship[];
   @OneToMany(() => Chat, chat => chat.sender)
   chatid1: Chat[];
@@ -37,4 +37,3 @@ export class User {
   //  @OneToMany(() => Channel, channel => channel.owner)
   // ownedChannels: Channel[];
 }
-//! add status 
