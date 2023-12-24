@@ -34,7 +34,7 @@ export class User {
   channel_membershipid: Channel_Membership;
   @OneToMany(() => Channel_Message, channel_message => channel_message.SenderUserid)
   channel_messageid: Channel_Message;
-   @OneToMany(() => Channel, channel => channel.owner)
-  ownedChannels: Channel[];
+  //  @OneToMany(() => Channel, channel => channel.owner)
+  // ownedChannels: Channel[];
 }
 //! add status 

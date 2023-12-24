@@ -16,6 +16,12 @@ import { ChannelModule } from './chat/channel/channel.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { profile } from 'console';
 import { ProfiledataModule } from './profiledata/profiledata.module';
+import { UploadModule } from './upload/upload.module';
+import { DataModule } from './data/data.module';
+import { StatusModule } from './status/status.module';
+import { AddfriendModule } from './addfriend/addfriend.module';
+import { TfaModule } from './2fa/2fa.module';
+import { FriendModule } from './friend/friend.module';
 
 
 @Module({
@@ -28,6 +34,14 @@ import { ProfiledataModule } from './profiledata/profiledata.module';
     ChannelModule,
     DashboardModule,
     ProfiledataModule,
+    UploadModule,
+    DataModule,
+    StatusModule,
+    AddfriendModule,
+    TfaModule,
+    FriendModule,
+    ChatModule,
+    ChannelModule,
   ],
   exports: [TypeOrmModule],
 })
