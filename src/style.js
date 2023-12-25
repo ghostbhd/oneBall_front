@@ -15,7 +15,7 @@ const style = {
 
   //my chat styles
   chatContainer: "flex flex-col h-[calc(100vh-45px)]",
-  chatsone: "w-11/12  h- mx-auto",//!ask the boys about this 
+  chatsone: "w-11/12 h-full mx-auto",//!ask the boys about this 
   activeChatItem: "bg-bDark_1",
   // messageCurrentUser: `
   //   text-right bg-blue-0 text-white p-2 rounded-l-lg rounded-tr-lg`,
@@ -28,11 +28,9 @@ const style = {
   searchBar: "p-2",
 
 
-  tabContainer: "  w-full flex justify-center items-center bg-bLight_4 p-1/2 rounded-full",
+  tabContainer: "w-full flex justify-center items-center bg-bLight_4 p-1/2 rounded-full",
   tabUnderline: "absolute bottom-0 h-full bg-white rounded-full transition-all duration-300",
-  tab: "z-10 py-2 px-6 focus:outline-none",
-  tabActive: "text-org_2",
-  tabInactive: "text-bDark_4",
+  
 };
 
 export const ImgBg = ({ img }) => ({
