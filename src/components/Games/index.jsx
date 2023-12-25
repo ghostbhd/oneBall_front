@@ -33,6 +33,7 @@ const Games = () => {
             {/* buttons ----- */}
             <Buttons />
             {/* game details --- */}
+            
           </div>
           {/* Game history --------------------------------------------*/}
           <GamesHistory gamehistory={data.gamesHistory} />

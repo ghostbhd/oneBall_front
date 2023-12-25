@@ -11,20 +11,21 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   const row = "sm:w-1/2 w-full sm:flex hidden flex-col space-y-20";
-  
+
   // Headers for fetch ----------------
   const headers = getHeaders().headers;
 
   useEffect(() => {
-    fetch('http://localhost:3009/dashboard', {
-      method: 'GET',
+    fetch("http://localhost:3009/dashboard", {
+      method: "GET",
       headers: headers,
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
-          return response.json();}
-        })
-    // fetchDataFromMockApi()
+          return response.json();
+        }
+      })
+      // fetchDataFromMockApi()
       .then((data) => {
         console.log(data); // Log the data to check its structure
         setData(data);

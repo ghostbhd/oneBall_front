@@ -3,12 +3,62 @@ import { useState } from "react";
 import { icons } from "../../constants";
 import PropTypes from "prop-types";
 import { ImgBg } from "../../style";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const EditInfo = ({ data }) => {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar);
   const [moreAvatars, setMoreAvatars] = useState(false);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(null);
+  const [fileTosend, setSelectedFileTosend] = useState(null);
+
+  const history = useNavigate();
+  const handleRedirect = (url) => {
+    history(url);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(selectedAvatar);
+
+    const formData = new FormData();
+    formData.append("username", username);
+    // await loadImageAsFile(selectedAvatar);
+    if (fileTosend == null) {
+      formData.append("filepath", selectedAvatar);
+    }
+    formData.append("file", fileTosend);
+    const headers = new Headers();
+    const jwtCookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="));
+    if (jwtCookie) {
+      const jwt = jwtCookie.split("=")[1];
+      headers.append("Authorization", `Bearer ${jwt}`);
+    } // /* alert */("Only image files are allowed!");
+    else {
+      handleRedirect("/Auth");
+    }
+    await fetch("http://localhost:3009/upload", {
+      method: "POST",
+      body: formData,
+      headers: headers,
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log("this the result of the fetch..." + data.accessToken);
+        Cookies.set("accessToken", data.accessToken);
+      })
+      .catch((error) => {
+        console.error("Error during file upload:", error);
+      });
+    window.location.reload();
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -26,6 +76,7 @@ const EditInfo = ({ data }) => {
 
     if (file) {
       setSelectedFile(file.name);
+      setSelectedFileTosend(file);
       avatarImages.push(URL.createObjectURL(file));
       setSelectedAvatar(avatarImages[avatarImages.length - 1]);
     }
@@ -38,10 +89,8 @@ const EditInfo = ({ data }) => {
     setMoreAvatars(false);
   };
 
-  
-
   return (
-    <form action="POST" className="w-full p-6">
+    <form action="POST" className="w-full p-6" onSubmit={handleSubmit}>
       {/* head ------------------------------------------------------------------ */}
       <div className={`flex flex-nowrap h-10 relative w-full text-bLight_5`}>
         <span className="h-full flex">

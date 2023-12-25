@@ -1,6 +1,6 @@
 import { icons } from "../../constants";
 import { useState, useEffect, useRef } from "react";
-import style from "../../style";
+import NotificationBadge from "./NotificationBadge";
 
 const NavBar = () => {
   const [showNotif, setShowNotif] = useState(false);
@@ -36,39 +36,15 @@ const NavBar = () => {
         </div>
 
         {/* menu icon -------------- */}
-        <div className={`md:hidden text-3xl text-bLight_5 ml-auto cursor-pointer`}>
+        <div
+          className={`md:hidden text-3xl text-bLight_5 ml-auto cursor-pointer`}
+        >
           {<icons.menu />}
         </div>
       </div>
 
       {/* notification badge --------- */}
-      <div
-        ref={notifRef}
-        className={`absolute flex flex-col right-0 h-screen z-50 text-bLight_2 top-0 w-80 
-          border-l-2 border-bLight_5/20 p-2 bg-bDark_5/10 !backdrop-blur-[100px] shadow-4xl
-          ${!showNotif ? "hidden" : ""}
-        `}
-      >
-        {/* close badge ------ */}
-        <div className={`w-full p-2 flex mb-3`}>
-          <div
-            className={`ml-auto text-xl cursor-pointer`}
-            onClick={() => setShowNotif(false)}
-          >
-            {<icons.xmark />}
-          </div>
-        </div>
-
-        {/* items ---------------- */}
-        <ul className="w-full h-full flex flex-col gap-2 overflow-y-auto">
-          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-2xl`}>
-            test
-          </li>
-          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-2xl`}>
-            test
-          </li>
-        </ul>
-      </div>
+      <NotificationBadge {...{ notifRef, showNotif, setShowNotif }} />
     </div>
   );
 };
