@@ -29,6 +29,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
   };
   
   useEffect(() => {
+      console.log('Socket connected:', socket.connected);
     if (activeChannel) {
       socket.emit("getChannelMessages", activeChannel);
     }
@@ -53,7 +54,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
       }
     });
     
-    // Check if the user is a member of the channel
+
     socket.emit("checkChannelMembership", {
       channelId: activeChannel,
       userId: currentUserToken.id,
@@ -74,7 +75,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
   const handleJoinChannel = () => {
     if (!isMember) {
       if (showPasswordInput) {
-
+        // Join with provided password
         console.log("--------------------------------");
         socket.emit("joinChannel", {
           channelId: activeChannel,
@@ -82,7 +83,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
           password: channelPassword,
         });
       } else {
-
+        // Show password input for protected channels
         setShowPasswordInput(true);
       }
     }
