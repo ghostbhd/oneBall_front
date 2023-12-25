@@ -28,6 +28,9 @@ import { FcGoogle } from "react-icons/fc"; // google icon
 
 import FortyTwo  from '../assets/42.svg'; // 42 logo
 
+// for chat --------------------------------------------------
+import { IoSearchSharp } from "react-icons/io5"; // search icon
+
 
 
 // chat icons
@@ -140,5 +143,5 @@ export const icons = { // All needed icons
 };
 
 export const chatIcons = {
-  block: BiBlock,
+  searsh : IoSearchSharp,
 };
