@@ -112,30 +112,34 @@ const ChatList = ({
   };
 
   return (
-    <div className={`h-5/5 w-full flex flex-col overflow-y-auto`}>
+    <div className={`h-5/5 w-full flex flex-col overflow-y-auto gap-2`}>
       {chats.map((chat) => (
+        // message item -----------------------------
         <div
           key={chat.id}
-          className={`flex flex-row items-center rounded-full  shadow-2xl  ${
-            activeChat === chat.id ? "bg-bLight_5/60" : ""
+          className={`flex flex-row items-center rounded-full cursor-pointer  shadow-2xl  ${
+            activeChat === chat.id ? "bg-bLight_5/40" : ""
           }`}
           onClick={() => handleChatClick(chat.id)}
         >
-          {/*! Wrapper div with relative positioning */}
-          <div className="relative">
-            {/* image ----------------------------- */}
-            <div
-              style={ImgBg({ img: chat.senderavatar })}
-              className={`w-12 h-12 border-4 rounded-full  ${
-                chat.status === "online"
-                  ? style.online
-                  : chat.status === "offline"
-                  ? style.offline
-                  : style.inGame
-              }`}
-              ></div>
-            {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
-            {/* <span
+          {/* image ----------------------------- */}
+          <div
+            style={ImgBg({
+              img:
+                chat.senderflag === currentUserToken.id
+                  ? chat.receiveravatar
+                  : chat.senderavatar,
+            })}
+            className={`w-12 h-12 border-4 rounded-full  ${
+              chat.status === "online"
+                ? style.online
+                : chat.status === "offline"
+                ? style.offline
+                : style.inGame
+            }`}
+          ></div>
+          {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
+          {/* <span
               className={`absolute w-12 h-12 rounded-full border-[3px] ${
                 chat.status === "online"
                   ? style.online
@@ -153,10 +157,9 @@ const ChatList = ({
               }
               alt={`${chat.name}`}
             /> */}
-          </div>
           <div className="flex flex-col text-sm">
-            <p className="text-white px-3">{chat.name}</p>
-            <p className="text-gray-400 px-3">{chat.lastMessage}</p>
+            <p className="text-bLight_4 px-3">@{chat.name}</p>
+            <p className="text-bLight_2 px-3">{chat.lastMessage}</p>
           </div>
         </div>
       ))}

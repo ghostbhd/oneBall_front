@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSocket } from "../../Socketio.jsx";
-import style from "../../style";
+import style, { ImgBg } from "../../style";
 
 function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
   const [channels, setChannels] = useState([]);
@@ -30,24 +30,23 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
 
   return (
     <div
-      className={`rounded-b-2xl flex flex-col overflow-y-auto ${style.blueBlur}`}
+      className={`flex flex-col overflow-y-auto`}
     >
       {channels.map((channel) => (
         <div
           key={channel.id}
-          className={`flex items-center p-2 rounded-l-[50px] rounded-r-[20px] rounded-lg shadow-2xl  ${
-            activeChannel === channel.id ? "bg-bLight_4" : ""
+          className={`flex items-center p-2 rounded-full ${
+            activeChannel === channel.id ? "bg-bLight_5/50" : ""
           }`}
           onClick={() => handleChannelClick(channel.id)}
         >
-          <div className="">
-            <img
-              src="https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"
-              alt={channel.Channel}
-              className="w-12 h-12 rounded-full "
-            />
-          </div>
-          <h3 className="text-white px-3">{channel.Channel}</h3>
+          <div
+            className={`w-12 h-12 rounded-full`}
+            style={ImgBg({
+              img: "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg",
+            })}
+          ></div>
+          <p className="text-bLight_2 px-3">#{channel.Channel}</p>
         </div>
       ))}
     </div>
