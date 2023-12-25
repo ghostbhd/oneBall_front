@@ -1,0 +1,29 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite --host --port=3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.1.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.8",
+    "vite": "^4.5.0"
+  },
+  "dependencies": {
+    "@react-spring/web": "^9.7.3",
+    "@use-gesture/react": "^10.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-use-measure": "^2.1.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2"
+  }
+}
