@@ -38,6 +38,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
       console.log("newChannelMessage", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
+    
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.messages)) {
           setMessages(data.messages);
@@ -73,7 +74,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
   const handleJoinChannel = () => {
     if (!isMember) {
       if (showPasswordInput) {
-        // Join with provided password
+
         console.log("--------------------------------");
         socket.emit("joinChannel", {
           channelId: activeChannel,
@@ -81,7 +82,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
           password: channelPassword,
         });
       } else {
-        // Show password input for protected channels
+
         setShowPasswordInput(true);
       }
     }
