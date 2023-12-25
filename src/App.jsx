@@ -48,7 +48,6 @@ const App = () => {
         >
           {/* Authentication ---------------------------------------------------------- */}
           <Routes>
-            <Route path="/Auth" element={<Auth />} />
             <Route path="/Callback" element={<CallBack />} />
           </Routes>
 
