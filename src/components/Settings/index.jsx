@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import style from "../../style";
 import qrImage from "./qr-test.svg";
 import checkMark from "../../assets/Checkmark.gif";
 
-
 const SuccessCheckmark = () => {
   return (
     <div className="animate-success-check w-full h-16 text-center">
-      <img src={checkMark} alt="checkMark" className="mx-auto mb-5  max-w-full h-16"/>
+      <img src={checkMark} alt="checkMark" className="mx-auto mb-5 max-w-full h-16"/>
       <p className="text-greenclr text-lg font-semibold mt-0 mb-0">
         2-Factor Authentication Enabled Successfully
       </p>
@@ -15,17 +14,21 @@ const SuccessCheckmark = () => {
   );
 };
 
-
 const Settings = () => {
   const [digits, setDigits] = useState(Array.from({ length: 6 }, () => ''));
   const [warning, setWarning] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const inputRefs = useRef([]);
 
   const handleDigitChange = (index, value) => {
     if (/^\d*$/.test(value) && value.length <= 1) {
       const newDigits = [...digits];
       newDigits[index] = value;
       setDigits(newDigits);
+
+      if (index < digits.length - 1 && value !== '') {
+        inputRefs.current[index + 1].focus();
+      }
     }
 
     if (index < digits.length - 1 && value !== '') {
@@ -75,23 +78,22 @@ const Settings = () => {
                   id={`digit-${index}`}
                   maxLength={1}
                   className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
+                  ref={(input) => (inputRefs.current[index] = input)}
                 />
               </div>
             ))}
           </div>
 
-        <div className="digits-grid mt-5 flex justify-center">
-          {warning && <p className="text-err text-xs mt-14">{warning}</p>}
+          <div className="digits-grid mt-5 flex justify-center">
+            {warning && <p className="text-err text-xs mt-14">{warning}</p>}
 
-          <button
-            className="absolute left-1/4 w-1/2 h-12 bg-gradient-to-r from-bDark_3 to-bDark_5 text-white text-sm rounded transition duration-500 hover:bg-gradient-to-r hover:from-bDark_4 hover:to-bDark_3"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-
-        </div>
-
+            <button
+              className="absolute left-1/4 w-1/2 h-12 bg-gradient-to-r from-bDark_3 to-bDark_5 text-white text-sm rounded transition duration-500 hover:bg-gradient-to-r hover:from-bDark_4 hover:to-bDark_3"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       )}
     </div>
