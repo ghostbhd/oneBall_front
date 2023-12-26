@@ -13,7 +13,7 @@ export class UploadService {
     if (user != null)
     {
       var userUp: any;
-      if (username != "null")
+      if (username != "null" && username != "")
         userUp = await this.userservice.saveUser({...user, username: username, Avatar: file.filePath});
       else
         userUp = await this.userservice.saveUser({...user, Avatar: file.filePath});

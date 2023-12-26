@@ -21,11 +21,13 @@ import { TfaModule } from './2fa/2fa.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatModule } from './chat/chat.module';
 import { ChannelModule } from './chat/channel/channel.module';
+import { GameStats } from './entities/game.entity';
+import { GameHistory } from './entities/GameHistory.entity';
 
 @Module({
   imports: [
    TypeOrmModule.forRoot(config),
-    TypeOrmModule.forFeature([User ,Channel, Channel_Membership, Chat, Message, Channel_Message, Friendship]),
+    TypeOrmModule.forFeature([User ,Channel, Channel_Membership, Chat, Message, Channel_Message, Friendship, GameStats, GameHistory]),
     UserModule,
     AuthModule,
     PassportModule.register( {session: true}),
