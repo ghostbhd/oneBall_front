@@ -25,7 +25,7 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
 
   const handleChannelClick = (channelId) => {
     setActiveChannel(channelId);
-    
+
     console.log("active channel is => ", channelId);
   };
 
