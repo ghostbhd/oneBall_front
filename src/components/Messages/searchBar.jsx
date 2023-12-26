@@ -28,7 +28,7 @@ const SearchBar = ({
   return (
     <div className={`pb-2 px-2 flex flex-row items-center`}>
       {/* search bar -------------------------------------------------------------- */}
-      <div className={`flex w-10/12 flex-row bg-bDark_4 rounded-full border-2 border-bLight_5`}>
+      <div className={`flex w-10/12 flex-row items-center bg-bDark_4/60 rounded-full border-2 border-bLight_5/40`}>
         {/* search input -------------------------------- */}
         <input
           type="text"
@@ -36,7 +36,7 @@ const SearchBar = ({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleSearchSubmit()}
-          className="w-full bg-transparent outline-none border-none rounded-full text-xs text-bLight_3 p-2"
+          className="w-full bg-transparent placeholder:text-bLight_4 outline-none border-none rounded-full text-xs text-bLight_3 p-2"
         />
         {/* search icons -------------------------------- */}
         <button

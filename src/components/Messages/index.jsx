@@ -56,19 +56,17 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
     >
       {/* chat sideBar ############################################################### */}
       <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>
-        <div className={`pb-2`}>
+
+        {/* SlidingBar - chatList - channelList --------------------------------- */}
+        <div
+          className={`h-full w-full flex flex-col overflow-hidden p-2 gap-2 ${style.blueBlur} ${style.rounded}`}
+        >
           <SearchBar
             onSearch={handleSearch}
             onChannelIconClick={toggleChannelCreationModal}
             currentUserToken={currentUserToken}
             onSearchSubmit={handleSearchSubmit}
           />
-        </div>
-
-        {/* SlidingBar - chatList - channelList --------------------------------- */}
-        <div
-          className={`h-full w-full flex flex-col overflow-hidden p-2 gap-2 ${style.blueBlur} ${style.rounded}`}
-        >
           <SlidingTabBar onTabSelected={handleTabSelected} />
           {activeTab === "dms" ? (
             <ChatList
@@ -97,7 +95,6 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
             currentUserToken={currentUserToken}
           />
         ) : activeChannel && activeTab === "channels" ? (
-          
           <ChannelWindow
             activeChannel={activeChannel}
             currentUserToken={currentUserToken}

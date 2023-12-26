@@ -30,6 +30,8 @@ import FortyTwo  from '../assets/42.svg'; // 42 logo
 
 // for chat --------------------------------------------------
 import { IoSearchSharp } from "react-icons/io5"; // search icon
+import { MdOutlineMoreVert } from "react-icons/md"; // more icon
+import { IoIosSend } from "react-icons/io"; // send icon
 
 
 
@@ -144,4 +146,6 @@ export const icons = { // All needed icons
 
 export const chatIcons = {
   searsh : IoSearchSharp,
+  more : MdOutlineMoreVert,
+  send : IoIosSend,
 };
