@@ -13,6 +13,9 @@ import {
   Auth,
   CallBack,
 } from "./components";
+
+import {GameShell} from "./pniw_pong/game/frontend/index.jsx"
+
 import style from "./style";
 
 import { SocketProvider } from "./Socketio";
@@ -73,6 +76,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/games" element={<Games />} />
+              <Route path="/ingame" element={<GameShell/>} /> {/* here */}
               <Route path="/messages" element={<Messages />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/stats" element={<Stats />} />

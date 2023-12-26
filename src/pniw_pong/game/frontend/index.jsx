@@ -3,13 +3,11 @@ import ReactDOM from "react-dom/client";
 import MyBall from "./Ball.jsx"
 import Player from "./player.jsx"
 import Border from "./Borders.jsx";
-import { useDrag } from "@use-gesture/react"
-import { SpringRef, animated, to, useSpring, useSpringRef, useSpringValue, config } from '@react-spring/web'
+import { SpringRef, useSpring, useSpringRef, useSpringValue, config } from '@react-spring/web'
 
 import "./index.css"
 import { io } from "socket.io-client"
 import FrontEndLogic from "./front_end_logic.jsx";
-import MovingDot from "./redot.jsx";
 
 function PlagrounReducer(state, action) {
     return {
@@ -30,7 +28,7 @@ function PlagrounReducer(state, action) {
 }
 
 // todo move the component to another
-const GameShell = () => {
+export const GameShell = () => {
 
     const [game_inf, game_inf_dispatch] = useReducer(PlagrounReducer, {
         max_x: 0,
@@ -139,7 +137,3 @@ const GameShell = () => {
         )
     }
 };
-
-const root = document.getElementById("root")
-
-ReactDOM.createRoot(root).render(<GameShell />)
