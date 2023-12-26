@@ -11,7 +11,7 @@ export class TfaController {
   create(@Body() create2faDto: Create2faDto) {
     const secret = speakeasy.generateSecret();
     QRCode.toDataURL(secret.otpauth_url, function(err, data_url) {
-      console.log(data_url);
+      // console.log(data_url);
  console.log('<img src="' + data_url + '">');
   });
     return this.tfaService.create(create2faDto);

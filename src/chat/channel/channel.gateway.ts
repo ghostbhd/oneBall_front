@@ -17,7 +17,6 @@ export class ChannelGateway {
     private readonly userService: UserService,) { }
   @WebSocketServer() server: Server;
 
-
   @SubscribeMessage('createChannel')
   async handleCreateChannel(client: Socket, channelData: { ownerId: number, channelName: string, channelType: string, password?: string }) {
 
@@ -35,8 +34,9 @@ export class ChannelGateway {
     try {
 
       const userChannels = await this.channelService.getUserChannels(userId);
-      // console.log("****", userChannels);
+
       client.emit('userChannels', userChannels);
+
     } catch (error) {
 
       console.error('Error fetching user channels:', error);
@@ -86,5 +86,24 @@ export class ChannelGateway {
   }
 
 
+  @SubscribeMessage('getChannelType')
+  async handleGetChannelType(client: Socket, channelId: number) {
+    try {
+      const channelType = await this.channelService.getChannelType(channelId);
+      client.emit('channelType', { channelId, channelType });
+    } catch (error) {
+      console.error('Error getting channel type:', error);
+    }
+  }
+
+  @SubscribeMessage('checkChannelMembership')
+  async handleCheckChannelMembership(client: Socket, data: { channelId: number, userId: number }) {
+    try {
+      const status = await this.channelService.getUserChannelStatus(data.channelId, data.userId);
+      client.emit('channelMembershipStatus', { channelId: data.channelId, ...status });
+    } catch (error) {
+      console.error('Error checking channel membership:', error);
+    }
+  }
 
 }

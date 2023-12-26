@@ -80,7 +80,6 @@ export class ChannelService {
     }
   }
   
-
   async getUserChannels(userId: number): Promise<Channel[]> {
     const publicAndProtectedChannels = await this.channelRepository.find({
       where: [{ public: true }, { protected: true }],
@@ -112,7 +111,7 @@ export class ChannelService {
       order: { Timestamp: 'ASC' },
     });
   
-    // Map messages to include user details
+
     return messages.map(message => ({
       id: message.id,
       Content: message.Content,
@@ -124,6 +123,41 @@ export class ChannelService {
   }
   
 
+  async getChannelType(channelId: number): Promise<string> {
+    const channel = await this.channelRepository.findOne({ where: { id: channelId } });
+
+    if (!channel) {
+      throw new NotFoundException('Channel not found');
+    }
+
+    if (channel.public) {
+      return 'public';
+    } else if (channel.protected) {
+      return 'protected';
+    } else if (channel.private) {
+      return 'private';
+    } else {
+      throw new Error('Invalid channel type');
+    }
+  }
+
+
+
+
+  async getUserChannelStatus(channelId: number, userId: number): Promise<{ isMember: boolean, isAdmin: boolean, isOwner: boolean }> {
+    const channel = await this.channelRepository.findOne({ where: { id: channelId } });
+    const membership = await this.Channel_MembershipRepository.findOne({
+      where: { channelid: { id: channelId }, userid: { id: userId } },
+    });
+  
+    return {
+      isMember: !!membership,
+      isAdmin: membership ? membership.isAdmin : false,
+      isOwner: channel && channel.owner.id === userId
+    };
+  }
+
+  
   
   async addMemberToChannel(channelId: number, userId: number, channelPassword?: string): Promise<Channel_Membership> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
@@ -191,6 +225,7 @@ export class ChannelService {
     return channel;
   }
 
+  
   async kickUserFromChannel(channelId: number, userId: number, requesterId: number): Promise<void> {
     const channel = await this.channelRepository.findOne({ where: { id: channelId } });
     const user = await this.userService.findUserById(userId);
