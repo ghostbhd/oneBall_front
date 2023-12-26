@@ -80,14 +80,18 @@ const Settings = () => {
             ))}
           </div>
 
-          {warning && <p className="text-err text-xs mt-2">{warning}</p>}
+        <div className="digits-grid mt-5 flex justify-center">
+          {warning && <p className="text-err text-xs mt-14">{warning}</p>}
 
           <button
-            className="absolute bottom-9 left-1/4 w-1/2 h-12 bg-gradient-to-r from-bDark_3 to-bDark_5 text-white text-sm rounded transition duration-500 hover:bg-gradient-to-r hover:from-bDark_4 hover:to-bDark_3"
+            className="absolute left-1/4 w-1/2 h-12 bg-gradient-to-r from-bDark_3 to-bDark_5 text-white text-sm rounded transition duration-500 hover:bg-gradient-to-r hover:from-bDark_4 hover:to-bDark_3"
             onClick={handleSubmit}
           >
             Submit
           </button>
+
+        </div>
+
         </div>
       )}
     </div>
