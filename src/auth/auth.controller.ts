@@ -36,9 +36,10 @@ export class AuthController {
     // res.setHeader('Set-Cookie',`accessToken=${ accessToken}`);
       // res.setHeader('Set-Cookie', accessTokenCookie);
       res.redirect("http://localhost:5173/CallBack");
-      return( 
-        {fff: 'ddddd'} 
-    );
+    console.log("the user throw an Exception ")
+    //   return( 
+    //     {fff: 'ddddd'} 
+    // );
   }
 
 
@@ -75,9 +76,9 @@ export class AuthController {
     // res.setHeader('Set-Cookie',`accessToken=${ accessToken}`);
       // res.setHeader('Set-Cookie', accessTokenCookie);
       res.redirect("http://localhost:5173/CallBack");
-      return( 
-        {fff: 'ddddd'} 
-    );
+    //   return( 
+    //     {fff: 'ddddd'} 
+    // );
   }
 
 
