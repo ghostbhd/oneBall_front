@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { useSocket } from "../../Socketio.jsx";
 import style, { ImgBg } from "../../style";
 import { chatIcons } from "../../constants";
-import { HiUserGroup } from "react-icons/hi";
+import ChannelMembers from "./ChannelMembers.jsx";
 
 const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const [messages, setMessages] = useState([]);
@@ -103,7 +103,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   return (
     <div
-      className={`w-full h-full flex flex-col overflow-hidden ${style.blueBlur} ${style.rounded}`}
+      className={`w-full h-full relative flex flex-col overflow-hidden ${style.blueBlur} ${style.rounded}`}
     >
       {/* Window navbar ---------------------------------------------------------------- */}
 
@@ -160,6 +160,9 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           </ul>
         </div>
       </div>
+
+      {/* Members modal ---------------------------------------------------------------- */}
+      <ChannelMembers show={showMembers} setShow={setShowMembers} />
 
       {/* Message display  ----------------------------------------------------------------------*/}
       <div
