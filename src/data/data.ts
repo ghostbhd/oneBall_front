@@ -15,7 +15,10 @@ export class Dataprofile {
     var friendRequest: boolean = false;
     var friendRequestSent: boolean = false;
     if (username2 == undefined || username1 == undefined)
+  {
+      console.log("the username is not found")
       throw new HttpException("error ", 404)
+    }
     console.log("the usernames ", username1, "the second username ", username2)
     const user1 = await this.userService.findUserByUn(username1);
     const user2 = await this.userService.findUserByUn(username2);
