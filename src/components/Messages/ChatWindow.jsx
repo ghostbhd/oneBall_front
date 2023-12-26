@@ -96,7 +96,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
 
   console.log(`active chat user is ${activeChatUser}`);
   return (
-    <div className={`w-9/12  ${style.contentW} ${style.chatContainer}`}>
+    <div className={`w-full  ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}
       <Link className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5" to={"/profile/"}>
         <img
@@ -107,7 +107,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
         <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
       </Link>
 
-      {/* Message display  */}
+      {/* Message display  ----------------------------------------------------------------------*/}
       <div
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >

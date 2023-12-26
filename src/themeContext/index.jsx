@@ -1,8 +1,6 @@
 // ThemeContext.js
 import { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
-import{useLocation} from "react-router-dom";
-
 
 const defaultTheme = {
   isSidebarCollapsed: true,
@@ -17,7 +15,6 @@ export function useTheme() {
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(defaultTheme);
- 
 
   const toggleSidebar = () => {
     setTheme((prevTheme) => ({

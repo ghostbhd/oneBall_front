@@ -12,17 +12,14 @@ const GameHistory = ({ last6Games }) => {
       {/* head ******************************************/}
       <div className={`flex w-full text-bLight_4 py-1`}>
         <span className="text-lg">Games history</span>
-        <Link
-          to="/games"
-          className={`ml-auto text-3xl font-bold hover:text-bLight_2 transition-colors`}
-        >
+        <Link to="/games" className={`ml-auto text-3xl font-bold`}>
           {<icons.toRight />}
         </Link>
       </div>
       {/* details bar ********************************************* */}
       <div
-        className={`w-full flex flex-row text-bLight_4 font-medium text-sm
-          bg-bDark_4 p-1 px-4 mt-3 rounded-full border-b-2 border-r-2 border-bLight_5
+        className={`w-full flex flex-row text-bLight_2 font-medium text-sm
+          bg-bDark_4 p-2 px-4 mt-3 rounded-full border-b-2 border-r-2 border-bLight_5
         `}
       >
         <span>Versus</span>
@@ -33,12 +30,11 @@ const GameHistory = ({ last6Games }) => {
       {/* game history list ************************************** */}
       <ul>
         {last6Games && Array.isArray(last6Games) && last6Games.length > 0 ? (
-          last6Games.map((item, index) => (
+          last6Games.map((item) => (
             <li
               key={item.id}
               className={`w-full flex flex-row text-bLight_4 align-middle
-                bg-bDark_4 p-4 mt-3 ${style.rounded}
-                ${index % 2 ? "bg-bDark_3" : "bg-bDark_4"}
+                p-3 mt-2 rounded-2xl bg-bLight_5/40
               `}
             >
               {/* opponent ----------- */}

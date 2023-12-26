@@ -4,6 +4,12 @@ module.exports = {
   mode: "jit",
   theme: {
     extend: {
+      width: {
+        '1/4': '25%', 
+      },
+      flexGrow: {
+        // Tailwind uses `flex-grow: 1;` for `flex-grow` class by default
+      },
       colors: {
         bLight_1: "#98c0cf",
         bLight_2: "#8dc7d4",
@@ -15,18 +21,26 @@ module.exports = {
         bDark_2: "#395f6d",
         bDark_3: "#2a515e",
         bDark_4: "#204753",
+        bDark_5: "#001216",
         org_1: "#ffe268",
         org_2: "#ffb037",
-        org_3: "#ea8d00"
+        org_3: "#ea8d00",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
       },
       boxShadow: {
-        '3xl': '0 25px 50px -12px rgb(0 0 0 / 0.5)',
-        '4xl': '0 0px 100px -12px rgb(0 0 0 / 0.4)',
-        'sBar': '20px 0 40px -12px rgb(0 0 0 / 0.4)',
-      }
+        "3xl": "0 25px 50px -12px rgb(0 0 0 / 0.5)",
+        "4xl": "0 0 60px -12px rgb(0 0 0 / 0.4)",
+        "5xl": "-4px 4px 40px -12px rgb(0 0 0 / 1)",
+        btn: "0 0px 50px -12px rgb(0 0 0 / 0.3)",
+        sBar: "20px 0 40px -12px rgb(0 0 0 / 0.4)",
+        login: "inset 20px 20px 44px 0 rgb(255 255 255 / 0.1),\
+          0 0 60px -12px rgb(0 0 0 / 0.4)"
+      },
+      borderRadius: {
+        "4xl": "2rem",
+      },
     },
     screens: {
       xs: "480px",
@@ -39,5 +53,4 @@ module.exports = {
     
   },
   plugins: [],
-}
- 
+};

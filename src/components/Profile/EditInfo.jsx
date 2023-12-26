@@ -1,95 +1,65 @@
 import { avatarImages } from "./avatarImages";
 import { useState } from "react";
 import { icons } from "../../constants";
-import style from "../../style";
 import PropTypes from "prop-types";
+import { ImgBg } from "../../style";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useDropzone } from "react-dropzone";
-import { useNavigate } from 'react-router-dom';
 
 const EditInfo = ({ data }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar);
   const [moreAvatars, setMoreAvatars] = useState(false);
   const [username, setUsername] = useState(null);
-  const [fileTosend, setSelectedFileTosend] = useState(null); 
+  const [fileTosend, setSelectedFileTosend] = useState(null);
 
-
-  const loadImage = async (path) => {
-    const response = await fetch(path);
-    const arrayBuffer = await response.arrayBuffer();
-    const binaryString = new TextDecoder().decode(arrayBuffer);
-    // console.log( "jsssssssssssssson" +  binaryString);
-    return binaryString;
-  };
-
-const loadImageAsFile = async (path) => {
-    const imagePath = path;
-
-    const response = await fetch(imagePath);
-    const blob = await response.blob();
-
-    // Extract the file name from the path
-    const fileName = imagePath.split('/').pop();
-
-    // Create a File object
-    const file = new File([blob], fileName, { type: blob.type });
-
-    setSelectedFileTosend(file);
-  };
-
-  const  history = useNavigate ();
+  const history = useNavigate();
   const handleRedirect = (url) => {
     history(url);
-  }
+  };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-    console.log(
-      selectedAvatar
-    )
-    
+    console.log(selectedAvatar);
+
     const formData = new FormData();
-    formData.append('username', username);
+    formData.append("username", username);
     // await loadImageAsFile(selectedAvatar);
-    if (fileTosend == null)
-    {
-      console.log("hello my friend");
-      formData.append('filepath', selectedAvatar)
+    if (fileTosend == null) {
+      formData.append("filepath", selectedAvatar);
     }
-    console.log( "jsssssssssssssson" +  fileTosend);
-    formData.append('file', fileTosend);
+    formData.append("file", fileTosend);
     const headers = new Headers();
     const jwtCookie = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('accessToken='));
-      if (jwtCookie) {
-        const jwt = jwtCookie.split('=')[1];
-    headers.append('Authorization', `Bearer ${jwt}`)
-   }   // /* alert */("Only image files are allowed!");
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="));
+    if (jwtCookie) {
+      const jwt = jwtCookie.split("=")[1];
+      headers.append("Authorization", `Bearer ${jwt}`);
+    } // /* alert */("Only image files are allowed!");
     else {
-       handleRedirect('/Auth'); 
-      }
-    const response = await fetch('http://localhost:3009/upload', {
-      method: 'POST',
+      handleRedirect("/Auth");
+    }
+    await fetch("http://localhost:3009/upload", {
+      method: "POST",
       body: formData,
       headers: headers,
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
-          return response.json();}
-        })
+          return response.json();
+        }
+      })
       .then((data) => {
         console.log("this the result of the fetch..." + data.accessToken);
-    Cookies.set('accessToken', data.accessToken);
-    })
-   .catch ((error) => {
-    console.error('Error during file upload:', error);
-  })
-      console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
+        Cookies.set("accessToken", data.accessToken);
+      })
+      .catch((error) => {
+        console.error("Error during file upload:", error);
+      });
     window.location.reload();
-  }; 
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const acceptedImageTypes = [
@@ -99,22 +69,16 @@ const loadImageAsFile = async (path) => {
       "image/gif",
       "image/svg+xml",
     ];
-    console.log(file);
     if (!acceptedImageTypes.includes(file.type)) {
       alert("Only image files are allowed!");
       return;
     }
-       
-      console.log('heeeeeeeeeeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiiiiieeeeeeeeeeeeeeeeeeeeer');
-      // console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
+
     if (file) {
-      console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer');
       setSelectedFile(file.name);
       setSelectedFileTosend(file);
       avatarImages.push(URL.createObjectURL(file));
-      // console.log(avatarImages);
       setSelectedAvatar(avatarImages[avatarImages.length - 1]);
-      console.log( "----------->" + selectedAvatar);
     }
   };
 
@@ -124,23 +88,9 @@ const loadImageAsFile = async (path) => {
     setUsername("");
     setMoreAvatars(false);
   };
-  const SaveAvatar = (e) => {
-    // e.preventDefault();
-    // const file = e.target.files[0];
-    // console.log("uuuuuuuu"+ file)
-      // console.log('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer' + file.json());
-      // avatarImages.push(URL.createObjectURL(e));
-      setSelectedAvatar(e);
-      setSelectedFileTosend(e);
-  }
-  const imagebg = ({ img }) => ({
-        backgroundImage: `url('${img}')`,
-    backgroundSize: `cover`,
-    backgroundPosition: `center`,
-  });
 
   return (
-    <form action="POST" className="w-full p-6" onSubmit = {handleSubmit} >
+    <form action="POST" className="w-full p-6" onSubmit={handleSubmit}>
       {/* head ------------------------------------------------------------------ */}
       <div className={`flex flex-nowrap h-10 relative w-full text-bLight_5`}>
         <span className="h-full flex">
@@ -166,6 +116,7 @@ const loadImageAsFile = async (path) => {
             ""
           )}
         </div>
+
         {/* upload button ---------*/}
         <label
           htmlFor="file-upload"
@@ -179,25 +130,23 @@ const loadImageAsFile = async (path) => {
       {/* Avatar selection -------------- */}
       <div className="w-full mt-3 relative space-y-4">
         <div
-          className={`w-full grid grid-cols-5 gap-4 relative overflow-hidden ${
-            moreAvatars ? "h-max" : "h-[90px]"
+          className={`w-full grid md:grid-cols-5 grid-cols-4 gap-4 relative overflow-hidden ${
+            moreAvatars ? "h-max" : "xl:h-28 sm:h-[90px] h-[60px]"
           }`}
         >
           {avatarImages.map((item, index) => (
             <div
               key={index}
-              className={`w-[90px] h-[90px] relative cursor-pointer mx-auto
-                ${style.rounded} ${
-                item === selectedAvatar ? "order-first" : ""
-              } 
+              className={`md:w-[90px] sm:w-[80px] xl:w-28 xl:h-28 w-[60px] md:h-[90px] sm:h-[80px] h-[60px] relative cursor-pointer mx-auto
+                rounded-[25px] ${item === selectedAvatar ? "order-first" : ""} 
               `}
-              style={imagebg({ img: item })}
+              style={ImgBg({ img: item })}
               onClick={() => setSelectedAvatar(item)}
             >
               {/* checked avatar --------------*/}
               {selectedAvatar === item ? (
                 <div
-                  className={`absolute flex w-full h-full ${style.rounded} bg-bLight_5 bg-opacity-50`}
+                  className={`absolute flex w-full h-full rounded-[25px] bg-bLight_5 bg-opacity-50`}
                 >
                   {
                     <icons.check className="text-[30pt] m-auto text-org_3 text-shadow" />

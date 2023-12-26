@@ -9,62 +9,11 @@ What i need to add in front:
 -readthe chat
 handle the error in the brouser
 check the console
-path  
+path prblm
 
 
 Search :
  Cross-Origin Resource Sharing (CORS)
- useEffect and useState io
- emit , useEffect,useState
-
-error when i send new user to chat list 
+ useEffect and useState
 
 
-
-
-  @SubscribeMessage('send-message')
-  async handleSendMessage(client: Socket, payload: { chatId: number; content: string ; senderId:number ; receiverid: number}) {
-    try {
-      console.log("Before sending ->", payload.content);
-      const sender = await this.userService.findUserById(payload.senderId);
-      const receiver = await this.userService.findUserById(payload.receiverid);
-      const message = await this.chatService.sendMessage(payload.chatId, payload.content, sender, receiver);
-
-      client.emit('new-message', message);
-
-      console.log("After sending ->", payload.content);
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
-  }
-
-
-
-  async sendMessage(chatId: number, content: string, sender:User, receiver:User): Promise<Message> {
-
-    const chat = await this.directMessageRepository.findOne({
-      where: { id: chatId },
-      relations: ['sender', 'receiver'],
-    });
-
-    if (!chat) {
-      throw new NotFoundException(`Chat with ID ${chatId} not found`);
-    }
-
-
-    // Create and save the new message
-    const newMessage = new Message();
-    newMessage.chatid = chat;
-    newMessage.SenderUserID = sender;
-    newMessage.ReceiverUserID = receiver;
-    newMessage.Content = content;
-    newMessage.Timestamp = new Date().toISOString();
-
-    console.log(`receiver :${sender}`);
-    console.log(`sender :${receiver}`);
-    console.log(`Attempting to save message in chat ${chatId}`);
-    const savedMessage = await this.messageRepository.save(newMessage);
-    console.log(`Message saved with ID: ${savedMessage.id}`);
-
-    return savedMessage;
-  }

@@ -1,51 +1,78 @@
-import { profileData } from "../../data/mockApi";
+// import { profileData } from "../../data/mockApi";
 import { useEffect, useState } from "react";
 import style from "../../style";
 import EditInfo from "./EditInfo";
 import Details from "./Details";
+import MDetails from "./MDetails";
+import FriendRequests from "./FriendRequests";
 import { getHeaders } from "../../jwt_token";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
+  const history = useNavigate();
+  const handleRedirect = (url) => {
+    history(url);
+  };
   const headers = getHeaders().headers;
   useEffect(() => {
-    // profileData()
-    fetch('http://localhost:3009/profileData', {
-      method: 'GET',
-      headers: headers,
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();}
-      })
-      .then((data) => {
-        console.log(data); // Log the data to check its structure
-        setData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("Error fetching data", err);
-        setLoading(false);
+    const fetchData = async () => {
+      const response = await fetch("http://localhost:3009/profileData", {
+        method: "GET",
+        headers: headers,
       });
+      if (response.status === 401) {
+        handleRedirect("/Auth");
+        console.log("Unauthorized. Please log in.");
+        return;
+      }
+      const data = await response.json();
+      console.log("Index profile data:",data);
+      setData(data);
+      setLoading(false);
+    };
+    fetchData();
+    // profileData()
+    //   .then((data) => {
+    //     console.log(data); // Log the data to check its structure
+    //     setData(data);
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log("Error fetching data", err);
+    //     setLoading(false);
+    //   });
   }, []);
 
   return (
-    <div className={`w-full h-full flex flex-row`}>
+    <div
+      className={`w-full sm:h-full sm:space-x-8 xl:space-x-20 flex sm:flex-row flex-col md:pb-4 pb-16 p-4 md:px-10 sm:pt-14 pt-6`}
+    >
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
         </p>
       ) : (
         <>
-          <div className={`w-7/12 h-full ${style.blueBlur} ${style.rounded}`}>
-            <EditInfo data={data.editInnfo}/>
+          {/* Mobile details ------------------------- */}
+          <div className={`block sm:hidden mb-8 w-full h-max ${style.rounded}`}>
+            <MDetails data={data.profileInfo} />
           </div>
+
+          {/* Edit info and friend requests ------------------- */}
           <div
-            className={`w-4/12 h-full bg-gradient-to-b from-org_2/40 from-5% 
-            via-bDark_1/50 to-bDark_1/50 ml-auto ${style.rounded}`}
+            className={`sm:w-8/12 w-full sm:h-full relative overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}
+          >
+            <EditInfo data={data.editInnfo} />
+            <FriendRequests />
+          </div>
+
+          {/* Details -------------------------------------- */}
+          <div
+            className={`sm:w-4/12 w-full sm:h-full bg-gradient-to-b from-org_1/40 from-5% shadow-4xl
+            via-bDark_1/50 to-bLight_5/20 ml-auto ${style.rounded} backdrop-blur-xl`}
           >
             <Details data={data.profileInfo} />
           </div>

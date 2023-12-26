@@ -1,5 +1,5 @@
 import React from "react";
-import style from "../../style";
+import style, { ImgBg } from "../../style";
 import { useState, useEffect } from "react";
 import SearchBar from "./searchBar.jsx";
 import ChatWindow from "./ChatWindow.jsx";
@@ -9,27 +9,20 @@ import { useSocket } from "../../Socketio.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
 
-
 const ChatList = ({
   activeChat,
   setActiveChat,
-  onSearch,
-  onIconClick,
-  setActiveChatUser,
   currentUserToken,
-  onTabSelected,
 
 }) => {
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
   const socket = useSocket();
 
-
   useEffect(() => {
     if (socket == null) return;
 
     socket.emit("request-latest-messages", currentUserToken.id);
-
 
     socket.on("latest-messages", (chatsFromServer) => {
       let sortedChats = chatsFromServer.sort((a, b) => {
@@ -50,7 +43,6 @@ const ChatList = ({
         );
 
         if (chatIndex > -1) {
-
           updatedChats[chatIndex] = {
             ...updatedChats[chatIndex],
             lastMessage: newMessage.content,
@@ -62,7 +54,6 @@ const ChatList = ({
             receiverflag: newMessage.receiverflag,
           };
         } else {
-
           updatedChats = [
             ...updatedChats,
             {
@@ -100,7 +91,6 @@ const ChatList = ({
       }
     });
 
-    // console.log(chats);
     return () => {
       socket.off("latest-messages");
       socket.off("new-message", handleNewMessage);
@@ -117,52 +107,41 @@ const ChatList = ({
     });
   };
 
-
-
   return (
-    <div className="h-5/5 rounded-b-2xl flex-grow overflow-y-auto">
-    {chats.map((chat) => (
-      <div
-        key={chat.id}
-        className={`flex items-center p-2 rounded-l-[50px] rounded-r-[20px] ${
-          style.transition
-        } hover:bg-opacity-70 rounded-lg shadow-2xl  ${
-          activeChat === chat.id ? style.activeChatItem : ""
-        }`}
-        onClick={() => handleChatClick(chat.id)}
-      >
-        {/*! Wrapper div with relative positioning */}
-        <div className="relative">
-          {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
-          <span
-            className={`absolute w-12 h-12 rounded-full border-[3px] ${
+    <div className={`h-5/5 w-full flex flex-col overflow-y-auto gap-2`}>
+      {chats.map((chat) => (
+        // message item -----------------------------
+        <div
+          key={chat.id}
+          className={`flex flex-row items-center rounded-full cursor-pointer  shadow-2xl  ${
+            activeChat === chat.id ? "bg-bLight_5/40" : ""
+          }`}
+          onClick={() => handleChatClick(chat.id)}
+        >
+          {/* image ----------------------------- */}
+          <div
+            style={ImgBg({
+              img:
+                chat.senderflag === currentUserToken.id
+                  ? chat.receiveravatar
+                  : chat.senderavatar,
+            })}
+            className={`w-12 h-12 border-4 rounded-full  ${
               chat.status === "online"
                 ? style.online
                 : chat.status === "offline"
                 ? style.offline
                 : style.inGame
             }`}
-          ></span>
-          <img
-            className="w-12 h-12 rounded-full "
-            src={
-              chat.senderflag === currentUserToken.id
-                ? chat.receiveravatar
-                : chat.senderavatar
-            }
-            alt={`${chat.name}`}
-          />
+          ></div>
+          <div className="flex flex-col text-sm">
+            <p className="text-bLight_4 px-3">@{chat.name}</p>
+            <p className="text-bLight_2 px-3">{chat.lastMessage}</p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-white px-3">{chat.name}</h3>
-          <p className="text-gray-400 px-3">{chat.lastMessage}</p>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
 };
 
-
 export default ChatList;
-
