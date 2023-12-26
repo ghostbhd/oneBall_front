@@ -1,10 +1,11 @@
-import { Body, Controller, HttpException, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UploadService } from "./upload.service";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "src/auth/auth.service";
 import { Response } from 'express'
 import { UserService } from "src/user/user.service";
+import path from "path";
 
 @Controller('upload')
 export class UploadController {
@@ -14,15 +15,11 @@ export class UploadController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file', { dest: './src/uploadFiles' }))
   async UploadFile (@Res({ passthrough: true }) res: Response, @Req() req: any, @Body() body : any ,@UploadedFile() file: Express.Multer.File) {
-    const { username , filepath } = body;
-    const usernm: string = username;
-      console.log(usernm.search(" "))
-    if (usernm.search(" ") != -1)
-      throw new HttpException("the username is not acceptable", 401)
+    const { username, filepath } = body;
     const user1 = await this.userService.findUserByUn(req.user.username);
     var path = null;
     var user = null;
-    // console.log("the file is undefined " + user1);
+      // console.log("the file is undefined " + user1);
     if (filepath)
     {
       path = filepath;
