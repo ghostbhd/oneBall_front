@@ -1,0 +1,21 @@
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import cookieParser from 'cookie-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
+  app.enableCors({
+    origin: 'http://localhost:5173', 
+    methods: 'GET,POST', 
+   credentials: true,
+  });
+ const config = new DocumentBuilder()
+    .setTitle('api endpoints')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('/', app, document);
+  await app.listen(3009);
+}
+bootstrap();
