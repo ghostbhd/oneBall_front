@@ -21,7 +21,6 @@ server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })
 
-
 const io = new Server(server, {
     cors: {
         origin: "*",
