@@ -19,6 +19,8 @@ module.exports = {
         org_1: "#ffe268",
         org_2: "#ffb037",
         org_3: "#ea8d00",
+        err:   "#FF0000",
+        greenclr: "#4CA833",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
