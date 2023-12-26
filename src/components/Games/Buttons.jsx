@@ -24,7 +24,7 @@ const Buttons = () => {
       {/* with random button */}
       <div className={container}>
         <Link
-          to={"/games"}
+          to={"/ingame"}
           className={` ${button} ml-auto from-bLight_5 to-white shadow-bLight_3`}
         >
           <div className={icon}>{<icons.random />}</div>
