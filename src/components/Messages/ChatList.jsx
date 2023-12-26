@@ -138,28 +138,9 @@ const ChatList = ({
                 : style.inGame
             }`}
           ></div>
-          {/* Status indicator with absolute to place it at the bottom-right corner of the avatar image.*/}
-          {/* <span
-              className={`absolute w-12 h-12 rounded-full border-[3px] ${
-                chat.status === "online"
-                  ? style.online
-                  : chat.status === "offline"
-                  ? style.offline
-                  : style.inGame
-              }`}
-            ></span>
-            <img
-              className="w-12 h-12 rounded-full "
-              src={
-                chat.senderflag === currentUserToken.id
-                  ? chat.receiveravatar
-                  : chat.senderavatar
-              }
-              alt={`${chat.name}`}
-            /> */}
-          <div className="flex flex-col text-sm">
+          <div className="flex w-9/12 flex-col text-sm">
             <p className="text-bLight_4 px-3">@{chat.name}</p>
-            <p className="text-bLight_2 px-3">{chat.lastMessage}</p>
+            <p className="text-bLight_2 px-3 w-full truncate">{chat.lastMessage}</p>
           </div>
         </div>
       ))}
