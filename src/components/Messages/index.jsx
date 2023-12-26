@@ -52,7 +52,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
 
   return (
     <div
-      className={`flex w-full  h-full ${style.chatsone} ${style.rounded} relative p-6`}
+      className={`flex w-full  h-full gap-2 ${style.chatsone} ${style.rounded} relative p-6`}
     >
       {/* chat sideBar ############################################################### */}
       <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>
@@ -97,6 +97,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
             currentUserToken={currentUserToken}
           />
         ) : activeChannel && activeTab === "channels" ? (
+          
           <ChannelWindow
             activeChannel={activeChannel}
             currentUserToken={currentUserToken}

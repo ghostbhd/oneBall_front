@@ -26,10 +26,10 @@ const SearchBar = ({
   };
 
   return (
-    <div className={`py-2 flex flex-row items-center`}>
-      {" "}
-      {/* Add your style class names */}
-      <div className={`flex w-9/12 flex-row bg-bDark_4 rounded-full`}>
+    <div className={`pb-2 px-2 flex flex-row items-center`}>
+      {/* search bar -------------------------------------------------------------- */}
+      <div className={`flex w-10/12 flex-row bg-bDark_4 rounded-full border-2 border-bLight_5`}>
+        {/* search input -------------------------------- */}
         <input
           type="text"
           placeholder="Search..."
@@ -38,13 +38,16 @@ const SearchBar = ({
           onKeyPress={(e) => e.key === "Enter" && handleSearchSubmit()}
           className="w-full bg-transparent outline-none border-none rounded-full text-xs text-bLight_3 p-2"
         />
+        {/* search icons -------------------------------- */}
         <button
           onClick={handleSearchSubmit}
-          className="text-2xl pr-1 text-bLight_4 ml-1"
+          className="text-xl pr-1 text-bLight_4 ml-1"
         >
           {<chatIcons.searsh />}
         </button>
       </div>
+
+      {/* add channel icon -------------------------------- */}
       <MdGroupAdd
         onClick={onChannelIconClick}
         className="text-3xl text-bLight_4 ml-auto"

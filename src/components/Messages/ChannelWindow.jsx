@@ -94,8 +94,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
   };
 
   return (
-    <div className={`w-full h-full flex flex-col`}>
-
+    <div className={`w-full h-full flex flex-col overflow-hidden ${style.blueBlur} ${style.rounded}`}>
       {/* Window navbar ---------------------------------------------------------------- */}
       <div
         className={`flex flex-row p-2 h-20 items-center rounded-t-lg bg-bDark_1 mb-5 `}
@@ -104,14 +103,14 @@ const ChannelWindow = ({ activeChannel, currentUserToken }) => {
         {isMember ? (
           <button
             onClick={handleJoinChannel}
-            className={`p-3 bg-bLight_5 text-white rounded-lg `}
+            className={`p-3 bg-bLight_5 text-white rounded-lg ml-auto `}
           >
             Join Channel
           </button>
         ) : (
           <button
             onClick={handleleaveChannel}
-            className={`p-3 bg-org_3 text-white rounded-lg`}
+            className={`p-3 bg-org_3 text-white rounded-lg ml-auto`}
           >
             Leave Channel
           </button>
