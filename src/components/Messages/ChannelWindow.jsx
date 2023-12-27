@@ -20,7 +20,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   const socket = useSocket();
   const messageContainerRef = useRef(null);
-  console.log("*************************");
 
   const handleSendMessagee = () => {
     if (newMessage.trim() !== "") {
@@ -37,14 +36,17 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   useEffect(() => {
     console.log("Socket connected:", socket.connected);
+
     if (activeChannel) {
       socket.emit("getChannelMessages", activeChannel);
     }
 
+    
     socket.on("newChannelMessage", (newMessage) => {
       console.log("newChannelMessage", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
+
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.messages)) {
@@ -53,7 +55,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         console.error("Received invalid format for channelMessages", data);
         setMessages([]);
       }
-      // console.log("channelMessages", channelMessages);
       if (messageContainerRef.current) {
         messageContainerRef.current.scrollTop =
           messageContainerRef.current.scrollHeight;
@@ -66,20 +67,27 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       userId: currentUserToken.id,
     });
 
-    socket.on("channelMembershipStatus", (status) => {
-      console.log("channelMembershipStatus", status);
+    socket.on("channelMembershipStatus", (data) => {
+      if (data.channelId === activeChannel) {
+        setMembershipStatus({
+          isMember: data.isMember,
+          isAdmin: data.isAdmin,
+          isOwner: data.isOwner,
+        });
+      }
     });
 
     return () => {
       socket.off("channelMessages");
       socket.off("channelMembershipStatus");
       socket.off("newChannelMessage");
+      socket.off("joinChannelSuccess");
     };
-  }, [socket, activeChannel, currentUserToken.id]);
+  }, [socket, activeChannel]);
 
   const handleJoinChannel = () => {
-    if (typeOfChannel === "protected" && !showPasswordInput) {
-      //! hena dert bli 5asha tkoun protected bach da5el password
+    if (typeOfChannel === 'protected' && !showPasswordInput) {//! hena dert bli 5asha tkoun protected bach da5el password
+      
       setShowPasswordInput(true);
     } else {
       //! For public channels (or after password is entered for protected channels)
@@ -88,13 +96,12 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         userId: currentUserToken.id,
         password: channelPassword,
       });
-
+  
       // Reset states
       setShowPasswordInput(false);
       setChannelPassword("");
     }
   };
-
   const handleleaveChannel = () => {};
 
   // More badge style -------
