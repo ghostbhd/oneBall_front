@@ -2,11 +2,25 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import style from "../../style";
 import { icons } from "../../constants";
+import { useSocket } from "../../Socketio";
+import { getHeaders } from "../../jwt_token";
+import * as jwtDecode from "jwt-decode";
 
 const Buttons = ({ data }) => {
   const button = `flex sm:p-3 p-2 rounded-xl w-max items-center cursor-pointer`;
   const text = `font-bold sm:block hidden`;
   const icon = `text-xl sm:ml-2 sm:mx-0 mx-4`;
+
+  const token = getHeaders().jwttt;
+  const decoded = jwtDecode.jwtDecode(token);
+
+
+  const socket = useSocket();
+  const addFriend = () => {
+    console.log("add friend Clicked");
+    socket.emit("FriendRequest", decoded,data.username )
+  }
+
 
   return (
     <div
@@ -28,19 +42,19 @@ const Buttons = ({ data }) => {
         className={`flex flex-row text-sm w-full sm:!mt-auto justify-between`}
       >
         {!data.friend && !data.friendRequest && !data.friendRequestSent ? (
-          // Add friend button ---------------------------
-          <div className={`${button} bg-bDark_4 text-bLight_3`}>
+          // Add friend button ------------------------------------------------------------
+          <div className={`${button} bg-bDark_4 text-bLight_3`} onClick={addFriend}>
             <p className={`${text} `}>Add Friend</p>
             <div className={`${icon} `}>{<icons.addPerson />}</div>
           </div>
         ) : data.friend ? (
-          // Remove friend button ---------------------------
+          // Remove friend button -----------------------------------------------------------
           <div className={`${button} bg-bLight_4 text-bDark_3`}>
             <p className={`${text} `}>Remove Friend</p>
             <div className={`${icon}`}>{<icons.removePerson />}</div>
           </div>
         ) : data.friendRequest ? (
-          // Accept friend request button ---------------------------
+          // Accept friend request button ---------------------------------------------------
           <div className={`flex flex-row space-x-4`}>
             <div className={`${button} bg-bDark_4 text-bLight_3`}>
               <p className={`${text} `}>Accept</p>
@@ -52,7 +66,7 @@ const Buttons = ({ data }) => {
             </div>
           </div>
         ) : data.friendRequestSent ? (
-          // Cancel friend request button ---------------------------
+          // Cancel friend request button ---------------------------------------------------
           <div className={`${button} bg-bLight_4 text-bDark_3`}>
             <p className={`${text} `}>Cancel Request</p>
             <div className={`${icon}`}>{<icons.cancelRequest />}</div>
