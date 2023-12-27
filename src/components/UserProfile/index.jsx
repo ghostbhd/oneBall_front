@@ -13,30 +13,33 @@ const UserProfile = () => {
   // username from url params ------------------
   const { username } = useParams();
   const header = getHeaders().headers;
+  header.append('Content-Type', 'application/json')
 
   useEffect(() => {
     // fetch(`http://localhost:3000/api/profile/${username}`) // Fetch the data from the API
-    fetch(`http://localhost:3000/profileData/user`, {
-      method: "POST",
-      headers: header,
-      body: JSON.stringify({ username }),
-    })
-      .then((res) => {
-        if (res.ok) {
-          res.json();
-        }
-      })
-
-      // userProfileData()
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-        console.log("Data fetched", data);
-      })
-      .catch((err) => {
-        console.log("Error fetching data", err);
+    const fetchdata = async () => {
+      const response = await fetch("http://localhost:3009/profileData/user", {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify({ username: username }),
       });
-  }, [header, username]);
+      // .then((res) => {
+      //   if (res.ok) {
+      //     res.json();
+      //   }
+      // })
+
+      if (response.status === 404)
+      {
+        console.log("User not found");
+        return;         
+      }
+      const data = await response.json();
+      setData(data);
+      setLoading(false);
+    };
+    fetchdata();
+  }, []);
 
   return (
     <div
