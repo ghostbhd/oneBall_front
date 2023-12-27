@@ -219,22 +219,22 @@ const userprofile = {
       time: "10:00",
     },
   ],
-  acheivement: [
-    {
-      id: 1,
-      title: "First Game",
-      description: "Play your first game",
-      icon: "https://picsum.photos/200/200",
-      date: "Aug 30",
-    },
-    {
-      id: 2,
-      title: "First Win",
-      description: "Win your first game",
-      icon: "https://picsum.photos/200/200",
-      date: "Aug 30",
-    },
-  ],
+  // acheivement: [
+  //   {
+  //     id: 1,
+  //     title: "First Game",
+  //     description: "Play your first game",
+  //     icon: "https://picsum.photos/200/200",
+  //     date: "Aug 30",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "First Win",
+  //     description: "Win your first game",
+  //     icon: "https://picsum.photos/200/200",
+  //     date: "Aug 30",
+  //   },
+  // ],
 };
 
 const games = {

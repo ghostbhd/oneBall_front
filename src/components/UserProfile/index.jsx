@@ -4,16 +4,30 @@ import { userProfileData } from "../../data/mockApi";
 import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
 import GameDetails from "./GameDetails";
+import { getHeaders } from "../../jwt_token";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // username from url params ------------------
   const { username } = useParams();
-  console.log(username);
+  const header = getHeaders().headers;
 
   useEffect(() => {
     // fetch(`http://localhost:3000/api/profile/${username}`) // Fetch the data from the API
-    userProfileData()
+    fetch(`http://localhost:3000/profileData/user`, {
+      method: "POST",
+      headers: header,
+      body: JSON.stringify({ username }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          res.json();
+        }
+      })
+
+      // userProfileData()
       .then((data) => {
         setData(data);
         setLoading(false);
@@ -22,7 +36,7 @@ const UserProfile = () => {
       .catch((err) => {
         console.log("Error fetching data", err);
       });
-  }, []);
+  }, [header, username]);
 
   return (
     <div

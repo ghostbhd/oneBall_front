@@ -2,11 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useSocket } from "../../Socketio.jsx";
 import style, { ImgBg } from "../../style";
 
-function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
+function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOfChannel, setTypeOfChannel }) {
   const [channels, setChannels] = useState([]);
+//   const [typeOfChannel, setTypeOfChannel] = useState("");
   const socket = useSocket();
 
+  console.log("typeOfChannel is ", typeOfChannel); //! hehowa fin 7atit lik type of channel
+
   useEffect(() => {
+
+    socket.on("channelType", (data) => {
+      setTypeOfChannel(data.channelType);
+      //   console.log("Channel type:=========================", data.channelType);
+    });
+
     socket.emit("getUserChannels", currentUserToken.id);
 
     socket.on("userChannels", (userChannels) => {
@@ -19,15 +28,16 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
     });
 
     return () => {
+      socket.off("channelType");
       socket.off("userChannels");
       socket.off("newChannelCreated");
     };
   }, [socket, currentUserToken.id]);
 
-  const handleChannelClick = (channelId) => {
-    setActiveChannel(channelId);
-
-    console.log("active channel is => ", channelId);
+  const handleChannelClick = (activeChannel) => {
+    setActiveChannel(activeChannel);
+    socket.emit("getChannelType", activeChannel); //! henaa fin emitit ela channel type
+    console.log("active channel is => ", activeChannel);
   };
 
   return (

@@ -136,7 +136,9 @@ const ChannelMembers = ({ show, setShow }) => {
           <p>Members</p>
         </div>
         {/* body ------------------------------------------------------*/}
-        <div className={`h-full flex w-full overflow-hidden border-2 border-bLight_5/40 rounded-3xl`}>
+        <div
+          className={`h-full flex w-full overflow-hidden border-2 border-bLight_5/40 rounded-3xl`}
+        >
           <div className={`w-full h-full flex flex-col overflow-y-auto`}>
             {members.map((member) => (
               // Member item ----------------------------------------------
@@ -155,14 +157,14 @@ const ChannelMembers = ({ show, setShow }) => {
                     @{member.username}
                   </p>
                 </div>
-                {/* buttons ------------------------------------- */}
+                {/* buttons ------------------------------------------------------------------------------------ */}
                 <div className={`ml-auto flex items-center gap-2`}>
                   {/* mute - unmute ----*/}
                   <div className={`${buttonStyle}`}>
                     {member.mute ? (
                       <chatIcons.mute
                         className={`${buttonStyle}`}
-                        onClick={() => console.log("unmute")}
+                        onClick={() => console.log("unmute")} // handel click ***
                       />
                     ) : (
                       <chatIcons.unmute
