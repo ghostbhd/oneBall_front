@@ -20,6 +20,7 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel }) {
 
     return () => {
       socket.off("userChannels");
+      socket.off("newChannelCreated");
     };
   }, [socket, currentUserToken.id]);
 

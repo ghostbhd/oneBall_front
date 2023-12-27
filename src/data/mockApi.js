@@ -165,7 +165,7 @@ const userprofile = {
   games: 24,
   lose: 8,
   win: 16,
-  state: "Online", // Online, InGame, Offline(2 Hours ago, yesterday, 2 days ago, last month, 1 year ago ...)
+  state: "Offline", // Online, InGame, Offline(2 Hours ago, yesterday, 2 days ago, last month, 1 year ago ...)
   friend: false,
   friendRequest: false,
   friendRequestSent: false,

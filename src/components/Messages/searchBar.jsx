@@ -28,7 +28,7 @@ const SearchBar = ({
   return (
     <div className={`pb-2 px-2 flex flex-row items-center`}>
       {/* search bar -------------------------------------------------------------- */}
-      <div className={`flex w-10/12 flex-row items-center bg-bDark_4/60 rounded-full border-2 border-bLight_5/40`}>
+      <div className={`flex w-10/12 flex-row items-center pr-1 bg-bDark_4/60 rounded-full border-2 border-bLight_5/40`}>
         {/* search input -------------------------------- */}
         <input
           type="text"
@@ -50,7 +50,7 @@ const SearchBar = ({
       {/* add channel icon -------------------------------- */}
       <MdGroupAdd
         onClick={onChannelIconClick}
-        className="text-3xl text-bLight_4 ml-auto"
+        className="text-3xl text-bLight_4 ml-auto cursor-pointer"
       />
     </div>
   );
