@@ -41,12 +41,12 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOf
   };
 
   return (
-    <div className={`flex flex-col overflow-y-auto`}>
+    <div className={`flex flex-col overflow-y-auto gap-2`}>
       {channels.map((channel) => (
         <div
           key={channel.id}
-          className={`flex items-center p-2 rounded-full ${
-            activeChannel === channel.id ? "bg-bLight_5/50" : ""
+          className={`flex items-center p-2 rounded-full cursor-pointer ${
+            activeChannel === channel.id ? "bg-bLight_5/50" : "banana"
           }`}
           onClick={() => handleChannelClick(channel.id)}
         >
@@ -56,7 +56,7 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOf
               img: "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg",
             })}
           ></div>
-          <p className="text-bLight_2 px-3">#{channel.Channel}</p>
+          <p className="text-bLight_4 px-3">#{channel.Channel}</p>
         </div>
       ))}
     </div>

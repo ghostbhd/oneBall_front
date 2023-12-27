@@ -22,7 +22,7 @@ const NavBar = () => {
 
   return (
     <div
-      className={`md:w-4/12 w-full md:pr-10 h-auto absolute z-40 top-0 right-0 md:p-1 
+      className={`md:w-4/12 hidden w-full md:pr-10 h-auto absolute z-40 top-0 right-0 md:p-1 
         md:bg-transparent bg-bDark_4/90
       `}
     >

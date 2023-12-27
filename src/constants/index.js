@@ -30,6 +30,14 @@ import FortyTwo  from '../assets/42.svg'; // 42 logo
 
 // for chat --------------------------------------------------
 import { IoSearchSharp } from "react-icons/io5"; // search icon
+import { MdOutlineMoreVert } from "react-icons/md"; // more icon
+import { IoIosSend } from "react-icons/io"; // send icon
+import { FaVolumeXmark } from "react-icons/fa6"; // volume mute icon
+import { FaVolumeHigh } from "react-icons/fa6"; // volume unmute icon
+import { MdDelete } from "react-icons/md"; // delete icon
+import { HiBan } from "react-icons/hi"; // ban icon
+import { TbUserPlus } from "react-icons/tb"; // unban icon
+
 
 
 
@@ -144,4 +152,12 @@ export const icons = { // All needed icons
 
 export const chatIcons = {
   searsh : IoSearchSharp,
+  more : MdOutlineMoreVert,
+  send : IoIosSend,
+  // channel members ----------------
+  mute : FaVolumeXmark,
+  unmute : FaVolumeHigh,
+  kick : MdDelete,
+  ban : HiBan,
+  unban : TbUserPlus,
 };

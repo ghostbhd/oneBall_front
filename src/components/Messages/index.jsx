@@ -11,7 +11,7 @@ import SearchBar from "./searchBar.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
 import ChannelList from "./ChannelList.jsx";
 
-const Messages = () => {
+const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeChat, setActiveChat] = useState(null);
   const [activeChatUser, setActiveChatUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,23 +54,20 @@ const Messages = () => {
 
   return (
     <div
-      className={`flex w-full  h-full ${style.chatsone} ${style.rounded} relative p-6`}
+      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} p-6`}
     >
       {/* chat sideBar ############################################################### */}
       <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>
-        <div className={`pb-2`}>
+        {/* SlidingBar - chatList - channelList --------------------------------- */}
+        <div
+          className={`h-full w-full flex flex-col overflow-hidden p-2 gap-2 ${style.blueBlur} ${style.rounded}`}
+        >
           <SearchBar
             onSearch={handleSearch}
             onChannelIconClick={toggleChannelCreationModal}
             currentUserToken={currentUserToken}
             onSearchSubmit={handleSearchSubmit}
           />
-        </div>
-
-        {/* SlidingBar - chatList - channelList --------------------------------- */}
-        <div
-          className={`h-full w-full flex flex-col overflow-hidden p-2 gap-2 ${style.blueBlur} ${style.rounded}`}
-        >
           <SlidingTabBar onTabSelected={handleTabSelected} />
           {activeTab === "dms" ? (
             <ChatList
@@ -95,7 +92,6 @@ const Messages = () => {
       {/* chat window ############################################################### */}
       <div className={`w-9/12 flex`}>
         {activeChat && activeTab === "dms" ? (
-          
           <ChatWindow
             activeChat={activeChat}
             activeChatUser={activeChatUser}

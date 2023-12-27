@@ -4,12 +4,6 @@ module.exports = {
   mode: "jit",
   theme: {
     extend: {
-      width: {
-        '1/4': '25%', 
-      },
-      flexGrow: {
-        // Tailwind uses `flex-grow: 1;` for `flex-grow` class by default
-      },
       colors: {
         bLight_1: "#98c0cf",
         bLight_2: "#8dc7d4",
@@ -50,7 +44,6 @@ module.exports = {
       lg: "1200px",
       xl: "1700px",
     },
-    
   },
   plugins: [],
 };

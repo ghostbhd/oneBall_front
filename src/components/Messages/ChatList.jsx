@@ -12,8 +12,11 @@ import SlidingTabBar from "./SlidingTabBar.jsx";
 const ChatList = ({
   activeChat,
   setActiveChat,
+  onSearch,
+  onIconClick,
+  setActiveChatUser,
   currentUserToken,
-
+  onTabSelected,
 }) => {
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
@@ -91,6 +94,7 @@ const ChatList = ({
       }
     });
 
+    // console.log(chats);
     return () => {
       socket.off("latest-messages");
       socket.off("new-message", handleNewMessage);
@@ -134,9 +138,9 @@ const ChatList = ({
                 : style.inGame
             }`}
           ></div>
-          <div className="flex flex-col text-sm">
+          <div className="flex w-9/12 flex-col text-sm">
             <p className="text-bLight_4 px-3">@{chat.name}</p>
-            <p className="text-bLight_2 px-3">{chat.lastMessage}</p>
+            <p className="text-bLight_2 px-3 w-full truncate">{chat.lastMessage}</p>
           </div>
         </div>
       ))}
