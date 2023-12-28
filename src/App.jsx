@@ -79,7 +79,7 @@ const App = () => {
               <Route path="/stats" element={<Stats />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/logout" element={<Logout />} />
-              <Route path="/profile/:username" element={<UserProfile />} />
+              <Route exact path="/profile/:username" element={<UserProfile />} />
             </Routes>
           </animated.div>
         </div>
