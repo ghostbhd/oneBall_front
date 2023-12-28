@@ -10,6 +10,7 @@ import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
 import ChannelList from "./ChannelList.jsx";
+import { useSocket } from "../../Socketio.jsx";
 
 const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeChat, setActiveChat] = useState(null);
@@ -20,6 +21,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeTab, setActiveTab] = useState("dms");
   const [activeChannel, setActiveChannel] = useState(null);
   const [typeOfChannel, setTypeOfChannel] = useState("");
+  const socket = useSocket();
 
   // const [WindowAvatar, setWindowAvatar] = useState(null);
 
@@ -54,7 +56,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
 
   return (
     <div
-      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} p-6`}
+      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} md:p-6 pb-12 px-2 pt-0 `}
     >
       {/* chat sideBar ############################################################### */}
       <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>
@@ -98,11 +100,15 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
             currentUserToken={currentUserToken}
           />
         ) : activeChannel && activeTab === "channels" ? (
+          typeOfChannel === "protected" ? (
+            <div></div>
+          ):(
           <ChannelWindow
             typeOfChannel={typeOfChannel}
             activeChannel={activeChannel}
             currentUserToken={currentUserToken}
           />
+          )
         ) : null}
       </div>
 
