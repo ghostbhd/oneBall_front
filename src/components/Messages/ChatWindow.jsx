@@ -6,7 +6,7 @@ import { FiMoreVertical } from "react-icons/fi";
 import { useSocket } from "../../Socketio.jsx";
 import {Link} from "react-router-dom";
 
-const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
+const ChatWindow = ({ activeChat, activeChatUser, currentUserToken, senderchat }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [received, setreceived] = useState(null);
@@ -15,8 +15,8 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   const socket = useSocket();
 
 
-  console.log("message ->", received);
-
+  console.log("message ->", senderchat);
+//!AYOUB here where i did the updates for sending the msg   and also in the msgs maping in the retun 
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -25,7 +25,6 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
         content: message,
         timestamp: new Date().toISOString(),
         senderId: currentUserToken.id,
-        recieverId: received,
         chatId: activeChat,
 
       };
@@ -36,7 +35,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
         chatId: activeChat,
         content: message,
         senderId: currentUserToken.id,
-        recieverId: received,
+
       });
       setMessage("");
     }
@@ -63,8 +62,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
       if (chatData && Array.isArray(chatData.messages)) {
         console.log("Chat data received:", chatData);
 
-    
-        setreceived(chatData.chatReceiverId);
+
 
         setMessages(chatData.messages);
 
@@ -112,7 +110,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >
         {sortedMessages.map((message) => {
-
+          {/*!AYOUB update the message.senderId line 117*/}
           return (
             <div
               key={message.id}

@@ -12,11 +12,11 @@ import SlidingTabBar from "./SlidingTabBar.jsx";
 const ChatList = ({
   activeChat,
   setActiveChat,
-  onSearch,
-  onIconClick,
-  setActiveChatUser,
   currentUserToken,
   onTabSelected,
+  senderchat,
+  setSenderchat,
+  
 }) => {
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
@@ -41,6 +41,7 @@ const ChatList = ({
       setChats((prevChats) => {
         let updatedChats = [...prevChats];
 
+
         const chatIndex = updatedChats.findIndex(
           (chat) => chat.id === newMessage.chatId
         );
@@ -55,7 +56,9 @@ const ChatList = ({
             senderavatar: newMessage.senderavatar,
             senderflag: newMessage.senderflag,
             receiverflag: newMessage.receiverflag,
+            
           };
+          // console.log("sender id is-", newMessage.senderId), console.log("sender id is --", newMessage.senderflag);
         } else {
           updatedChats = [
             ...updatedChats,
@@ -72,6 +75,7 @@ const ChatList = ({
             },
           ];
         }
+        
 
         updatedChats.sort(
           (a, b) => new Date(b.timestamp) - new Date(a.timestamp)

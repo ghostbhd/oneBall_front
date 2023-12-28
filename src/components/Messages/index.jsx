@@ -20,6 +20,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeTab, setActiveTab] = useState("dms");
   const [activeChannel, setActiveChannel] = useState(null);
   const [typeOfChannel, setTypeOfChannel] = useState("");
+  const [senderchat, setSenderchat] = useState(null);
 
   // const [WindowAvatar, setWindowAvatar] = useState(null);
 
@@ -72,6 +73,8 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
           {activeTab === "dms" ? (
             <ChatList
               currentUserToken={currentUserToken}
+              senderchat={senderchat}
+              setSenderchat={setSenderchat}
               activeChat={activeChat}
               setActiveChat={setActiveChat}
               setActiveChatUser={setActiveChatUser}
@@ -94,6 +97,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
         {activeChat && activeTab === "dms" ? (
           <ChatWindow
             activeChat={activeChat}
+            senderchat={senderchat}
             activeChatUser={activeChatUser}
             currentUserToken={currentUserToken}
           />
