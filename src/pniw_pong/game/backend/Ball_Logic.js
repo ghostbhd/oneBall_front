@@ -22,20 +22,6 @@ function timeout(ms, inf, n) {
     });
 }
 
-/*
-function TimeToPosition(Ball, opt) {
-let now = Date.now()
-if (opt == 2) {
-    let r = now - Ball.h_state.start;
-    r = r / MAX_H
-    console.log("measured ", r)
-    return (r)
-}
-else
-    return (0)
-}
-*/
-
 function upd_vertical_pos(inf) {
     let dir = inf.ball.y_dir == 1 ? 1 : -1
     let dist = ((Date.now() - inf.ball.v_state.start) / inf.state.MAX_V) * dir

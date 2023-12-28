@@ -76,6 +76,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/games" element={<Games />} />
+              <Route path="/Auth" element={<Auth/>} />
               <Route path="/ingame" element={<GameShell/>} /> {/* here */}
               <Route path="/messages" element={<Messages />} />
               <Route path="/profile" element={<Profile />} />
