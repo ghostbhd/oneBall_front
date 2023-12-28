@@ -1,8 +1,7 @@
-import React from "react";
 import ChatList from "./ChatList.jsx";
 import ChatWindow from "./ChatWindow.jsx";
 import style from "../../style";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ChannelWindow from "./ChannelWindow.jsx";
 import ChannelCreation from "./ChannelCreation.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
@@ -101,13 +100,17 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
           />
         ) : activeChannel && activeTab === "channels" ? (
           typeOfChannel === "protected" ? (
-            <div></div>
-          ):(
-          <ChannelWindow
-            typeOfChannel={typeOfChannel}
-            activeChannel={activeChannel}
-            currentUserToken={currentUserToken}
-          />
+            <div className={`absolute flex item w-full h-full backdrop-blur-md top-0 left-0 z-20 bg-bDark_5/50`}>
+              <div className={`w-40 h-max`}>
+
+              </div>
+            </div>
+          ) : (
+            <ChannelWindow
+              typeOfChannel={typeOfChannel}
+              activeChannel={activeChannel}
+              currentUserToken={currentUserToken}
+            />
           )
         ) : null}
       </div>
