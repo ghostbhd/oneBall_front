@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules/
 src/global_backend/src/node_modules/
+src/global_backend/src/backend/node_modules/
 src/global_backend/src/dist
 dist
 dist-ssr

@@ -1,23 +1,24 @@
 
-const MAX_V = 4973
-const MAX_H = 1500
-const PLAYER_TO_MAX = 0.15
-const SPEED_LIMIT = 540
-const MID_BALL_TO_MAX_V = 0.019021739 // (35 / 920)/ 2
+const MAX_V : number = 4973
+const MAX_H : number = 1500
+const PLAYER_TO_MAX : number = 0.15
+const SPEED_LIMIT : number = 540
+const MID_BALL_TO_MAX_V : number = 0.019021739 // (35 / 920)/ 2
 //const MID_BALL_TO_MAX_V = 0.0175
 
-function timeout(ms, inf, n) {
+function timeout(ms, inf, n) : Promise<string> {
     return new Promise((resolve) => {
+
         if (n == 1) {
             inf.ball.v_state.resolve = resolve
             inf.ball.v_state.id = setTimeout(() => {
-                resolve()
+                resolve("resolved")
             }, ms);
             //console.log("this is n", n, inf.ball.v_state.id)
         }
         else
             setTimeout(() => {
-                resolve()
+                resolve("resolved")
             }, ms);
     });
 }
@@ -27,8 +28,9 @@ function upd_vertical_pos(inf) {
     let dist = ((Date.now() - inf.ball.v_state.start) / inf.state.MAX_V) * dir
     //console.log("dist ", dist)
     let r = inf.ball.v_state.pos + dist
-    console.log("prev ", inf.ball.v_state.pos, " now ", Math.abs(Number(r).toPrecision(5)))
-    return (Math.abs(Number(r).toPrecision(5)))
+    let result : number = Math.abs(parseInt(Number(r).toPrecision(5)))
+    console.log("prev ", inf.ball.v_state.pos, " now ", result)
+    return (result)
 }
 
 
@@ -37,7 +39,7 @@ function salat(inf) {
     if (inf.ball.v_state.id != -1) {
         clearTimeout(inf.ball.v_state.id)
         inf.ball.v_state.id = -1
-        inf.ball.v_state.resolve()
+        inf.ball.v_state.resolve("resolved")
     }
 }
 
@@ -66,19 +68,17 @@ async function horizontal_bouncing(io, socket, inf) {
                     inf.ball.v_state.changed = 1
                     clearTimeout(inf.ball.v_state.id)
                     inf.ball.v_state.id = -1
-                    inf.ball.v_state.resolve()
+                    inf.ball.v_state.resolve("resolved")
                 }
                 else
                     console.log("wtf")
             }
         }
         else {
-            /*
             salat(inf)
             let data = { winner: inf.ball.x_dir == 1 ? 2 : 1 }
             io.emit("salat", data)
             break
-                */
         }
 
         // accelarate ==>
@@ -140,7 +140,7 @@ async function BounceLogic(io, socket, inf) {
 
 async function Ball_Logic(io, socket, inf) {
 
-    const time_out_id = await timeout(100, 0)
+    const time_out_id = await timeout(100, inf, 0)
 
     if (inf.state.launched == false) {
         console.log("frist_ping")
