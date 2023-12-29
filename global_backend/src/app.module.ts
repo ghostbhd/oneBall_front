@@ -23,6 +23,7 @@ import { ChatModule } from './chat/chat.module';
 import { ChannelModule } from './chat/channel/channel.module';
 import { GameStats } from './entities/game.entity';
 import { GameHistory } from './entities/GameHistory.entity';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { GameHistory } from './entities/GameHistory.entity';
     FriendModule,
     ChatModule,
     ChannelModule,
+    GameModule,
   ],
   // exports: [TypeOrmModule],
 })
