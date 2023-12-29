@@ -36,7 +36,7 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOf
 
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);
-    socket.emit("getChannelType", activeChannel); //! henaa fin emitit ela channel type
+    socket.emit("getChannelType", activeChannel); 
     console.log("active channel is => ", activeChannel);
   };
 

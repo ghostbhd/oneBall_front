@@ -12,14 +12,14 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const [channelPassword, setChannelPassword] = useState("");
   const [showMembers, setShowMembers] = useState(false);
   const [membershipStatus, setMembershipStatus] = useState({
-    isMember: false,
-    isAdmin: false,
-    isOwner: true,
+ 
   });
   const [moreBadge, setMoreBadge] = useState(false);
 
   const socket = useSocket();
   const messageContainerRef = useRef(null);
+  console.log("------------------------------>", membershipStatus);
+
 
   const handleSendMessagee = () => {
     if (newMessage.trim() !== "") {
@@ -65,14 +65,19 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     socket.emit("checkChannelMembership", {
       channelId: activeChannel,
       userId: currentUserToken.id,
+      
     });
 
     socket.on("channelMembershipStatus", (data) => {
+      console.log("Received membership status^^^*******************************************:", data.isOwner);
+
       if (data.channelId === activeChannel) {
+        console.log("Received membership status********************************************:", data.isOwner);
         setMembershipStatus({
           isMember: data.isMember,
           isAdmin: data.isAdmin,
           isOwner: data.isOwner,
+          
         });
       }
     });
@@ -102,6 +107,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       setChannelPassword("");
     }
   };
+
   const handleleaveChannel = () => {};
 
   // More badge style -------

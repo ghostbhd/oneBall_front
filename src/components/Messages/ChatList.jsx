@@ -14,8 +14,7 @@ const ChatList = ({
   setActiveChat,
   currentUserToken,
   onTabSelected,
-  senderchat,
-  setSenderchat,
+
   
 }) => {
   const [chats, setChats] = useState([]);
@@ -113,6 +112,7 @@ const ChatList = ({
     socket.emit("request-messages-for-chat", {
       chatId,
     });
+
   };
 
   return (

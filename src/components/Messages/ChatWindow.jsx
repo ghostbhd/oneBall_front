@@ -6,17 +6,15 @@ import { FiMoreVertical } from "react-icons/fi";
 import { useSocket } from "../../Socketio.jsx";
 import {Link} from "react-router-dom";
 
-const ChatWindow = ({ activeChat, activeChatUser, currentUserToken, senderchat }) => {
+const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [received, setreceived] = useState(null);
+  // const [Avatar, setUseravatar] = useState(null);
+  // const [username, setUsername] = useState(null);
 
 
   const socket = useSocket();
 
-
-  console.log("message ->", senderchat);
-//!AYOUB here where i did the updates for sending the msg   and also in the msgs maping in the retun 
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -57,8 +55,11 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken, senderchat }
     socket.on("new-message", handleNewMessage);
 
     socket.on("messages-for-chat-response", (chatData) => {
-      console.log("Chat data received:", chatData.chatReceiverId);
-
+      
+      // console.log("Chat data received username :", chatData.senderUsername);
+      // setUsername(chatData.senderUsername);
+      // console.log("Chat data received avatar :", chatData.senderAvatar);
+      // setUseravatar(chatData.senderAvatar);
       if (chatData && Array.isArray(chatData.messages)) {
         console.log("Chat data received:", chatData);
 
@@ -99,7 +100,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken, senderchat }
       <Link className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5" to={"/profile/"}>
         <img
           className="w-16 h-18  rounded-full  mr-5"
-          src={activeChatUser?.avatar || "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"} // Use the avatar from activeChatUser
+          src={activeChatUser?.avatar || "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"}
           alt={activeChatUser?.name || "Default Name"}
         />
         <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
