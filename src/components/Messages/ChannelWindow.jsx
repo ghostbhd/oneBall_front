@@ -91,11 +91,11 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   }, [socket, activeChannel]);
 
   const handleJoinChannel = () => {
-    if (typeOfChannel === 'protected' && !showPasswordInput) {//! hena dert bli 5asha tkoun protected bach da5el password
+    if (typeOfChannel === 'protected' && !showPasswordInput) {
       
       setShowPasswordInput(true);
     } else {
-      //! For public channels (or after password is entered for protected channels)
+      
       socket.emit("joinChannel", {
         channelId: activeChannel,
         userId: currentUserToken.id,
@@ -108,9 +108,17 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     }
   };
 
-  const handleleaveChannel = () => {};
+  const handleleaveChannel = () => {
+    console.log("---------> leave channel clicked");
+    socket.emit("leaveChannel", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+    });
+
+  };
 
   // More badge style -------
+  
   const li = `p-2 hover:bg-bLight_5/50 hover:text-bLight_2 cursor-pointer`;
 
   return (
