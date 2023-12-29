@@ -14,7 +14,7 @@ import {
   CallBack,
 } from "./components";
 
-import {GameShell} from "./pniw_pong/game/frontend/index.jsx"
+import {GameShell} from "./pniw_pong/frontend/index.jsx"
 
 import style from "./style";
 
