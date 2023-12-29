@@ -1,5 +1,4 @@
 import { useSpring } from "@react-spring/web"
-import MovingDot from "./redot"
 import { Children, Fragment } from "react"
 
 export default function FrontEndLogic({ children, f_l }) {
