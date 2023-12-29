@@ -48,7 +48,7 @@ const Profile = () => {
 
   return (
     <div
-      className={`w-full sm:h-full sm:space-x-8 xl:space-x-20 flex sm:flex-row flex-col md:pb-4 pb-16 p-4 md:px-10 sm:pt-14 pt-6`}
+      className={`w-full sm:h-full sm:space-x-8 xl:space-x-10 flex sm:flex-row flex-col md:pb-4 pb-16 p-4 md:px-10 sm:pt-14 pt-6`}
     >
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">

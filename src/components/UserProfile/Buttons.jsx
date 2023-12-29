@@ -14,14 +14,64 @@ const Buttons = ({ data }) => {
   const token = getHeaders().jwttt;
   const decoded = jwtDecode.jwtDecode(token);
 
-
   const socket = useSocket();
   const addFriend = () => {
-    console.log("add friend Clicked");
-    socket.emit("FriendRequest", decoded,data.username )
-  }
+    console.log(
+      "add friend Clicked ",
+      decoded,
+      "the username is ",
+      data.username
+    );
+    socket.emit("FriendRequest", {
+      username1: decoded.name,
+      username2: data.username,
+    });
+    window.location.reload();
+  };
 
+  const RefuseFriend = () => {
+    console.log(
+      "Refuse friend Clicked ",
+      decoded,
+      "the username is ",
+      data.username
+    );
+    socket.emit("RefuseRequest", {
+      username1: decoded.name,
+      username2: data.username,
+    });
+    window.location.reload();
+  };
 
+  const AcceptFriend = () => {
+    console.log(
+      "Accept friend Clicked ",
+      decoded,
+      "the username is ",
+      data.username
+    );
+    socket.emit("AcceptRequest", {
+      username1: decoded.name,
+      username2: data.username,
+    });
+    window.location.reload();
+  };
+
+  socket.on("FriendRequest", (stats) => {
+    data.friend = stats.friend;
+    data.friendRequest = stats.friendRequest;
+    data.friendRequestSent = stats.friendRequestSent;
+  });
+  socket.on("RefuseRequest", (stats) => {
+    data.friend = stats.friend;
+    data.friendRequest = stats.friendRequest;
+    data.friendRequestSent = stats.friendRequestSent;
+  });
+  socket.on("AcceptRequest", (stats) => {
+    data.friend = stats.friend;
+    data.friendRequest = stats.friendRequest;
+    data.friendRequestSent = stats.friendRequestSent;
+  });
   return (
     <div
       className={`w-full flex flex-col space-y-6 sm:px-5 px-3 ${style.blueBlur} p-4 ${style.rounded}`}
@@ -43,31 +93,46 @@ const Buttons = ({ data }) => {
       >
         {!data.friend && !data.friendRequest && !data.friendRequestSent ? (
           // Add friend button ------------------------------------------------------------
-          <div className={`${button} bg-bDark_4 text-bLight_3`} onClick={addFriend}>
+          <div
+            className={`${button} bg-bDark_4 text-bLight_3`}
+            onClick={addFriend}
+          >
             <p className={`${text} `}>Add Friend</p>
             <div className={`${icon} `}>{<icons.addPerson />}</div>
           </div>
         ) : data.friend ? (
           // Remove friend button -----------------------------------------------------------
-          <div className={`${button} bg-bLight_4 text-bDark_3`}>
+          <div
+            className={`${button} bg-bLight_4 text-bDark_3`}
+            onClick={RefuseFriend}
+          >
             <p className={`${text} `}>Remove Friend</p>
             <div className={`${icon}`}>{<icons.removePerson />}</div>
           </div>
         ) : data.friendRequest ? (
           // Accept friend request button ---------------------------------------------------
           <div className={`flex flex-row space-x-4`}>
-            <div className={`${button} bg-bDark_4 text-bLight_3`}>
+            <div
+              className={`${button} bg-bDark_4 text-bLight_3`}
+              onClick={AcceptFriend}
+            >
               <p className={`${text} `}>Accept</p>
               <div className={`${icon} !text-base`}>{<icons.check />}</div>
             </div>
-            <div className={`${button} bg-bLight_4 text-bDark_3`}>
+            <div
+              className={`${button} bg-bLight_4 text-bDark_3`}
+              onClick={RefuseFriend}
+            >
               <p className={`${text} `}>Decline</p>
               <div className={`${icon} !text-base`}>{<icons.xmark />}</div>
             </div>
           </div>
         ) : data.friendRequestSent ? (
           // Cancel friend request button ---------------------------------------------------
-          <div className={`${button} bg-bLight_4 text-bDark_3`}>
+          <div
+            className={`${button} bg-bLight_4 text-bDark_3`}
+            onClick={RefuseFriend}
+          >
             <p className={`${text} `}>Cancel Request</p>
             <div className={`${icon}`}>{<icons.cancelRequest />}</div>
           </div>

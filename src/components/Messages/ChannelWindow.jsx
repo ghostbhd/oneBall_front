@@ -250,4 +250,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   );
 };
 
+
+
 export default ChannelWindow;

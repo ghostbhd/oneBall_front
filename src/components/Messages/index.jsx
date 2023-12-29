@@ -22,6 +22,8 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [typeOfChannel, setTypeOfChannel] = useState("");
   const socket = useSocket();
 
+  const [showPasswordWindow, setShowPasswordWindow] = useState(false);
+
   // const [WindowAvatar, setWindowAvatar] = useState(null);
 
   const handleSearchSubmit = (searchTerm) => {
@@ -100,7 +102,9 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
           />
         ) : activeChannel && activeTab === "channels" ? (
           typeOfChannel === "protected" ? (
+            // password window ------------------------------------------------------
             <div className={`absolute flex item w-full h-full backdrop-blur-md top-0 left-0 z-20 bg-bDark_5/50`}>
+              <div className={`absolute w-full h-full left-0 top-0`}></div>
               <div className={`w-40 h-max`}>
 
               </div>
