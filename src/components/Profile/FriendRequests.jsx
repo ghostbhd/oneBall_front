@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { ImgBg } from "../../style";
 import { icons } from "../../constants";
 import { Link } from "react-router-dom";
+import { useSocket } from "../../Socketio";
 
 const FriendRequests = () => {
   const [data, setData] = useState([]);
+  const socket = useSocket();
 
   const handelAccept = ({ username }) => {
     console.log("accept");
@@ -19,9 +21,19 @@ const FriendRequests = () => {
     });
   };
 
+  const pushData = (obj) => {
+    data.push(obj);
+    setData([...data]);
+  };
+
+  const printData = () => {
+    console.log("--------------------data", data);
+  };
+
   const handelDecline = ({ username }) => {
     console.log("decline");
     console.log(username);
+    console.log("data", data)
     // delete user from data object
     data.forEach((item, index) => {
       if (item.username === username) {
@@ -30,15 +42,30 @@ const FriendRequests = () => {
       }
     });
   };
+
+
   useEffect(() => {
-    friendRequestData()
-      .then((data) => {
-        console.log(data); // Log the data to check its structure
-        setData(data);
-      })
-      .catch((err) => {
-        console.log("Error fetching data", err);
-      });
+    printData();
+    socket.on("Friend-Request", (reqData) => {
+      console.log("FriendRequests", reqData);
+      const newData = {username:reqData.username, fullName: reqData.fullName,image: reqData.image}
+      // adding data to previous data
+      pushData(newData);
+      printData();
+    });
+
+    socket.on("Friend-Refuse", (data) => {
+      console.log("Refuse", data);
+      const username = data.username;
+      // delete from data if the username is exist in data
+      handelDecline({ username: username});
+      printData();
+    });
+
+    return () => {
+      socket.off("Friend-Request");
+      socket.off("Friend-Refuse");
+    };
   }, []);
 
   return (
@@ -56,7 +83,7 @@ const FriendRequests = () => {
         {data.map((item) => (
           // friend request item -----------------------------------------------------------------
           <li
-            key={item.id}
+            key={item.username}
             className={`flex flex-col items-center relative w-32 z-50 shadow-xl 
               bg-gradient-to-bl from-bLight_5/50 to-bLight_5/10 p-2 rounded-2xl
             `}
@@ -69,8 +96,17 @@ const FriendRequests = () => {
               style={ImgBg({ img: item.image })}
             ></Link>
             {/* username and fullName ---- */}
-            <p title={item.fullName} className={`text-bLight_2 text-sm w-full text-center truncate`}>{item.fullName}</p>
-            <p className={`text-bLight_2/80 text-xs w-full text-center truncate`}>@{item.username}</p>
+            <p
+              title={item.fullName}
+              className={`text-bLight_2 text-sm w-full text-center truncate`}
+            >
+              {item.fullName}
+            </p>
+            <p
+              className={`text-bLight_2/80 text-xs w-full text-center truncate`}
+            >
+              @{item.username}
+            </p>
 
             {/* accept and decline buttons ----------------- */}
             <div

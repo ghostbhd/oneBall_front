@@ -10,7 +10,7 @@ const EditInfo = ({ data }) => {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(data.avatar);
   const [moreAvatars, setMoreAvatars] = useState(false);
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState("");
   const [fileTosend, setSelectedFileTosend] = useState(null);
 
   const history = useNavigate();

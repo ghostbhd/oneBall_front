@@ -22,7 +22,7 @@ export const SocketProvider = ({ children }) => {
           token = toke.split("=")[1];
     useEffect(() => {
         // Create the socket only once (on mount)
-        const newSocket = io(SOCKET_SERVER_URL, { autoConnect: true,
+        const newSocket = io(SOCKET_SERVER_URL, {
           auth: {
         token: token,
       }

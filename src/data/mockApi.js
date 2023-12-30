@@ -136,7 +136,6 @@ const profile = {
 
 const frindRequest = [
   {
-    id: 1,
     username: "anass",
     image: "/src/assets/avatar/Deadpool.jpg",
     fullName: "Anass ghost",

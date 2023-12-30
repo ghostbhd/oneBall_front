@@ -87,25 +87,17 @@ const Buttons = ({ data: initialData }) => {
 
   useEffect(() => {
     socket.on("FriendRequest", (stats) => {
-      console.log(
-        "add friend Clicked ------------------------------------------------ ",
-        stats
-      );
-
       // Update the component state
       dataSetten(stats);
     });
 
-    socket.on("RefuseRequest", (stats) => {
-      console.log(
-        "Refuse friend Clicked ------------------------------------------------ ",
-        stats
-      );
-      dataSetten(stats);
-    });
-    socket.on("AcceptRequest", (stats) => {
-      dataSetten(stats);
-    });
+    // socket.on("RefuseRequest", (stats) => {
+    //   dataSetten(stats);
+    // });
+
+    // socket.on("AcceptRequest", (stats) => {
+    //   dataSetten(stats);
+    // });
     // Clean up the socket subscription on component unmount
     return () => {
       socket.off("FriendRequest");
