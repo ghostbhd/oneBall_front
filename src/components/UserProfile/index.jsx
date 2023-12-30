@@ -28,7 +28,6 @@ const UserProfile = () => {
 
         if (!response.ok)
         {
-
           if (response.status === 404) {
             console.log("User not found------");
             // return;

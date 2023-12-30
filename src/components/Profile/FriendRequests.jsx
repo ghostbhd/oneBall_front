@@ -1,65 +1,67 @@
-import { friendRequestData } from "../../data/mockApi";
+// import { friendRequestData } from "../../data/mockApi";
 import { useEffect, useState } from "react";
 import { ImgBg } from "../../style";
 import { icons } from "../../constants";
 import { Link } from "react-router-dom";
 import { useSocket } from "../../Socketio";
+import * as jwtDecode from "jwt-decode";
+import { getHeaders } from "../../jwt_token";
 
 const FriendRequests = () => {
   const [data, setData] = useState([]);
   const socket = useSocket();
+  const token = getHeaders().jwttt;
+  const decoded = jwtDecode.jwtDecode(token);
 
+  const removeFromData = (username) => {
+    setData((prevData) => prevData.filter((item) => item.username !== username));
+  };
+
+  // Add data ------------------------------------------------
+  const addData = (obj) => {
+    setData( prevData => [...prevData, obj]);
+  };
+
+  const printData = (msg) => {
+    console.log(msg, "--------------------data", data);
+  };
+
+  // accept friend request ---------------------------
   const handelAccept = ({ username }) => {
-    console.log("accept");
-    console.log(username);
-    // delete user from data object
-    data.forEach((item, index) => {
-      if (item.username === username) {
-        data.splice(index, 1);
-        setData([...data]); // update data
-      }
+    socket.emit("AcceptRequest", {
+      username1: decoded.name,
+      username2: username,
     });
+    removeFromData({ username: username });
   };
 
-  const pushData = (obj) => {
-    data.push(obj);
-    setData([...data]);
-  };
-
-  const printData = () => {
-    console.log("--------------------data", data);
-  };
-
+  // decline friend request ---------------------------
   const handelDecline = ({ username }) => {
-    console.log("decline");
-    console.log(username);
-    console.log("data", data)
-    // delete user from data object
-    data.forEach((item, index) => {
-      if (item.username === username) {
-        data.splice(index, 1);
-        setData([...data]); // update data
-      }
+    socket.emit("RefuseRequest", {
+      username1: decoded.name,
+      username2: username,
     });
+    removeFromData(username);
   };
-
 
   useEffect(() => {
-    printData();
     socket.on("Friend-Request", (reqData) => {
-      console.log("FriendRequests", reqData);
-      const newData = {username:reqData.username, fullName: reqData.fullName,image: reqData.image}
+      // console.log("FriendRequests", reqData);
+      const newData = {
+        username: reqData.username,
+        fullName: reqData.fullName,
+        image: reqData.image,
+      };
       // adding data to previous data
-      pushData(newData);
-      printData();
+      addData(newData);
     });
 
     socket.on("Friend-Refuse", (data) => {
-      console.log("Refuse", data);
-      const username = data.username;
+      // console.log("Refuse", data);
+      const friend = data.username;
+      console.log("username in Friend-Refuse", data.username);
       // delete from data if the username is exist in data
-      handelDecline({ username: username});
-      printData();
+      removeFromData(friend);
     });
 
     return () => {
