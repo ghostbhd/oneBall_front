@@ -13,7 +13,7 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOf
 
     socket.on("channelType", (data) => {
       setTypeOfChannel(data.channelType);
-      //   console.log("Channel type:=========================", data.channelType);
+        // console.log("Channel type:=========================", data.channelType);
     });
 
     socket.emit("getUserChannels", currentUserToken.id);

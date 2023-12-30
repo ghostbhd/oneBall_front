@@ -29,21 +29,11 @@ const Profile = () => {
         return;
       }
       const data = await response.json();
-      console.log("Index profile data:",data);
+      console.log("Index profile data:", data);
       setData(data);
       setLoading(false);
     };
     fetchData();
-    // profileData()
-    //   .then((data) => {
-    //     console.log(data); // Log the data to check its structure
-    //     setData(data);
-    //     setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error fetching data", err);
-    //     setLoading(false);
-    //   });
   }, []);
 
   return (

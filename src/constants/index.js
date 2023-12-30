@@ -39,11 +39,6 @@ import { HiBan } from "react-icons/hi"; // ban icon
 import { TbUserPlus } from "react-icons/tb"; // unban icon
 
 
-
-
-// chat icons
-import { BiBlock } from "react-icons/bi"; // block icon
-
 export const sidebarItems = [ // From med to lg screens
   {
     icon: MdSpaceDashboard,
@@ -74,12 +69,7 @@ export const sidebarItems = [ // From med to lg screens
     icon: MdSettings,
     title: "Settings",
     link: "/settings",
-  },
-  {
-    icon: TbLogout,
-    title: "Logout",
-    link: "/logout",
-  },
+  }
 ];
 
 export const phoneBottomBar = [ // Responsive bottom bar
@@ -124,6 +114,7 @@ export const phoneNavBar = [
 ];
 
 export const icons = { // All needed icons
+  logout : TbLogout,
   toRight: FaAngleRight,
   toLeft: FaAngleLeft,
   arrowRight: BiSolidArrowToRight,

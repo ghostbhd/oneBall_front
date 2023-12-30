@@ -57,7 +57,7 @@ const EditInfo = ({ data }) => {
       .catch((error) => {
         console.error("Error during file upload:", error);
       });
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleFileChange = (e) => {
