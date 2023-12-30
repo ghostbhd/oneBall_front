@@ -14,32 +14,44 @@ const UserProfile = () => {
   const { username } = useParams();
   const header = getHeaders().headers;
   const history = useNavigate();
-  header.append('Content-Type', 'application/json')
+  header.append("Content-Type", "application/json");
 
   useEffect(() => {
     const fetchdata = async () => {
-      const response = await fetch("http://localhost:3009/profileData/user", {
-        method: "POST",
-        headers: header,
-        body: JSON.stringify({ username: username }),
-      });
+      try {
+        const response = await fetch("http://localhost:3009/profileData/user", {
+          method: "POST",
+          headers: header,
+          body: JSON.stringify({ username: username }),
+          
+        });
 
-      if (response.status === 404)
-      {
-        console.log("User not found");
-        return;         
+        if (!response.ok)
+        {
+
+          if (response.status === 404) {
+            console.log("User not found------");
+            // return;
+          }
+          else if (response.status === 301) {
+            history("/profile");
+            console.log("same user profile");
+            // return;
+          }
+          else
+          {
+            throw new Error("User not found");
+          }
+
+        }
+
+        const data = await response.json();
+        setData(data);
+        setLoading(false);
+      } catch (error) {
+        // console.error("user profile error")
+        // console.log("error:", error.message);
       }
-
-      if (response.status === 301)
-      {
-        history("/profile");
-        console.log("same user profile");
-        return;
-      }
-
-      const data = await response.json();
-      setData(data);
-      setLoading(false);
     };
     fetchdata();
   }, []);
