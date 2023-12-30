@@ -46,10 +46,11 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       console.log("newChannelMessage", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
-
+    
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.messages)) {
+        console.log("channelMessages", data);
         setMessages(data.messages);
       } else {
         console.error("Received invalid format for channelMessages", data);
@@ -74,8 +75,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       if (data.channelId === activeChannel) {
         console.log("Received membership status********************************************:", data.isOwner);
         setMembershipStatus({
-          isMember: data.isMember,
           isAdmin: data.isAdmin,
+          isMember: data.isMember,
           isOwner: data.isOwner,
           
         });
@@ -102,6 +103,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         password: channelPassword,
       });
   
+      window.location.reload();
       // Reset states
       setShowPasswordInput(false);
       setChannelPassword("");
@@ -114,8 +116,15 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       channelId: activeChannel,
       userId: currentUserToken.id,
     });
+    window.location.reload();//! tell anas about this 
 
   };
+
+  const handleChannelmembers = () => {
+    console.log("---------> channel members clicked");
+    socket.emit("getChannelMembers", activeChannel);
+    setShowMembers(true);
+  }
 
   // More badge style -------
   
@@ -190,10 +199,10 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                 moreBadge ? "" : "hidden"
               }`}
               >
-                <li className={`${li}`} onClick={() => setShowMembers(true)}>
+                <li className={`${li}`} onClick={() => handleChannelmembers()}>
                   Members
                 </li>
-                <li className={`${li}`} onClick={console.log("Ban")}>
+                <li className={`${li}`} onClick={console.log("set admin")}>
                   Set an admin
                 </li>
                 {membershipStatus.isOwner ? (
@@ -206,7 +215,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           </div>
 
           {/* Members ---------------------------------------------------------------- */}
-          <ChannelMembers show={showMembers} setShow={setShowMembers} />
+          <ChannelMembers show={showMembers} setShow={setShowMembers} activeChannel={activeChannel} currentUserToken={currentUserToken} />
 
           {/* Message display  ----------------------------------------------------------------------*/}
           <div

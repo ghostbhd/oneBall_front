@@ -1,118 +1,34 @@
 import PropTypes from "prop-types";
 import style, { ImgBg } from "../../style";
 import { chatIcons } from "../../constants";
+import { useState, useEffect, useRef } from "react";
+import { useSocket } from "../../Socketio.jsx";
 
-const ChannelMembers = ({ show, setShow }) => {
-  const members = [
-    // {
-    //   id: "1",
-    //   username: "firstone",
-    //   avatar: "https://i.pravatar.cc/150?img=1",
-    //   mute: false,
-    //   ban: false,
-    // },
-    // {
-    //   id: "2",
-    //   username: "user2",
-    //   avatar: "https://i.pravatar.cc/150?img=2",
-    //   mute: true,
-    //   ban: false,
-    // },
-    // {
-    //   id: "3",
-    //   username: "user3",
-    //   avatar: "https://i.pravatar.cc/150?img=3",
-    //   mute: false,
-    //   ban: true,
-    // },
-    // {
-    //   id: "1",
-    //   username: "user1",
-    //   avatar: "https://i.pravatar.cc/150?img=1",
-    //   mute: false,
-    //   ban: false,
-    // },
-    // {
-    //   id: "2",
-    //   username: "user2",
-    //   avatar: "https://i.pravatar.cc/150?img=2",
-    //   mute: true,
-    //   ban: false,
-    // },
-    // {
-    //   id: "3",
-    //   username: "user3",
-    //   avatar: "https://i.pravatar.cc/150?img=3",
-    //   mute: false,
-    //   ban: true,
-    // },
-    // {
-    //   id: "1",
-    //   username: "user1",
-    //   avatar: "https://i.pravatar.cc/150?img=1",
-    //   mute: false,
-    //   ban: false,
-    // },
-    // {
-    //   id: "2",
-    //   username: "user2",
-    //   avatar: "https://i.pravatar.cc/150?img=2",
-    //   mute: true,
-    //   ban: false,
-    // },
-    // {
-    //   id: "3",
-    //   username: "user3",
-    //   avatar: "https://i.pravatar.cc/150?img=3",
-    //   mute: false,
-    //   ban: true,
-    // },
-    // {
-    //   id: "2",
-    //   username: "user2",
-    //   avatar: "https://i.pravatar.cc/150?img=2",
-    //   mute: true,
-    //   ban: false,
-    // },
-    // {
-    //   id: "3",
-    //   username: "user3",
-    //   avatar: "https://i.pravatar.cc/150?img=3",
-    //   mute: false,
-    //   ban: true,
-    // },
-    // {
-    //   id: "2",
-    //   username: "user2",
-    //   avatar: "https://i.pravatar.cc/150?img=2",
-    //   mute: true,
-    //   ban: false,
-    // },
-    // {
-    //   id: "3",
-    //   username: "user3",
-    //   avatar: "https://i.pravatar.cc/150?img=3",
-    //   mute: false,
-    //   ban: true,
-    // },
-    // {
-    //   id: "2",
-    //   username: "user2",
-    //   avatar: "https://i.pravatar.cc/150?img=2",
-    //   mute: true,
-    //   ban: false,
-    // },
-    // {
-    //   id: "3",
-    //   username: "lastone",
-    //   avatar: "https://i.pravatar.cc/150?img=3",
-    //   mute: false,
-    //   ban: true,
-    // },
-  ];
-
+const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
+  const [members, setMembers] = useState([]);
+  const socket = useSocket();
   // member button style -------------------------------------------------
   const buttonStyle = `text-xl text-bLight_5 hover:text-bLight_2 cursor-pointer`;
+
+
+  // console.log(members);
+  useEffect(() => {
+    
+    socket.on("channelMembers", (data) => {
+      console.log("memers are:",data);
+      setMembers(data);
+    } );
+  
+  //  socket.on("userKickedFromChannel")
+
+
+  }, []);
+
+  const handelKickUser =(requesterId) =>{
+    console.log("requesterId is ", requesterId);
+    socket.emit("kickUserFromChannel", activeChannel, currentUserToken.id, requesterId);
+  }
+  
 
   return (
     <div
@@ -191,7 +107,7 @@ const ChannelMembers = ({ show, setShow }) => {
                   <div>
                     <chatIcons.kick
                       className={`${buttonStyle}`}
-                      onClick={() => console.log("kick")}
+                      onClick={() => handelKickUser(member.userid.id)}
                     />
                   </div>
                 </div>
