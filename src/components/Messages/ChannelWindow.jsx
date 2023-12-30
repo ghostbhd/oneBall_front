@@ -40,7 +40,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     if (activeChannel) {
       socket.emit("getChannelMessages", activeChannel);
     }
-
+    
     socket.on("newChannelMessage", (newMessage) => {
       console.log("newChannelMessage", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);

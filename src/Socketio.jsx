@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 
 
-const SOCKET_SERVER_URL = 'http://localhost:3009';
+const SOCKET_SERVER_URL = 'http://localhost:3009/';
 
 
 const SocketContext = createContext(null);
@@ -13,10 +14,20 @@ export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
-
+    var  token;
+  const toke = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("accessToken="));
+      if (toke)
+          token = toke.split("=")[1];
     useEffect(() => {
         // Create the socket only once (on mount)
-        const newSocket = io(SOCKET_SERVER_URL, { autoConnect: true });
+        const newSocket = io(SOCKET_SERVER_URL, { autoConnect: true,
+          auth: {
+        token: token,
+      }
+    });
+        console.log("connected =================> ", token);
 
         setSocket(newSocket);
 
@@ -31,4 +42,8 @@ export const SocketProvider = ({ children }) => {
             {children}
         </SocketContext.Provider>
     );
+};
+
+SocketProvider.propTypes = {
+    children: PropTypes.node.isRequired,
 };

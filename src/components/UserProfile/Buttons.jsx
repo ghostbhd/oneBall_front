@@ -5,8 +5,10 @@ import { icons } from "../../constants";
 import { useSocket } from "../../Socketio";
 import { getHeaders } from "../../jwt_token";
 import * as jwtDecode from "jwt-decode";
+import { useEffect, useState } from "react";
 
-const Buttons = ({ data }) => {
+const Buttons = ({ data: initialData }) => {
+  const [data, setData] = useState(initialData);
   const button = `flex sm:p-3 p-2 rounded-xl w-max items-center cursor-pointer`;
   const text = `font-bold sm:block hidden`;
   const icon = `text-xl sm:ml-2 sm:mx-0 mx-4`;
@@ -15,6 +17,16 @@ const Buttons = ({ data }) => {
   const decoded = jwtDecode.jwtDecode(token);
 
   const socket = useSocket();
+
+  const dataSetten = (state) => {
+    setData((prevData) => ({
+      ...prevData,
+      friend: state.friend,
+      friendRequest: state.friendRequest,
+      friendRequestSent: state.friendRequestSent,
+    }));
+  };
+
   const addFriend = () => {
     console.log(
       "add friend Clicked ",
@@ -26,7 +38,12 @@ const Buttons = ({ data }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    window.location.reload();
+    setData((prevData) => ({
+      ...prevData,
+      friend: false,
+      friendRequest: false,
+      friendRequestSent: true,
+    }));
   };
 
   const RefuseFriend = () => {
@@ -40,7 +57,13 @@ const Buttons = ({ data }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    window.location.reload();
+    setData((prevData) => ({
+      ...prevData,
+      friend: false,
+      friendRequest: false,
+      friendRequestSent: false,
+    }));
+    // window.location.reload();
   };
 
   const AcceptFriend = () => {
@@ -54,24 +77,41 @@ const Buttons = ({ data }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    window.location.reload();
+    setData((prevData) => ({
+      ...prevData,
+      friend: true,
+      friendRequest: false,
+      friendRequestSent: false,
+    }));
   };
 
-  socket.on("FriendRequest", (stats) => {
-    data.friend = stats.friend;
-    data.friendRequest = stats.friendRequest;
-    data.friendRequestSent = stats.friendRequestSent;
-  });
-  socket.on("RefuseRequest", (stats) => {
-    data.friend = stats.friend;
-    data.friendRequest = stats.friendRequest;
-    data.friendRequestSent = stats.friendRequestSent;
-  });
-  socket.on("AcceptRequest", (stats) => {
-    data.friend = stats.friend;
-    data.friendRequest = stats.friendRequest;
-    data.friendRequestSent = stats.friendRequestSent;
-  });
+  useEffect(() => {
+    socket.on("FriendRequest", (stats) => {
+      console.log(
+        "add friend Clicked ------------------------------------------------ ",
+        stats
+      );
+
+      // Update the component state
+      dataSetten(stats);
+    });
+
+    socket.on("RefuseRequest", (stats) => {
+      console.log(
+        "Refuse friend Clicked ------------------------------------------------ ",
+        stats
+      );
+      dataSetten(stats);
+    });
+    socket.on("AcceptRequest", (stats) => {
+      dataSetten(stats);
+    });
+    // Clean up the socket subscription on component unmount
+    return () => {
+      socket.off("FriendRequest");
+    };
+  }, []);
+
   return (
     <div
       className={`w-full flex flex-col space-y-6 sm:px-5 px-3 ${style.blueBlur} p-4 ${style.rounded}`}
@@ -157,7 +197,7 @@ const Buttons = ({ data }) => {
 };
 
 Buttons.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.object,
 };
 
 export default Buttons;
