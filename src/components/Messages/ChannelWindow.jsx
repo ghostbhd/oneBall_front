@@ -21,18 +21,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   console.log("------------------------------>", membershipStatus);
 
 
-  const handleSendMessagee = () => {
-    if (newMessage.trim() !== "") {
-      socket.emit("sendMessageToChannel", {
-        channelId: activeChannel,
-        senderId: currentUserToken.id,
-        content: newMessage,
-      });
-
-      console.log("Sending message:", newMessage);
-      setNewMessage("");
-    }
-  };
 
   useEffect(() => {
     console.log("Socket connected:", socket.connected);
@@ -45,6 +33,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     socket.on("newChannelMessage", (newMessage) => {
       console.log("newChannelMessage", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
+      
     });
     
     // Listen for channel messages ---------------------------------------------
@@ -87,9 +76,22 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       socket.off("channelMessages");
       socket.off("channelMembershipStatus");
       socket.off("newChannelMessage");
-      socket.off("joinChannelSuccess");
     };
   }, [socket, activeChannel]);
+
+
+  const handleSendMessagee = () => {
+    if (newMessage.trim() !== "") {
+      socket.emit("sendMessageToChannel", {
+        channelId: activeChannel,
+        senderId: currentUserToken.id,
+        content: newMessage,
+      });
+
+      console.log("Sending message:", newMessage);
+      setNewMessage("");
+    }
+  };
 
   const handleJoinChannel = () => {
     if (typeOfChannel === 'protected' && !showPasswordInput) {
@@ -103,7 +105,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         password: channelPassword,
       });
   
-      window.location.reload();
+      // window.location.reload();
       // Reset states
       setShowPasswordInput(false);
       setChannelPassword("");
@@ -116,7 +118,22 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       channelId: activeChannel,
       userId: currentUserToken.id,
     });
-    window.location.reload();//! tell anas about this 
+
+    socket.on("channelMembershipStatus", (data) => {
+      console.log("Received membership status^^^*******************************************:", data.isOwner);
+
+      // if (data.channelId === activeChannel) {
+      //   console.log("Received membership status********************************************:", data.isOwner);
+      //   setMembershipStatus({
+      //     isAdmin: data.isAdmin,
+      //     isMember: data.isMember,
+      //     isOwner: data.isOwner,
+          
+      //   });
+      // }
+    });
+    
+    // window.location.reload();//! tell anas about this 
 
   };
 

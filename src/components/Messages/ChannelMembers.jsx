@@ -28,6 +28,54 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
     console.log("requesterId is ", requesterId);
     socket.emit("kickUserFromChannel", activeChannel, currentUserToken.id, requesterId);
   }
+
+  const handleAddPassword = () =>
+  {
+    
+  }
+
+  const handleRemovePassword = () =>
+  {
+    
+  }
+
+  const handelChangePassword = () =>
+  {
+    
+  }
+
+  const handleSetAdmin = () =>
+  {
+    
+  }
+
+  const handleRemoveAdmin = () =>
+  {
+    
+  }
+
+
+  const handelMute = () =>
+  {
+
+  }
+
+  const handelUnMute = (requesterId) =>
+  {
+    // console.log(" Unmuting user");
+    // socket.emit("UnMuteUser",activeChannel,requesterId);
+  }
+
+  const handelBane = () =>
+  {
+
+  }
+
+  const handelUnBane = () =>
+  {
+    
+  }
+
   
 
   return (
@@ -80,12 +128,12 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
                     {member.mute ? (
                       <chatIcons.mute
                         className={`${buttonStyle}`}
-                        onClick={() => console.log("unmute")} // handel click ***
+                        onClick={() => handelUnMute(member.userid.id)} // handel click ***
                       />
                     ) : (
                       <chatIcons.unmute
                         className={`${buttonStyle}`}
-                        onClick={() => console.log("mute")}
+                        onClick={() => handelMute(member.userid.id)}
                       />
                     )}
                   </div>
@@ -94,12 +142,12 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
                     {member.ban ? (
                       <chatIcons.ban
                         className={`${buttonStyle}`}
-                        onClick={() => console.log("unban")}
+                        onClick={() => handelUnBane(member.userid.id)}
                       />
                     ) : (
                       <chatIcons.unban
                         className={`${buttonStyle}`}
-                        onClick={() => console.log("ban")}
+                        onClick={() =>handelBane(member.userid.id)}
                       />
                     )}
                   </div>
