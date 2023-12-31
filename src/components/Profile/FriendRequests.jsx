@@ -32,7 +32,7 @@ const FriendRequests = () => {
       username1: decoded.name,
       username2: username,
     });
-    removeFromData({ username: username });
+    removeFromData(username);
   };
 
   // decline friend request ---------------------------
