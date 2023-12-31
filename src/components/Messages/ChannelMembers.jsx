@@ -17,13 +17,19 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
       setMembers(data);
     });
 
+    // socket.on("newMember", )
+
+
     // socket.on("userKickedFromChannel");
 
     //  socket.on("userKickedFromChannel")
   }, []);
 
-  const handelKickUser = (requesterId) => {
+  const handelKickUser = (requesterId, username) => {
+    console.log("activeChannel is ", activeChannel);
+    console.log("currentUserToken.id is ", currentUserToken.id);
     console.log("requesterId is ", requesterId);
+    console.log("username is ", username);
     socket.emit(
       "kickUserFromChannel",
       activeChannel,
@@ -126,7 +132,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                   <div>
                     <chatIcons.kick
                       className={`${buttonStyle}`}
-                      onClick={() => handelKickUser(member.userid.id)}
+                      onClick={() => handelKickUser(member.userid.id, member.userid.username)}
                     />
                   </div>
                 </div>
