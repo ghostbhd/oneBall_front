@@ -21,7 +21,6 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeChannel, setActiveChannel] = useState(null);
   const [typeOfChannel, setTypeOfChannel] = useState("");
 
-
   const handleSearchSubmit = (searchTerm) => {
     if (searchTerm.trim()) {
       socket.emit("search-user", {
@@ -89,7 +88,6 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
       </div>
 
       {/* chat window ############################################################### */}
-      {}
       <div className={`w-9/12 flex`}>
         {activeChat && activeTab === "dms" ? (
           <ChatWindow
