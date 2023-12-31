@@ -19,7 +19,11 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
       setMembers(data);
     } );
 
+
+    return () => {
     socket.on("userKickedFromChannel");
+    }
+    // socket.off("channelMembers");
   
   //  socket.on("userKickedFromChannel")
 
@@ -29,6 +33,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
   const handelKickUser =(requesterId) =>{
     console.log("requesterId is ", requesterId);
     socket.emit("kickUserFromChannel", activeChannel, currentUserToken.id, requesterId);
+
   }
 
   const handleAddPassword = () =>
