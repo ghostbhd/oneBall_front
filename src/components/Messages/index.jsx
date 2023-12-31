@@ -1,7 +1,8 @@
+import React from "react";
 import ChatList from "./ChatList.jsx";
 import ChatWindow from "./ChatWindow.jsx";
 import style from "../../style";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChannelWindow from "./ChannelWindow.jsx";
 import ChannelCreation from "./ChannelCreation.jsx";
 import { getHeaders } from "../../jwt_token.jsx";
@@ -9,7 +10,6 @@ import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
 import ChannelList from "./ChannelList.jsx";
-import { useSocket } from "../../Socketio.jsx";
 
 const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeChat, setActiveChat] = useState(null);
@@ -20,11 +20,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeTab, setActiveTab] = useState("dms");
   const [activeChannel, setActiveChannel] = useState(null);
   const [typeOfChannel, setTypeOfChannel] = useState("");
-  const socket = useSocket();
 
-  const [showPasswordWindow, setShowPasswordWindow] = useState(false);
-
-  // const [WindowAvatar, setWindowAvatar] = useState(null);
 
   const handleSearchSubmit = (searchTerm) => {
     if (searchTerm.trim()) {
@@ -57,7 +53,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
 
   return (
     <div
-      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} md:p-6 pb-12 px-2 pt-0 `}
+      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} p-6`}
     >
       {/* chat sideBar ############################################################### */}
       <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>
@@ -93,6 +89,7 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
       </div>
 
       {/* chat window ############################################################### */}
+      {}
       <div className={`w-9/12 flex`}>
         {activeChat && activeTab === "dms" ? (
           <ChatWindow
@@ -101,21 +98,11 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
             currentUserToken={currentUserToken}
           />
         ) : activeChannel && activeTab === "channels" ? (
-          typeOfChannel === "protected" ? (
-            // password window ------------------------------------------------------
-            <div className={`absolute flex item w-full h-full backdrop-blur-md top-0 left-0 z-20 bg-bDark_5/50`}>
-              <div className={`absolute w-full h-full left-0 top-0`}></div>
-              <div className={`w-40 h-max`}>
-
-              </div>
-            </div>
-          ) : (
-            <ChannelWindow
-              typeOfChannel={typeOfChannel}
-              activeChannel={activeChannel}
-              currentUserToken={currentUserToken}
-            />
-          )
+          <ChannelWindow
+            typeOfChannel={typeOfChannel}
+            activeChannel={activeChannel}
+            currentUserToken={currentUserToken}
+          />
         ) : null}
       </div>
 
