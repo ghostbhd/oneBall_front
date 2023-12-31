@@ -4,72 +4,50 @@ import { chatIcons } from "../../constants";
 import { useState, useEffect, useRef } from "react";
 import { useSocket } from "../../Socketio.jsx";
 
-const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
+const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   const [members, setMembers] = useState([]);
   const socket = useSocket();
   // member button style -------------------------------------------------
   const buttonStyle = `text-xl text-bLight_5 hover:text-bLight_2 cursor-pointer`;
 
-
   // console.log(members);
   useEffect(() => {
-    
     socket.on("channelMembers", (data) => {
-      console.log("memers are:",data);
+      console.log("memers are:", data);
       setMembers(data);
-    } );
+    });
 
     // socket.on("userKickedFromChannel");
-  
-  //  socket.on("userKickedFromChannel")
 
-
+    //  socket.on("userKickedFromChannel")
   }, []);
 
-  const handelKickUser =(requesterId) =>{
+  const handelKickUser = (requesterId) => {
     console.log("requesterId is ", requesterId);
-    socket.emit("kickUserFromChannel", activeChannel, currentUserToken.id, requesterId);
-  }
+    socket.emit(
+      "kickUserFromChannel",
+      activeChannel,
+      currentUserToken.id,
+      requesterId
+    );
+  };
 
-  const handleAddPassword = () =>
-  {
-    
-  }
+  const handleAddPassword = () => {};
 
-  const handleRemovePassword = () =>
-  {
-    
-  }
+  const handleRemovePassword = () => {};
 
-  const handelChangePassword = () =>
-  {
-    
-  }
+  const handelChangePassword = () => {};
 
+  const handelMute = () => {};
 
-
-  const handelMute = () =>
-  {
-
-  }
-
-  const handelUnMute = (requesterId) =>
-  {
+  const handelUnMute = (requesterId) => {
     // console.log(" Unmuting user");
     // socket.emit("UnMuteUser",activeChannel,requesterId);
-  }
+  };
 
-  const handelBane = () =>
-  {
+  const handelBane = () => {};
 
-  }
-
-  const handelUnBane = () =>
-  {
-    
-  }
-
-  
+  const handelUnBane = () => {};
 
   return (
     <div
@@ -140,7 +118,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
                     ) : (
                       <chatIcons.unban
                         className={`${buttonStyle}`}
-                        onClick={() =>handelBane(member.userid.id)}
+                        onClick={() => handelBane(member.userid.id)}
                       />
                     )}
                   </div>
