@@ -19,7 +19,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   const socket = useSocket();
   const messageContainerRef = useRef(null);
-  console.log("------------------------------>", membershipStatus);
+  // console.log("------------------------------>", membershipStatus);
 
 
 
@@ -39,13 +39,13 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     });
     
 
-    socket.emit("getSenderIdsInChannel", activeChannel);
+  //   socket.emit("getSenderIdsInChannel", activeChannel);
 
-    socket.on("senderIdsInChannel",(id) => {
-  console.log("sender id is---------------------------------------", id);
+  //   socket.on("senderIdsInChannel",(id) => {
+  // // console.log("sender id is---------------------------------------", id);
 
-      setSender(id);
-    });
+  //     setSender(id);
+  //   });
 
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
