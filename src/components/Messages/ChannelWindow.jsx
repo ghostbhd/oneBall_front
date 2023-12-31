@@ -11,6 +11,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [channelPassword, setChannelPassword] = useState("");
   const [showMembers, setShowMembers] = useState(false);
+  const [sender, setSender] = useState(null);
   const [membershipStatus, setMembershipStatus] = useState({
  
   });
@@ -19,6 +20,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const socket = useSocket();
   const messageContainerRef = useRef(null);
   console.log("------------------------------>", membershipStatus);
+
 
 
 
@@ -36,10 +38,20 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       
     });
     
+
+    socket.emit("getSenderIdsInChannel", activeChannel);
+
+    socket.on("senderIdsInChannel",(id) => {
+  console.log("sender id is---------------------------------------", id);
+
+      setSender(id);
+    });
+
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.messages)) {
         console.log("channelMessages", data);
+        // console.log("sender*******************************************:", data.messages.id);
         setMessages(data.messages);
       } else {
         console.error("Received invalid format for channelMessages", data);
@@ -58,11 +70,11 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       
     });
 
+   
+
     socket.on("channelMembershipStatus", (data) => {
-      console.log("Received membership status^^^*******************************************:", data.isOwner);
 
       if (data.channelId === activeChannel) {
-        console.log("Received membership status********************************************:", data.isOwner);
         setMembershipStatus({
           isAdmin: data.isAdmin,
           isMember: data.isMember,
@@ -104,13 +116,13 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         userId: currentUserToken.id,
         password: channelPassword,
       });
-  
       // window.location.reload();
       // Reset states
       setShowPasswordInput(false);
       setChannelPassword("");
     }
   };
+
 
   const handleleaveChannel = () => {
     console.log("---------> leave channel clicked");
@@ -119,21 +131,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       userId: currentUserToken.id,
     });
 
-    socket.on("channelMembershipStatus", (data) => {
-      console.log("Received membership status^^^*******************************************:", data.isOwner);
-
-      // if (data.channelId === activeChannel) {
-      //   console.log("Received membership status********************************************:", data.isOwner);
-      //   setMembershipStatus({
-      //     isAdmin: data.isAdmin,
-      //     isMember: data.isMember,
-      //     isOwner: data.isOwner,
-          
-      //   });
-      // }
-    });
-    
-    // window.location.reload();//! tell anas about this 
 
   };
 
@@ -143,7 +140,18 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     setShowMembers(true);
   }
 
-  // More badge style -------
+
+  const handleSetAdmin = () =>
+  {
+    // socket.emit("setUserAsAdmin", activeChannel, currentUserToken.id);
+    
+  }
+
+  const handleRemoveAdmin = () =>
+  {
+    
+  }
+
   
   const li = `p-2 hover:bg-bLight_5/50 hover:text-bLight_2 cursor-pointer`;
 
@@ -219,7 +227,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                 <li className={`${li}`} onClick={() => handleChannelmembers()}>
                   Members
                 </li>
-                <li className={`${li}`} onClick={console.log("set admin")}>
+                <li className={`${li}`} onClick={handleSetAdmin()}>
                   Set an admin
                 </li>
                 {membershipStatus.isOwner ? (

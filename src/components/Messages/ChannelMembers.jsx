@@ -18,6 +18,8 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
       console.log("memers are:",data);
       setMembers(data);
     } );
+
+    socket.on("userKickedFromChannel");
   
   //  socket.on("userKickedFromChannel")
 
@@ -44,15 +46,6 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken}) => {
     
   }
 
-  const handleSetAdmin = () =>
-  {
-    
-  }
-
-  const handleRemoveAdmin = () =>
-  {
-    
-  }
 
 
   const handelMute = () =>
