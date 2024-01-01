@@ -1,21 +1,14 @@
-import React from "react";
-import style, { ImgBg } from "../../style";
+
+import style, { ImgBg } from "../../../style";
 import { useState, useEffect } from "react";
-import SearchBar from "./searchBar.jsx";
-import ChatWindow from "./ChatWindow.jsx";
-import { MdGroupAdd } from "react-icons/md";
-import ChannelCreation from "./ChannelCreation.jsx";
-import { useSocket } from "../../Socketio.jsx";
-import { getHeaders } from "../../jwt_token.jsx";
-import SlidingTabBar from "./SlidingTabBar.jsx";
+import { useSocket } from "../../../Socketio.jsx";
+import PropTypes from "prop-types";
 
 const ChatList = ({
   activeChat,
   setActiveChat,
   currentUserToken,
   onTabSelected,
-
-  
 }) => {
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
@@ -90,7 +83,7 @@ const ChatList = ({
       if (response.chatId) {
         setActiveChat(response.chatId);
 
-        socket.emit("request-messages-for-chat", { chatId: response.chatId });
+        socket.emit("request-messages-for-chat", { chatId: response.chatId , sender_id: currentUserToken.id});
       } else if (response.error) {
         console.error("Search error:", response.error);
         alert("User Not Found");
@@ -112,6 +105,8 @@ const ChatList = ({
     socket.emit("request-messages-for-chat", {
       chatId,
     });
+        // socket.emit("request-latest-messages", currentUserToken.id);
+
 
   };
 
@@ -150,6 +145,13 @@ const ChatList = ({
       ))}
     </div>
   );
+};
+
+ChatList.propTypes = {
+  activeChat: PropTypes.string,
+  setActiveChat: PropTypes.func,
+  currentUserToken: PropTypes.object,
+  onTabSelected: PropTypes.func,
 };
 
 export default ChatList;
