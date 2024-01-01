@@ -5,7 +5,7 @@ import EditInfo from "./EditInfo";
 import Details from "./Details";
 import MDetails from "./MDetails";
 import FriendRequests from "./FriendRequests";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -16,7 +16,7 @@ const Profile = () => {
   const handleRedirect = (url) => {
     history(url);
   };
-  const headers = getHeaders().headers;
+  const headers = GetHeaders().headers;
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("http://localhost:3009/profileData", {

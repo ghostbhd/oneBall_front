@@ -35,13 +35,13 @@ const Auth = () => {
           <p>Welcome to Ping Pong game</p>
         </div>
 
-{/* google button ----------------------------------------------- */}
+        {/* google button ----------------------------------------------- */}
         <div className={`bg-white text-black ${btn}`}>
           <div className={`mr-4 text-xl xl:text-3xl`}>{<icons.google />}</div>
           <GoogleAuthButton />
         </div>
 
-{/* 42 button ----------------------------------------------- */}
+        {/* 42 button ----------------------------------------------- */}
         <div className={`bg-black text-white ${btn} mb-auto`}>
           <div className={`w-5 xl:w-7 mr-4`}>
             <img src={icons.fortyTwo} alt="42" className="" />{" "}

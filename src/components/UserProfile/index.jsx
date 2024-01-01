@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
 import GameDetails from "./GameDetails";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
@@ -12,7 +12,7 @@ const UserProfile = () => {
 
   // username from url params ------------------
   const { username } = useParams();
-  const header = getHeaders().headers;
+  const header = GetHeaders().headers;
   const history = useNavigate();
   header.append("Content-Type", "application/json");
 

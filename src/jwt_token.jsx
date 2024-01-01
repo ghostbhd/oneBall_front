@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-export const getHeaders = () => {
+export const GetHeaders = () => {
   const history = useNavigate();
-  const handleRedirect = (url) => {
-    history(url);
-  };
+
   const headers = new Headers();
   var jwttt;
 
@@ -16,7 +14,8 @@ export const getHeaders = () => {
     const jwt = jwtCookie.split("=")[1];
     headers.append("Authorization", `Bearer ${jwt}`);
   } else {
-    handleRedirect("/Auth");
+    jwttt = undefined;
+    history("/Auth");
   }
 
   return { headers, jwttt };
