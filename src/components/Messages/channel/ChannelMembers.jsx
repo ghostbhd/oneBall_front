@@ -1,28 +1,26 @@
 import PropTypes from "prop-types";
 import style, { ImgBg } from "../../../style";
-import { chatIcons } from "../../../constants";
+import { chatIcons, icons } from "../../../constants";
 import { useState, useEffect } from "react";
 import { useSocket } from "../../../Socketio.jsx";
+import { Link } from "react-router-dom";
 
 const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   const [members, setMembers] = useState([]);
   const socket = useSocket();
+
   // member button style -------------------------------------------------
   const buttonStyle = `text-xl text-bLight_5 hover:text-bLight_2 cursor-pointer`;
 
+  console.log("members are:", members);
   // console.log(members);
   useEffect(() => {
+    // channel members -----------------------
     socket.on("channelMembers", (data) => {
-      console.log("memers are:", data);
+      // console.log("memers are:", data);
       setMembers(data);
     });
 
-    // socket.on("newMember", )
-
-
-    // socket.on("userKickedFromChannel");
-
-    //  socket.on("userKickedFromChannel")
     return () => {
       socket.off("channelMembers");
     };
@@ -42,6 +40,21 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   const handleRemovePassword = () => {};
 
   const handelChangePassword = () => {};
+
+  // set admin ----------------------------------
+  const handelSetAdmin = (channelId, seter, userSetted) => {
+    console.log("setting user as admin", channelId, seter, userSetted);
+    socket.emit("setUserAsAdmin", {
+      channelId: channelId,
+      userId: seter,
+      requesterId: userSetted,
+    });
+  };
+
+  // remove admin ----------------------------------
+  const handelRemoveAdmin = (channelId, seter, userSetted) => {
+    
+  }
 
   const handelMute = () => {};
 
@@ -86,16 +99,58 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                 key={member.id}
                 className={`flex p-2 w-full hover:bg-bDark_1/20 transition-all`}
               >
-                <div className={`flex items-center`}>
+                <div className={`flex gap-2 items-center`}>
                   {/* Image -------------------------- */}
-                  <div
+                  <Link
+                    to={`/profile/${member.username}`}
                     style={ImgBg({ img: member.avatar })}
                     className={`w-12 h-12 rounded-full`}
-                  ></div>
-                  {/* username --------------------------- */}
-                  <p className={`text-bLight_4 text-sm px-2`}>
-                    @{member.username}
-                  </p>
+                  ></Link>
+                  <div className={`flex flex-col w-max`}>
+                    {/* username --------------------------- */}
+                    <p className={`text-bLight_4 py-1 text-sm`}>
+                      @{member.username}
+                    </p>
+                    {/* role --------------------------- */}
+                    {member.isMember ? (
+                      <div className={`flex items-center gap-2`}>
+                        <p className={`text-bLight_5 text-xs`}>Member</p>
+
+                        {/* set as admin button -------- */}
+                        <button
+                          className={`text-xs p-1 bg-bLight_5 rounded-full text-bDark_4 transition-all hover:bg-bLight_4`}
+                          onClick={() =>
+                            handelSetAdmin(
+                              activeChannel,
+                              currentUserToken.id,
+                              member.userid.id
+                            )
+                          }
+                        >
+                          Set as admin
+                        </button>
+                      </div>
+                    ) : (
+                      <div className={`flex items-center gap-2`}>
+                        <p className={`text-org_3 text-xs`}>Admin</p>
+
+                        {/* remove admin button -------- */}
+                        <button
+                          title="Remove admin"
+                          className={`text-xs p-1 bg-bLight_5 rounded-full text-bDark_4 transition-all hover:bg-bLight_4`}
+                          onClick={() =>
+                            handelRemoveAdmin(
+                              activeChannel,
+                              currentUserToken.id,
+                              member.userid.id
+                            )
+                          }
+                        >
+                          {<chatIcons.admin />}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 {/* buttons ------------------------------------------------------------------------------------ */}
                 <div className={`ml-auto flex items-center gap-2`}>
@@ -147,6 +202,8 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
 ChannelMembers.propTypes = {
   show: PropTypes.bool.isRequired,
   setShow: PropTypes.func.isRequired,
+  activeChannel: PropTypes.string.isRequired,
+  currentUserToken: PropTypes.object.isRequired,
 };
 
 export default ChannelMembers;
