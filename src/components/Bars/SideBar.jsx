@@ -17,41 +17,20 @@ const SideBar = () => {
   const handleRedirect = (url) => {
     history(url);
   };
-  var username = "";
 
-  const token = getHeaders().jwttt;
-  if (token === undefined)
-  {
-    handleRedirect("/Auth");
-    console.log("token undefined");
-  }
-  else
-  {
-
-    const decoded = jwtDecode.jwtDecode(token);
-    username = decoded.name;
-  }
-
+  
   const { theme, toggleSidebar } = useTheme();
+  
+  const handelDesconnect = () =>
+  {
+    // const token = getHeaders().jwttt;
+    // const decoded = jwtDecode.jwtDecode(token);
+    // const username = decoded.name;
+    // socket.emit("deconnect", username);
+    Cookies.remove("accessToken");
 
-  const handelDesconnect = () => {
-    socket.emit("deconnect", username);
   };
-
-  useEffect(() => {
-    socket.on("deconnected", (ok) => {
-      if (ok === "ok") {
-        Cookies.remove("accessToken");
-        socket.disconnect();
-        handleRedirect("/Auth");
-      }
-    });
-
-    return () => {
-      socket.off("deconnect");
-    };
-  }, []);
-
+  
   return (
     <div
       className={`md:flex hidden h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-20
@@ -131,6 +110,8 @@ const SideBar = () => {
           } cursor-pointer`}
           onClick={() => {
             handelDesconnect();
+            handleRedirect("/Auth");
+            socket.disconnect();
           }}
         >
           <div className={`flex flex-row p-2 items-center`}>

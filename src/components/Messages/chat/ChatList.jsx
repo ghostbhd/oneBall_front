@@ -1,21 +1,14 @@
-import React from "react";
-import style, { ImgBg } from "../../style";
+
+import style, { ImgBg } from "../../../style";
 import { useState, useEffect } from "react";
-import SearchBar from "./searchBar.jsx";
-import ChatWindow from "./ChatWindow.jsx";
-import { MdGroupAdd } from "react-icons/md";
-import ChannelCreation from "./ChannelCreation.jsx";
-import { useSocket } from "../../Socketio.jsx";
-import { getHeaders } from "../../jwt_token.jsx";
-import SlidingTabBar from "./SlidingTabBar.jsx";
+import { useSocket } from "../../../Socketio.jsx";
+import PropTypes from "prop-types";
 
 const ChatList = ({
   activeChat,
   setActiveChat,
   currentUserToken,
   onTabSelected,
-
-  
 }) => {
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
@@ -150,6 +143,13 @@ const ChatList = ({
       ))}
     </div>
   );
+};
+
+ChatList.propTypes = {
+  activeChat: PropTypes.string,
+  setActiveChat: PropTypes.func,
+  currentUserToken: PropTypes.object,
+  onTabSelected: PropTypes.func,
 };
 
 export default ChatList;
