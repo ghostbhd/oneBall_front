@@ -17,9 +17,16 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   const socket = useSocket();
   const messageContainerRef = useRef(null);
-  console.log("------------------------------>", membershipStatus);
+  const notifRef = useRef(null);
 
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setMoreBadge(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
     console.log("Socket connected:", socket.connected);
 
     if (activeChannel) {
@@ -73,11 +80,12 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     });
 
     return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
       socket.off("channelMessages");
       socket.off("channelMembershipStatus");
       socket.off("newChannelMessage");
     };
-  }, [socket, activeChannel]);
+  }, [socket, activeChannel, notifRef]);
 
   const handleSendMessagee = () => {
     if (newMessage.trim() !== "") {
@@ -199,14 +207,16 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           ) : (
             // More button -----------------------------
             <div
-              className={`text-2xl text-bLight_4 cursor-pointer`}
+              ref={notifRef}
+              className={`text-3xl text-bLight_4 cursor-pointer transition-all duration-500 ${moreBadge ? "rotate-90" : ""}`}
               onClick={() => setMoreBadge(!moreBadge)}
             >
               {<chatIcons.more />}
             </div>
           )}
-          {/*more badge ------------------------------- */}
+          {/*more-badge ------------------------------- */}
           <ul
+            ref={notifRef}
             className={`absolute z-10 text-sm text-bLight_4 right-1/2 flex flex-col overflow-hidden 
               top-full w-52 h-max bg-bDark_3 border-2 border-bLight_5/20 rounded-3xl ${
                 moreBadge ? "" : "hidden"
@@ -219,7 +229,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
               Set an admin
             </li>
             {membershipStatus.isOwner ? (
-              <li className={`${li}`} onClick={console.log("change pass")}>
+              <li className={`${li}`} onClick={console.log("whyyyy")}>
                 Edit Password
               </li>
             ) : null}

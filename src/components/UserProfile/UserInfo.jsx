@@ -3,21 +3,40 @@ import style from "../../style";
 import PropTypes from "prop-types";
 import { icons } from "../../constants";
 import Buttons from "./Buttons";
+import { useState, useEffect } from "react";
+import { useSocket } from "../../Socketio";
 
 const UserInfo = ({ data }) => {
+  const [state, setState] = useState(data.state);
+  const socket = useSocket();
+
+  useEffect(() => {
+    socket.on("ChangeState", (userState) => {
+      if (data.username === userState.username) {
+        setState(userState.state);
+      }
+    });
+
+    return () => {
+      socket.off("ChangeState");
+    };
+  }, []);
+
   const starPosition =
     "absolute -top-3 sm:-right-5 -right-2 sm:w-12 sm:h-12 w-8 h-8";
 
   return (
     <div className={`w-full h-max flex relative overflow-hidden`}>
       {/* content ----------------------------- */}
-      <div className={`w-full h-max flex sm:flex-row flex-col sm:space-y-0 space-y-4 sm:space-x-8`}>
+      <div
+        className={`w-full h-max flex sm:flex-row flex-col sm:space-y-0 space-y-4 sm:space-x-8`}
+      >
         <div
           className={`flex flex-row space-x-8 sm:w-max w-full p-4 bg-gradient-to-r 
             ${
-              data.state === "Online"
+              state === "Online"
                 ? "from-org_3/30 to-org_1/20"
-                : data.state === "InGame"
+                : state === "InGame"
                 ? "from-bLight_3/30 to-bLight_1/30"
                 : "from-gray-500/30 to-gray-400/30"
             }
@@ -61,9 +80,9 @@ const UserInfo = ({ data }) => {
           <div className="flex flex-col sm:w-32 w-24 sm:h-32 h-24 break-words">
             <p
               className={`sm:text-xl text-base w-full ${
-                data.state === "Online"
+                state === "Online"
                   ? "text-org_1/80"
-                  : data.state === "InGame"
+                  : state === "InGame"
                   ? "text-bLight_3"
                   : "text-gray-400"
               }`}
@@ -72,9 +91,9 @@ const UserInfo = ({ data }) => {
             </p>
             <p
               className={`${
-                data.state === "Online"
+                state === "Online"
                   ? "text-org_1/60"
-                  : data.state === "InGame"
+                  : state === "InGame"
                   ? "text-bLight_3/80"
                   : "text-gray-400/80"
               }`}
@@ -85,14 +104,14 @@ const UserInfo = ({ data }) => {
             <div className={`flex flex-row items-center mt-auto`}>
               <span
                 className={`w-2 h-2 rounded-full mr-2 ${
-                  data.state === "Online"
+                  state === "Online"
                     ? "bg-org_2"
-                    : data.state === "InGame"
+                    : state === "InGame"
                     ? "bg-bLight_3"
                     : "bg-gray-500"
                 }`}
               ></span>
-              <p className="text-white/60 text-xs mr-auto">{data.state}</p>
+              <p className="text-white/60 text-xs mr-auto">{state}</p>
             </div>
           </div>
         </div>
