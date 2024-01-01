@@ -1,17 +1,19 @@
-import React from "react";
-import ChatList from "./ChatList.jsx";
-import ChatWindow from "./ChatWindow.jsx";
-import style from "../../style";
-import { useState, useEffect } from "react";
-import ChannelWindow from "./ChannelWindow.jsx";
-import ChannelCreation from "./ChannelCreation.jsx";
+
+import ChatList from "./chat/ChatList.jsx";
+import ChatWindow from "./chat/ChatWindow.jsx";
+
+import ChannelWindow from "./channel/ChannelWindow.jsx";
+import ChannelCreation from "./channel/ChannelCreation.jsx";
+import ChannelList from "./channel/ChannelList.jsx";
+
+import { useState } from "react";
 import { getHeaders } from "../../jwt_token.jsx";
 import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
-import ChannelList from "./ChannelList.jsx";
+import style from "../../style";
 
-const Messages = (onSearch, onIconClick, onTabSelected) => {
+const Messages = () => {
   const [activeChat, setActiveChat] = useState(null);
   const [activeChatUser, setActiveChatUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");

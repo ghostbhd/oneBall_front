@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
-import { useSocket } from "../../Socketio.jsx";
-import style, { ImgBg } from "../../style";
-import { chatIcons } from "../../constants";
+import { useSocket } from "../../../Socketio.jsx";
+import style, { ImgBg } from "../../../style";
+import { chatIcons } from "../../../constants";
 import ChannelMembers from "./ChannelMembers.jsx";
 
 const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
@@ -17,11 +17,11 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   const socket = useSocket();
   const messageContainerRef = useRef(null);
-  const notifRef = useRef(null);
+  const moreBadgeRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
+      if (moreBadgeRef.current && !moreBadgeRef.current.contains(event.target)) {
         setMoreBadge(false);
       }
     };
@@ -72,6 +72,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     socket.on("channelMembershipStatus", (data) => {
       if (data.channelId === activeChannel) {
         setMembershipStatus({
+          channelName:data.channelName,
           isAdmin: data.isAdmin,
           isMember: data.isMember,
           isOwner: data.isOwner,
@@ -85,7 +86,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       socket.off("channelMembershipStatus");
       socket.off("newChannelMessage");
     };
-  }, [socket, activeChannel, notifRef]);
+  }, [socket, activeChannel, moreBadgeRef]);
 
   const handleSendMessagee = () => {
     if (newMessage.trim() !== "") {
@@ -181,7 +182,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             className={`w-16 h-16 rounded-full border-2 border-bLight_5/80`}
             style={ImgBg({ img: "/src/assets/avatar/Deadpool.jpg" })}
           ></div>
-          <p>#Channel</p>
+          <p>#{membershipStatus.channelName}</p>
         </div>
 
         {/* right button --------------------------------------------------------------- */}
@@ -207,7 +208,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           ) : (
             // More button -----------------------------
             <div
-              ref={notifRef}
+              // ref={moreBadgeRef}
               className={`text-3xl text-bLight_4 cursor-pointer transition-all duration-500 ${moreBadge ? "rotate-90" : ""}`}
               onClick={() => setMoreBadge(!moreBadge)}
             >
@@ -216,7 +217,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           )}
           {/*more-badge ------------------------------- */}
           <ul
-            ref={notifRef}
+            // ref={moreBadgeRef}
             className={`absolute z-10 text-sm text-bLight_4 right-1/2 flex flex-col overflow-hidden 
               top-full w-52 h-max bg-bDark_3 border-2 border-bLight_5/20 rounded-3xl ${
                 moreBadge ? "" : "hidden"

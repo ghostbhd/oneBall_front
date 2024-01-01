@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-import style from "../../style";
+import { useState, useEffect } from "react";
+import style from "../../../style";
 import { IoIosSend } from "react-icons/io";
-import { FiMoreVertical } from "react-icons/fi";
-import { useSocket } from "../../Socketio.jsx";
+import { useSocket } from "../../../Socketio.jsx";
 import {Link} from "react-router-dom";
 
 const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {

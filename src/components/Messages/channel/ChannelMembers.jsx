@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import style, { ImgBg } from "../../style";
-import { chatIcons } from "../../constants";
-import { useState, useEffect, useRef } from "react";
-import { useSocket } from "../../Socketio.jsx";
+import style, { ImgBg } from "../../../style";
+import { chatIcons } from "../../../constants";
+import { useState, useEffect } from "react";
+import { useSocket } from "../../../Socketio.jsx";
 
 const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   const [members, setMembers] = useState([]);
@@ -23,13 +23,12 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
     // socket.on("userKickedFromChannel");
 
     //  socket.on("userKickedFromChannel")
+    return () => {
+      socket.off("channelMembers");
+    };
   }, []);
 
-  const handelKickUser = (requesterId, username) => {
-    console.log("activeChannel is ", activeChannel);
-    console.log("currentUserToken.id is ", currentUserToken.id);
-    console.log("requesterId is ", requesterId);
-    console.log("username is ", username);
+  const handelKickUser = (requesterId) => {
     socket.emit(
       "kickUserFromChannel",
       activeChannel,
@@ -132,7 +131,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                   <div>
                     <chatIcons.kick
                       className={`${buttonStyle}`}
-                      onClick={() => handelKickUser(member.userid.id, member.userid.username)}
+                      onClick={() => handelKickUser(member.userid.id)}
                     />
                   </div>
                 </div>

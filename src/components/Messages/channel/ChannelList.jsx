@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSocket } from "../../Socketio.jsx";
-import style, { ImgBg } from "../../style";
+import { useSocket } from "../../../Socketio.jsx";
+import style, { ImgBg } from "../../../style";
 
 function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOfChannel, setTypeOfChannel }) {
   const [channels, setChannels] = useState([]);
