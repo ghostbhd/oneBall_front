@@ -2,12 +2,14 @@ import React, { useEffect, useLayoutEffect, useReducer, useRef, useState } from 
 import ReactDOM from "react-dom/client";
 import MyBall from "./Ball.jsx"
 import Player from "./player.jsx"
+import * as jwtDecode from "jwt-decode";
 import Border from "./Borders.jsx";
 import { SpringRef, useSpring, useSpringRef, useSpringValue, config } from '@react-spring/web'
-
+import { getHeaders } from "../../jwt_token.jsx"
 import "./index.css"
 import { io } from "socket.io-client"
 import FrontEndLogic from "./front_end_logic.jsx";
+import { useSocket } from "../../Socketio.jsx";
 
 function PlagrounReducer(state, action) {
     return {
@@ -45,6 +47,7 @@ export const GameShell = () => {
         pitch_h: 0
     })
 
+
     const [bind_l, set_bind_l] = useState(0)
 
     const [bind_r, set_bind_r] = useState(0)
@@ -79,7 +82,7 @@ export const GameShell = () => {
 
 
     const [x_traj, b_apix] = useSpring(() => ({
-        x : 0,
+        x: 0,
         config: {
             duration: 4973
         },
@@ -90,13 +93,13 @@ export const GameShell = () => {
         config: {
             duration: 1500,
         },
-        onRest : () => {
+        onRest: () => {
             console.log("stoped")
             console.log("y ==> ", y_traj.y.get())
         }
     }));
 
-    if (!game_inf.calculated) {
+    if (game_inf.calculated === false) {
         console.log("waaalooo")
         return (
             <div className="content" id="pingpong_playground" ref={myComponentRef}>
@@ -108,28 +111,21 @@ export const GameShell = () => {
 
     //console.log("ok now rendered height :", game_inf.max_y)
     else {
-        document.addEventListener("visibilitychange", () => {
-            //console.log("aach hadaa ==> ", document.visibilityState)
-            //tobe_handled
-        })
-        game_inf.connected = true
-        const ws = io("ws://localhost:4000") // add the login infos here
         const front_logic = {
             b_apix: b_apix,
             b_apiy: b_apiy,
             x_traj: x_traj,
             y_traj: y_traj,
-            ws: ws,
             game_inf: game_inf,
-            game_inf_dispatch: game_inf_dispatch
+            ws : {}
         }
-        console.log("content: ", game_inf.ball_size)
+        //console.log("content: ", game_inf.ball_size)
         return (
             <div className="content" id="pingpong_playground" ref={myComponentRef}>
                 <FrontEndLogic f_l={front_logic}>
                     <MyBall x_traj={x_traj} y_traj={y_traj} size={game_inf.ball_size} />
-                    <Player ws={ws} b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />
-                    <Player ws={ws} b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} />
+                    <Player b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />
+                    <Player b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} />
                     <Border p={1} />
                     <Border p={0} />
                 </FrontEndLogic>
