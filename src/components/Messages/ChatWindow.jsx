@@ -9,13 +9,13 @@ import {Link} from "react-router-dom";
 const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  // const [Avatar, setUseravatar] = useState(null);
-  // const [username, setUsername] = useState(null);
+  const [Avatar, setUseravatar] = useState(null);
+  const [username, setUsername] = useState(null);
 
 
   const socket = useSocket();
 
-
+  
   const handleSendMessage = () => {
     if (message.trim()) {
       const newMessage = {
@@ -56,10 +56,10 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
 
     socket.on("messages-for-chat-response", (chatData) => {
       
-      // console.log("Chat data received username :", chatData.senderUsername);
-      // setUsername(chatData.senderUsername);
-      // console.log("Chat data received avatar :", chatData.senderAvatar);
-      // setUseravatar(chatData.senderAvatar);
+      console.log("Chat data received username :", chatData.senderUsername);
+      setUsername(chatData.senderUsername);
+      console.log("Chat data received avatar :", chatData.senderAvatar);
+      setUseravatar(chatData.senderAvatar);
       if (chatData && Array.isArray(chatData.messages)) {
         console.log("Chat data received:", chatData);
 

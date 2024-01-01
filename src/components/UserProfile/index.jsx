@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { userProfileData } from "../../data/mockApi";
+import { useNavigate, useParams } from "react-router-dom";
+// import { userProfileData } from "../../data/mockApi";
 import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
 import GameDetails from "./GameDetails";
@@ -13,30 +13,47 @@ const UserProfile = () => {
   // username from url params ------------------
   const { username } = useParams();
   const header = getHeaders().headers;
+  const history = useNavigate();
+  header.append("Content-Type", "application/json");
 
   useEffect(() => {
-    // fetch(`http://localhost:3000/api/profile/${username}`) // Fetch the data from the API
-    fetch(`http://localhost:3000/profileData/user`, {
-      method: "POST",
-      headers: header,
-      body: JSON.stringify({ username }),
-    })
-      .then((res) => {
-        if (res.ok) {
-          res.json();
-        }
-      })
+    const fetchdata = async () => {
+      try {
+        const response = await fetch("http://localhost:3009/profileData/user", {
+          method: "POST",
+          headers: header,
+          body: JSON.stringify({ username: username }),
+          
+        });
 
-      // userProfileData()
-      .then((data) => {
+        if (!response.ok)
+        {
+          if (response.status === 404) {
+            console.log("User not found------");
+            // return;
+          }
+          else if (response.status === 301) {
+            history("/profile");
+            console.log("same user profile");
+            // return;
+          }
+          else
+          {
+            throw new Error("User not found");
+          }
+
+        }
+
+        const data = await response.json();
         setData(data);
         setLoading(false);
-        console.log("Data fetched", data);
-      })
-      .catch((err) => {
-        console.log("Error fetching data", err);
-      });
-  }, [header, username]);
+      } catch (error) {
+        // console.error("user profile error")
+        // console.log("error:", error.message);
+      }
+    };
+    fetchdata();
+  }, []);
 
   return (
     <div

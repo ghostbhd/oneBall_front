@@ -21,7 +21,6 @@ const Messages = (onSearch, onIconClick, onTabSelected) => {
   const [activeChannel, setActiveChannel] = useState(null);
   const [typeOfChannel, setTypeOfChannel] = useState("");
 
-
   const handleSearchSubmit = (searchTerm) => {
     if (searchTerm.trim()) {
       socket.emit("search-user", {

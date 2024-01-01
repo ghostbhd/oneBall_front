@@ -29,26 +29,16 @@ const Profile = () => {
         return;
       }
       const data = await response.json();
-      console.log("Index profile data:",data);
+      console.log("Index profile data:", data);
       setData(data);
       setLoading(false);
     };
     fetchData();
-    // profileData()
-    //   .then((data) => {
-    //     console.log(data); // Log the data to check its structure
-    //     setData(data);
-    //     setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error fetching data", err);
-    //     setLoading(false);
-    //   });
   }, []);
 
   return (
     <div
-      className={`w-full sm:h-full sm:space-x-8 xl:space-x-20 flex sm:flex-row flex-col md:pb-4 pb-16 p-4 md:px-10 sm:pt-14 pt-6`}
+      className={`w-full sm:h-full sm:space-x-8 xl:space-x-10 flex sm:flex-row flex-col md:pb-4 pb-16 p-4 md:px-10 sm:pt-14 pt-6`}
     >
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
@@ -66,6 +56,8 @@ const Profile = () => {
             className={`sm:w-8/12 w-full sm:h-full relative overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}
           >
             <EditInfo data={data.editInnfo} />
+
+            {/* Friend requests ------------------------- */}
             <FriendRequests />
           </div>
 

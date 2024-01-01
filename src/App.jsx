@@ -6,7 +6,7 @@ import {
   Messages,
   Stats,
   Settings,
-  Logout,
+  // Logout,
   MSideBar,
   NavBar,
   UserProfile,
@@ -32,7 +32,7 @@ const App = () => {
 
   const fadeInAnimation = useSpring({
     opacity: isVisible ? 1 : 0,
-    transform: isVisible ? "translateY(0)" : "translateY(20px)",
+    transform: isVisible ? "translateY(0)" : "translateY(200px)",
   });
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const App = () => {
           {/* content ----------------------------------------------------------------- */}
           <animated.div
             style={fadeInAnimation}
-            className={`flex flex-wrap overflow-y-auto relative xl:px-60 md:pt-0 pt-16
+            className={`flex flex-wrap overflow-y-auto relative xl:px-50 md:pt-0 pt-16
             ${theme.isSidebarCollapsed ? style.contentW2 : style.contentW}
           `}
           >
@@ -78,7 +78,7 @@ const App = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/stats" element={<Stats />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/logout" element={<Logout />} />
+              {/* <Route path="/logout" element={<Logout />} /> */}
               <Route path="/profile/:username" element={<UserProfile />} />
             </Routes>
           </animated.div>

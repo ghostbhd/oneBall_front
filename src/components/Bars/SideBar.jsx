@@ -1,11 +1,20 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sidebarItems, icons } from "../../constants";
 import style from "../../style";
+import { useSocket } from "../../Socketio";
 
 import { useTheme } from "../../themeContext";
+import Logout from "../Logout";
+import Cookies from "js-cookie";
+
 
 const SideBar = () => {
   const location = useLocation();
+  const history = useNavigate();
+  const socket = useSocket();
+  const handleRedirect = (url) => {
+    history(url);
+  }
 
   const { theme, toggleSidebar } = useTheme();
 
@@ -42,7 +51,7 @@ const SideBar = () => {
           <li
             key={item.title}
             className={`${
-              index === sidebarItems.length - 3
+              index === sidebarItems.length - 2
                 ? "!mb-auto"
                 : index === 0
                 ? "!mt-auto"
@@ -77,6 +86,34 @@ const SideBar = () => {
             </Link>
           </li>
         ))}
+
+        {/* logout ------------------------ */}
+        <li
+            className={`${theme.isSidebarCollapsed ? "w-max" : "w-full"} cursor-pointer`}
+            onClick={() => {Cookies.remove("accessToken"); handleRedirect("/Auth"); socket.disconnect(); } }
+          >
+            <div
+              className={`flex flex-row p-2 items-center`}
+            >
+              {/* Icon ---------- */}
+              <span
+                className={`${
+                  theme.isSidebarCollapsed ? "text-2xl xl:text-3xl" : "text-xl xl:text-2xl"
+                }`}
+              >
+                {<icons.logout />}
+              </span>
+
+              {/* title ---- */}
+              <span
+                className={`text-base overflow-hidden w-max ${
+                  theme.isSidebarCollapsed ? "hidden" : "ml-8"
+                }`}
+              >
+                Logout
+              </span>
+            </div>
+          </li>
       </ul>
     </div>
   );

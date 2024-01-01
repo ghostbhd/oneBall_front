@@ -58,9 +58,9 @@ const UserInfo = ({ data }) => {
           </div>
 
           {/* user info ------------------------------------------- */}
-          <div className="flex flex-col sm:h-32 h-24">
+          <div className="flex flex-col sm:w-32 w-24 sm:h-32 h-24 break-words">
             <p
-              className={`sm:text-xl text-base w-max ${
+              className={`sm:text-xl text-base w-full ${
                 data.state === "Online"
                   ? "text-org_1/80"
                   : data.state === "InGame"
