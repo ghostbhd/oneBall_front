@@ -1,16 +1,62 @@
 import { useSpring } from "@react-spring/web"
-import { Children, Fragment } from "react"
+import { Children, Fragment, useDebugValue, useEffect, useState } from "react"
+import { useSocket } from "../../Socketio"
+import { getHeaders } from "../../jwt_token"
+import * as jwtDecode from "jwt-decode";
+
+function CountDown({ children }) {
+    const [time, settime] = useState(3)
+    let intervalID = setInterval(() => {
+        if (time - 1 == 0)
+            clearInterval(intervalID)
+        settime(time - 1)
+    }, 1000);
+    return (
+        <Fragment>
+            {
+                time === 0 ?
+                    (
+                        <p className="w-30 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
+                            SSStarting iin {time}
+                        </p>
+                    ) :
+                    children
+            }
+        </Fragment>
+    )
+}
 
 export default function FrontEndLogic({ children, f_l }) {
 
-    //let f_l = props.f_l
+    const [ingame, setingame] = useState(false)
+    const [requested, setrequested] = useState(false)
+
+    f_l.ws = useSocket()
+
     let ball_size = f_l.game_inf.ball_size
     let border_size = f_l.game_inf.border_size
     let pl_width = f_l.game_inf.pl_w
-    console.log("break point this is pitch h", f_l.game_inf.pitch_h)
 
-    f_l.ws.on("connect", () => {
+    const token = getHeaders().jwttt;
+    const currentUserToken = jwtDecode.jwtDecode(token);
+    console.log("current user id is ", currentUserToken.id);
+    useEffect(() => {
+        if (requested === false) {
+            f_l.ws.emit("lija_bsmlah", { playerID : currentUserToken.id})
+            setrequested(true)
+            console.log("emited")
+        }
+    }, [])
 
+    f_l.ws.on("opponent_found", (data) => {
+        console.log("opponent_found !!")
+        if (ingame === false) {
+            setingame(true)
+        }
+        else {
+            console.log("wtfff")
+        }
+        console.log("matra walo")
         f_l.ws.on("salat", (data) => {
             f_l.b_apiy.pause()
             f_l.b_apix.pause()
@@ -68,9 +114,24 @@ export default function FrontEndLogic({ children, f_l }) {
         })
     })
 
+    /*
+        */
+
     return (
         <Fragment>
-            {children}
+            {
+                /*{
+
+                        ingame === false ?
+                        (
+                            <p className="w-30 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
+                            Waiting for chi 3do ykon khsiiim
+                            </p>
+                        ) :
+                        <CountDown />
+                */
+                    children
+            }
         </Fragment>
     );
 

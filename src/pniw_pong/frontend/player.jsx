@@ -1,27 +1,34 @@
 import { animated, useSpring } from '@react-spring/web'
 import { useEffect, useRef, useState } from 'react'
 import { useGesture, useDrag } from '@use-gesture/react'
+import { useSocket } from "../../Socketio.jsx";
+import { getHeaders } from "../../jwt_token"
+import * as jwtDecode from "jwt-decode";
 
 export default function Player(pro) {
 
-    console.log("ouii")
     const mycom = useRef()
     let myHeight = pro.height * 0.15
 
     let border_height = pro.height * 0.015
 
     let calc_pitch = pro.height - (border_height * 2)
+
     //tobe checked for buggies
+    const token = getHeaders().jwttt;
+    const currentUserToken = jwtDecode.jwtDecode(token);
+    const wsocket = useSocket();
 
     const bind = useDrag(({ active, movement: [, my],
         offset: [, oy], direction: [xDir], velocity, cancel }) => {
         if (oy >= border_height) {
             if (pro.side == 2) {
                 pro.api.start({ y: oy, immediate: true })
-                pro.ws.emit("post:right_plr:y", (oy - border_height) / calc_pitch)
+                wsocket.emit("post:right_plr:y", { data: (oy - border_height) / calc_pitch , playerID : currentUserToken.id})
             }
             else {
-                pro.ws.emit("post:left_plr:y", (oy - border_height) / calc_pitch)
+                wsocket.emit("post:left_plr:y", { data: (oy - border_height) / calc_pitch , playerID : currentUserToken.id})
+                console.log("emitting left")
                 pro.api.start({ y: oy, immediate: true })
             }
         }
@@ -30,7 +37,7 @@ export default function Player(pro) {
     }, { bounds: { top: border_height, bottom: pro.height - myHeight - border_height }, axis: 'y' })
 
     if (pro.side == 2) {
-        pro.ws.on('get:right_plr:y', (data) => {
+        wsocket.on('get:right_plr:y', (data) => {
             pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
         })
         return (
@@ -51,7 +58,7 @@ export default function Player(pro) {
         )
     }
     else {
-        pro.ws.on('get:left_plr:y', (data) => {
+        wsocket.on('get:left_plr:y', (data) => {
             pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
         })
         return (
