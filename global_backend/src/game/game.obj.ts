@@ -1,9 +1,10 @@
+import { Scope } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 
 export class GameObj {
-    constructor(private left_socket: number, private right_socket: number) {
+    constructor(public left_socket : number, public right_socket : number, public roomid : string) {
         this.state = {
-            roomid: 0,
+            roomid: roomid,
             launched: false,
             pingpongs: 0,
             salat: false,

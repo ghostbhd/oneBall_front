@@ -6,22 +6,17 @@ import * as jwtDecode from "jwt-decode";
 
 function CountDown({ children }) {
     const [time, settime] = useState(3)
-    let intervalID = setInterval(() => {
-        if (time - 1 == 0)
-            clearInterval(intervalID)
-        settime(time - 1)
-    }, 1000);
+    if (time === 0)
+        return (children)
+    if (time >= 1)
+        setTimeout(() => settime(time - 1), 1000)
+
     return (
         <Fragment>
-            {
-                time === 0 ?
-                    (
-                        <p className="w-30 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
-                            SSStarting iin {time}
-                        </p>
-                    ) :
-                    children
-            }
+
+            <p className="w-30 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16">
+                SSStarting iin {time}
+            </p>
         </Fragment>
     )
 }
@@ -42,11 +37,12 @@ export default function FrontEndLogic({ children, f_l }) {
     console.log("current user id is ", currentUserToken.id);
     useEffect(() => {
         if (requested === false) {
-            f_l.ws.emit("lija_bsmlah", { playerID : currentUserToken.id})
+            f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
             setrequested(true)
             console.log("emited")
         }
     }, [])
+
 
     f_l.ws.on("opponent_found", (data) => {
         console.log("opponent_found !!")
@@ -120,17 +116,16 @@ export default function FrontEndLogic({ children, f_l }) {
     return (
         <Fragment>
             {
-                /*{
 
-                        ingame === false ?
-                        (
-                            <p className="w-30 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
+                ingame === false ?
+                    (
+                        <p className="w-30 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
                             Waiting for chi 3do ykon khsiiim
-                            </p>
-                        ) :
-                        <CountDown />
-                */
-                    children
+                        </p>
+                    ) :
+                    <CountDown>
+                        {children}
+                    </CountDown>
             }
         </Fragment>
     );
