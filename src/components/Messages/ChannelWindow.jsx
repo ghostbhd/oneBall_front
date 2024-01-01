@@ -65,6 +65,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     socket.on("channelMembershipStatus", (data) => {
       if (data.channelId === activeChannel) {
         setMembershipStatus({
+          channelName:data.channelName,
           isAdmin: data.isAdmin,
           isMember: data.isMember,
           isOwner: data.isOwner,
@@ -174,7 +175,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             className={`w-16 h-16 rounded-full border-2 border-bLight_5/80`}
             style={ImgBg({ img: "/src/assets/avatar/Deadpool.jpg" })}
           ></div>
-          <p>#Channel</p>
+          <p>#{membershipStatus.channelName}</p>
         </div>
 
         {/* right button --------------------------------------------------------------- */}
