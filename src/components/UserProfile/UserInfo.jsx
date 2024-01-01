@@ -12,6 +12,7 @@ const UserInfo = ({ data }) => {
 
   useEffect(() => {
     socket.on("ChangeState", (userState) => {
+      console.log("### username: ",userState.username, "state: ", userState.state);
       if (data.username === userState.username) {
         setState(userState.state);
       }
