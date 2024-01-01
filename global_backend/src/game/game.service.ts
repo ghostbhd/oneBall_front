@@ -3,15 +3,17 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Socket, Server } from 'socket.io';
 import { GameObj } from './game.obj';
+import { QueueService } from './queue/queue.service';
 
 
 @Injectable()
 export class GameService {
-
+    constructor(private queue: QueueService) {
+    }
     private MAX_H: number = 1499
     private MAX_V: number = 4973
     private PLAYER_TO_MAX: number = 0.15
-    private SPEED_LIMIT: number = 540
+    private SPEED_LIMIT: number = 800
     private MID_BALL_TO_MAX_V: number = 0.019021739 // (35 / 920)/ 2
 
     timeout(ms: number, inf: GameObj, n: number): Promise<string> {
@@ -52,9 +54,14 @@ export class GameService {
             inf.ball.v_state.id = -1
             inf.ball.v_state.resolve("resolved")
         }
+        let game_index : number = this.queue.games.findIndex(game => game.state.roomid === inf.state.roomid)
+        if (game_index == -1)
+            console.log("waamiiiiiiii")
+        this.queue.games.slice(game_index, game_index + 1)
+        // add information to the repository
     }
 
-    async horizontal_bouncing(io: Server, socket: Socket, inf: GameObj) {
+    async horizontal_bouncing(io: Server, inf: GameObj) {
 
         while (inf.state.salat == false) {
 
@@ -88,7 +95,7 @@ export class GameService {
             else {
                 this.salat(inf)
                 let data = { winner: inf.ball.x_dir == 1 ? 2 : 1 }
-                io.emit("salat", data)
+                io.in(inf.state.roomid).emit("salat", data)
                 break
             }
 
@@ -99,11 +106,11 @@ export class GameService {
                 inf.ball.h_dur -= 20
 
             //console.log("MAX SPEED", inf.ball.h_dur)
-            io.emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur })
+            io.in(inf.state.roomid).emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur })
         }
     }
 
-    async vertical_bouncing(io: Server, socket: Socket, inf: GameObj) {
+    async vertical_bouncing(io: Server, inf: GameObj) {
 
         let _dur = 0
         while (inf.state.salat == false) {
@@ -133,33 +140,32 @@ export class GameService {
                 _dur = inf.ball.y_dir == 1 ? ((1 - inf.ball.v_state.pos) * inf.state.MAX_V) : inf.ball.v_state.pos * inf.state.MAX_V
                 //console.log("cleared sending new _dur =", _dur,
                 //"cuz pos ===>", inf.ball.v_state.pos, "ydir ==>", inf.ball.y_dir)
-                io.emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: _dur, pos: inf.ball.v_state.pos })
+                io.in(inf.state.roomid).emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: _dur, pos: inf.ball.v_state.pos })
             }
             else {
                 inf.ball.v_state.pos = inf.ball.y_dir == 1 ? 0 : 1
-                io.emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: inf.ball.v_dur, pos: inf.ball.v_state.pos })
+                io.in(inf.state.roomid).emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: inf.ball.v_dur, pos: inf.ball.v_state.pos })
             }
-
             //console.log("server : vertical bounce ", "=============================")
         }
     }
 
-    async BounceLogic(io: Server, socket: Socket, inf: GameObj) {
-        this.vertical_bouncing(io, socket, inf)
-        this.horizontal_bouncing(io, socket, inf)
+    async BounceLogic(io: Server, inf: GameObj) {
+        this.vertical_bouncing(io, inf)
+        this.horizontal_bouncing(io, inf)
     }
 
-    async Ball_Logic(io: Server, socket: Socket, inf: GameObj) {
-        io.emit("opponent_found")
-        const time_out_id = await this.timeout(3000, inf, 0)
+    async Ball_Logic(io: Server, inf: GameObj) {
+        io.in(inf.state.roomid).emit("opponent_found")
+        const time_out_id = await this.timeout(4500, inf, 0)
 
         if (inf.state.launched == false) {
-            console.log("frist_ping")
-            io.emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur })
+            console.log("first_ping id =", inf.state.roomid)
+            io.in(inf.state.roomid).emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur })
 
             inf.state.launched = true
 
-            this.BounceLogic(io, socket, inf)
+            this.BounceLogic(io, inf)
         }
     }
     /*
