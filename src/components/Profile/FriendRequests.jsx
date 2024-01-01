@@ -5,12 +5,12 @@ import { icons } from "../../constants";
 import { Link } from "react-router-dom";
 import { useSocket } from "../../Socketio";
 import * as jwtDecode from "jwt-decode";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 
 const FriendRequests = () => {
   const [data, setData] = useState([]);
   const socket = useSocket();
-  const token = getHeaders().jwttt;
+  const token = GetHeaders().jwttt;
   const decoded = jwtDecode.jwtDecode(token);
 
   const removeFromData = (username) => {

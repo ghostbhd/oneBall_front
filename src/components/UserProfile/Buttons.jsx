@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import style from "../../style";
 import { icons } from "../../constants";
 import { useSocket } from "../../Socketio";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 import * as jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ const Buttons = ({ data: initialData }) => {
   const text = `font-bold sm:block hidden`;
   const icon = `text-xl sm:ml-2 sm:mx-0 mx-4`;
 
-  const token = getHeaders().jwttt;
+  const token = GetHeaders().jwttt;
   const decoded = jwtDecode.jwtDecode(token);
 
   const socket = useSocket();

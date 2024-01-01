@@ -7,7 +7,7 @@ import ChannelCreation from "./channel/ChannelCreation.jsx";
 import ChannelList from "./channel/ChannelList.jsx";
 
 import { useState } from "react";
-import { getHeaders } from "../../jwt_token.jsx";
+import { GetHeaders } from "../../jwt_token.jsx";
 import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
@@ -35,7 +35,7 @@ const Messages = () => {
   const handleTabSelected = (tabId) => {
     setActiveTab(tabId);
   };
-  const token = getHeaders().jwttt;
+  const token = GetHeaders().jwttt;
   const currentUserToken = jwtDecode.jwtDecode(token);
   console.log("current user id is ", currentUserToken.id);
 

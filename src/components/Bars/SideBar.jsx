@@ -5,32 +5,58 @@ import { useSocket } from "../../Socketio";
 
 import { useTheme } from "../../themeContext";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import * as jwtDecode from "jwt-decode";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 
 const SideBar = () => {
   const location = useLocation();
+
+  var username = "";
+
   const history = useNavigate();
-  const socket = useSocket();
-  const handleRedirect = (url) => {
-    history(url);
-  };
 
-  
   const { theme, toggleSidebar } = useTheme();
-  
-  const handelDesconnect = () =>
-  {
-    // const token = getHeaders().jwttt;
-    // const decoded = jwtDecode.jwtDecode(token);
-    // const username = decoded.name;
-    // socket.emit("deconnect", username);
-    Cookies.remove("accessToken");
 
-  };
+  const socket = useSocket();
   
+  useEffect(() => {
+    // if (socket)
+    if (socket == null) return;
+    
+    socket.on("deconnected", (ok) => {
+      console.log("ok ======== ", ok);
+      if (ok === "ok") {
+        Cookies.remove("accessToken");
+        socket.disconnect();
+        history("/Auth");
+      }
+    });
+
+    return () => {
+      if (socket) socket.off("deconnected");
+    };
+  }, [socket]);
+  
+  const token = GetHeaders().jwttt;
+  var decoded;
+  if (token != undefined) {
+    decoded = jwtDecode.jwtDecode(token);
+    username = decoded.name;
+  } else {
+    decoded = undefined;
+    username = null;
+    return;
+  }
+  const handelDesconnect = () => {
+    console.log(socket);
+    if (socket == undefined || socket == null) {
+      console.log("hhhhhhhhh");
+      return;
+    } else socket.emit("deconnect", username);
+  };
+
   return (
     <div
       className={`md:flex hidden h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-20
@@ -110,8 +136,6 @@ const SideBar = () => {
           } cursor-pointer`}
           onClick={() => {
             handelDesconnect();
-            handleRedirect("/Auth");
-            socket.disconnect();
           }}
         >
           <div className={`flex flex-row p-2 items-center`}>

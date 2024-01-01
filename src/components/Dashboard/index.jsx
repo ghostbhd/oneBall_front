@@ -4,7 +4,7 @@ import MessageList from "./MessageList";
 import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -13,7 +13,7 @@ const Dashboard = () => {
   const row = "sm:w-1/2 w-full sm:flex hidden flex-col space-y-20";
 
   // Headers for fetch ----------------
-  const headers = getHeaders().headers;
+  const headers = GetHeaders().headers;
 
   useEffect(() => {
     fetch("http://localhost:3009/dashboard", {
