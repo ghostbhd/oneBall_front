@@ -78,6 +78,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           isOwner: data.isOwner,
         });
       }
+
+      console.log("channelMembershipStatus", data);
     });
 
     return () => {

@@ -86,10 +86,6 @@ const Buttons = ({ data: initialData }) => {
   };
 
   useEffect(() => {
-    socket.emit("userState", {
-      username1: decoded.name,
-      username2: data.username,
-    });
     socket.on("FriendRequest", (stats) => {
       // Update the component state
       dataSetten(stats);

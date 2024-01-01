@@ -37,6 +37,10 @@ import { FaVolumeHigh } from "react-icons/fa6"; // volume unmute icon
 import { MdDelete } from "react-icons/md"; // delete icon
 import { HiBan } from "react-icons/hi"; // ban icon
 import { TbUserPlus } from "react-icons/tb"; // unban icon
+import { FaCrown } from "react-icons/fa";
+import { MdAdminPanelSettings } from "react-icons/md";
+
+
 
 
 export const sidebarItems = [ // From med to lg screens
@@ -151,4 +155,6 @@ export const chatIcons = {
   kick : MdDelete,
   ban : HiBan,
   unban : TbUserPlus,
+  owner : FaCrown,
+  admin : MdAdminPanelSettings,
 };
