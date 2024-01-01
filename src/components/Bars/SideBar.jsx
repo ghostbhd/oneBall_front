@@ -4,9 +4,11 @@ import style from "../../style";
 import { useSocket } from "../../Socketio";
 
 import { useTheme } from "../../themeContext";
-import Logout from "../Logout";
 import Cookies from "js-cookie";
+import { useEffect } from "react";
 
+import * as jwtDecode from "jwt-decode";
+import { getHeaders } from "../../jwt_token";
 
 const SideBar = () => {
   const location = useLocation();
@@ -14,10 +16,21 @@ const SideBar = () => {
   const socket = useSocket();
   const handleRedirect = (url) => {
     history(url);
-  }
+  };
 
+  
   const { theme, toggleSidebar } = useTheme();
+  
+  const handelDesconnect = () =>
+  {
+    const token = getHeaders().jwttt;
+    const decoded = jwtDecode.jwtDecode(token);
+    const username = decoded.name;
+    socket.emit("deconnect", username);
+    Cookies.remove("accessToken");
 
+  };
+  
   return (
     <div
       className={`md:flex hidden h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-20
@@ -61,7 +74,8 @@ const SideBar = () => {
             <Link
               to={item.link}
               className={`flex flex-row p-2 items-center ${
-                location.pathname === `${item.link}` || location.pathname === `${item.link}/`
+                location.pathname === `${item.link}` ||
+                location.pathname === `${item.link}/`
                   ? `bg-org_3 rounded-3xl text-white font-bold`
                   : ""
               }`}
@@ -69,7 +83,9 @@ const SideBar = () => {
               {/* Icon ---------- */}
               <span
                 className={`${
-                  theme.isSidebarCollapsed ? "text-2xl xl:text-3xl" : "text-xl xl:text-2xl"
+                  theme.isSidebarCollapsed
+                    ? "text-2xl xl:text-3xl"
+                    : "text-xl xl:text-2xl"
                 }`}
               >
                 {<item.icon />}
@@ -89,31 +105,37 @@ const SideBar = () => {
 
         {/* logout ------------------------ */}
         <li
-            className={`${theme.isSidebarCollapsed ? "w-max" : "w-full"} cursor-pointer`}
-            onClick={() => {Cookies.remove("accessToken"); handleRedirect("/Auth"); socket.disconnect(); } }
-          >
-            <div
-              className={`flex flex-row p-2 items-center`}
+          className={`${
+            theme.isSidebarCollapsed ? "w-max" : "w-full"
+          } cursor-pointer`}
+          onClick={() => {
+            handelDesconnect();
+            handleRedirect("/Auth");
+            socket.disconnect();
+          }}
+        >
+          <div className={`flex flex-row p-2 items-center`}>
+            {/* Icon ---------- */}
+            <span
+              className={`${
+                theme.isSidebarCollapsed
+                  ? "text-2xl xl:text-3xl"
+                  : "text-xl xl:text-2xl"
+              }`}
             >
-              {/* Icon ---------- */}
-              <span
-                className={`${
-                  theme.isSidebarCollapsed ? "text-2xl xl:text-3xl" : "text-xl xl:text-2xl"
-                }`}
-              >
-                {<icons.logout />}
-              </span>
+              {<icons.logout />}
+            </span>
 
-              {/* title ---- */}
-              <span
-                className={`text-base overflow-hidden w-max ${
-                  theme.isSidebarCollapsed ? "hidden" : "ml-8"
-                }`}
-              >
-                Logout
-              </span>
-            </div>
-          </li>
+            {/* title ---- */}
+            <span
+              className={`text-base overflow-hidden w-max ${
+                theme.isSidebarCollapsed ? "hidden" : "ml-8"
+              }`}
+            >
+              Logout
+            </span>
+          </div>
+        </li>
       </ul>
     </div>
   );

@@ -17,6 +17,7 @@ const UserProfile = () => {
   header.append("Content-Type", "application/json");
 
   useEffect(() => {
+    
     const fetchdata = async () => {
       try {
         const response = await fetch("http://localhost:3009/profileData/user", {
