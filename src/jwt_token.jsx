@@ -6,12 +6,12 @@ export const getHeaders = () => {
     history(url);
   };
   const headers = new Headers();
-  var jwttt;
+  // var jwttt;
 
   const jwtCookie = document.cookie
     .split("; ")
     .find((row) => row.startsWith("accessToken="));
-  jwttt = jwtCookie;
+  // jwttt = jwtCookie;
   if (jwtCookie) {
     const jwt = jwtCookie.split("=")[1];
     headers.append("Authorization", `Bearer ${jwt}`);
@@ -19,5 +19,5 @@ export const getHeaders = () => {
     handleRedirect("/Auth");
   }
 
-  return { headers, jwttt };
+  return { headers, jwtCookie };
 };
