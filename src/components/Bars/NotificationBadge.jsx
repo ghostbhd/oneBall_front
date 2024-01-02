@@ -59,8 +59,8 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
   return (
     <div
       ref={notifRef}
-      className={`absolute right-0 top-0 z-50 flex flex-col max-h-screen sm:w-96 w-screen m-6
-        p-2 ${style.rounded} bg-bDark_4  !border-bLight_3/10 shadow-4xl gap-4
+      className={`absolute right-0 top-0 z-50 flex flex-col h-screen sm:w-96 w-screen
+        p-2 bg-bDark_4  !border-bLight_3/10 shadow-4xl gap-4 transform transition-all ease-in-out duration-400 ${showNotif ? "translate-x-0" : "translate-x-full"}
       `}
     >
       {/* close badge ------ */}
