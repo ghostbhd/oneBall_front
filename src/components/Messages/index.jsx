@@ -37,7 +37,7 @@ const Messages = () => {
   };
   const token = GetHeaders().jwttt;
   const currentUserToken = jwtDecode.jwtDecode(token);
-  console.log("current user id is ", currentUserToken.id);
+  // console.log("current user id is ", currentUserToken.id);
 
   const handleSearch = (query) => {
     setSearchTerm(query);
@@ -80,6 +80,7 @@ const Messages = () => {
             />
           ) : (
             <ChannelList
+              activeChannel={activeChannel}
               typeOfChannel={typeOfChannel}
               setTypeOfChannel={setTypeOfChannel}
               currentUserToken={currentUserToken}
