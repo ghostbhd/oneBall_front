@@ -6,7 +6,7 @@ import ChannelWindow from "./channel/ChannelWindow.jsx";
 import ChannelCreation from "./channel/ChannelCreation.jsx";
 import ChannelList from "./channel/ChannelList.jsx";
 
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { getHeaders } from "../../jwt_token.jsx";
 import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar.jsx";
@@ -37,15 +37,21 @@ const Messages = () => {
   };
 
   const handleTabSelected = (tabId) => {
+      if(socket == null) return;  
+  console.log("*****************************************************888")
+  socket.emit("request-latest-messages", currentUserToken.id);
+
     setActiveTab(tabId);
   };
   const token = getHeaders().jwttt;
   const currentUserToken = jwtDecode.jwtDecode(token);
   console.log("current user id is ", currentUserToken.id);
 
-  if(socket == null) return;
-
+  useEffect(() => {
+  if(socket == null) return;  
+  console.log("*****************************************************888")
   socket.emit("request-latest-messages", currentUserToken.id);
+  }, [socket]);
   const handleSearch = (query) => {
     setSearchTerm(query);
   };
@@ -75,7 +81,7 @@ const Messages = () => {
             currentUserToken={currentUserToken}
             onSearchSubmit={handleSearchSubmit}
           />
-          <SlidingTabBar onTabSelected={handleTabSelected} />
+          <SlidingTabBar onTabSelected={handleTabSelected} currentUserToken={currentUserToken} />
           {activeTab === "dms" ? (
             <ChatList
               currentUserToken={currentUserToken}
