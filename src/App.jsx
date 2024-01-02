@@ -13,6 +13,9 @@ import {
   CallBack,
   Error_404,
 } from "./components";
+
+import { GameShell } from "./pniw_pong/index.jsx";
+
 import style from "./style";
 
 import { SocketProvider } from "./Socketio";
@@ -50,6 +53,7 @@ const App = () => {
           <Routes>
             <Route path="/Auth" element={<Auth />} />
             <Route path="/Callback" element={<CallBack />} />
+            <Route path="/Ingame" element={<GameShell />} />
 
             <Route
               path="*"
@@ -88,7 +92,7 @@ const App = () => {
                         element={<UserProfile />}
                       />
                       {/* if the component state of /profile/:username route be 404 */}
-                      
+
                       <Route path="*" element={<Error_404 />} />
                     </Routes>
                   </div>
