@@ -16,8 +16,9 @@ const Dashboard = () => {
   const headers = GetHeaders().headers;
 
   useEffect(() => {
-    fetch("http://localhost:3009/dashboard", {
-      method: "GET",
+    console.log('Headers:', headers);
+    fetch('http://localhost:3009/dashboard', {
+      method: 'GET',
       headers: headers,
     })
       .then((response) => {

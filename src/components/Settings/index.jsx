@@ -1,7 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import Switch from '@mui/material/Switch';
 import style from "../../style";
-import qrImage from "./qr-test.svg";
 import checkMark from "../../assets/Checkmark.gif";
+import { getHeaders } from "../../jwt_token";
+
+
 
 const SuccessCheckmark = () => {
   return (
@@ -15,10 +18,63 @@ const SuccessCheckmark = () => {
 };
 
 const Settings = () => {
+
+
   const [digits, setDigits] = useState(Array.from({ length: 6 }, () => ''));
   const [warning, setWarning] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [qrImageUrl, setQrImageUrl] = useState('');
   const inputRefs = useRef([]);
+
+  const storedValue = localStorage.getItem('isChecked');
+  const [isChecked, setChecked] = useState(storedValue ? storedValue === 'true' : false);
+
+  useEffect(() => {
+    if (isChecked) 
+    {
+      // setLoading(false);
+      fetchQrCode();
+    }
+  }, [isChecked]);
+  
+  const headers = getHeaders().headers;
+  
+  const fetchQrCode = async () => {
+    try {
+        const response = await fetch('http://localhost:3009/2fa', {
+          method: 'GET',
+          headers: headers,
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch QR code. Status: ${response.status}`);
+        }
+        const htmlString = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        const imgElement = doc.querySelector('img');
+        if (imgElement) {
+          const imageUrl = imgElement.getAttribute('src'); 
+          setQrImageUrl(imageUrl);
+        } 
+        else 
+        {
+          throw new Error('No img tag found in the HTML response');
+        }
+    } 
+    catch (error) {
+      console.error('Error fetching QR code:', error.message);
+    }
+  };
+
+  const handleChange = () => {
+    const newValue = !isChecked;
+    setChecked(newValue);
+    localStorage.setItem('isChecked', String(newValue));
+
+    if (newValue) {
+      fetchQrCode();
+    }
+  };
 
   const handleDigitChange = (index, value) => {
     if (/^\d*$/.test(value) && value.length <= 1) {
@@ -36,66 +92,121 @@ const Settings = () => {
     }
   };
 
-  const handleSubmit = () => {
-    const correctDigits = ['1', '2', '3', '4', '5', '6'];
+  const header = getHeaders().headers;
+  header.append("Content-Type", "application/json");
 
-    if (digits.join('') === correctDigits.join('')) {
-      setDigits(Array.from({ length: 6 }, () => ''));
-      setWarning('');
-      setIsSuccess(true);
 
-      // Apply blur effect to the background
-      document.getElementById('app-root').style.filter = 'blur(5px)';
-    } else {
-      setDigits(Array.from({ length: 6 }, () => ''));
-      setWarning('Incorrect Verification Code. Please try again.');
+
+
+  const handleSubmit = async () => {
+    try {
+      console.clear();
+      const passValue = digits.join('');
+      const response = await fetch('http://localhost:3009/2fa', {
+        method: 'POST',
+        headers: header,
+        body: JSON.stringify({ pass: passValue }),
+      });
+      if (!response.ok) 
+      {
+        if (response.status === 401) {
+          setWarning('Incorrect Verification Code. Please try again.');
+          setDigits(Array.from({ length: 6 }, () => ''));
+        } 
+        else {
+          throw new Error('Failed to verify digits with the backend.');
+        }
+      }
+      
+      else 
+      {
+        console.clear();
+        const { isValid } = await response.json();
+        if (!isValid)
+        {
+          setWarning('');
+          setIsSuccess(true);
+          document.getElementById('app-root').style.filter = 'blur(5px)';
+        } 
+      }
+    } catch (error) {
+      console.error('Error handling verification:', error.message);
+      setWarning('Failed to verify the code. Please try again.');
     }
   };
-
+  
+  // const [loading, setLoading] = useState(true);
   return (
     <div className={`w-full h-full flex`}>
+          {/* {loading ? (
+        <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
+          Loading...
+        </p>
+      ) : (
+        <> */}
       {isSuccess ? (
         <SuccessCheckmark />
       ) : (
-        <div className={`sm:w-max px-20 p-6 gap-2 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
-          <p className={`text-2xl font-semibold text-bLight_4`}>Scan QR Code</p>
-          <p className={`text-bLight_4 text-sm leading-5`}>
-            To enable 2-factor authentication, scan <br />
-            this QR Code with your Google Authentication App <br />
-            and enter the verification code below
-          </p>
-          <img src={qrImage} alt="qr-code" className="my-5 max-w-full h-auto" />
-          <p className={`text-bLight_2 text-lg leading-5`}>
-            Enter Verification Code :
-          </p>
-          <div className="digits-grid flex justify-center">
-            {digits.map((digit, index) => (
-              <div className="digit-container" key={index}>
-                <input
-                  type="text"
-                  value={digit}
-                  onChange={(e) => handleDigitChange(index, e.target.value)}
-                  id={`digit-${index}`}
-                  maxLength={1}
-                  className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
-                  ref={(input) => (inputRefs.current[index] = input)}
-                />
+        <div className={`sm:w-max px-20 p-6 gap-1 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
+          <p className={`text-2xl font-semibold text-bLight_4`}>Two-Factor Authentication</p>
+
+
+          <div className="flex items-center pt-1.5">
+            <Switch
+              color="default"
+              checked={isChecked}
+              onChange={handleChange}
+              sx={{
+                '& .MuiSwitch-thumb': {
+                  backgroundColor: isChecked ? '#6398a4' : '#6398a4',
+                },
+              }}
+            />
+            <p className={`text-bLight_4 text-sm `}>
+              {isChecked ? 'Disable 2FA' : 'Enable 2FA'}
+            </p>
+          </div>
+
+
+          {isChecked && (
+            <>
+              <img src={qrImageUrl} alt="qr-code" className="my-5 max-w-full h-auto rounded-lg" />
+
+              <p className={`text-bLight_4 text-sm leading-5 mb-5`}>
+                To enable 2-factor authentication, scan <br />
+                this QR Code with your Google Authentication App <br />
+                and enter the verification code below
+              </p>
+              <div className="digits-grid flex flex-wrap justify-center pb-4">
+                {digits.map((digit, index) => (
+                  <div className="digit-container" key={index}>
+                    <input
+                      type="text"
+                      value={digit}
+                      onChange={(e) => handleDigitChange(index, e.target.value)}
+                      id={`digit-${index}`}
+                      maxLength={1}
+                      className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
+                      ref={(input) => (inputRefs.current[index] = input)}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-
-          <div className="w-full flex flex-col items-center justify-center">
-            {warning && <p className="text-org_3 text-xs my-2">{warning}</p>}
-
-            <button
-              className="w-full p-4 bg-bDark_1 rounded-xl text-white text-sm"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
+              <div className="w-full flex flex-col items-center justify-center">
+                {warning && <p className="text-org_3 text-xs my-1">{warning}</p>}
+                <button
+                  className="w-full p-4 bg-bDark_1 rounded-xl text-white text-sm mt-2"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
+      {/* </>
+    )} */}
     </div>
   );
 };
