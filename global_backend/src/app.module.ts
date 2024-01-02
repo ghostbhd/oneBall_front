@@ -19,8 +19,6 @@ import { StatusModule } from './status/status.module';
 import { AddfriendModule } from './addfriend/addfriend.module';
 import { TfaModule } from './2fa/2fa.module';
 import { FriendModule } from './friend/friend.module';
-import { ChatModule } from './chat/chat.module';
-import { ChannelModule } from './chat/channel/channel.module';
 import { GameStats } from './entities/game.entity';
 import { GameHistory } from './entities/GameHistory.entity';
 import { GameModule } from './game/game.module';
@@ -40,8 +38,6 @@ import { GameModule } from './game/game.module';
     AddfriendModule,
     TfaModule,
     FriendModule,
-    ChatModule,
-    ChannelModule,
     GameModule,
   ],
   // exports: [TypeOrmModule],

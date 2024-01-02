@@ -3,6 +3,9 @@ import { Children, Fragment, useDebugValue, useEffect, useState } from "react"
 import { useSocket } from "../../Socketio"
 import { getHeaders } from "../../jwt_token"
 import * as jwtDecode from "jwt-decode";
+import { createContext } from "react";
+import { Whoami } from "./index.jsx";
+
 
 function CountDown({ children }) {
     const [time, settime] = useState(3)
@@ -26,6 +29,8 @@ export default function FrontEndLogic({ children, f_l }) {
     const [ingame, setingame] = useState(false)
     const [requested, setrequested] = useState(false)
 
+    const [who_val, setwho_val] = useState()
+
     f_l.ws = useSocket()
 
     let ball_size = f_l.game_inf.ball_size
@@ -39,20 +44,19 @@ export default function FrontEndLogic({ children, f_l }) {
         if (requested === false) {
             f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
             setrequested(true)
-            console.log("emited")
+            console.log("emited lija_bsmlah")
         }
     }, [])
 
-
     f_l.ws.on("opponent_found", (data) => {
         console.log("opponent_found !!")
+        setwho_val(data)
         if (ingame === false) {
             setingame(true)
         }
         else {
             console.log("wtfff")
         }
-        console.log("matra walo")
         f_l.ws.on("salat", (data) => {
             f_l.b_apiy.pause()
             f_l.b_apix.pause()
@@ -110,13 +114,10 @@ export default function FrontEndLogic({ children, f_l }) {
         })
     })
 
-    /*
-        */
 
     return (
-        <Fragment>
+        <Whoami.Provider value={who_val}>
             {
-
                 ingame === false ?
                     (
                         <p className="w-30 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
@@ -127,7 +128,7 @@ export default function FrontEndLogic({ children, f_l }) {
                         {children}
                     </CountDown>
             }
-        </Fragment>
+        </Whoami.Provider>
     );
 
 }

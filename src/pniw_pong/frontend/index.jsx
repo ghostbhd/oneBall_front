@@ -10,6 +10,9 @@ import "./index.css"
 import { io } from "socket.io-client"
 import FrontEndLogic from "./front_end_logic.jsx";
 import { useSocket } from "../../Socketio.jsx";
+import { createContext } from 'react';
+
+export const Whoami = createContext(0)
 
 function PlagrounReducer(state, action) {
     return {
@@ -117,7 +120,7 @@ export const GameShell = () => {
             x_traj: x_traj,
             y_traj: y_traj,
             game_inf: game_inf,
-            ws : {}
+            ws: {}
         }
         //console.log("content: ", game_inf.ball_size)
         return (
