@@ -5,6 +5,7 @@ import NotificationBadge from "./NotificationBadge";
 const NavBar = () => {
   const [showNotif, setShowNotif] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const notifRef = useRef();
 
   useEffect(() => {
@@ -40,7 +41,8 @@ const NavBar = () => {
             className={`text-bLight_5 outline-none placeholder:text-bLight_5 text-sm bg-transparent transition-all ease-in-out duration-400 ${
               showSearch ? "w-60 p-2" : "w-0 p-0"
             }`}
-            placeholder="Search"
+            placeholder="Search for users"
+            onChange={(e) => {setSearchValue(e.target.value); if (!showSearch) setSearchValue("")} }
           />
           <div className="p-2 flex items-center" onClick={() => setShowSearch(!showSearch)}>
             {!showSearch ? <icons.search /> : <icons.xmark />}
