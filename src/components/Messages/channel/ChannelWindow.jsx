@@ -71,6 +71,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
     socket.on("channelMembershipStatus", (data) => {
       if (data.channelId === activeChannel) {
+        console.log("channelMembershipStatus", data);
         setMembershipStatus({
           channelName:data.channelName,
           isAdmin: data.isAdmin,

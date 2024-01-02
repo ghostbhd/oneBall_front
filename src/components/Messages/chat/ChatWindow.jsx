@@ -44,8 +44,11 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
     console.log(`active chat is ${activeChat}`);
 
 
+
+
     const handleNewMessage = (newMessage) => {
-      if (newMessage.chatId === activeChat) {
+      console.log("new message received:================================================", newMessage);
+      if (newMessage.chatid.id === activeChat) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
@@ -53,11 +56,15 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
     socket.on("new-message", handleNewMessage);
 
     socket.on("messages-for-chat-response", (chatData) => {
+      console.log("new:================================================", chatData);
       
       // console.log("Chat data received username :", chatData.senderUsername);
       // setUsername(chatData.senderUsername);
       // console.log("Chat data received avatar :", chatData.senderAvatar);
       // setUseravatar(chatData.senderAvatar);
+      if (chatData.id === activeChat) {
+        setMessages((prevMessages) => [...prevMessages, chatData]);
+      }
       if (chatData && Array.isArray(chatData.messages)) {
         console.log("Chat data received:", chatData);
 
@@ -75,21 +82,22 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
       }
     });
 
-
     return () => {
       socket.off("new-message", handleNewMessage);
       socket.off("messages-for-chat-response");
       socket.emit("leave-chat", { chatId: activeChat });
     };
-
+    
   }, [activeChat, socket, messages]);
-
-
-
+  
   const sortedMessages = [...messages].sort(
-
+    
     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-  );
+    
+    );
+    // setMessages(sortedMessages);
+
+
 
   console.log(`active chat user is ${activeChatUser}`);
   return (
@@ -113,12 +121,12 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
           return (
             <div
               key={message.id}
-              className={`mb-5 ${message.senderId === currentUserToken.id
+              className={`mb-5 ${message.chatReceiverId === currentUserToken.id
                   ? style.messageCurrentUser
                   : style.messageOtherUser
                 }`}
             >
-              <p className="text-white">{message.content}</p>
+              <p className="text-white">{message.Content}</p>
               {/* Format the timestamp as needed */}
               <span className="text-gray-400">
                 {new Date(message.timestamp).toLocaleTimeString()}

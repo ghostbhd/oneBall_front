@@ -12,13 +12,13 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   // member button style -------------------------------------------------
   const buttonStyle = `text-xl text-bLight_5 hover:text-bLight_2 cursor-pointer`;
 
-  console.log("members are:", members);
   // console.log(members);
   useEffect(() => {
     // channel members -----------------------
     socket.on("channelMembers", (data) => {
       // console.log("memers are:", data);
       setMembers(data);
+      console.log("members are:", data);
     });
 
     return () => {
@@ -28,11 +28,11 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
 
   const handelKickUser = (requesterId) => {
     socket.emit(
-      "kickUserFromChannel",
-      activeChannel,
-      currentUserToken.id,
-      requesterId
-    );
+      "kickUserFromChannel",{
+      channelId:activeChannel,
+      userId: currentUserToken.id,
+      requesterId:requesterId
+      });
   };
 
   const handleAddPassword = () => {};
@@ -52,8 +52,14 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   };
 
   // remove admin ----------------------------------
-  const handelRemoveAdmin = () => {
+  const handelRemoveAdmin = (channelId, seter, userSetted) => {
     
+    console.log("setting user as admin", channelId, seter, userSetted);
+    socket.emit("removeUserFromAdmin", {
+      channelId: channelId,
+      userId: seter,
+      requesterId: userSetted,
+    });
   }
 
   const handelMute = () => {};
@@ -140,9 +146,9 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                           className={`text-xs p-1 bg-bLight_5 rounded-full text-bDark_4 transition-all hover:bg-bLight_4`}
                           onClick={() =>
                             handelRemoveAdmin(
-                              // activeChannel,
-                              // currentUserToken.id,
-                              // member.userid.id
+                              activeChannel,
+                              currentUserToken.id,
+                              member.userid.id
                             )
                           }
                         >

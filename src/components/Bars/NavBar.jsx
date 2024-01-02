@@ -18,7 +18,7 @@ const NavBar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [notifRef, showNotif]);
+  },[]);
 
   return (
     <div

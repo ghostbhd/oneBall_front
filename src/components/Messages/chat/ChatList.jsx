@@ -13,11 +13,12 @@ const ChatList = ({
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
   const socket = useSocket();
-
+  
+  // socket.emit("request-latest-messages", currentUserToken.id);
   useEffect(() => {
     if (socket == null) return;
 
-    socket.emit("request-latest-messages", currentUserToken.id);
+    
 
     socket.on("latest-messages", (chatsFromServer) => {
       let sortedChats = chatsFromServer.sort((a, b) => {
