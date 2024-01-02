@@ -87,6 +87,8 @@ const App = () => {
                         path="/profile/:username"
                         element={<UserProfile />}
                       />
+                      {/* if the component state of /profile/:username route be 404 */}
+                      
                       <Route path="*" element={<Error_404 />} />
                     </Routes>
                   </div>

@@ -12,12 +12,9 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   // member button style -------------------------------------------------
   const buttonStyle = `text-xl text-bLight_5 hover:text-bLight_2 cursor-pointer`;
 
-  console.log("members are:", members);
-  // console.log(members);
   useEffect(() => {
     // channel members -----------------------
     socket.on("channelMembers", (data) => {
-      // console.log("memers are:", data);
       setMembers(data);
     });
 
@@ -43,7 +40,6 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
 
   // set admin ----------------------------------
   const handelSetAdmin = (channelId, seter, userSetted) => {
-    console.log("setting user as admin", channelId, seter, userSetted);
     socket.emit("setUserAsAdmin", {
       channelId: channelId,
       userId: seter,
@@ -52,9 +48,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   };
 
   // remove admin ----------------------------------
-  const handelRemoveAdmin = (channelId, seter, userSetted) => {
-    
-  }
+  const handelRemoveAdmin = (channelId, seter, userSetted) => {};
 
   const handelMute = () => {};
 

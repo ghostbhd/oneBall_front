@@ -39,6 +39,7 @@ import { HiBan } from "react-icons/hi"; // ban icon
 import { TbUserPlus } from "react-icons/tb"; // unban icon
 import { FaCrown } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
+import { FaLock } from "react-icons/fa6";
 
 
 
@@ -157,4 +158,5 @@ export const chatIcons = {
   unban : TbUserPlus,
   owner : FaCrown,
   admin : MdAdminPanelSettings,
+  lock : FaLock,
 };

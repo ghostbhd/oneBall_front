@@ -17,41 +17,35 @@ const UserProfile = () => {
   header.append("Content-Type", "application/json");
 
   useEffect(() => {
-    
     const fetchdata = async () => {
-      try {
-        const response = await fetch("http://localhost:3009/profileData/user", {
-          method: "POST",
-          headers: header,
-          body: JSON.stringify({ username: username }),
-          
-        });
-
-        if (!response.ok)
-        {
+      await fetch("http://localhost:3009/profileData/user", {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify({ username: username }),
+      })
+        .then((response) => {
           if (response.status === 404) {
-            console.log("User not found------");
-            // return;
-          }
-          else if (response.status === 301) {
+            history("/Error_404");
+            return;
+          } else if (response.status === 301) {
             history("/profile");
-            console.log("same user profile");
-            // return;
+            // console.log("same user profile");
+            return;
+          } else if (response.status === 401) {
+            history("/Auth");
+            // console.log("user not authenticated");
+            return;
+          } else if (response.status === 500) {
+            history("/Error_500");
+            // console.log("server error");
+            return;
           }
-          else
-          {
-            throw new Error("User not found");
-          }
-
-        }
-
-        const data = await response.json();
-        setData(data);
-        setLoading(false);
-      } catch (error) {
-        // console.error("user profile error")
-        // console.log("error:", error.message);
-      }
+          return response.json();
+        })
+        .then(async (response) => {
+          setData(response);
+          setLoading(false);
+        });
     };
     fetchdata();
   }, []);

@@ -5,6 +5,8 @@ import style, { ImgBg } from "../../../style";
 import { chatIcons } from "../../../constants";
 import ChannelMembers from "./ChannelMembers.jsx";
 
+import PropTypes from "prop-types";
+
 const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -21,40 +23,36 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (moreBadgeRef.current && !moreBadgeRef.current.contains(event.target)) {
+      if (
+        moreBadgeRef.current &&
+        !moreBadgeRef.current.contains(event.target)
+      ) {
         setMoreBadge(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
 
-    console.log("Socket connected:", socket.connected);
+    // console.log("Socket connected:", socket.connected);
 
     if (activeChannel) {
       socket.emit("getChannelMessages", activeChannel);
     }
 
-    // setShowPasswordInput(false);
     socket.on("newChannelMessage", (newMessage) => {
-      console.log("newChannelMessage", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     socket.emit("getSenderIdsInChannel", activeChannel);
 
     socket.on("senderIdsInChannel", (id) => {
-      console.log("sender id is---------------------------------------", id);
-
       setSender(id);
     });
 
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.messages)) {
-        console.log("channelMessages", data);
-        // console.log("sender*******************************************:", data.messages.id);
         setMessages(data.messages);
       } else {
-        console.error("Received invalid format for channelMessages", data);
         setMessages([]);
       }
       if (messageContainerRef.current) {
@@ -72,14 +70,12 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     socket.on("channelMembershipStatus", (data) => {
       if (data.channelId === activeChannel) {
         setMembershipStatus({
-          channelName:data.channelName,
+          channelName: data.channelName,
           isAdmin: data.isAdmin,
           isMember: data.isMember,
           isOwner: data.isOwner,
         });
       }
-
-      console.log("channelMembershipStatus", data);
     });
 
     return () => {
@@ -88,7 +84,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       socket.off("channelMembershipStatus");
       socket.off("newChannelMessage");
     };
-  }, [socket, activeChannel, moreBadgeRef]);
+  }, [socket, activeChannel, moreBadgeRef, currentUserToken.id]);
 
   const handleSendMessagee = () => {
     if (newMessage.trim() !== "") {
@@ -98,7 +94,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         content: newMessage,
       });
 
-      console.log("Sending message:", newMessage);
       setNewMessage("");
     }
   };
@@ -118,7 +113,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   };
 
   const handleleaveChannel = () => {
-    console.log("---------> leave channel clicked");
     socket.emit("leaveChannel", {
       channelId: activeChannel,
       userId: currentUserToken.id,
@@ -126,16 +120,9 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   };
 
   const handleChannelmembers = () => {
-    console.log("---------> channel members clicked");
     socket.emit("getChannelMembers", activeChannel);
     setShowMembers(true);
   };
-
-  const handleSetAdmin = () => {
-    // socket.emit("setUserAsAdmin", activeChannel, currentUserToken.id);
-  };
-
-  const handleRemoveAdmin = () => {};
 
   const li = `p-2 hover:bg-bLight_5/50 hover:text-bLight_2 cursor-pointer`;
 
@@ -211,7 +198,9 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             // More button -----------------------------
             <div
               // ref={moreBadgeRef}
-              className={`text-3xl text-bLight_4 cursor-pointer transition-all duration-500 ${moreBadge ? "rotate-90" : ""}`}
+              className={`text-3xl text-bLight_4 cursor-pointer transition-all duration-500 ${
+                moreBadge ? "rotate-90" : ""
+              }`}
               onClick={() => setMoreBadge(!moreBadge)}
             >
               {<chatIcons.more />}
@@ -219,7 +208,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           )}
           {/*more-badge ------------------------------- */}
           <ul
-            // ref={moreBadgeRef}
+            ref={moreBadgeRef}
             className={`absolute z-10 text-sm text-bLight_4 right-1/2 flex flex-col overflow-hidden 
               top-full w-52 h-max bg-bDark_3 border-2 border-bLight_5/20 rounded-3xl ${
                 moreBadge ? "" : "hidden"
@@ -228,13 +217,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <li className={`${li}`} onClick={() => handleChannelmembers()}>
               Members
             </li>
-            <li className={`${li}`} onClick={handleSetAdmin()}>
-              Set an admin
-            </li>
             {membershipStatus.isOwner ? (
-              <li className={`${li}`} onClick={console.log("whyyyy")}>
-                Edit Password
-              </li>
+              <li className={`${li}`}>Edit Password</li>
             ) : null}
           </ul>
         </div>
@@ -318,6 +302,12 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       </div>
     </div>
   );
+};
+
+ChannelWindow.propTypes = {
+  activeChannel: PropTypes.string,
+  currentUserToken: PropTypes.object,
+  typeOfChannel: PropTypes.string,
 };
 
 export default ChannelWindow;
