@@ -25,6 +25,9 @@ import { MdBlockFlipped } from "react-icons/md"; // block icon
 import { MdPersonAddDisabled } from "react-icons/md"; // cancel request icon
 import { TiThMenu } from "react-icons/ti"; // menu icon
 import { FcGoogle } from "react-icons/fc"; // google icon
+import { FaUserClock } from "react-icons/fa"; // friend waiting icon
+import { IoPlay } from "react-icons/io5"; // play icon
+import { MdCancel } from "react-icons/md"; // stop icon
 
 import FortyTwo  from '../assets/42.svg'; // 42 logo
 
@@ -35,11 +38,15 @@ import { IoIosSend } from "react-icons/io"; // send icon
 import { FaVolumeXmark } from "react-icons/fa6"; // volume mute icon
 import { FaVolumeHigh } from "react-icons/fa6"; // volume unmute icon
 import { MdDelete } from "react-icons/md"; // delete icon
-import { HiBan } from "react-icons/hi"; // ban icon
-import { TbUserPlus } from "react-icons/tb"; // unban icon
-import { FaCrown } from "react-icons/fa";
-import { MdAdminPanelSettings } from "react-icons/md";
-import { FaLock } from "react-icons/fa6";
+
+// import { HiBan } from "react-icons/hi"; // ban icon
+// import { TbUserPlus } from "react-icons/tb"; // unban icon
+import { ImUserMinus } from "react-icons/im"; // ban icon
+import { ImUserPlus } from "react-icons/im"; // unban icon
+
+import { FaCrown } from "react-icons/fa"; // owner icon
+import { MdAdminPanelSettings } from "react-icons/md"; // admin icon
+import { FaLock } from "react-icons/fa6"; // lock icon
 
 
 
@@ -144,6 +151,9 @@ export const icons = { // All needed icons
   menu: TiThMenu,
   google: FcGoogle,
   fortyTwo: FortyTwo,
+  friendWaiting: FaUserClock,
+  play: IoPlay,
+  stop: MdCancel,
 };
 
 export const chatIcons = {
@@ -154,8 +164,8 @@ export const chatIcons = {
   mute : FaVolumeXmark,
   unmute : FaVolumeHigh,
   kick : MdDelete,
-  ban : HiBan,
-  unban : TbUserPlus,
+  ban : ImUserMinus,
+  unban : ImUserPlus,
   owner : FaCrown,
   admin : MdAdminPanelSettings,
   lock : FaLock,

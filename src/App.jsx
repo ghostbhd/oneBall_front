@@ -46,6 +46,10 @@ const App = () => {
           className={`w-full h-full flex flex-row fixed`}
           style={ImgBg({ img: "/src/assets/bg contain.png" })}
         >
+          {/* backdrop ----------------------------------------------------------------- */}
+          <div
+            className={`absolute right-0 top-0 w-screen h-screen bg-bDark_5/60 ${style.backdropBlur}`}
+          ></div>
           {/* Authentication ---------------------------------------------------------- */}
           <Routes>
             <Route path="/Auth" element={<Auth />} />
@@ -55,19 +59,14 @@ const App = () => {
               path="*"
               element={
                 <>
-                  {/* backdrop ----------------------------------------------------------------- */}
-                  <div
-                    className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60 ${style.backdropBlur}`}
-                  ></div>
                   {/* sidebar ----------------------------------------------------------------- */}
                   <SideBar />
                   {/* mobile sidebar ---------------------------------------------------------- */}
                   <MSideBar />
-                  {/* navbar ----------------------------------------------------------------- */}
-                  <NavBar />
+
                   {/* content ----------------------------------------------------------------- */}
                   <div
-                    className={`flex flex-wrap overflow-y-auto relative xl:px-50 md:pt-0 pt-16
+                    className={`flex flex-wrap relative overflow-y-auto xl:px-50 pt-6
                       ${
                         theme.isSidebarCollapsed
                           ? style.contentW2
@@ -75,6 +74,8 @@ const App = () => {
                       }
                       `}
                   >
+                    {/* navbar ----------------------------------------------------------------- */}
+                    <NavBar />
                     {/* routes ----------------------------------------------------------------- */}
                     <Routes>
                       <Route index element={<Dashboard />} />
@@ -88,7 +89,7 @@ const App = () => {
                         element={<UserProfile />}
                       />
                       {/* if the component state of /profile/:username route be 404 */}
-                      
+
                       <Route path="*" element={<Error_404 />} />
                     </Routes>
                   </div>
