@@ -59,7 +59,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`md:flex hidden h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 shadow-sBar z-20
+      className={`md:flex hidden h-screen p-4 text-bLight_1 border-r-2 border-bDark_2 z-20
         ${style.barBlueBlur}
         ${theme.isSidebarCollapsed ? style.sidebarW2 : style.sidebarW}`}
     >

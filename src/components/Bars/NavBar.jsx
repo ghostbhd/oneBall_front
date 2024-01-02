@@ -18,12 +18,11 @@ const NavBar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  },[]);
+  }, []);
 
   return (
     <div
-      className={`md:w-4/12 w-full md:pr-10 h-auto absolute z-40 top-0 right-0 md:p-1 
-        md:bg-transparent bg-bDark_4/90
+      className={`h-auto absolute z-10 top-0 left-0 px-8 bg-bDark_4 w-full
       `}
     >
       <div className="md:w-max w-full relative flex flex-row items-center p-1 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
@@ -44,7 +43,9 @@ const NavBar = () => {
       </div>
 
       {/* notification badge --------- */}
-      <NotificationBadge {...{ notifRef, showNotif, setShowNotif }} />
+      {showNotif ? (
+        <NotificationBadge {...{ notifRef, showNotif, setShowNotif }} />
+      ) : null}
     </div>
   );
 };
