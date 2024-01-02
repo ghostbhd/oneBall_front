@@ -1,8 +1,9 @@
 import { Scope } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
+import { Player } from './queue/queue.service';
 
 export class GameObj {
-    constructor(public left_socket : number, public right_socket : number, public roomid : string) {
+    constructor(public left_Player : Player, public right_Player : Player, public roomid : string) {
         this.state = {
             roomid: roomid,
             launched: false,
@@ -12,12 +13,12 @@ export class GameObj {
             MAX_H: 1500
         }
         this.left_plr = {
-            socket: left_socket,
+            Player: left_Player,
             y: 0,
             effects: {}
         }
         this.right_plr = {
-            socket: right_socket,
+            Player: right_Player,
             y: 0,
             effects: {}
         }

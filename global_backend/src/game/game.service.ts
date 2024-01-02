@@ -54,10 +54,22 @@ export class GameService {
             inf.ball.v_state.id = -1
             inf.ball.v_state.resolve("resolved")
         }
-        let game_index : number = this.queue.games.findIndex(game => game.state.roomid === inf.state.roomid)
+        let game_index: number = this.queue.games.findIndex(game => game.state.roomid === inf.state.roomid)
         if (game_index == -1)
             console.log("waamiiiiiiii")
-        this.queue.games.slice(game_index, game_index + 1)
+        console.log("before slicing the game lentght = ", this.queue.games.length)
+        this.queue.games.forEach(element => {
+            console.log("and this is it = ", element.state.roomid)
+        });
+        this.queue.games.splice(game_index, game_index + 1)
+        this.queue.games_size--
+        this.queue.games.forEach(element => {
+            console.log("and this is it = ", element.state.roomid)
+        });
+        console.log("after slicing the game lentght = ", this.queue.games.length)
+        this.queue.games.forEach(element => {
+            console.log("and this is it = ", element.state.roomid)
+        });
         // add information to the repository
     }
 
@@ -156,7 +168,10 @@ export class GameService {
     }
 
     async Ball_Logic(io: Server, inf: GameObj) {
-        io.in(inf.state.roomid).emit("opponent_found")
+
+        inf.left_plr.Player.socket.emit("opponent_found", 1)
+        inf.right_plr.Player.socket.emit("opponent_found", 2)
+
         const time_out_id = await this.timeout(4500, inf, 0)
 
         if (inf.state.launched == false) {
