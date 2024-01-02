@@ -60,7 +60,9 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
     <div
       ref={notifRef}
       className={`absolute right-0 top-0 z-50 flex flex-col h-screen sm:w-96 w-screen
-        p-2 bg-bDark_4  !border-bLight_3/10 shadow-4xl gap-4 transform transition-all ease-in-out duration-400 ${showNotif ? "translate-x-0" : "translate-x-full"}
+        p-2 bg-bDark_4  !border-bLight_3/10 shadow-4xl gap-4 transform transition-all ease-in-out duration-400 ${
+          showNotif ? "translate-x-0" : "translate-x-full"
+        }
       `}
     >
       {/* close badge ------ */}
@@ -77,9 +79,10 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
       <ul className="w-full h-full flex flex-col gap-1 overflow-y-auto">
         {notifItems.map((item) => (
           // friend request *********************************************************************************************
-          <>
+          // <>
+          <li className={`${li}`} key={item.username}>
             {item.type === "friend" ? (
-              <li className={`${li}`}>
+              <>
                 {/* icon friend waiting ------------------------------------------------ */}
                 <div className={`bg-bDark_4 ${firstIcon}`}>
                   {<icons.friendWaiting />}
@@ -112,10 +115,12 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
                     </div>
                   </div>
                 </div>
-              </li>
+              </>
             ) : (
+              // </li>
               // game invitaion *********************************************************************************************
-              <li className={`${li}`}>
+              // <li className={`${li}`} key={item.username}>
+              <>
                 {/* icon game req ------------------------------------------------ */}
                 <div className={`bg-bDark_3 ${firstIcon}`}>
                   {<icons.gameController />}
@@ -148,9 +153,10 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
                     </div>
                   </div>
                 </div>
-              </li>
+              </>
             )}
-          </>
+          </li>
+          // </>
         ))}
       </ul>
     </div>
