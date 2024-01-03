@@ -65,7 +65,7 @@ const App = () => {
               <NavBar />
               {/* content ----------------------------------------------------------------- */}
               <div
-                className={`flex flex-wrap overflow-y-auto relative xl:px-50 md:pt-0 pt-16
+                className={`flex flex-wrap overflow-y-auto relative xl:px-52 md:pt-0 pt-16
                     ${
                       theme.isSidebarCollapsed
                         ? style.contentW2
