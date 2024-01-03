@@ -1,43 +1,74 @@
 import { icons } from "../../constants";
 import PropTypes from "prop-types";
-import { useState } from "react";
-import style, { ImgBg } from "../../style";
+import { useEffect, useState } from "react";
+import { ImgBg } from "../../style";
+import { useSocket } from "../../Socketio";
+import { GetHeaders } from "../../jwt_token";
+import * as jwtDecode  from "jwt-decode";
 
 const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
-  const [notifItems, setNotifItems] = useState([
-    {
-      type: "friend",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User1",
-      fullName: "test test",
-    },
-    {
-      type: "game",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User2",
-      fullName: "test test",
-    },
-    {
-      type: "friend",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User3",
-      fullName: "test test",
-    },
-    {
-      type: "game",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User4",
-      fullName: "test test",
-    },
-  ]);
+  const [notifItems, setNotifItems] = useState([]);
+  const removeFromData = (username) => {
+    setNotifItems((prevData) => prevData.filter((item) => item.username !== username));
+  };
+  const addData = (obj) => {
+    setNotifItems( prevData => [...prevData, obj]);
+  };
+  const socket = useSocket();
+  const token = GetHeaders().jwttt;
+  const decoded = jwtDecode.jwtDecode(token);
 
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("NotificationAdd", (reqData) => {
+      // console.log("FriendRequests", reqData);
+      const newData = {
+        type: "friend",
+        image: reqData.image,
+        username: reqData.username,
+        fullName: reqData.fullName,
+      };
+      // adding data to previous data
+      console.log("the data is ", newData)
+      addData(newData);
+    });
+
+    socket.on("Friend-Refuse", (reqData) => {
+      // console.log("Refuse", data);
+      const newData = {
+        type: "friend",
+        image: reqData.image,
+        username: reqData.username,
+        fullName: reqData.fullName,
+      };
+      removeFromData(newData.username);
+      console.log("the data refused is ", newData)
+    });
+
+    return () => {
+      socket.off("Friend-Request");
+      // socket.off("Friend-Refuse");
+    };
+  }, [socket]);
   // Friend request ------------------------------------------------
   const handelAcceptFriend = (username) => {
     console.log("accept friend request");
+    if (socket == null) return;
+    socket.emit("AcceptRequest", {
+      username1: decoded.name,
+      username2: username,
+    })
+    removeFromData(username);
   };
 
   const handelRejecttFriend = (username) => {
     console.log("reject friend request");
+    if (socket == null) return;
+    socket.emit("RefuseRequest", {
+      username1: decoded.name,
+      username2: username,
+    });
+    removeFromData(username);
   };
 
   // Game request ------------------------------------------------

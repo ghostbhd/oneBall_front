@@ -55,7 +55,7 @@ const Profile = () => {
           <div
             className={`sm:w-8/12 w-full sm:h-full relative overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}
           >
-            <EditInfo data={data.editInnfo} />
+            <EditInfo data={data.editInnfo} setData={setData} />
 
             {/* Friend requests ------------------------- */}
             <FriendRequests />
