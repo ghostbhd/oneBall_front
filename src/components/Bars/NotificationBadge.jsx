@@ -16,7 +16,11 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
   };
   const socket = useSocket();
   const token = GetHeaders().jwttt;
-  const decoded = jwtDecode.jwtDecode(token);
+  let decoded;
+  if (token)
+    decoded = jwtDecode.jwtDecode(token);
+  else
+    decoded = null;
 
   useEffect(() => {
     if (socket == null) return;
@@ -50,6 +54,7 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
       // socket.off("Friend-Refuse");
     };
   }, [socket]);
+  
   // Friend request ------------------------------------------------
   const handelAcceptFriend = (username) => {
     console.log("accept friend request");

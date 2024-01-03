@@ -111,6 +111,7 @@ const EditInfo = ({ data, setData }) => {
     setSelectedAvatar(data.avatar);
     setUsername("");
     setMoreAvatars(false);
+    setError("");
   };
 
   return (
