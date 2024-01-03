@@ -304,10 +304,4 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   );
 };
 
-ChannelWindow.propTypes = {
-  activeChannel: PropTypes.string,
-  currentUserToken: PropTypes.object,
-  typeOfChannel: PropTypes.string,
-};
-
 export default ChannelWindow;

@@ -53,8 +53,6 @@ const App = () => {
           <Routes>
             <Route path="/Auth" element={<Auth />} />
             <Route path="/Callback" element={<CallBack />} />
-            <Route path="/Ingame" element={<GameShell />} />
-
             <Route
               path="*"
               element={
@@ -72,15 +70,16 @@ const App = () => {
                   {/* content ----------------------------------------------------------------- */}
                   <div
                     className={`flex flex-wrap overflow-y-auto relative xl:px-50 md:pt-0 pt-16
-                      ${
+                    ${
                         theme.isSidebarCollapsed
-                          ? style.contentW2
-                          : style.contentW
+                        ? style.contentW2
+                        : style.contentW
                       }
                       `}
                   >
                     {/* routes ----------------------------------------------------------------- */}
                     <Routes>
+                      <Route path="/Ingame" element={<GameShell />} />
                       <Route index element={<Dashboard />} />
                       <Route path="/games" element={<Games />} />
                       <Route path="/messages" element={<Messages />} />

@@ -24,12 +24,11 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   }, []);
 
   const handelKickUser = (requesterId) => {
-    socket.emit(
-      "kickUserFromChannel",
-      activeChannel,
-      currentUserToken.id,
-      requesterId
-    );
+    socket.emit("kickUserFromChannel", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      requesterId: requesterId,
+    });
   };
 
   const handleAddPassword = () => {};
@@ -40,6 +39,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
 
   // set admin ----------------------------------
   const handelSetAdmin = (channelId, seter, userSetted) => {
+    console.log("setting user as admin", channelId, seter, userSetted);
     socket.emit("setUserAsAdmin", {
       channelId: channelId,
       userId: seter,
@@ -48,7 +48,14 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   };
 
   // remove admin ----------------------------------
-  const handelRemoveAdmin = (channelId, seter, userSetted) => {};
+  const handelRemoveAdmin = (channelId, seter, userSetted) => {
+    console.log("setting user as admin", channelId, seter, userSetted);
+    socket.emit("removeUserFromAdmin", {
+      channelId: channelId,
+      userId: seter,
+      requesterId: userSetted,
+    });
+  };
 
   const handelMute = () => {};
 
