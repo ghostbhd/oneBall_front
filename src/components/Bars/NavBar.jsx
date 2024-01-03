@@ -32,7 +32,7 @@ const NavBar = () => {
       <div className="md:w-max w-full gap-4 flex flex-row items-center p-1 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
         {/* search icon ----------------------------------------------------- */}
         <div
-          ref={notifRef}
+          // ref={notifRef}
           className={`text-2xl flex items-center text-bLight_5 bg-bDark_4 cursor-pointer rounded-full shadow-4xl transition-all`}
         >
           <input

@@ -6,21 +6,43 @@ import { ImgBg } from "../../style";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const EditInfo = ({ data }) => {
+const EditInfo = ({ data, setData }) => {
   const [selectedFile, setSelectedFile] = useState("");
-  const [selectedAvatar, setSelectedAvatar] = useState(data.avatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(() => {
+    const initialAvatar = data.avatar;
+    // Check if the initial avatar is not in the array, push it
+    if (!avatarImages.includes(initialAvatar)) {
+      avatarImages.push(initialAvatar);
+    }
+    return initialAvatar;
+  });
   const [moreAvatars, setMoreAvatars] = useState(false);
   const [username, setUsername] = useState("");
   const [fileTosend, setSelectedFileTosend] = useState(null);
+  const [error, setError] = useState("");
 
   const history = useNavigate();
   const handleRedirect = (url) => {
     history(url);
   };
 
+  // Submit form ---------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(selectedAvatar);
+
+    const regex = /[A-Z0-9!@#$%^&*(),.?":{}|<>]/;
+
+    if (
+      username.length &&
+      (username.length < 3 || username.length > 10 || regex.test(username))
+    ) {
+      setError("Username must be 3-10 characters long and contain only letters");
+      setUsername("");
+      return;
+    }
+
+    setError("");
+    setUsername("");
 
     const formData = new FormData();
     formData.append("username", username);
@@ -51,7 +73,8 @@ const EditInfo = ({ data }) => {
         }
       })
       .then((data) => {
-        console.log("this the result of the fetch..." + data.accessToken);
+        console.log("File upload success:", data);
+        // setData(data);
         Cookies.set("accessToken", data.accessToken);
       })
       .catch((error) => {
@@ -60,6 +83,7 @@ const EditInfo = ({ data }) => {
     // window.location.reload();
   };
 
+  // File handling -------------------------------------------------------------
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const acceptedImageTypes = [
@@ -172,19 +196,24 @@ const EditInfo = ({ data }) => {
       </div>
 
       {/* Edit info (change username input) ------------------- */}
-      <div className={`w-full mt-6 flex flex-col`}>
+      <div className={`w-full mt-6 gap-4 flex flex-col`}>
         <p className="text-bLight_5">Edit info</p>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          placeholder="change username"
-          className="w-full bg-bLight_5 bg-opacity-30 mt-4 text-org_1 placeholder:text-bLight_4
+        <div className={`w-full flex flex-col gap-0.5`}>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="change username"
+            className="w-full bg-bLight_5 bg-opacity-30 text-org_1 placeholder:text-bLight_4
             text-xs p-2 rounded-full outline-none border-2 border-bLight_5 border-opacity-70
           "
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-        />
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+          />
+          {error.length > 0 ? (
+            <p className={`text-xs pl-4 text-org_3`}>{error}</p>
+          ) : null}
+        </div>
       </div>
       {/* save and cancel buttons -------- */}
       <div className={`w-full mt-4 flex flex-row space-x-10 items-center`}>
@@ -205,6 +234,7 @@ const EditInfo = ({ data }) => {
 
 EditInfo.propTypes = {
   data: PropTypes.object.isRequired,
+  setData: PropTypes.func.isRequired,
 };
 
 export default EditInfo;

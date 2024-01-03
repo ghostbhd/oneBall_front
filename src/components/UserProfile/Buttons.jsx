@@ -87,18 +87,11 @@ const Buttons = ({ data: initialData }) => {
 
   useEffect(() => {
     socket.on("FriendRequest", (stats) => {
-      // Update the component state
-      dataSetten(stats);
+      if (stats.username === data.username) {
+        dataSetten(stats);
+      }
     });
 
-    // socket.on("RefuseRequest", (stats) => {
-    //   dataSetten(stats);
-    // });
-
-    // socket.on("AcceptRequest", (stats) => {
-    //   dataSetten(stats);
-    // });
-    // Clean up the socket subscription on component unmount
     return () => {
       socket.off("FriendRequest");
     };
