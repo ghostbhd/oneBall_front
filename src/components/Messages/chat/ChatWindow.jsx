@@ -3,7 +3,7 @@ import style from "../../../style";
 import { IoIosSend } from "react-icons/io";
 import { useSocket } from "../../../Socketio.jsx";
 import {Link} from "react-router-dom";
-
+ 
 const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -15,26 +15,27 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
 
 
   const handleSendMessage = () => {
-    if (message.trim()) {
-      const newMessage = {
 
-        content: message,
-        timestamp: new Date().toISOString(),
-        senderId: currentUserToken.id,
-        chatId: activeChat,
+    // if (message.trim()) {
+      // const newMessage = {}
 
-      };
-      console.log('Sending message:', newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      //   Content: message,
+      //   Timestamp: new Date().toISOString(),
+      //   senderId: currentUserToken.id,
+      //   chatId: activeChat,
+
+      // // };
+      // console.log('Sending message:', newMessage);
+      // setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       socket.emit("send-message", {
         chatId: activeChat,
-        content: message,
+        Content: message,
         senderId: currentUserToken.id,
 
       });
       setMessage("");
-    }
+    // }
   };
 
   useEffect(() => {
@@ -44,8 +45,11 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
     console.log(`active chat is ${activeChat}`);
 
 
+
+
     const handleNewMessage = (newMessage) => {
-      if (newMessage.chatId === activeChat) {
+      console.log("new message received:================================================", newMessage);
+      if (newMessage.chatid.id === activeChat) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
@@ -53,11 +57,12 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
     socket.on("new-message", handleNewMessage);
 
     socket.on("messages-for-chat-response", (chatData) => {
+      console.log("new:================================================", chatData);
       
-      // console.log("Chat data received username :", chatData.senderUsername);
-      // setUsername(chatData.senderUsername);
-      // console.log("Chat data received avatar :", chatData.senderAvatar);
-      // setUseravatar(chatData.senderAvatar);
+
+      if (chatData.id === activeChat) {
+        setMessages((prevMessages) => [...prevMessages, chatData.messages]);
+      }
       if (chatData && Array.isArray(chatData.messages)) {
         console.log("Chat data received:", chatData);
 
@@ -75,21 +80,24 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
       }
     });
 
+    const sortedMessages = [...messages].sort(
+      
+      (a, b) => new Date(a.Timestamp) - new Date(b.Timestamp)
+      
+      );
+      console.log("#################### ", sortedMessages);
 
+      setMessages(sortedMessages);
     return () => {
       socket.off("new-message", handleNewMessage);
       socket.off("messages-for-chat-response");
       socket.emit("leave-chat", { chatId: activeChat });
     };
+    
+  }, [activeChat, socket]);
+  
 
-  }, [activeChat, socket, messages]);
 
-
-
-  const sortedMessages = [...messages].sort(
-
-    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-  );
 
   console.log(`active chat user is ${activeChatUser}`);
   return (
@@ -108,20 +116,20 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
       <div
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >
-        {sortedMessages.map((message) => {
+        {messages.map((message) => {
           {/*!AYOUB update the message.senderId line 117*/}
           return (
             <div
               key={message.id}
-              className={`mb-5 ${message.senderId === currentUserToken.id
-                  ? style.messageCurrentUser
-                  : style.messageOtherUser
+              className={`mb-5 ${message.ReceiverUserID.id === currentUserToken.id
+                ? style.messageOtherUser
+                  : style.messageCurrentUser
                 }`}
             >
-              <p className="text-white">{message.content}</p>
+              <p className="text-white">{message.Content}</p>
               {/* Format the timestamp as needed */}
               <span className="text-gray-400">
-                {new Date(message.timestamp).toLocaleTimeString()}
+                {new Date(message.Timestamp).toLocaleTimeString()}
               </span>
             </div>
           );

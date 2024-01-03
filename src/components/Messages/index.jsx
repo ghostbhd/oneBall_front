@@ -6,12 +6,14 @@ import ChannelWindow from "./channel/ChannelWindow.jsx";
 import ChannelCreation from "./channel/ChannelCreation.jsx";
 import ChannelList from "./channel/ChannelList.jsx";
 
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { GetHeaders } from "../../jwt_token.jsx";
 import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar.jsx";
 import SlidingTabBar from "./SlidingTabBar.jsx";
 import style from "../../style";
+import { useSocket } from "../../Socketio.jsx";
+
 
 const Messages = () => {
   const [activeChat, setActiveChat] = useState(null);
@@ -23,22 +25,33 @@ const Messages = () => {
   const [activeChannel, setActiveChannel] = useState(null);
   const [typeOfChannel, setTypeOfChannel] = useState("");
 
+  const socket = useSocket();
+  
   const handleSearchSubmit = (searchTerm) => {
-    if (searchTerm.trim()) {
-      socket.emit("search-user", {
-        username: searchTerm,
-        currentUserId: currentUserToken.id,
-      });
-    }
+    // if (searchTerm.trim()) {
+    //   socket.emit("search-user", {
+    //     username: searchTerm,
+    //     currentUserId: currentUserToken.id,
+    //   });
+    // }
   };
 
   const handleTabSelected = (tabId) => {
+      if(socket == null) return;  
+  console.log("*****************************************************888")
+  socket.emit("request-latest-messages", currentUserToken.id);
+
     setActiveTab(tabId);
   };
   const token = GetHeaders().jwttt;
   const currentUserToken = jwtDecode.jwtDecode(token);
-  // console.log("current user id is ", currentUserToken.id);
+  console.log("current user id is ", currentUserToken.id);
 
+  useEffect(() => {
+  if(socket == null) return;  
+  console.log("*****************************************************888")
+  socket.emit("request-latest-messages", currentUserToken.id);
+  }, [socket]);
   const handleSearch = (query) => {
     setSearchTerm(query);
   };
@@ -68,7 +81,7 @@ const Messages = () => {
             currentUserToken={currentUserToken}
             onSearchSubmit={handleSearchSubmit}
           />
-          <SlidingTabBar onTabSelected={handleTabSelected} />
+          <SlidingTabBar onTabSelected={handleTabSelected} currentUserToken={currentUserToken} />
           {activeTab === "dms" ? (
             <ChatList
               currentUserToken={currentUserToken}
@@ -80,7 +93,6 @@ const Messages = () => {
             />
           ) : (
             <ChannelList
-              activeChannel={activeChannel}
               typeOfChannel={typeOfChannel}
               setTypeOfChannel={setTypeOfChannel}
               currentUserToken={currentUserToken}
