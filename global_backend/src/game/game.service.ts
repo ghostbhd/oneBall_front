@@ -40,10 +40,16 @@ export class GameService {
                 }, ms);
                 //console.log("this is n", n, inf.ball.v_state.id)
             }
-            else
+            else if (n == 0)
                 setTimeout(() => {
                     resolve("resolved")
                 }, ms);
+            else {
+                inf.ball.h_state.resolve = resolve
+                inf.ball.h_state.id = setTimeout(() => {
+                    resolve("resolved")
+                }, ms);
+            }
         })
     }
 
@@ -67,7 +73,15 @@ export class GameService {
             clearTimeout(inf.ball.v_state.id)
             inf.ball.v_state.id = -1
             inf.ball.v_state.resolve("resolved")
+
         }
+
+        if (inf.ball.h_state.id != -1) {
+            clearTimeout(inf.ball.h_state.id)
+            inf.ball.h_state.id = -1
+            inf.ball.h_state.resolve("resolved")
+        }
+
         let game_index: number = this.queue.games.findIndex(game => game.state.roomid === inf.state.roomid)
         if (game_index == -1)
             console.log("waamiiiiiiii")
@@ -93,7 +107,11 @@ export class GameService {
         while (inf.state.salat as boolean === false) {
 
             inf.ball.h_state.start = Date.now()
-            const hh = await this.timeout(inf.ball.h_dur, inf, 0)
+            console.log("+++++horizontal await");
+            const hh = await this.timeout(inf.ball.h_dur, inf, 2)
+
+            if (inf.state.salat === true)
+                break
 
             inf.ball.x_dir = inf.ball.x_dir == 1 ? 0 : 1
             let pl_y = inf.ball.x_dir == 1 ? inf.left_plr.y : inf.right_plr.y

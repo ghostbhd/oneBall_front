@@ -114,12 +114,12 @@ export class GameGateway {
     async trans_right(@MessageBody("playerID") id: number, @MessageBody("data") data: number, @ConnectedSocket() socket: Socket) {
         let index: number = this.queue.games.findIndex(game => game.right_plr.Player.id === id)
         //console.log("post:right_plr:y before and index =", index)
-        console.log("games lentgh ", this.queue.games.length)
+        //console.log("games lentgh ", this.queue.games.length)
         if (index !== -1) {
             if (this.queue.games[index].state.launched === true) {
                 this.queue.games[index].right_plr.y = data // maybe validate the speed of the mvm
                 this.queue.games[index].left_plr.Player.socket.emit('get:right_plr:y', this.queue.games[index].right_plr.y)
-                console.log("post:right_plr:y")
+                //console.log("post:right_plr:y")
             }
         }
     }
@@ -128,12 +128,12 @@ export class GameGateway {
     async trans_left(@MessageBody("playerID") id: number, @MessageBody("data") data: number, @ConnectedSocket() socket: Socket) {
         let index: number = this.queue.games.findIndex(game => game.left_plr.Player.id === id)
         //console.log("post:left_plr:y before and number == ", index)
-        console.log("games lentgh ", this.queue.games.length)
+        //console.log("games lentgh ", this.queue.games.length)
         if (index !== -1) {
             if (this.queue.games[index].state.launched === true) {
                 this.queue.games[index].left_plr.y = data // maybe validate the speed of the mvm
                 this.queue.games[index].right_plr.Player.socket.emit('get:left_plr:y', this.queue.games[index].left_plr.y)
-                console.log("post:left_plr_plr:y")
+                //console.log("post:left_plr_plr:y")
             }
         }
     }
