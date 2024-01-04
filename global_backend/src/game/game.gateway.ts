@@ -10,14 +10,10 @@ import { Socket, Server } from 'socket.io';
 import { GameObj } from './game.obj';
 import { EntitySchemaEmbeddedColumnOptions } from 'typeorm';
 import { QueueService } from './queue/queue.service';
+import type { Player } from './queue/queue.service';
 import { find } from 'rxjs';
 import { throws } from 'assert';
 import { number } from 'prop-types';
-
-type PlayerQueue = {
-    id: number;
-    socket: Socket;
-}
 
 @WebSocketGateway({
     cors: {
@@ -31,7 +27,7 @@ export class GameGateway {
 
     check(games: GameObj[], playerID: number): boolean {
         let res = games.find(game => {
-            if (game.left_plr.socket === playerID || game.right_plr.socket === playerID)
+            if (game.left_plr.Player.id === playerID || game.right_plr.Player.id === playerID)
                 return (true)
             return false
         })
@@ -45,7 +41,7 @@ export class GameGateway {
     @SubscribeMessage('lija_bsmlah')
     async push_or_match(@MessageBody("playerID") id: number, @ConnectedSocket() socket: Socket) {
         try {
-            let to_push: PlayerQueue
+            let to_push: Player
             let room_id = ""
             let game_index: number
 
@@ -56,18 +52,19 @@ export class GameGateway {
                 this.check(this.queue.games, id) === false) {
                 if (this.queue.players.length + 1 < 2) {
 
+                    console.log("\n\n------pushing into the players ===>\n")
                     to_push = {
                         id: id,
                         socket: socket
                     }
-                    console.log("pushing into the players ===>")
                     this.queue.players.push(to_push)
                     console.log("pushing player ====", id)
+                    console.log("\n\n------end of pushing ===>\n")
                 }
                 else {
+                    console.log("\n\n------------match\n\n")
                     room_id = this.queue.players[0].id.toString() + id.toString()
                     this.queue.players[0].socket.join(room_id)
-
 
                     console.log("matching ", this.queue.players[0].id, id, " to =>", room_id)
                     this.queue.players.forEach((e) => console.log("before waah wal7maa9 =", e.id))
@@ -85,11 +82,13 @@ export class GameGateway {
                     game_index = this.queue.games.findIndex(game => game.state.roomid === room_id)
                     if (game_index == -1)
                         throw ("aaach haad lmlawi")
+                    console.log("the players before the size ==>", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
+                    console.log("\n\nendof------------match\n\n")
                     this.gameService.Ball_Logic(this.server, this.queue.games[game_index])
-
                     //handle in the gameservice ack from both clients that they're ready
                     //handle out of game
                     //handle disconnections
+                    //handle lag
                     /*
                     socket.on("disconnect", () => {
                         const indexOfBanana = this.queue.players.findIndex(fruit => fruit.id === id);
@@ -113,8 +112,9 @@ export class GameGateway {
 
     @SubscribeMessage('post:right_plr:y')
     async trans_right(@MessageBody("playerID") id: number, @MessageBody("data") data: number, @ConnectedSocket() socket: Socket) {
-        console.log("post:right_plr:y before")
         let index: number = this.queue.games.findIndex(game => game.right_plr.Player.id === id)
+        console.log("post:right_plr:y before and index =", index)
+        console.log("games lentgh ", this.queue.games.length)
         if (index !== -1) {
             if (this.queue.games[index].state.launched === true) {
                 this.queue.games[index].right_plr.y = data // maybe validate the speed of the mvm
@@ -126,8 +126,9 @@ export class GameGateway {
 
     @SubscribeMessage('post:left_plr:y')
     async trans_left(@MessageBody("playerID") id: number, @MessageBody("data") data: number, @ConnectedSocket() socket: Socket) {
-        console.log("post:left_plr:y before")
         let index: number = this.queue.games.findIndex(game => game.left_plr.Player.id === id)
+        console.log("post:left_plr:y before and number == ", index)
+        console.log("games lentgh ", this.queue.games.length)
         if (index !== -1) {
             if (this.queue.games[index].state.launched === true) {
                 this.queue.games[index].left_plr.y = data // maybe validate the speed of the mvm
@@ -137,6 +138,7 @@ export class GameGateway {
         }
     }
 
+    /*
     @SubscribeMessage('update:inf')
     async update_inf(@MessageBody("playerID") id: number, @ConnectedSocket() socket: Socket) {
         let side: number = 0
@@ -155,11 +157,14 @@ export class GameGateway {
             if (this.queue.games[index].state.launched === true) {
                 socket.emit('update:', {
                     //ball pos,
-                    ball_pos : { x : {
+                    ball_pos: {
+                        x: {
 
-                    }}
+                        }
+                    }
                 })
             }
         }
     }
+        */
 }
