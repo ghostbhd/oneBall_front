@@ -194,8 +194,8 @@ export class GameService {
 
         if (inf.state.launched == false) {
             console.log("first_ping id =", inf.state.roomid)
-            this.laghandled_emit("opponent_found", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.left_plr.Player.socket, inf)
-            this.laghandled_emit("opponent_found", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.right_plr.Player.socket, inf)
+            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.left_plr.Player.socket, inf)
+            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.right_plr.Player.socket, inf)
 
             inf.state.launched = true
 

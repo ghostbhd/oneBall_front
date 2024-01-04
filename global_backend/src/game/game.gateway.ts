@@ -113,7 +113,7 @@ export class GameGateway {
     @SubscribeMessage('post:right_plr:y')
     async trans_right(@MessageBody("playerID") id: number, @MessageBody("data") data: number, @ConnectedSocket() socket: Socket) {
         let index: number = this.queue.games.findIndex(game => game.right_plr.Player.id === id)
-        console.log("post:right_plr:y before and index =", index)
+        //console.log("post:right_plr:y before and index =", index)
         console.log("games lentgh ", this.queue.games.length)
         if (index !== -1) {
             if (this.queue.games[index].state.launched === true) {
@@ -127,7 +127,7 @@ export class GameGateway {
     @SubscribeMessage('post:left_plr:y')
     async trans_left(@MessageBody("playerID") id: number, @MessageBody("data") data: number, @ConnectedSocket() socket: Socket) {
         let index: number = this.queue.games.findIndex(game => game.left_plr.Player.id === id)
-        console.log("post:left_plr:y before and number == ", index)
+        //console.log("post:left_plr:y before and number == ", index)
         console.log("games lentgh ", this.queue.games.length)
         if (index !== -1) {
             if (this.queue.games[index].state.launched === true) {
