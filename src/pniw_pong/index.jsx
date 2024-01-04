@@ -1,15 +1,10 @@
-import React, { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
-import ReactDOM from "react-dom/client";
+import { useEffect, useReducer, useRef, useState } from "react";
 import MyBall from "./Ball.jsx"
 import Player from "./player.jsx"
-import * as jwtDecode from "jwt-decode";
 import Border from "./Borders.jsx";
-import { SpringRef, useSpring, useSpringRef, useSpringValue, config } from '@react-spring/web'
-import { getHeaders } from "../../jwt_token.jsx"
+import { useSpring} from '@react-spring/web'
 import "./index.css"
-import { io } from "socket.io-client"
 import FrontEndLogic from "./front_end_logic.jsx";
-import { useSocket } from "../../Socketio.jsx";
 import { createContext } from 'react';
 
 export const Whoami = createContext(0)

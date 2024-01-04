@@ -1,27 +1,53 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { userProfileData } from "../../data/mockApi";
+import { useNavigate, useParams } from "react-router-dom";
+// import { userProfileData } from "../../data/mockApi";
 import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
 import GameDetails from "./GameDetails";
+import { GetHeaders } from "../../jwt_token";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // username from url params ------------------
   const { username } = useParams();
-  console.log(username);
+  const header = GetHeaders().headers;
+  const history = useNavigate();
+  header.append("Content-Type", "application/json");
 
   useEffect(() => {
-    // fetch(`http://localhost:3000/api/profile/${username}`) // Fetch the data from the API
-    userProfileData()
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-        console.log("Data fetched", data);
+    const fetchdata = async () => {
+      await fetch("http://localhost:3009/profileData/user", {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify({ username: username }),
       })
-      .catch((err) => {
-        console.log("Error fetching data", err);
-      });
+        .then((response) => {
+          if (response.status === 404) {
+            history("/Error_404");
+            return;
+          } else if (response.status === 301) {
+            history("/profile");
+            // console.log("same user profile");
+            return;
+          } else if (response.status === 401) {
+            history("/Auth");
+            // console.log("user not authenticated");
+            return;
+          } else if (response.status === 500) {
+            history("/Error_500");
+            // console.log("server error");
+            return;
+          }
+          return response.json();
+        })
+        .then(async (response) => {
+          setData(response);
+          setLoading(false);
+        });
+    };
+    fetchdata();
   }, []);
 
   return (
@@ -29,6 +55,7 @@ const UserProfile = () => {
       className={`w-full md:h-full h-max flex md:flex-row flex-col 
       md:space-y-0 space-y-8 md:p-6 md:pt-16 p-4 pb-16`}
     >
+      
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...

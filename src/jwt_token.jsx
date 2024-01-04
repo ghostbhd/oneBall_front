@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const getHeaders = () => {
+export const GetHeaders = () => {
   const history = useNavigate();
   const handleRedirect = (url) => {
     history(url);

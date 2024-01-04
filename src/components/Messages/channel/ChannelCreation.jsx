@@ -2,7 +2,7 @@ import { useState } from 'react';
 // import { useHistory } from 'react-router-dom';
 
 
-import { useSocket } from "../../Socketio.jsx";
+import { useSocket } from "../../../Socketio.jsx";
 
 
 const ChannelCreation = ({ onClose, currentUserToken }) => {

@@ -1,8 +1,8 @@
-import { animated, useSpring } from '@react-spring/web'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { useGesture, useDrag } from '@use-gesture/react'
-import { useSocket } from "../../Socketio.jsx";
-import { getHeaders } from "../../jwt_token"
+import { animated } from '@react-spring/web'
+import { useContext} from 'react'
+import { useDrag } from '@use-gesture/react'
+import { useSocket } from "../Socketio.jsx";
+import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
 import { Whoami } from "./index.jsx"
 
@@ -20,24 +20,9 @@ export default function Player(pro) {
     let calc_pitch = pro.height - (border_height * 2)
 
     //tobe checked for buggies
-    const token = getHeaders().jwttt
-    const currentUserToken = jwtDecode.jwtDecode(token)
-
-    useEffect(() => {
-        if (pro.side !== who) {
-            console.log("for me ", who, " different than", pro.side)
-            let event = pro.side === 1 ? 'get:left_plr:y' : 'get:right_plr:y'
-            console.log("attaching ", event, " to ", pro.side)
-            wsocket.on(event, (data) => {
-                console.log("recieved ", event)
-                pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
-            })
-        }
-        return () => {
-            wsocket.off(event)
-        }
-    }, [])
-
+<<<<<<< Updated upstream
+    const token = GetHeaders().jwttt;
+    const currentUserToken = jwtDecode.jwtDecode(token);
 
     if (pro.side !== who) {
         return (
