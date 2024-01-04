@@ -11,7 +11,7 @@ export default function Player(pro) {
     const wsocket = useSocket();
     let who = useContext(Whoami)
     let padding = pro.side === 2 ? '99%' : '0%'
-    let color = pro.side === 2 ? '#7FFFD4': '#ff6d6d'
+    let color = pro.side === 2 ? '#7FFFD4' : '#ff6d6d'
 
     let myHeight = pro.height * 0.15
 
@@ -20,17 +20,26 @@ export default function Player(pro) {
     let calc_pitch = pro.height - (border_height * 2)
 
     //tobe checked for buggies
-    const token = getHeaders().jwttt;
-    const currentUserToken = jwtDecode.jwtDecode(token);
+    const token = getHeaders().jwttt
+    const currentUserToken = jwtDecode.jwtDecode(token)
+
+    useEffect(() => {
+        if (pro.side !== who) {
+            console.log("for me ", who, " different than", pro.side)
+            let event = pro.side === 1 ? 'get:left_plr:y' : 'get:right_plr:y'
+            console.log("attaching ", event, " to ", pro.side)
+            wsocket.on(event, (data) => {
+                console.log("recieved ", event)
+                pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
+            })
+        }
+        return () => {
+            wsocket.off(event)
+        }
+    }, [])
+
 
     if (pro.side !== who) {
-        console.log("for me ", who, " different than", pro.side)
-        let event = pro.side === 1 ? 'get:left_plr:y' : 'get:right_plr:y'
-        console.log("attaching ", event," to ", pro.side)
-        wsocket.on(event, (data) => {
-            console.log("recieved ", event)
-            pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
-        })
         return (
             <animated.div
                 style={{

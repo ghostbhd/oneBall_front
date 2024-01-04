@@ -123,12 +123,13 @@ export const GameShell = () => {
             ws: {}
         }
         //console.log("content: ", game_inf.ball_size)
+
         return (
             <div className="content" id="pingpong_playground" ref={myComponentRef}>
                 <FrontEndLogic f_l={front_logic}>
                     <MyBall x_traj={x_traj} y_traj={y_traj} size={game_inf.ball_size} />
-                    <Player b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />
-                    <Player b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} />
+                    {/*<Player b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />*/}
+                    {/*<Player b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} /> */}
                     <Border p={1} />
                     <Border p={0} />
                 </FrontEndLogic>
