@@ -186,7 +186,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                 <div className={`ml-auto flex items-center gap-2`}>
                   {/* mute - unmute ----*/}
                   <div className={`${buttonStyle}`}>
-                    {member.ismuted ? (
+                    {member.isMuted ? (
                       <chatIcons.mute
                         className={`${buttonStyle}`}
                         onClick={() => handelUnMute(member.userid.id)} // handel click ***
