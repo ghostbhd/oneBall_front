@@ -33,10 +33,13 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     };
     document.addEventListener("mousedown", handleClickOutside);
 
-    // console.log("Socket connected:", socket.connected);
-
     if (activeChannel) {
       socket.emit("getChannelMessages", activeChannel);
+    }
+
+    if (membershipStatus.isMember) {
+      setShowMembers(false);
+      setMoreBadge(false);
     }
 
     socket.on("newChannelMessage", (newMessage) => {
@@ -52,6 +55,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.messages)) {
+        console.log("data.messages", data);
         setMessages(data.messages);
       } else {
         setMessages([]);
@@ -123,6 +127,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const handleChannelmembers = () => {
     socket.emit("getChannelMembers", activeChannel);
     setShowMembers(true);
+    setMoreBadge(false);
   };
 
   const li = `p-2 hover:bg-bLight_5/50 hover:text-bLight_2 cursor-pointer`;
@@ -164,14 +169,10 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       </div>
       {/* Window navbar ---------------------------------------------------------------- */}
       <div
-        className={`flex flex-row p-2 pr-6 h-max items-center rounded-t-lg bg-bDark_1/40 `}
+        className={`flex flex-row p-4 px-6 h-max items-center rounded-t-lg bg-bDark_1/40 `}
       >
         {/* channel image and name ---------------------*/}
         <div className={`flex gap-2 items-center text-bLight_4`}>
-          <div
-            className={`w-16 h-16 rounded-full border-2 border-bLight_5/80`}
-            style={ImgBg({ img: "/src/assets/avatar/Deadpool.jpg" })}
-          ></div>
           <p>#{membershipStatus.channelName}</p>
         </div>
 
@@ -202,7 +203,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
               className={`text-3xl text-bLight_4 cursor-pointer transition-all duration-500 ${
                 moreBadge ? "rotate-90" : ""
               }`}
-              onClick={() => setMoreBadge(!moreBadge)}
+              onClick={() => setMoreBadge((prev) => !prev)}
             >
               {<chatIcons.more />}
             </div>
@@ -215,12 +216,22 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                 moreBadge ? "" : "hidden"
               }`}
           >
-            <li className={`${li}`} onClick={() => handleChannelmembers()}>
+            <li
+              className={`${li}`}
+              onClick={() => handleChannelmembers()}
+              ref={moreBadgeRef}
+            >
               Members
             </li>
             {membershipStatus.isOwner ? (
-              <li className={`${li}`}>Edit Password</li>
-            ) : null}
+              typeOfChannel === "Public" ? (
+                <li className={`${li}`}>Add password</li>
+              ) : (
+                <li className={`${li}`}>Change password</li>
+              )
+            ) : (
+              ""
+            )}
           </ul>
         </div>
       </div>

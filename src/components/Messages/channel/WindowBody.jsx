@@ -1,12 +1,12 @@
-import React from 'react'
 import style from '../../../style'
 import { ImgBg } from '../../../style'
+import PropTypes from 'prop-types'
 
 const WindowBody = ({messageContainerRef, messages, currentUserToken}) => {
   return (
     <div
-        className={`flex w-full px-5 flex-col scroll-mb-0 overflow-y-auto ${style.chatWindowMessages}`}
-        ref={messageContainerRef}
+        className={`flex w-full px-5 flex-col scroll-mb-0 overflow-y-auto`}
+        // ref={messageContainerRef}
       >
         {Array.isArray(messages) && messages.length === 0 ? (
           <p className={`mx-auto mt-5 text-sm text-bLight_4/80`}>
@@ -19,7 +19,7 @@ const WindowBody = ({messageContainerRef, messages, currentUserToken}) => {
               key={message.id}
               className={`my-2 p-2 rounded-lg w-7/12 relative flex gap-2 align-baseline ${
                 message.senderId === currentUserToken.id
-                  ? "ml-auto text-right p-2 rounded-lg flex-row-reverse items-end"
+                  ? "ml-auto text-right p-2 rounded-lg flex-row-reverse"
                   : "text-left p-2 rounded-lg"
               }`}
             >
@@ -50,6 +50,12 @@ const WindowBody = ({messageContainerRef, messages, currentUserToken}) => {
         )}
       </div>
   )
+}
+
+WindowBody.propTypes = {
+  messageContainerRef: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
+  currentUserToken: PropTypes.object.isRequired,
 }
 
 export default WindowBody
