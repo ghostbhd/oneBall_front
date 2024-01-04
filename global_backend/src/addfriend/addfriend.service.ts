@@ -17,7 +17,7 @@ export class AddfriendService {
     private readonly users: Repository<User> ,private readonly userservice: UserService) {}
   async create(createAddfriendDto: CreateAddfriendDto) {
 
-    console.log("the username is ", createAddfriendDto.username1)
+    //console.log("the username is ", createAddfriendDto.username1)
     const username1 = await this.userservice.findUserByUn(createAddfriendDto.username1) 
     const username2 = await this.userservice.findUserByUn(createAddfriendDto.username2)
     if (!username2 || !username1 || username1.username == username2.username)
@@ -37,14 +37,14 @@ export class AddfriendService {
         date.getMinutes().toString().padStart(2, '0') + ':' +
         date.getSeconds().toString().padStart(2, '0');
     const entity = await this.friendShip.save(friend);
-    console.log(entity);
+    //console.log(entity);
     const user1 = await this.friendShip.findOne({where: {userid1: username1} , relations: ['userid1', 'userid2' ] })
     const username = await this.users.findOne({where: {username: createAddfriendDto.username2}, relations: ['friendship_sender', 'friendship_reciver']})
-    console.log("user2.friendship_sender================== ", username.friendship_sender);
-    console.log("user2.friendship_reciver================== ", username.friendship_reciver);
+    //console.log("user2.friendship_sender================== ", username.friendship_sender);
+    //console.log("user2.friendship_reciver================== ", username.friendship_reciver);
     const usernamee = await this.users.findOne({where: {username: createAddfriendDto.username1}, relations: ['friendship_sender', 'friendship_reciver']})
-    console.log("user1.friendship_sender================== ", usernamee.friendship_sender);
-    console.log("user1.friendship_reciver================== ", usernamee.friendship_reciver);
+    //console.log("user1.friendship_sender================== ", usernamee.friendship_sender);
+    //console.log("user1.friendship_reciver================== ", usernamee.friendship_reciver);
     const user2 = await this.friendShip.find({where: {userid2: username2}})
     if (!user1 || !user2)
       throw new HttpException("the user is not found", 404);
@@ -56,10 +56,10 @@ export class AddfriendService {
     if (!username1 || !username2)
       throw new HttpException("the not found", 404);
     const userfriend = await this.friendShip.findOne({where: {userid1: username1, userid2: username2}, relations: ['userid1']})
-    console.log("this the usenamer ===> ", userfriend.userid1.username)
+    //console.log("this the usenamer ===> ", userfriend.userid1.username)
     const us1 = { ...userfriend,  Status: "accepted"}
     const u = await this.friendShip.save(us1)
-    console.log("the friend is accepted ==============> ", u);
+    //console.log("the friend is accepted ==============> ", u);
   }
   
   async RefuseUser(accepted_friend: CreateAddfriendDto) {
@@ -68,10 +68,10 @@ export class AddfriendService {
     if (!username1 || !username2)
       throw new HttpException("the not found", 404);
     const userfriend = await this.friendShip.findOne({where: {userid1: username1, userid2: username2}, relations: ['userid1']})
-    console.log("this the usenamer ===> ", userfriend.userid1.username)
+    //console.log("this the usenamer ===> ", userfriend.userid1.username)
     // const us1 = { ...userfriend,  Status: "accepted"}
     const u = await this.friendShip.remove(userfriend)
-    console.log("the friend is Refused ==============> ", u);
+    //console.log("the friend is Refused ==============> ", u);
   }
   findAll() {
     return `This action returns all addfriend`;

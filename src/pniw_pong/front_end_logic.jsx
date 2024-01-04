@@ -78,7 +78,10 @@ export default function FrontEndLogic({ children, f_l }) {
             })
         })
 
-        f_l.ws.on("ball:first_ping", (data) => {
+        f_l.ws.on("ball:first_ping", (data, callback) => {
+            callback({
+                status: 'ok'
+            })
             console.log("first ping ", data.h_dur, data.v_dur)
             console.log("max_size ==> ", f_l.game_inf.max_y, " ball_size ==> ", ball_size, "border size ==> ", border_size)
             console.log("pitch_h ==>", f_l.game_inf.pitch_h)
