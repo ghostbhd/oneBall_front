@@ -63,7 +63,10 @@ export default function FrontEndLogic({ children, f_l }) {
             })
         })
 
-        f_l.ws.on("ball:horizontal:bounce", (data) => {
+        f_l.ws.on("ball:horizontal:bounce", (data, callback) => {
+            callback({
+                status: 'ok'
+            })
             const dir = data.dir == 1 ? f_l.game_inf.pitch_w - ball_size : 0
             const from_ = data.dir == 1 ? 0 : f_l.game_inf.pitch_w - ball_size
             //console.log("h_bounce from ", from_, "to " , dir, 
@@ -101,6 +104,24 @@ export default function FrontEndLogic({ children, f_l }) {
                 },
             })
         })
+
+        f_l.ws.on("ball:vertical:bounce", (data, callback) => {
+            callback({
+                status : 'ok'
+            })
+            const dir = data.dir == 1 ? f_l.game_inf.pitch_h - ball_size : 0
+            const from_ = 0 + (data.pos * (f_l.game_inf.pitch_h - ball_size))
+            //console.log("v_bounce from ", from_, "to ", dir,
+            //"duration :", data.dur, "pos", data.pos)
+            f_l.b_apiy.start({
+                from: { y: from_ },
+                to: { y: dir },
+                config: {
+                    duration: data.dur
+                }
+            })
+        })
+
         return () => {
             f_l.ws.off("ball:first_ping")
             f_l.ws.off("opponent_found")

@@ -15,17 +15,17 @@ export class AddfriendGateway {
   server: Server;
 
   async handleConnection(client: Socket) {
-    // console.log(client);
-    console.log("------------------------||||||||||||||--------------------------------------");
-    console.log('Client connected');
+    // //console.log(client);
+    //console.log("------------------------||||||||||||||--------------------------------------");
+    //console.log('Client connected');
     const token = client.handshake.auth.token;
     if (token == undefined)
       return ;
     // console.log(this.server);
-    console.log("token ----> " ,token)
+    //console.log("token ----> " ,token)
     const userPaylod : any = jwtDecode(token)
     const user = await this.userservice.findUserByUn(userPaylod.name)
-    // console.log(user);
+    // //console.log(user);
     await this.userservice.saveUser({ ...user, status: "Online"})
     
     const user1 = await this.userservice.findUserByUn(userPaylod.name)
@@ -34,7 +34,7 @@ export class AddfriendGateway {
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Client disconnected');
+    //console.log('Client disconnected');
   }
   @SubscribeMessage('FriendRequest')
   create(@MessageBody() createAddfriendDto: CreateAddfriendDto) {
