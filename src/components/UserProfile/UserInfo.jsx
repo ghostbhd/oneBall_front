@@ -30,7 +30,7 @@ const UserInfo = ({ data }) => {
     <div className={`w-full h-max flex relative overflow-hidden`}>
       {/* content ----------------------------- */}
       <div
-        className={`w-full h-max flex sm:flex-row flex-col sm:space-y-0 space-y-4 sm:space-x-8`}
+        className={`w-full h-max flex sm:flex-row flex-col gap-4`}
       >
         <div
           className={`flex flex-row space-x-8 sm:w-max w-full p-4 bg-gradient-to-r 

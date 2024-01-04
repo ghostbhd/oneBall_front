@@ -5,6 +5,8 @@ import style, { ImgBg } from "../../../style";
 import { chatIcons } from "../../../constants";
 import ChannelMembers from "./ChannelMembers.jsx";
 import WindowBody from "./WindowBody.jsx";
+import AddPasswordInput from "./AddPasswordInput.jsx";
+import ChangePasswordInput from "./ChangePasswordInput.jsx";
 
 import PropTypes from "prop-types";
 
@@ -17,6 +19,9 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const [sender, setSender] = useState(null);
   const [membershipStatus, setMembershipStatus] = useState({});
   const [moreBadge, setMoreBadge] = useState(false);
+
+  const [showAddPassword, setShowAddPassword] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const socket = useSocket();
   const messageContainerRef = useRef(null);
@@ -223,19 +228,24 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             >
               Members
             </li>
-            {membershipStatus.isOwner ? (
-              typeOfChannel === "Public" ? (
-                <li className={`${li}`}>Add password</li>
+            {membershipStatus.isOwner && typeOfChannel !== "private" ? (
+              typeOfChannel === "public" ? (
+                <li onClick={() => setShowAddPassword(true)} className={`${li}`}>Add password</li>
               ) : (
-                <li className={`${li}`}>Change password</li>
+                <li onClick={() => setShowChangePassword(true)} className={`${li}`}>Change password</li>
               )
             ) : (
-              ""
+              null
             )}
           </ul>
         </div>
       </div>
 
+      {/* Add password input --------------------------------------------------------------- */}
+      {showAddPassword && <AddPasswordInput showAddPassword={showAddPassword} setShowAddPassword={setShowAddPassword} />}
+
+      {/* Change password input --------------------------------------------------------------- */}
+      {showChangePassword && <ChangePasswordInput showChangePassword={showChangePassword} setShowChangePassword={setShowChangePassword} />}
       {/* Members ---------------------------------------------------------------- */}
       <ChannelMembers
         show={showMembers}
@@ -246,7 +256,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
       {/* Message display  ----------------------------------------------------------------------*/}
       <WindowBody
-        messageContainerRef={messageContainerRef}
+        // messageContainerRef={messageContainerRef}
         messages={messages}
         currentUserToken={currentUserToken}
       />
