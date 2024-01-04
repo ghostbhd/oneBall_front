@@ -203,7 +203,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
 ChannelMembers.propTypes = {
   show: PropTypes.bool.isRequired,
   setShow: PropTypes.func.isRequired,
-  activeChannel: PropTypes.string.isRequired,
+  activeChannel: PropTypes.number.isRequired,
   currentUserToken: PropTypes.object.isRequired,
 };
 

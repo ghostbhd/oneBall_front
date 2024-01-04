@@ -38,7 +38,7 @@ function ChannelList({
       socket.off("userChannels");
       socket.off("newChannelCreated");
     };
-  }, [socket, currentUserToken.id]);
+  }, [socket]);
 
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);
