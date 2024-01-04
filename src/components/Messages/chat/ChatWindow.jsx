@@ -99,7 +99,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
 
 
 
-  // console.log(`active chat user is ${activeChatUser}`);
+  console.log(`active chat user is ${activeChatUser}`);
   return (
     <div className={`w-full  ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}

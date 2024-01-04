@@ -86,7 +86,6 @@ const ChatList = ({
         console.log("Search response:", response.chatId);
         setActiveChat(response.chatId);
 
-        
         socket.emit("request-messages-for-chat", { chatId: response.chatId , sender_id: currentUserToken.id});
       } else if (response.error) {
         console.error("Search error:", response.error);
@@ -111,6 +110,8 @@ const ChatList = ({
     socket.emit("request-messages-for-chat", {
       chatId,
     });
+        // socket.emit("request-latest-messages", currentUserToken.id);
+
 
         // socket.emit("request-latest-messages", currentUserToken.id);
 

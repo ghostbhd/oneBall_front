@@ -6,8 +6,9 @@ import Stats from "./Stats";
 import Settings from "./Settings";
 import {SideBar, MSideBar, NavBar} from "./Bars"
 import UserProfile from "./UserProfile";
-import Auth from "./Authentication/index"
+import Auth from "./Authentication"
 import CallBack from "./Authentication/CallBack"
+import Error_404 from "./404";
 
 export {
     SideBar,
@@ -21,5 +22,6 @@ export {
     NavBar,
     UserProfile,
     Auth,
-    CallBack
+    CallBack,
+    Error_404
 }

@@ -1,30 +1,36 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSocket } from "../../../Socketio.jsx";
-import style, { ImgBg } from "../../../style";
+import { chatIcons } from "../../../constants/index.js";
 
-function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOfChannel, setTypeOfChannel }) {
+function ChannelList({
+  activeChannel,
+  currentUserToken,
+  setActiveChannel,
+  typeOfChannel,
+  setTypeOfChannel,
+}) {
   const [channels, setChannels] = useState([]);
-//   const [typeOfChannel, setTypeOfChannel] = useState("");
+  //   const [typeOfChannel, setTypeOfChannel] = useState("");
   const socket = useSocket();
 
-  console.log("typeOfChannel is ", typeOfChannel); //! hehowa fin 7atit lik type of channel
+  // console.log("typeOfChannel is ", typeOfChannel); //! hehowa fin 7atit lik type of channel
 
   useEffect(() => {
-
     socket.on("channelType", (data) => {
       setTypeOfChannel(data.channelType);
-      //   console.log("Channel type:=========================", data.channelType);
     });
 
     socket.emit("getUserChannels", currentUserToken.id);
 
     socket.on("userChannels", (userChannels) => {
-      console.log("Received userChannels:", userChannels);
+      // console.log("Received userChannels:", userChannels);
       setChannels(userChannels);
+      // console.log("userChannels", userChannels);
     });
 
     socket.on("newChannelCreated", (newChannel) => {
       setChannels((prevChannels) => [...prevChannels, newChannel]);
+      // console.log("new channel created", newChannel);
     });
 
     return () => {
@@ -32,11 +38,11 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOf
       socket.off("userChannels");
       socket.off("newChannelCreated");
     };
-  }, [socket, currentUserToken.id]);
+  }, [socket]);
 
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);
-    socket.emit("getChannelType", activeChannel); 
+    socket.emit("getChannelType", activeChannel);
     console.log("active channel is => ", activeChannel);
   };
 
@@ -45,18 +51,15 @@ function ChannelList({ activeChannel, currentUserToken, setActiveChannel, typeOf
       {channels.map((channel) => (
         <div
           key={channel.id}
-          className={`flex items-center p-2 rounded-full cursor-pointer ${
-            activeChannel === channel.id ? "bg-bLight_5/50" : "banana"
+          className={`flex items-center p-2 px-4 bg-bLight_5/10 rounded-full cursor-pointer ${
+            channel.id === activeChannel ? "bg-bLight_5/50" : "banana"
           }`}
           onClick={() => handleChannelClick(channel.id)}
         >
-          <div
-            className={`w-12 h-12 rounded-full`}
-            style={ImgBg({
-              img: "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg",
-            })}
-          ></div>
-          <p className="text-bLight_4 px-3">#{channel.Channel}</p>
+          {console.log("channel id is ", channel.id, "active channel is ", activeChannel)}
+          <div className="text-bLight_4">#{channel.Channel}</div>
+          {/* lock icon for protectd channel */}
+          {channel.protected ? <div className={`text-bLight_5 ml-auto`}>{<chatIcons.lock />}</div> : null}
         </div>
       ))}
     </div>

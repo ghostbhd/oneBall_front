@@ -5,21 +5,20 @@ import { useState, useEffect } from "react";
 import { useSocket } from "../../../Socketio.jsx";
 import { Link } from "react-router-dom";
 
-const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
+const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, membershipStatus }) => {
   const [members, setMembers] = useState([]);
   const socket = useSocket();
 
   // member button style -------------------------------------------------
   const buttonStyle = `text-xl text-bLight_5 hover:text-bLight_2 cursor-pointer`;
 
-  // console.log(members);
   useEffect(() => {
     // channel members -----------------------
     socket.on("channelMembers", (data) => {
-      // console.log("memers are:", data);
       setMembers(data);
-      console.log("members are:", data);
     });
+
+    console.log("Token is ", currentUserToken);
 
     return () => {
       socket.off("channelMembers");
@@ -33,12 +32,6 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
       requesterId: requesterId,
     });
   };
-
-  const handleAddPassword = () => {};
-
-  const handleRemovePassword = () => {};
-
-  const handelChangePassword = () => {};
 
   // set admin ----------------------------------
   const handelSetAdmin = (channelId, seter, userSetted) => {
@@ -141,6 +134,8 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                     <p className={`text-bLight_4 py-1 text-sm`}>
                       @{member.username}
                     </p>
+                    {membershipStatus.isOwner ? 
+                    <>
                     {/* role --------------------------- */}
                     {member.isMember ? (
                       <div className={`flex items-center gap-2`}>
@@ -180,11 +175,20 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                         </button>
                       </div>
                     )}
+                    </>
+                    :
+                    null}
                   </div>
                 </div>
                 {/* buttons ------------------------------------------------------------------------------------ */}
                 <div className={`ml-auto flex items-center gap-2`}>
-                  {/* mute - unmute ----*/}
+                  {currentUserToken.name === member.username ? (
+                    <div onClick={() => handelKickUser(member.userid.id)} className={`text-sm text-bDark_4 bg-bLight_4 p-1 cursor-pointer rounded-full`}>
+                      Leave channel
+                    </div>
+                  ) : (
+                    <>
+                    {/* mute - unmute ----*/}
                   <div className={`${buttonStyle}`}>
                     {member.isMuted ? (
                       <chatIcons.mute
@@ -201,12 +205,12 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                   {/* ban - unban ----*/}
                   <div>
                     {member.isBanned ? (
-                      <chatIcons.ban
+                      <chatIcons.unban
                         className={`${buttonStyle}`}
                         onClick={() => handelUnBane(member.userid.id)}
                       />
                     ) : (
-                      <chatIcons.unban
+                      <chatIcons.ban
                         className={`${buttonStyle}`}
                         onClick={() => handelBane(member.userid.id)}
                       />
@@ -218,7 +222,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                       className={`${buttonStyle}`}
                       onClick={() => handelKickUser(member.userid.id)}
                     />
-                  </div>
+                  </div></>)}
                 </div>
               </div>
             ))}

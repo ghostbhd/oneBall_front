@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
 import GameDetails from "./GameDetails";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
@@ -12,46 +12,40 @@ const UserProfile = () => {
 
   // username from url params ------------------
   const { username } = useParams();
-  const header = getHeaders().headers;
+  const header = GetHeaders().headers;
   const history = useNavigate();
   header.append("Content-Type", "application/json");
 
   useEffect(() => {
-    
     const fetchdata = async () => {
-      try {
-        const response = await fetch("http://localhost:3009/profileData/user", {
-          method: "POST",
-          headers: header,
-          body: JSON.stringify({ username: username }),
-          
-        });
-
-        if (!response.ok)
-        {
+      await fetch("http://localhost:3009/profileData/user", {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify({ username: username }),
+      })
+        .then((response) => {
           if (response.status === 404) {
-            console.log("User not found------");
-            // return;
-          }
-          else if (response.status === 301) {
+            history("/Error_404");
+            return;
+          } else if (response.status === 301) {
             history("/profile");
-            console.log("same user profile");
-            // return;
+            // console.log("same user profile");
+            return;
+          } else if (response.status === 401) {
+            history("/Auth");
+            // console.log("user not authenticated");
+            return;
+          } else if (response.status === 500) {
+            history("/Error_500");
+            // console.log("server error");
+            return;
           }
-          else
-          {
-            throw new Error("User not found");
-          }
-
-        }
-
-        const data = await response.json();
-        setData(data);
-        setLoading(false);
-      } catch (error) {
-        // console.error("user profile error")
-        // console.log("error:", error.message);
-      }
+          return response.json();
+        })
+        .then(async (response) => {
+          setData(response);
+          setLoading(false);
+        });
     };
     fetchdata();
   }, []);
@@ -61,6 +55,7 @@ const UserProfile = () => {
       className={`w-full md:h-full h-max flex md:flex-row flex-col 
       md:space-y-0 space-y-8 md:p-6 md:pt-16 p-4 pb-16`}
     >
+      
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...

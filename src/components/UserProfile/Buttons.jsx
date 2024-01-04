@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import style from "../../style";
 import { icons } from "../../constants";
 import { useSocket } from "../../Socketio";
-import { getHeaders } from "../../jwt_token";
+import { GetHeaders } from "../../jwt_token";
 import * as jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ const Buttons = ({ data: initialData }) => {
   const text = `font-bold sm:block hidden`;
   const icon = `text-xl sm:ml-2 sm:mx-0 mx-4`;
 
-  const token = getHeaders().jwttt;
+  const token = GetHeaders().jwttt;
   const decoded = jwtDecode.jwtDecode(token);
 
   const socket = useSocket();
@@ -46,6 +46,7 @@ const Buttons = ({ data: initialData }) => {
     }));
   };
 
+  // remove friend ------------------------------
   const RefuseFriend = () => {
     console.log(
       "Refuse friend Clicked ",
@@ -57,13 +58,6 @@ const Buttons = ({ data: initialData }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    setData((prevData) => ({
-      ...prevData,
-      friend: false,
-      friendRequest: false,
-      friendRequestSent: false,
-    }));
-    // window.location.reload();
   };
 
   const AcceptFriend = () => {
@@ -77,28 +71,15 @@ const Buttons = ({ data: initialData }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    setData((prevData) => ({
-      ...prevData,
-      friend: true,
-      friendRequest: false,
-      friendRequestSent: false,
-    }));
   };
 
   useEffect(() => {
     socket.on("FriendRequest", (stats) => {
-      // Update the component state
-      dataSetten(stats);
+      if (stats.username === data.username) {
+        dataSetten(stats);
+      }
     });
 
-    // socket.on("RefuseRequest", (stats) => {
-    //   dataSetten(stats);
-    // });
-
-    // socket.on("AcceptRequest", (stats) => {
-    //   dataSetten(stats);
-    // });
-    // Clean up the socket subscription on component unmount
     return () => {
       socket.off("FriendRequest");
     };
@@ -121,12 +102,12 @@ const Buttons = ({ data: initialData }) => {
       </Link>
 
       <div
-        className={`flex flex-row text-sm w-full sm:!mt-auto justify-between`}
+        className={`flex flex-row text-sm w-full sm:!mt-auto gap-2 justify-between`}
       >
         {!data.friend && !data.friendRequest && !data.friendRequestSent ? (
           // Add friend button ------------------------------------------------------------
           <div
-            className={`${button} bg-bDark_4 text-bLight_3`}
+            className={`${button} bg-bDark_4 text-bLight_3 border-2 border-bDark_3/40`}
             onClick={addFriend}
           >
             <p className={`${text} `}>Add Friend</p>
@@ -135,7 +116,7 @@ const Buttons = ({ data: initialData }) => {
         ) : data.friend ? (
           // Remove friend button -----------------------------------------------------------
           <div
-            className={`${button} bg-bLight_4 text-bDark_3`}
+            className={`${button} bg-bLight_5 text-bDark_1 hover:bg-bLight_4 transition-all`}
             onClick={RefuseFriend}
           >
             <p className={`${text} `}>Remove Friend</p>
@@ -162,7 +143,7 @@ const Buttons = ({ data: initialData }) => {
         ) : data.friendRequestSent ? (
           // Cancel friend request button ---------------------------------------------------
           <div
-            className={`${button} bg-bLight_4 text-bDark_3`}
+            className={`${button} bg-bLight_4 text-bDark_4`}
             onClick={RefuseFriend}
           >
             <p className={`${text} `}>Cancel Request</p>

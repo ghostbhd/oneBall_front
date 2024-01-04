@@ -1,9 +1,20 @@
-import GoogleAuthButton from "./googleAuth";
-import FortyTwoAuthButton from "./FortyTwoAuth";
 import { ImgBg } from "../../style";
 import { icons } from "../../constants";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 const Auth = () => {
+
+  const token = Cookies.get("accessToken");
+  const history = useNavigate();
+  
+  useEffect(() => {
+    if (token) {
+      history("/");
+    }
+  }, [token])
+
   // buttons style --------------------------------------------------
   const btn = `p-2 xl:p-4 rounded-lg flex flex-row items-center 
               w-full text-sm xl:text-base cursor-pointer`;
@@ -16,7 +27,7 @@ const Auth = () => {
 
   return (
     <div
-      className={`absolute w-screen h-screen z-50 left-0 top-0 justify-center
+      className={`w-screen h-screen z-50 left-0 top-0 justify-center
         sm:p-10 p-6 flex flex-col items-center`}
       style={ImgBg({ img: "/src/assets/loginPageBg.jpg" })}
     >
@@ -35,19 +46,25 @@ const Auth = () => {
           <p>Welcome to Ping Pong game</p>
         </div>
 
-{/* google button ----------------------------------------------- */}
-        <div className={`bg-white text-black ${btn}`}>
+        {/* google button ----------------------------------------------- */}
+        <Link
+          to={"http://localhost:3009/auth/login/google"}
+          className={`bg-white text-black ${btn}`}
+        >
           <div className={`mr-4 text-xl xl:text-3xl`}>{<icons.google />}</div>
-          <GoogleAuthButton />
-        </div>
+          Login with Google
+        </Link>
 
-{/* 42 button ----------------------------------------------- */}
-        <div className={`bg-black text-white ${btn} mb-auto`}>
+        {/* 42 button ----------------------------------------------- */}
+        <Link
+          to={"http://localhost:3009/auth/login/FortyTwo"}
+          className={`bg-black text-white ${btn} mb-auto`}
+        >
           <div className={`w-5 xl:w-7 mr-4`}>
             <img src={icons.fortyTwo} alt="42" className="" />{" "}
           </div>
-          <FortyTwoAuthButton />
-        </div>
+          Login with 42
+        </Link>
       </div>
     </div>
   );
