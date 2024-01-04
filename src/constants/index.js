@@ -166,7 +166,7 @@ export const chatIcons = {
   mute : FaVolumeXmark,
   unmute : FaVolumeHigh,
   kick : MdDelete,
-  ban : ImUserMinus,
+  ban : MdBlockFlipped,
   unban : ImUserPlus,
   owner : FaCrown,
   admin : MdAdminPanelSettings,

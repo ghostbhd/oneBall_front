@@ -2,7 +2,7 @@ import style from '../../../style'
 import { ImgBg } from '../../../style'
 import PropTypes from 'prop-types'
 
-const WindowBody = ({messageContainerRef, messages, currentUserToken}) => {
+const WindowBody = ({ messages, currentUserToken}) => {
   return (
     <div
         className={`flex h-full w-full px-5 flex-col scroll-mb-0 overflow-y-auto`}
@@ -53,7 +53,6 @@ const WindowBody = ({messageContainerRef, messages, currentUserToken}) => {
 }
 
 WindowBody.propTypes = {
-  messageContainerRef: PropTypes.object.isRequired,
   messages: PropTypes.array.isRequired,
   currentUserToken: PropTypes.object.isRequired,
 }
