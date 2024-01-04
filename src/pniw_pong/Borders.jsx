@@ -1,5 +1,4 @@
-import { animated, useSpring } from '@react-spring/web'
-import { useEffect } from 'react'
+import { animated} from '@react-spring/web'
 import "./index.css"
 import "./k.css"
 

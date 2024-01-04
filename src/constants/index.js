@@ -25,13 +25,32 @@ import { MdBlockFlipped } from "react-icons/md"; // block icon
 import { MdPersonAddDisabled } from "react-icons/md"; // cancel request icon
 import { TiThMenu } from "react-icons/ti"; // menu icon
 import { FcGoogle } from "react-icons/fc"; // google icon
+import { FaUserClock } from "react-icons/fa"; // friend waiting icon
+import { IoPlay } from "react-icons/io5"; // play icon
+import { MdCancel } from "react-icons/md"; // stop icon
+import { CgSearch } from "react-icons/cg"; // search icon
 
 import FortyTwo  from '../assets/42.svg'; // 42 logo
 
+// for chat --------------------------------------------------
+import { IoSearchSharp } from "react-icons/io5"; // search icon
+import { MdOutlineMoreVert } from "react-icons/md"; // more icon
+import { IoIosSend } from "react-icons/io"; // send icon
+import { FaVolumeXmark } from "react-icons/fa6"; // volume mute icon
+import { FaVolumeHigh } from "react-icons/fa6"; // volume unmute icon
+import { MdDelete } from "react-icons/md"; // delete icon
+
+// import { HiBan } from "react-icons/hi"; // ban icon
+// import { TbUserPlus } from "react-icons/tb"; // unban icon
+import { ImUserMinus } from "react-icons/im"; // ban icon
+import { ImUserPlus } from "react-icons/im"; // unban icon
+
+import { FaCrown } from "react-icons/fa"; // owner icon
+import { MdAdminPanelSettings } from "react-icons/md"; // admin icon
+import { FaLock } from "react-icons/fa6"; // lock icon
 
 
-// chat icons
-import { BiBlock } from "react-icons/bi"; // block icon
+
 
 export const sidebarItems = [ // From med to lg screens
   {
@@ -63,12 +82,7 @@ export const sidebarItems = [ // From med to lg screens
     icon: MdSettings,
     title: "Settings",
     link: "/settings",
-  },
-  {
-    icon: TbLogout,
-    title: "Logout",
-    link: "/logout",
-  },
+  }
 ];
 
 export const phoneBottomBar = [ // Responsive bottom bar
@@ -113,6 +127,7 @@ export const phoneNavBar = [
 ];
 
 export const icons = { // All needed icons
+  logout : TbLogout,
   toRight: FaAngleRight,
   toLeft: FaAngleLeft,
   arrowRight: BiSolidArrowToRight,
@@ -137,8 +152,23 @@ export const icons = { // All needed icons
   menu: TiThMenu,
   google: FcGoogle,
   fortyTwo: FortyTwo,
+  friendWaiting: FaUserClock,
+  play: IoPlay,
+  stop: MdCancel,
+  search: CgSearch,
 };
 
 export const chatIcons = {
-  block: BiBlock,
+  searsh : IoSearchSharp,
+  more : MdOutlineMoreVert,
+  send : IoIosSend,
+  // channel members ----------------
+  mute : FaVolumeXmark,
+  unmute : FaVolumeHigh,
+  kick : MdDelete,
+  ban : MdBlockFlipped,
+  unban : ImUserPlus,
+  owner : FaCrown,
+  admin : MdAdminPanelSettings,
+  lock : FaLock,
 };

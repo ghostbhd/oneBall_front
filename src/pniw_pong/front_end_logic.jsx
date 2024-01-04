@@ -1,9 +1,7 @@
-import { useSpring } from "@react-spring/web"
-import { Children, Fragment, useDebugValue, useEffect, useState } from "react"
-import { useSocket } from "../../Socketio"
-import { getHeaders } from "../../jwt_token"
+import { Fragment, useEffect, useState } from "react"
+import { useSocket } from "../Socketio"
+import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
-import { createContext } from "react";
 import { Whoami } from "./index.jsx";
 
 
@@ -37,7 +35,7 @@ export default function FrontEndLogic({ children, f_l }) {
     let border_size = f_l.game_inf.border_size
     let pl_width = f_l.game_inf.pl_w
 
-    const token = getHeaders().jwttt;
+    const token = GetHeaders().jwttt;
     const currentUserToken = jwtDecode.jwtDecode(token);
     console.log("current user id is ", currentUserToken.id);
     useEffect(() => {
@@ -63,64 +61,41 @@ export default function FrontEndLogic({ children, f_l }) {
                 f_l.b_apix.pause()
                 console.log("winner winner chicken dinner ", data.winner)
             })
+        })
 
-            f_l.ws.on("ball:vertical:bounce", (data, callback) => {
-                callback({
-                    status: 'ok'
-                })
-                const dir = data.dir == 1 ? f_l.game_inf.pitch_h - ball_size : 0
-                const from_ = 0 + (data.pos * (f_l.game_inf.pitch_h - ball_size))
-                //console.log("v_bounce from ", from_, "to ", dir,
-                //"duration :", data.dur, "pos", data.pos)
-                f_l.b_apiy.start({
-                    from: { y: from_ },
-                    to: { y: dir },
-                    config: {
-                        duration: data.dur
-                    }
-                })
+        f_l.ws.on("ball:horizontal:bounce", (data) => {
+            const dir = data.dir == 1 ? f_l.game_inf.pitch_w - ball_size : 0
+            const from_ = data.dir == 1 ? 0 : f_l.game_inf.pitch_w - ball_size
+            //console.log("h_bounce from ", from_, "to " , dir, 
+            //"duration :", data.dur)
+
+            f_l.b_apix.start({
+                from: { x: from_ },
+                to: { x: dir },
+                config: {
+                    duration: data.dur
+                }
+            })
+        })
+
+        f_l.ws.on("ball:first_ping", (data) => {
+            console.log("first ping ", data.h_dur, data.v_dur)
+            console.log("max_size ==> ", f_l.game_inf.max_y, " ball_size ==> ", ball_size, "border size ==> ", border_size)
+            console.log("pitch_h ==>", f_l.game_inf.pitch_h)
+            f_l.b_apix.start({
+                from: { x: pl_width },
+                to: { x: f_l.game_inf.pitch_w - ball_size },
+                config: {
+                    duration: data.h_dur
+                }
             })
 
-            f_l.ws.on("ball:horizontal:bounce", (data, callback) => {
-                callback({
-                    status: 'ok'
-                })
-                const dir = data.dir == 1 ? f_l.game_inf.pitch_w - ball_size : 0
-                const from_ = data.dir == 1 ? 0 : f_l.game_inf.pitch_w - ball_size
-                //console.log("h_bounce from ", from_, "to " , dir, 
-                //"duration :", data.dur)
-
-                f_l.b_apix.start({
-                    from: { x: from_ },
-                    to: { x: dir },
-                    config: {
-                        duration: data.dur
-                    }
-                })
-            })
-
-            f_l.ws.on("ball:first_ping", (data, callback) => {
-                callback({
-                    status: 'ok'
-                })
-                console.log("first ping ", data.h_dur, data.v_dur)
-                console.log("max_size ==> ", f_l.game_inf.max_y, " ball_size ==> ", ball_size, "border size ==> ", border_size)
-                console.log("pitch_h ==>", f_l.game_inf.pitch_h)
-                f_l.b_apix.start({
-                    from: { x: pl_width },
-                    to: { x: f_l.game_inf.pitch_w - ball_size },
-                    config: {
-                        duration: data.h_dur
-                    }
-                })
-
-                f_l.b_apiy.start({
-                    from: { y: border_size },
-                    to: { y: f_l.game_inf.pitch_h - ball_size },
-                    config: {
-                        duration: data.v_dur
-                    },
-                })
+            f_l.b_apiy.start({
+                from: { y: border_size },
+                to: { y: f_l.game_inf.pitch_h - ball_size },
+                config: {
+                    duration: data.v_dur
+                },
             })
         })
         return () => {

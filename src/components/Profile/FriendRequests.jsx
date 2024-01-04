@@ -1,44 +1,73 @@
-import { friendRequestData } from "../../data/mockApi";
+// import { friendRequestData } from "../../data/mockApi";
 import { useEffect, useState } from "react";
 import { ImgBg } from "../../style";
 import { icons } from "../../constants";
 import { Link } from "react-router-dom";
+import { useSocket } from "../../Socketio";
+import * as jwtDecode from "jwt-decode";
+import { GetHeaders } from "../../jwt_token";
 
 const FriendRequests = () => {
   const [data, setData] = useState([]);
+  const socket = useSocket();
+  const token = GetHeaders().jwttt;
+  const decoded = jwtDecode.jwtDecode(token);
 
+  const removeFromData = (username) => {
+    setData((prevData) => prevData.filter((item) => item.username !== username));
+  };
+
+  // Add data ------------------------------------------------
+  const addData = (obj) => {
+    setData( prevData => [...prevData, obj]);
+  };
+
+  const printData = (msg) => {
+    console.log(msg, "--------------------data", data);
+  };
+
+  // accept friend request ---------------------------
   const handelAccept = ({ username }) => {
-    console.log("accept");
-    console.log(username);
-    // delete user from data object
-    data.forEach((item, index) => {
-      if (item.username === username) {
-        data.splice(index, 1);
-        setData([...data]); // update data
-      }
+    socket.emit("AcceptRequest", {
+      username1: decoded.name,
+      username2: username,
     });
+    removeFromData(username);
   };
 
+  // decline friend request ---------------------------
   const handelDecline = ({ username }) => {
-    console.log("decline");
-    console.log(username);
-    // delete user from data object
-    data.forEach((item, index) => {
-      if (item.username === username) {
-        data.splice(index, 1);
-        setData([...data]); // update data
-      }
+    socket.emit("RefuseRequest", {
+      username1: decoded.name,
+      username2: username,
     });
+    removeFromData(username);
   };
+
   useEffect(() => {
-    friendRequestData()
-      .then((data) => {
-        console.log(data); // Log the data to check its structure
-        setData(data);
-      })
-      .catch((err) => {
-        console.log("Error fetching data", err);
-      });
+    socket.on("Friend-Request", (reqData) => {
+      // console.log("FriendRequests", reqData);
+      const newData = {
+        username: reqData.username,
+        fullName: reqData.fullName,
+        image: reqData.image,
+      };
+      // adding data to previous data
+      addData(newData);
+    });
+
+    socket.on("Friend-Refuse", (data) => {
+      // console.log("Refuse", data);
+      const friend = data.username;
+      console.log("username in Friend-Refuse", data.username);
+      // delete from data if the username is exist in data
+      removeFromData(friend);
+    });
+
+    return () => {
+      socket.off("Friend-Request");
+      socket.off("Friend-Refuse");
+    };
   }, []);
 
   return (
@@ -56,7 +85,7 @@ const FriendRequests = () => {
         {data.map((item) => (
           // friend request item -----------------------------------------------------------------
           <li
-            key={item.id}
+            key={item.username}
             className={`flex flex-col items-center relative w-32 z-50 shadow-xl 
               bg-gradient-to-bl from-bLight_5/50 to-bLight_5/10 p-2 rounded-2xl
             `}
@@ -69,8 +98,17 @@ const FriendRequests = () => {
               style={ImgBg({ img: item.image })}
             ></Link>
             {/* username and fullName ---- */}
-            <p title={item.fullName} className={`text-bLight_2 text-sm w-full text-center truncate`}>{item.fullName}</p>
-            <p className={`text-bLight_2/80 text-xs w-full text-center truncate`}>@{item.username}</p>
+            <p
+              title={item.fullName}
+              className={`text-bLight_2 text-sm w-full text-center truncate`}
+            >
+              {item.fullName}
+            </p>
+            <p
+              className={`text-bLight_2/80 text-xs w-full text-center truncate`}
+            >
+              @{item.username}
+            </p>
 
             {/* accept and decline buttons ----------------- */}
             <div

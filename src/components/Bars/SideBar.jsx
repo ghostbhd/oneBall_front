@@ -1,13 +1,61 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sidebarItems, icons } from "../../constants";
 import style from "../../style";
+import { useSocket } from "../../Socketio";
 
 import { useTheme } from "../../themeContext";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+
+import * as jwtDecode from "jwt-decode";
+import { GetHeaders } from "../../jwt_token";
 
 const SideBar = () => {
   const location = useLocation();
 
+  var username = "";
+
+  const history = useNavigate();
+
   const { theme, toggleSidebar } = useTheme();
+
+  const socket = useSocket();
+  
+  useEffect(() => {
+    // if (socket)
+    if (socket == null) return;
+    
+    socket.on("deconnected", (ok) => {
+      console.log("ok ======== ", ok);
+      if (ok === "ok") {
+        Cookies.remove("accessToken");
+        socket.disconnect();
+        history("/Auth");
+      }
+    });
+
+    return () => {
+      if (socket) socket.off("deconnected");
+    };
+  }, [socket]);
+  
+  const token = GetHeaders().jwttt;
+  var decoded;
+  if (token != undefined) {
+    decoded = jwtDecode.jwtDecode(token);
+    username = decoded.name;
+  } else {
+    decoded = undefined;
+    username = null;
+    return;
+  }
+  const handelDesconnect = () => {
+    console.log(socket);
+    if (socket == undefined || socket == null) {
+      console.log("hhhhhhhhh");
+      return;
+    } else socket.emit("deconnect", username);
+  };
 
   return (
     <div
@@ -42,7 +90,7 @@ const SideBar = () => {
           <li
             key={item.title}
             className={`${
-              index === sidebarItems.length - 3
+              index === sidebarItems.length - 2
                 ? "!mb-auto"
                 : index === 0
                 ? "!mt-auto"
@@ -52,7 +100,8 @@ const SideBar = () => {
             <Link
               to={item.link}
               className={`flex flex-row p-2 items-center ${
-                location.pathname === `${item.link}` || location.pathname === `${item.link}/`
+                location.pathname === `${item.link}` ||
+                location.pathname === `${item.link}/`
                   ? `bg-org_3 rounded-3xl text-white font-bold`
                   : ""
               }`}
@@ -60,7 +109,9 @@ const SideBar = () => {
               {/* Icon ---------- */}
               <span
                 className={`${
-                  theme.isSidebarCollapsed ? "text-2xl xl:text-3xl" : "text-xl xl:text-2xl"
+                  theme.isSidebarCollapsed
+                    ? "text-2xl xl:text-3xl"
+                    : "text-xl xl:text-2xl"
                 }`}
               >
                 {<item.icon />}
@@ -77,6 +128,38 @@ const SideBar = () => {
             </Link>
           </li>
         ))}
+
+        {/* logout ------------------------ */}
+        <li
+          className={`${
+            theme.isSidebarCollapsed ? "w-max" : "w-full"
+          } cursor-pointer`}
+          onClick={() => {
+            handelDesconnect();
+          }}
+        >
+          <div className={`flex flex-row p-2 items-center`}>
+            {/* Icon ---------- */}
+            <span
+              className={`${
+                theme.isSidebarCollapsed
+                  ? "text-2xl xl:text-3xl"
+                  : "text-xl xl:text-2xl"
+              }`}
+            >
+              {<icons.logout />}
+            </span>
+
+            {/* title ---- */}
+            <span
+              className={`text-base overflow-hidden w-max ${
+                theme.isSidebarCollapsed ? "hidden" : "ml-8"
+              }`}
+            >
+              Logout
+            </span>
+          </div>
+        </li>
       </ul>
     </div>
   );

@@ -1,45 +1,41 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-import style from "../../style";
+import { useState, useEffect } from "react";
+import style from "../../../style";
 import { IoIosSend } from "react-icons/io";
-import { FiMoreVertical } from "react-icons/fi";
-import { useSocket } from "../../Socketio.jsx";
-
-
+import { useSocket } from "../../../Socketio.jsx";
+import {Link} from "react-router-dom";
+ 
 const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [received, setreceived] = useState(null);
+  // const [Avatar, setUseravatar] = useState(null);
+  // const [username, setUsername] = useState(null);
 
 
   const socket = useSocket();
 
 
-  console.log("message ->", received);
-
-
   const handleSendMessage = () => {
-    if (message.trim()) {
-      const newMessage = {
 
-        content: message,
-        timestamp: new Date().toISOString(),
-        senderId: currentUserToken.id,
-        recieverId: received,
-        chatId: activeChat,
+    // if (message.trim()) {
+      // const newMessage = {}
 
-      };
-      console.log('Sending message:', newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      //   Content: message,
+      //   Timestamp: new Date().toISOString(),
+      //   senderId: currentUserToken.id,
+      //   chatId: activeChat,
+
+      // // };
+      // console.log('Sending message:', newMessage);
+      // setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       socket.emit("send-message", {
         chatId: activeChat,
-        content: message,
+        Content: message,
         senderId: currentUserToken.id,
-        recieverId: received,
+
       });
       setMessage("");
-    }
+    // }
   };
 
   useEffect(() => {
@@ -49,8 +45,11 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
     console.log(`active chat is ${activeChat}`);
 
 
+
+
     const handleNewMessage = (newMessage) => {
-      if (newMessage.chatId === activeChat) {
+      console.log("new message received:================================================", newMessage);
+      if (newMessage.chatid.id === activeChat) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
@@ -58,13 +57,16 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
     socket.on("new-message", handleNewMessage);
 
     socket.on("messages-for-chat-response", (chatData) => {
-      console.log("Chat data received:", chatData.chatReceiverId);
+      console.log("new:================================================", chatData);
+      
 
+      if (chatData.id === activeChat) {
+        setMessages((prevMessages) => [...prevMessages, chatData.messages]);
+      }
       if (chatData && Array.isArray(chatData.messages)) {
         console.log("Chat data received:", chatData);
 
-    
-        setreceived(chatData.chatReceiverId);
+
 
         setMessages(chatData.messages);
 
@@ -78,53 +80,56 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
       }
     });
 
+    const sortedMessages = [...messages].sort(
+      
+      (a, b) => new Date(a.Timestamp) - new Date(b.Timestamp)
+      
+      );
+      console.log("#################### ", sortedMessages);
 
+      setMessages(sortedMessages);
     return () => {
       socket.off("new-message", handleNewMessage);
       socket.off("messages-for-chat-response");
       socket.emit("leave-chat", { chatId: activeChat });
     };
+    
+  }, [activeChat, socket]);
+  
 
-  }, [activeChat, socket, messages]);
 
-
-
-  const sortedMessages = [...messages].sort(
-
-    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-  );
 
   console.log(`active chat user is ${activeChatUser}`);
   return (
-    <div className={`w-9/12  ${style.contentW} ${style.chatContainer}`}>
+    <div className={`w-full  ${style.contentW} ${style.chatContainer}`}>
       {/* Chat header */}
-      <div className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5">
+      <Link className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5" to={"/profile/"}>
         <img
           className="w-16 h-18  rounded-full  mr-5"
-          src={activeChatUser?.avatar || "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"} // Use the avatar from activeChatUser
+          src={activeChatUser?.avatar || "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"}
           alt={activeChatUser?.name || "Default Name"}
         />
         <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
-      </div>
+      </Link>
 
-      {/* Message display  */}
+      {/* Message display  ----------------------------------------------------------------------*/}
       <div
         className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
       >
-        {sortedMessages.map((message) => {
-
+        {messages.map((message) => {
+          {/*!AYOUB update the message.senderId line 117*/}
           return (
             <div
               key={message.id}
-              className={`mb-5 ${message.senderId === currentUserToken.id
-                  ? style.messageCurrentUser
-                  : style.messageOtherUser
+              className={`mb-5 ${message.ReceiverUserID.id === currentUserToken.id
+                ? style.messageOtherUser
+                  : style.messageCurrentUser
                 }`}
             >
-              <p className="text-white">{message.content}</p>
+              <p className="text-white">{message.Content}</p>
               {/* Format the timestamp as needed */}
               <span className="text-gray-400">
-                {new Date(message.timestamp).toLocaleTimeString()}
+                {new Date(message.Timestamp).toLocaleTimeString()}
               </span>
             </div>
           );

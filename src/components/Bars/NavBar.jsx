@@ -1,24 +1,48 @@
 import { icons } from "../../constants";
 import { useState, useEffect, useRef } from "react";
-import style from "../../style";
+import NotificationBadge from "./NotificationBadge";
 
 const NavBar = () => {
   const [showNotif, setShowNotif] = useState(false);
-  const notifRef = useRef(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const notifRef = useRef();
+  const searchInputRef = useRef();
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
-        setShowNotif(false);
-      }
-    };
+    if (showSearch) {
+      searchInputRef.current.focus();
+    } else {
+      setSearchValue("");
+    }
+  }, [showSearch]);
 
+  const handleClickOutside = (event) => {
+    if (
+      searchInputRef.current &&
+      !searchInputRef.current.contains(event.target) &&
+      (!notifRef.current || !notifRef.current.contains(event.target))
+    ) {
+      setShowNotif(false);
+      setShowSearch(false);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    // Check the key code
+    if (event.key === 'Enter') {
+      // Handle the Enter key press
+      console.log('Enter key pressed!', "search value is ", searchValue);
+    }
+  };
+
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [notifRef, showNotif]);
+  }, []);
 
   return (
     <div
@@ -26,8 +50,35 @@ const NavBar = () => {
         md:bg-transparent bg-bDark_4/90
       `}
     >
-      <div className="md:w-max w-full relative flex flex-row items-center p-1 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
-        {/* notification icon ------- */}
+      <div className="md:w-max w-full gap-4 flex flex-row items-center p-1 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
+        {/* search icon ----------------------------------------------------- */}
+        <div
+          className={`text-2xl flex items-center text-bLight_5 bg-bDark_4 cursor-pointer rounded-full shadow-4xl transition-all`}
+        >
+          <input
+            ref={searchInputRef}
+            type="text"
+            className={`text-bLight_5 outline-none placeholder:text-bLight_5 text-sm bg-transparent transition-all ease-in-out duration-400 ${
+              showSearch ? "w-60 p-2" : "w-0 p-0"
+            }`}
+            placeholder="Search for users"
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+              if (!showSearch) setSearchValue("");
+            }}
+            autoFocus={showSearch}
+            value={searchValue}
+            onKeyDown={handleKeyDown}
+          />
+          <div
+            className="p-2 flex items-center"
+            onClick={() => setShowSearch(!showSearch)}
+          >
+            {!showSearch ? <icons.search /> : <icons.xmark />}
+          </div>
+        </div>
+
+        {/* notification icon --------------------------------------- */}
         <div
           className={`text-2xl text-bDark_4 md:ml-auto cursor-pointer p-2 bg-bLight_4/70 rounded-full`}
           onClick={() => setShowNotif(true)}
@@ -35,40 +86,18 @@ const NavBar = () => {
           {<icons.notifications />}
         </div>
 
-        {/* menu icon -------------- */}
-        <div className={`md:hidden text-3xl text-bLight_5 ml-auto cursor-pointer`}>
+        {/* menu icon --------------------------------------------------------- */}
+        <div
+          className={`md:hidden text-3xl text-bLight_5 ml-auto cursor-pointer`}
+        >
           {<icons.menu />}
         </div>
       </div>
 
       {/* notification badge --------- */}
-      <div
-        ref={notifRef}
-        className={`absolute flex flex-col right-0 h-screen z-50 text-bLight_2 top-0 w-80 
-          border-l-2 border-bLight_5/20 p-2 bg-bDark_5/10 !backdrop-blur-[100px] shadow-4xl
-          ${!showNotif ? "hidden" : ""}
-        `}
-      >
-        {/* close badge ------ */}
-        <div className={`w-full p-2 flex mb-3`}>
-          <div
-            className={`ml-auto text-xl cursor-pointer`}
-            onClick={() => setShowNotif(false)}
-          >
-            {<icons.xmark />}
-          </div>
-        </div>
-
-        {/* items ---------------- */}
-        <ul className="w-full h-full flex flex-col gap-2 overflow-y-auto">
-          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-2xl`}>
-            test
-          </li>
-          <li className={`w-full flex flex-row bg-bDark_1/70 p-3 rounded-2xl`}>
-            test
-          </li>
-        </ul>
-      </div>
+      {/* {showNotif ? ( */}
+      <NotificationBadge {...{ notifRef, showNotif, setShowNotif }} />
+      {/* ) : null} */}
     </div>
   );
 };

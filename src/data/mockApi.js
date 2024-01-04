@@ -136,7 +136,6 @@ const profile = {
 
 const frindRequest = [
   {
-    id: 1,
     username: "anass",
     image: "/src/assets/avatar/Deadpool.jpg",
     fullName: "Anass ghost",
@@ -165,7 +164,7 @@ const userprofile = {
   games: 24,
   lose: 8,
   win: 16,
-  state: "Online", // Online, InGame, Offline(2 Hours ago, yesterday, 2 days ago, last month, 1 year ago ...)
+  state: "Offline", // Online, InGame, Offline(2 Hours ago, yesterday, 2 days ago, last month, 1 year ago ...)
   friend: false,
   friendRequest: false,
   friendRequestSent: false,
@@ -219,22 +218,22 @@ const userprofile = {
       time: "10:00",
     },
   ],
-  acheivement: [
-    {
-      id: 1,
-      title: "First Game",
-      description: "Play your first game",
-      icon: "https://picsum.photos/200/200",
-      date: "Aug 30",
-    },
-    {
-      id: 2,
-      title: "First Win",
-      description: "Win your first game",
-      icon: "https://picsum.photos/200/200",
-      date: "Aug 30",
-    },
-  ],
+  // acheivement: [
+  //   {
+  //     id: 1,
+  //     title: "First Game",
+  //     description: "Play your first game",
+  //     icon: "https://picsum.photos/200/200",
+  //     date: "Aug 30",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "First Win",
+  //     description: "Win your first game",
+  //     icon: "https://picsum.photos/200/200",
+  //     date: "Aug 30",
+  //   },
+  // ],
 };
 
 const games = {
