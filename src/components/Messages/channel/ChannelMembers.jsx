@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useSocket } from "../../../Socketio.jsx";
 import { Link } from "react-router-dom";
 
-const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
+const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, membershipStatus }) => {
   const [members, setMembers] = useState([]);
   const socket = useSocket();
 
@@ -17,6 +17,8 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
     socket.on("channelMembers", (data) => {
       setMembers(data);
     });
+
+    console.log("Token is ", currentUserToken);
 
     return () => {
       socket.off("channelMembers");
@@ -30,12 +32,6 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
       requesterId: requesterId,
     });
   };
-
-  const handleAddPassword = () => {};
-
-  const handleRemovePassword = () => {};
-
-  const handelChangePassword = () => {};
 
   // set admin ----------------------------------
   const handelSetAdmin = (channelId, seter, userSetted) => {
@@ -57,16 +53,42 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
     });
   };
 
-  const handelMute = () => {};
-
-  const handelUnMute = (requesterId) => {
-    // console.log(" Unmuting user");
-    // socket.emit("UnMuteUser",activeChannel,requesterId);
+  const handelMute = (requesterId) => {
+    console.log(" MuteUser", currentUserToken.id, requesterId);
+    socket.emit("MuteUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
   };
 
-  const handelBane = () => {};
+  const handelUnMute = (requesterId) => {
+    console.log(" Unmuting user", currentUserToken.id, requesterId);
 
-  const handelUnBane = () => {};
+    socket.emit("UnMuteUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
+  };
+
+  const handelBane = (requesterId) => {
+    console.log(" BanUser", currentUserToken.id, requesterId);
+    socket.emit("BanUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
+  };
+
+  const handelUnBane = (requesterId) => {
+    console.log(" UnBanUser", currentUserToken.id, requesterId);
+    socket.emit("UnBanUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
+  };
 
   return (
     <div
@@ -112,6 +134,8 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                     <p className={`text-bLight_4 py-1 text-sm`}>
                       @{member.username}
                     </p>
+                    {membershipStatus.isOwner ? 
+                    <>
                     {/* role --------------------------- */}
                     {member.isMember ? (
                       <div className={`flex items-center gap-2`}>
@@ -151,13 +175,22 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                         </button>
                       </div>
                     )}
+                    </>
+                    :
+                    null}
                   </div>
                 </div>
                 {/* buttons ------------------------------------------------------------------------------------ */}
                 <div className={`ml-auto flex items-center gap-2`}>
-                  {/* mute - unmute ----*/}
+                  {currentUserToken.name === member.username ? (
+                    <div onClick={() => handelKickUser(member.userid.id)} className={`text-sm text-bDark_4 bg-bLight_4 p-1 cursor-pointer rounded-full`}>
+                      Leave channel
+                    </div>
+                  ) : (
+                    <>
+                    {/* mute - unmute ----*/}
                   <div className={`${buttonStyle}`}>
-                    {member.mute ? (
+                    {member.isMuted ? (
                       <chatIcons.mute
                         className={`${buttonStyle}`}
                         onClick={() => handelUnMute(member.userid.id)} // handel click ***
@@ -171,13 +204,13 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                   </div>
                   {/* ban - unban ----*/}
                   <div>
-                    {member.ban ? (
-                      <chatIcons.ban
+                    {member.isBanned ? (
+                      <chatIcons.unban
                         className={`${buttonStyle}`}
                         onClick={() => handelUnBane(member.userid.id)}
                       />
                     ) : (
-                      <chatIcons.unban
+                      <chatIcons.ban
                         className={`${buttonStyle}`}
                         onClick={() => handelBane(member.userid.id)}
                       />
@@ -189,7 +222,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                       className={`${buttonStyle}`}
                       onClick={() => handelKickUser(member.userid.id)}
                     />
-                  </div>
+                  </div></>)}
                 </div>
               </div>
             ))}

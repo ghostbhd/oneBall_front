@@ -72,7 +72,7 @@ const Messages = () => {
 
   return (
     <div
-      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} p-6 pt-14`}
+      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} p-6 pb-14 md:pb-0 md:pt-14`}
     >
       {/* chat sideBar ############################################################### */}
       <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>

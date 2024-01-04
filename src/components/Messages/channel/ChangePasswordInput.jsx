@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import style from "../../../style";
+import PropTypes from "prop-types";
 
 const ChangePasswordInput = ({ showChangePassword, setShowChangePassword }) => {
-
-  const [password , setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (!showChangePassword) {
       setPassword("");
     }
-  }
-  , [showChangePassword]);
+  }, [showChangePassword]);
 
   const handleChangePassword = () => {
     console.log("change password");
-  }
+  };
 
   const handleRemovePassword = () => {
     console.log("remove password");
-  }
+  };
 
   return (
     <div
@@ -56,6 +55,11 @@ const ChangePasswordInput = ({ showChangePassword, setShowChangePassword }) => {
       </div>
     </div>
   );
+};
+
+ChangePasswordInput.PropTypes = {
+  showChangePassword: PropTypes.bool,
+  setShowChangePassword: PropTypes.func,
 };
 
 export default ChangePasswordInput;

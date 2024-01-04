@@ -58,13 +58,6 @@ const Buttons = ({ data: initialData }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    setData((prevData) => ({
-      ...prevData,
-      friend: false,
-      friendRequest: false,
-      friendRequestSent: false,
-    }));
-    // window.location.reload();
   };
 
   const AcceptFriend = () => {
@@ -78,12 +71,6 @@ const Buttons = ({ data: initialData }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    setData((prevData) => ({
-      ...prevData,
-      friend: true,
-      friendRequest: false,
-      friendRequestSent: false,
-    }));
   };
 
   useEffect(() => {
