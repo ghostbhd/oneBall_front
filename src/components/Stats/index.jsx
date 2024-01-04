@@ -1,26 +1,62 @@
 import style from "../../style";
 import { motion } from 'framer-motion';
+import GoldTrophyCup from "../../assets/GoldTrophyCup.svg";
+import BronzeTrophyCup from "../../assets/BronzeTrophyCup.svg";
+import SilverTrophyCup from "../../assets/SilverTrophyCup.svg";
+import Hashtag from "../../assets/hashtag.svg";
+import ProfileTest from "../../assets/test.jpg";
+
+
+const TrophyImage = ({ position }) => {
+  let trophyImage;
+
+  switch (position) {
+    case 1:
+      trophyImage = <img src={GoldTrophyCup} alt="Gold Trophy" style={{ height: '45px', width: '45px' ,  marginLeft: '3%' }} />;
+      break;
+    case 2:
+      trophyImage = <img src={SilverTrophyCup} alt="Silver Trophy" style={{ height: '45px', width: '45px' , marginLeft: '3%'}} />;
+      break;
+    case 3:
+      trophyImage = <img src={BronzeTrophyCup} alt="Bronze Trophy" style={{ height: '45px', width: '45px' ,  marginLeft: '3%'}} />;
+      break;
+    default:
+      // trophyImage = <img src={Hashtag} alt="Hashtag" style={{ height: '45px', width: '35px' ,  marginLeft: '2%', backgroundColor: 'green'}} />;
+      trophyImage = (
+        <div className="flex items-center justify-center h-12 w-10 mx-auto ml-8">
+          <span className="font-bold text-center text-xl text-org_3">#{position}</span>
+        </div>
+      
+      );
+  }
+
+  return trophyImage;
+};
+
+
+
 const Stats = () => {
 
+
   const randomArray = [
-    { id: 1, name: '#1 Player', xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    { id: 2, name: '#2 Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    { id: 3, name: '#3 Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    { id: 4, name: '#4 Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
-    { id: 5, name: '#5 Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 6, name: '#6 Player', xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    { id: 7, name: '#7 Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    { id: 8, name: '#8 Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    { id: 9, name: '#9 Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
-    { id: 10, name: 'Player #10', xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 11, name: 'Player #11', xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 12, name: 'Player #12', xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 13, name: 'Player #13', xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    { id: 14, name: 'Player #14', xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    { id: 15, name: 'Player #15', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    { id: 16, name: 'Player #16', xp: 876, win: 10, lose: 0, badge: 'Master' },
-    { id: 17, name: 'Player #17', xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 18, name: 'Player #18', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 1,   name:  (<img src={ProfileTest} alt="UserProfile" className="h-12 w-12 ml-9 border-2 border-solid  border-org_3 overflow-hidden"  style={{ borderRadius: '1vw' }}/>, 'aya'), xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    { id: 2,   name: 'Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    { id: 3,   name: 'Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    { id: 4,   name: 'Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
+    { id: 5,   name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 6,   name: 'Player', xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    { id: 7,   name: 'Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    { id: 8,   name: 'Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    { id: 9,   name: 'Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
+    { id: 10, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 11, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 12, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 13, name: 'Player', xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    { id: 14, name: 'Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    { id: 15, name: 'Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    { id: 16, name: 'Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
+    { id: 17, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 18, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
   ];
   
   return (
@@ -52,6 +88,7 @@ const Stats = () => {
         <ul className="w-full max-w-screen-md">
           {randomArray.map(item => (
             <li key={item.id} className={`w-full h-3/4 flex justify-around text-bLight_4 align-middle p-3 mt-2 rounded-2xl bg-bLight_5/40 `}>
+              <TrophyImage position={item.id} />
               <span className="flex-1 w-10 text-center">{item.name}</span>
               <span className="flex-1 w-10 text-center">{item.xp}</span>
               <span className="flex-1 w-10 text-center">{item.win}</span>

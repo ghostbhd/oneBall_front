@@ -11,9 +11,11 @@ import {
   UserProfile,
   Auth,
   CallBack,
+  // WelcomeBack,
   Error_404,
 } from "./components";
 import style from "./style";
+import WelcomeBack from "./components/WelcomeBack";
 
 import { SocketProvider } from "./Socketio";
 
@@ -83,6 +85,7 @@ const App = () => {
                       <Route path="/messages" element={<Messages />} />
                       <Route path="/profile" element={<Profile />} />
                       <Route path="/stats" element={<Stats />} />
+                      <Route path="/welcomeback" element={<WelcomeBack />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route
                         path="/profile/:username"

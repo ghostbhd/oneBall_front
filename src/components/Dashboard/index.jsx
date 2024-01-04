@@ -6,6 +6,7 @@ import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
 import { GetHeaders } from "../../jwt_token";
 
+
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +38,7 @@ const Dashboard = () => {
         setLoading(false);
       });
   }, []);
+
 
   return (
     <div
