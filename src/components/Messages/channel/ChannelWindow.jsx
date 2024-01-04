@@ -32,7 +32,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     if (activeChannel) {
       socket.emit("getChannelMessages", activeChannel);
     }
-
+console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     // setShowPasswordInput(false);
     socket.on("newChannelMessage", (newMessage) => {
       console.log("newChannelMessage", newMessage);
@@ -77,6 +77,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
           isAdmin: data.isAdmin,
           isMember: data.isMember,
           isOwner: data.isOwner,
+          isBuned: data.isBuned,
+          isMuted: data.isMuted,
         });
       }
 

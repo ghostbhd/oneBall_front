@@ -27,12 +27,11 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
   }, []);
 
   const handelKickUser = (requesterId) => {
-    socket.emit(
-      "kickUserFromChannel",{
-      channelId:activeChannel,
+    socket.emit("kickUserFromChannel", {
+      channelId: activeChannel,
       userId: currentUserToken.id,
-      requesterId:requesterId
-      });
+      requesterId: requesterId,
+    });
   };
 
   const handleAddPassword = () => {};
@@ -53,25 +52,50 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
 
   // remove admin ----------------------------------
   const handelRemoveAdmin = (channelId, seter, userSetted) => {
-    
     console.log("setting user as admin", channelId, seter, userSetted);
     socket.emit("removeUserFromAdmin", {
       channelId: channelId,
       userId: seter,
       requesterId: userSetted,
     });
-  }
-
-  const handelMute = () => {};
-
-  const handelUnMute = (requesterId) => {
-    // console.log(" Unmuting user");
-    // socket.emit("UnMuteUser",activeChannel,requesterId);
   };
 
-  const handelBane = () => {};
+  const handelMute = (requesterId) => {
+    console.log(" MuteUser", currentUserToken.id, requesterId);
+    socket.emit("MuteUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
+  };
 
-  const handelUnBane = () => {};
+  const handelUnMute = (requesterId) => {
+    console.log(" Unmuting user", currentUserToken.id, requesterId);
+
+    socket.emit("UnMuteUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
+  };
+
+  const handelBane = (requesterId) => {
+    console.log(" BanUser", currentUserToken.id, requesterId);
+    socket.emit("BanUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
+  };
+
+  const handelUnBane = (requesterId) => {
+    console.log(" UnBanUser", currentUserToken.id, requesterId);
+    socket.emit("UnBanUser", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+      targetUserId: requesterId,
+    });
+  };
 
   return (
     <div
@@ -162,7 +186,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                 <div className={`ml-auto flex items-center gap-2`}>
                   {/* mute - unmute ----*/}
                   <div className={`${buttonStyle}`}>
-                    {member.mute ? (
+                    {member.ismuted ? (
                       <chatIcons.mute
                         className={`${buttonStyle}`}
                         onClick={() => handelUnMute(member.userid.id)} // handel click ***
@@ -176,7 +200,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
                   </div>
                   {/* ban - unban ----*/}
                   <div>
-                    {member.ban ? (
+                    {member.isBanned ? (
                       <chatIcons.ban
                         className={`${buttonStyle}`}
                         onClick={() => handelUnBane(member.userid.id)}
@@ -208,7 +232,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken }) => {
 ChannelMembers.propTypes = {
   show: PropTypes.bool.isRequired,
   setShow: PropTypes.func.isRequired,
-  activeChannel: PropTypes.string.isRequired,
+  activeChannel: PropTypes.number.isRequired,
   currentUserToken: PropTypes.object.isRequired,
 };
 
