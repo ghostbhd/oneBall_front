@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 const WindowBody = ({messageContainerRef, messages, currentUserToken}) => {
   return (
     <div
-        className={`flex w-full px-5 flex-col scroll-mb-0 overflow-y-auto`}
+        className={`flex h-full w-full px-5 flex-col scroll-mb-0 overflow-y-auto`}
         // ref={messageContainerRef}
       >
         {Array.isArray(messages) && messages.length === 0 ? (
