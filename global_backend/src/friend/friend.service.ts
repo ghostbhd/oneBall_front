@@ -3,8 +3,9 @@ import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Friendship } from 'src/entities/Friendship.entity';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class FriendService {
@@ -25,10 +26,12 @@ export class FriendService {
     return friend;
   }
 
-  async findOne(username: string): Promise<Friendship> {
-    const user = await this.userService.findUserByUn(username) 
-    console.log('hanaaaaaaaaaaaaaaaaaaaaaa')
-    const friend = this.friendService.findOne({where:[{userid1: user}, {userid2: user}], relations: ['userid1', 'userid2']})
+  async findOne(user1: User, user2: User): Promise<Friendship> {
+    // const user = await this.userService.findUserByUn(username) 
+    console.log('hanaaaaaaaaaaaaaaaaaaaaaa', user1, "hanaaaaaaaaaaaaaaaaaaaaaa ", user2)
+    const friend = await this.friendService.findOne({where:[{userid1: Equal(user1.id), userid2: Equal(user2.id)}, {userid1: Equal(user2.id), userid2: Equal(user1.id)}], relations: ['userid1', 'userid2']})
+
+    console.log("the friendship table |||||", friend)
     return friend;
   }
 

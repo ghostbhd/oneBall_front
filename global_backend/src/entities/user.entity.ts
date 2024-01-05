@@ -7,6 +7,8 @@ import { Channel_Message } from './Channel_Message.entity';
 import { StringifyOptions } from 'querystring';
 import { GameHistory } from './GameHistory.entity';
 import { GameStats } from './game.entity'
+import { Socket } from 'socket.io';
+import { BlockedList } from './BlockedList.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -19,8 +21,12 @@ export class User {
   Avatar: string;
   @Column({default: false})
   is_twofactor: boolean;
+  @Column({ nullable: true })
+  secret: string;
   @Column({nullable: true})
   status: string;
+  @Column({ nullable: true})
+  socket: string;
   @OneToMany(() => Friendship, friendship => friendship.userid2)
   friendship_reciver: Friendship[];
   @OneToMany(() => Friendship, friendship => friendship.userid1)
@@ -43,6 +49,10 @@ export class User {
   GameStats: GameStats;
   @OneToMany(() => GameHistory, Gamehistory => Gamehistory.opponent)
   opponent: GameHistory[];
+  @OneToMany(() => BlockedList, (block) => block.BlockedUser)
+  blockedList: BlockedList[];
+  @OneToMany(() => BlockedList, (block) => block.Blocker)
+  blocker: BlockedList[];
   //  @OneToMany(() => Channel, channel => channel.owner)
   // ownedChannels: Channel[];
 }

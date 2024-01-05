@@ -18,13 +18,13 @@ export class FriendController {
         return await this.friendService.findAll(createFriendDto.currentUser);
   }
 
-  @Get(':id')
-  findOne(username: string) {
-    return this.friendService.findOne(username);
-  }
+//   @Get(':id')
+//   findOne(username: string) {
+//     return this.friendService.findOne(username);
+//   }
 
-  @Delete()
-  remove() {
-    return this.friendService.remove();
-  }
+//   @Delete()
+//   remove() {
+//     return this.friendService.remove();
+//   }
 }

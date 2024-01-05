@@ -14,7 +14,7 @@ export class Chat {
     @ManyToOne(() => User, user => user.chatid2)
     receiver: User;
 
-    content: string;
+    Content: string;
     
     @OneToMany(() => Message, message => message.chatid)
     messageid: Message[];

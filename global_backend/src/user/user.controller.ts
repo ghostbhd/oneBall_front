@@ -26,9 +26,21 @@ export class UserController {
     @Get()
     // @UseGuards(AuthGuard('jwt'))
     async findAllUsers(@Req() req: any): Promise<User[]> {
-    console.log("here is the payload =====> " + JSON.stringify(req.user));
+    // console.log("here is the payload =====> " + JSON.stringify(req.user));
     const user = this.userService.findAllUsers();
     console.log("0000000000000------------------000000000000")
     return user; 
+  }
+  @Post('friend')
+  async userFriend (@Body() body: any) {
+    try
+  {
+
+    console.log("the frind is " , body.friend)
+     await this.userService.friends(body.friend);
+    }
+    catch (error) {
+      return null;
+    }
   }
 }
