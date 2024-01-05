@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { icons } from "../../constants";
 import style from "../../style";
 import { ImgBg } from "../../style";
+import { useState } from "react";
 
 const Details = ({ data }) => {
   // position of the star and level ------------------------
@@ -12,7 +13,7 @@ const Details = ({ data }) => {
 
   return (
     <div
-      className={`w-full sm:flex hidden flex-col md:p-10 sm:p-2 sm:pt-10 h-max space-y-4`}
+      className={`w-full sm:flex hidden  overflow-hidden h-full flex-col md:p-10 sm:p-2 sm:pt-10 gap-4`}
     >
       {/* image ----------------------------------------- */}
       <div
@@ -29,7 +30,7 @@ const Details = ({ data }) => {
         </div>
       </div>
       {/* Details ----------------------------------------- */}
-      <div className="mx-auto w-3/4 flex flex-col">
+      <div className="mx-auto h-max w-3/4 flex flex-col">
         {/* xp and progress ------------------------ */}
         <div className="w-full flex flex-wrap">
           {/* xp ------------------------ */}
