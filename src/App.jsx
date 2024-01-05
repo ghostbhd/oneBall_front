@@ -46,7 +46,7 @@ const App = () => {
       <Routes>
         <Route path="/Auth" element={<Auth />} />
         <Route path="/Callback" element={<CallBack />} />
-
+        
         <Route
           path="*"
           element={

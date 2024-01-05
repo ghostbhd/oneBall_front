@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { icons } from "../../constants";
 import style from "../../style";
 import { ImgBg } from "../../style";
-import { useState } from "react";
+import FriendList from "./FriendList";
 
 const Details = ({ data }) => {
   // position of the star and level ------------------------
@@ -61,6 +61,7 @@ const Details = ({ data }) => {
           </p>
         </div>
       </div>
+      <FriendList />
     </div>
   );
 };
