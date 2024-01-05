@@ -5,6 +5,9 @@ import UserInfo from "./UserInfo";
 import UserGamesHistory from "./UserGamesHistory";
 import GameDetails from "./GameDetails";
 import { GetHeaders } from "../../jwt_token";
+import { useSocket } from "../../Socketio";
+import Cookies from "js-cookie";
+import * as jwtDecode from "jwt-decode";
 
 const UserProfile = () => {
   const [data, setData] = useState([]);
@@ -15,6 +18,13 @@ const UserProfile = () => {
   const header = GetHeaders().headers;
   const history = useNavigate();
   header.append("Content-Type", "application/json");
+  const [block, setBlock] = useState({
+    blocker: false,
+    blocked: false,
+    username: "",
+  });
+
+  const socket = useSocket();
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -44,22 +54,66 @@ const UserProfile = () => {
         })
         .then(async (response) => {
           setData(response);
+          // setBlock({blocker: response.blocker, blocked: response.blocked, username: response.username});
           setLoading(false);
         });
     };
     fetchdata();
   }, []);
 
+  const handelUnblock = () => {
+    console.log("unblock clicked");
+    socket.emit("UnBlock-User", {
+      username1: data.username,
+      username2: jwtDecode.jwtDecode(Cookies.get("accessToken")).name,
+    });
+  };
+
+  useEffect(() => {
+
+    if (!socket) return;
+    socket.on("Ha-Tblocka", (stats) => {
+      if (stats.username === data.username) {
+        setBlock(stats);
+      }
+    });
+    return () => {
+      socket.off("Ha-Tblocka");
+    };
+  }, [socket]);
+
   return (
     <div
       className={`w-full md:h-full h-max flex md:flex-row flex-col 
       md:space-y-0 space-y-8 md:p-6 md:pt-16 p-4 pb-16`}
     >
-      
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
           Loading...
         </p>
+      ) : block.blocked || block.blocker ? (
+        <div className={`flex m-auto items-center justify-center`}>
+          {block.blocker ? (
+            <div className={`flex flex-col gap-6`}>
+              <p className={`text-xl text-bLight_4`}>You blocked this user</p>
+              <p
+                onClick={handelUnblock}
+                className={`p-6 text-center bg-org_3/40 hover:bg-org_3/60 cursor-pointer transition-all 
+                  text-org_2/80 rounded-2xl border-2 border-org_2/50 text-2xl font-bold`}
+              >
+                Unblock
+              </p>
+            </div>
+          ) : (
+            <div className={`w-4/5 flex`}>
+              <p className={`text-xl text-center w-full text-bLight_4`}>
+                Profile Unavailable: This user has restricted access to their
+                profile. Respect their privacy and feel free to connect through
+                other channels if needed.
+              </p>
+            </div>
+          )}
+        </div>
       ) : (
         <>
           {/* User details row --------------------------*/}
