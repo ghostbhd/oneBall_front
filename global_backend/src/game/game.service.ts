@@ -3,28 +3,37 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Socket, Server } from 'socket.io';
 import { GameObj } from './game.obj';
-import { QueueService } from './queue/queue.service';
+import { Player, QueueService } from './queue/queue.service';
 import { state } from './game.obj';
 import { Game } from './entities/game.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
+import { Repository } from 'typeorm';
+import { UserService } from 'src/user/user.service';
+import { GameHistory } from 'src/entities/GameHistory.entity';
+import { ExpressLoader } from '@nestjs/serve-static';
 
 
 @Injectable()
 export class GameService {
-    constructor(private queue: QueueService) {
+    constructor(private queue: QueueService, private readonly userService: UserService) {
     }
     private MAX_H: number = 1499
     private MAX_V: number = 4973
     private PLAYER_TO_MAX: number = 0.15
-    private SPEED_LIMIT: number = 800
+    private SPEED_LIMIT: number = 1000
     private MID_BALL_TO_MAX_V: number = 0.019021739 // (35 / 920)/ 2
 
-    async laghandled_emit(event: string, data, client: Socket, inf: GameObj) {
-        client.timeout(250).emit(event, data, (err, response) => {
+    async laghandled_emit(event: string, data, client: Socket, inf: GameObj, io: Server) {
+        client.timeout(1300).emit(event, data, (err, response) => {
             if (err) {
-                console.log("---<<<aaayeeeh ===>", event)
                 if (inf.state.salat === false)
-                    this.salat(inf)
-            } else {
+                    console.log("---<<<aaayeeeh ===>", event)
+                this.salat(inf)
+                let winner = inf.left_plr.Player.socket.id !== client.id ? inf.right_plr.Player.id : inf.left_plr.Player.id
+                io.in(inf.state.roomid).emit("salat", winner)
+            }
+            else {
                 console.log(response.status); // 'ok'
             }
         })
@@ -65,15 +74,14 @@ export class GameService {
         return (result)
     }
 
-
-    salat(inf: GameObj) {
+    //TODO
+    async salat(inf: GameObj) {
         console.log("safi ra salaaat ====>")
         inf.state.salat = true
         if (inf.ball.v_state.id != -1) {
             clearTimeout(inf.ball.v_state.id)
             inf.ball.v_state.id = -1
             inf.ball.v_state.resolve("resolved")
-
         }
 
         if (inf.ball.h_state.id != -1) {
@@ -83,23 +91,42 @@ export class GameService {
         }
 
         let game_index: number = this.queue.games.findIndex(game => game.state.roomid === inf.state.roomid)
-        if (game_index == -1)
-            console.log("waamiiiiiiii")
-        console.log("before slicing the game lentght = ", this.queue.games.length)
-        this.queue.games.forEach(element => {
-            console.log("and this is it = ", element.state.roomid)
-        });
-        this.queue.games.splice(game_index, game_index + 1)
-        this.queue.games_size--
-        this.queue.games.forEach(element => {
-            console.log("and this is it = ", element.state.roomid)
-        });
-        console.log("after slicing the game lentght = ", this.queue.games.length)
-        this.queue.games.forEach(element => {
-            console.log("and this is it = ", element.state.roomid)
-        });
-        console.log("the players after the game ended queue ==> size ==> ", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
-        // add information to the repository
+        if (game_index !== -1) {
+            console.log("before slicing the game lentght = ", this.queue.games.length)
+            this.queue.games.forEach(element => {
+                console.log("and this is it = ", element.state.roomid)
+            });
+            this.queue.games.splice(game_index, game_index + 1)
+            this.queue.games_size--
+            this.queue.games.forEach(element => {
+                console.log("and this is it = ", element.state.roomid)
+            });
+            console.log("after slicing the game lentght = ", this.queue.games.length)
+            this.queue.games.forEach(element => {
+                console.log("and this is it = ", element.state.roomid)
+            });
+
+            // add information to the Repository
+
+            console.log("the players after the game ended queue ==> size ==> ", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
+            console.log("after ended ==>")
+            //this.database_entries(inf.left_plr.Player, inf.right_plr.Player)
+        }
+    }
+
+    async database_entries(left_plr: Player, right_plr: Player) {
+        console.log("testing the db entries left user ==> ")
+        const left_user: User = await this.userService.findUserById(left_plr.id)
+        console.log(left_user)
+        const right_user: User = await this.userService.findUserById(right_plr.id)
+        console.log("testing the db entries right user ==> ")
+        console.log(right_user)
+
+        /*
+        const gamehistory = new GameHistory()
+        gamehistory.userId1 = left_user
+        gamehistory.userId2 = right_user
+        */
     }
 
     async horizontal_bouncing(io: Server, inf: GameObj) {
@@ -139,20 +166,25 @@ export class GameService {
             }
             else {
                 this.salat(inf)
-                let data = { winner: inf.ball.x_dir == 1 ? 2 : 1 }
+                let data: number = inf.ball.x_dir == 1 ? 2 : 1 //TOBE checked
                 io.in(inf.state.roomid).emit("salat", data)
                 break
             }
 
             // accelarate ==>
+            /* 
             if (inf.ball.h_dur - 20 <= this.SPEED_LIMIT)
                 inf.ball.h_dur = this.SPEED_LIMIT
             else
                 inf.ball.h_dur -= 20
+            */
 
             //console.log("MAX SPEED", inf.ball.h_dur)
-            this.laghandled_emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur }, inf.left_plr.Player.socket, inf)
-            this.laghandled_emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur }, inf.right_plr.Player.socket, inf)
+            io.in(inf.roomid).emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur })
+            /*
+            this.laghandled_emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur }, inf.left_plr.Player.socket, inf, io)
+            this.laghandled_emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur }, inf.right_plr.Player.socket, inf, io)
+            */
         }
     }
 
@@ -186,13 +218,11 @@ export class GameService {
                 _dur = inf.ball.y_dir == 1 ? ((1 - inf.ball.v_state.pos) * inf.state.MAX_V) : inf.ball.v_state.pos * inf.state.MAX_V
                 //console.log("cleared sending new _dur =", _dur,
                 //"cuz pos ===>", inf.ball.v_state.pos, "ydir ==>", inf.ball.y_dir)
-                this.laghandled_emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: _dur, pos: inf.ball.v_state.pos }, inf.left_plr.Player.socket, inf)
-                this.laghandled_emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: _dur, pos: inf.ball.v_state.pos }, inf.right_plr.Player.socket, inf)
+                io.in(inf.roomid).emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: _dur, pos: inf.ball.v_state.pos })
             }
             else {
                 inf.ball.v_state.pos = inf.ball.y_dir == 1 ? 0 : 1
-                this.laghandled_emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: inf.ball.v_dur, pos: inf.ball.v_state.pos }, inf.left_plr.Player.socket, inf)
-                this.laghandled_emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: inf.ball.v_dur, pos: inf.ball.v_state.pos }, inf.right_plr.Player.socket, inf)
+                io.in(inf.roomid).emit("ball:vertical:bounce", { dir: inf.ball.y_dir, dur: inf.ball.v_dur, pos: inf.ball.v_state.pos })
             }
             //console.log("server : vertical bounce ", "=============================")
         }
@@ -205,15 +235,15 @@ export class GameService {
 
     async Ball_Logic(io: Server, inf: GameObj) {
 
-        this.laghandled_emit("opponent_found", 1, inf.left_plr.Player.socket, inf)
-        this.laghandled_emit("opponent_found", 2, inf.right_plr.Player.socket, inf)
+        this.laghandled_emit("opponent_found", 1, inf.left_plr.Player.socket, inf, io)
+        this.laghandled_emit("opponent_found", 2, inf.right_plr.Player.socket, inf, io)
 
         const time_out_id = await this.timeout(4500, inf, 0)
 
         if (inf.state.launched == false) {
             console.log("first_ping id =", inf.state.roomid)
-            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.left_plr.Player.socket, inf)
-            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.right_plr.Player.socket, inf)
+            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.left_plr.Player.socket, inf, io)
+            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.right_plr.Player.socket, inf, io)
 
             inf.state.launched = true
 

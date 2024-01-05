@@ -14,6 +14,10 @@ import type { Player } from './queue/queue.service';
 import { find } from 'rxjs';
 import { throws } from 'assert';
 import { number } from 'prop-types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
+import { UserService } from 'src/user/user.service';
+import { GameHistory } from 'src/entities/GameHistory.entity';
 
 @WebSocketGateway({
     cors: {
@@ -22,7 +26,8 @@ import { number } from 'prop-types';
 })
 
 export class GameGateway {
-    constructor(private readonly gameService: GameService, private queue: QueueService) {
+    constructor(private readonly gameService: GameService, private queue: QueueService,
+               private readonly userService: UserService) {
     }
 
     check(games: GameObj[], playerID: number): boolean {
@@ -37,6 +42,7 @@ export class GameGateway {
     }
 
     @WebSocketServer() server: Server;
+
 
     @SubscribeMessage('lija_bsmlah')
     async push_or_match(@MessageBody("playerID") id: number, @ConnectedSocket() socket: Socket) {
@@ -55,7 +61,8 @@ export class GameGateway {
                     console.log("\n\n------pushing into the players ===>\n")
                     to_push = {
                         id: id,
-                        socket: socket
+                        socket: socket,
+                        ConsecutiveLatencies : 0,
                     }
                     this.queue.players.push(to_push)
                     console.log("pushing player ====", id)
@@ -68,7 +75,9 @@ export class GameGateway {
 
                     console.log("matching ", this.queue.players[0].id, id, " to =>", room_id)
                     this.queue.players.forEach((e) => console.log("before waah wal7maa9 =", e.id))
-                    this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket }, room_id))
+
+                    //this.database_entries(this.queue.players[0] , {id : id, socket : socket})
+                    this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket , ConsecutiveLatencies : 0}, room_id))
                     this.queue.games_size++
                     this.queue.players.splice(0, 1)
                     console.log("lentgh after slicing", this.queue.players.length)
@@ -84,6 +93,7 @@ export class GameGateway {
                         throw ("aaach haad lmlawi")
                     console.log("the players before the size ==>", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
                     console.log("\n\nendof------------match\n\n")
+
                     this.gameService.Ball_Logic(this.server, this.queue.games[game_index])
                     //handle in the gameservice ack from both clients that they're ready
                     //handle out of game
@@ -106,6 +116,7 @@ export class GameGateway {
             }
         }
         catch (hh) {
+            console.log('veery bad!!')
             console.log(hh)
         }
     }

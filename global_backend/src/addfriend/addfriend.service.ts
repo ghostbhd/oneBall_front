@@ -129,11 +129,11 @@ export class AddfriendService {
       where: [{userid1: username1, userid2: username2}, {userid2: username1, userid1: username2} ],
       relations: ['userid1', 'userid2']
     });
-    console.log("this the usenamer ===> ", userfriend.userid1.username);
+    //console.log("this the usenamer ===> ", userfriend.userid1.username);
     // const us1 = { ...userfriend,  Status: "accepted"}
-    console.log("the friend is Refused ==============> ", userfriend);
+    //console.log("the friend is Refused ==============> ", userfriend);
     const u = await this.friendShip.remove(userfriend);
-    console.log("the friend is Refused ==============> ", u);
+    //console.log("the friend is Refused ==============> ", u);
   }
 
   async Blockuser(username1: string, username2: string) {
