@@ -5,9 +5,9 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 export class Friendship {
     @PrimaryGeneratedColumn()
     id: number;
-    @ManyToOne(() => User,(user) => user.friendship_sender)
+    @ManyToOne(() => User,(user) => user.friendship_reciver, {cascade: true})
     userid1: User;
-    @ManyToOne(() => User,(user) => user.friendship_reciver)
+    @ManyToOne(() => User,(user) => user.friendship_sender, {cascade: true})
     userid2: User;
     @Column({nullable: true})
     Status: string;

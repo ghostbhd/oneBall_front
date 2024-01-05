@@ -10,7 +10,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, 'FortyTwo') {
   constructor(@Inject('AUTH_SERVICE') private readonly AuthService: AuthService) {
     super({
       clientID: 'u-s4t2ud-b0ed96cd075b1351a54095578eb440c9da4d5dfee6cf8a7cf6969c1cc80b825c',
-      clientSecret: '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',
+      clientSecret: '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',
       callbackURL: 'http://localhost:3009/auth/FortyTwo/callback', // Adjust the callback URL
       scope: ['public'], 
     });
@@ -21,11 +21,11 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, 'FortyTwo') {
     // console.log(accessToken);
     // console.log(refreshToken);
     console.log("profile here");
-    console.log(profile);
+    // console.log(profile);
     const user = await this.AuthService.login({email: profile.emails[0].value, username: profile.emails[0].value.split("@")[0] + "_42", avatar: profile._json.image.link});
     // if (!user) return null;
     console.log(user);
     console.log("profile here");
-    return { profile, accessToken , refreshToken};
+    return {user, profile, accessToken , refreshToken};
   }
 }

@@ -5,9 +5,11 @@ import { Friendship } from 'src/entities/Friendship.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { FriendModule } from 'src/friend/friend.module';
+import { BlockedList } from 'src/entities/BlockedList.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Friendship, User])],
+  imports: [FriendModule, TypeOrmModule.forFeature([Friendship, User, BlockedList])],
   providers: [AddfriendGateway, AddfriendService, UserService],
 })
 export class AddfriendModule {}

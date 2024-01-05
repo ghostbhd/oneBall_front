@@ -22,7 +22,7 @@ export class UploadController {
     const user1 = await this.userService.findUserByUn(req.user.username);
     var path = null;
     var user = null;
-    // console.log("the file is undefined " + user1);
+    console.log("the file is undefined " , req.user.username);
     if (filepath)
     {
       path = filepath;
@@ -37,7 +37,7 @@ export class UploadController {
       path = file.path;
       user = await this.uploadsevice.saveAvatar(req.user.username , username, {filePath: "http://localhost:3009/" + path})
     }
-    console.log('Username :', username);
+    console.log('Username :', username, " the username ", user.username);
     console.log(file);
     const accessToken:  string = await this.authService.create_jwt({
         email: req.user.email,

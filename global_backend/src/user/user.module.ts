@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
+import { User } from '../entities/user.entity';
 
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { Friendship } from '../entities/Friendship.entity';
 @Module({
     imports: [ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../', '../', 'src/uploadFiles'), 
@@ -15,7 +16,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
           res.setHeader('Content-Type', 'image/jpeg');
         },
       },
-    }),TypeOrmModule.forFeature([User])],
+    }),TypeOrmModule.forFeature([ Friendship,User])],
     controllers: [UserController],
     providers: [UserService],
     exports: [UserService, TypeOrmModule],

@@ -12,18 +12,27 @@ export class Channel_Membership {
     channelid: Channel;
     @Column()
     DateJoined: string;
-    @Column({ default: true })
-    isAdmin: boolean; // Indicates if the user is an administrator of the channel
-  
-    @Column({ nullable: true })
-    muteExpiration: Date; // For implementing temporary mute
+    @Column({ default: false })
+    isAdmin: boolean; 
 
     @Column({ default: false })
-    isBanned: boolean; // For implementing bans
+    isMember: boolean; 
+
+    @Column({ default: false })
+    isOwner: boolean; 
+    
+    @Column({ nullable: true })
+    muteExpiration: Date; 
+
+    @Column({ default: false })
+    isBanned: boolean;
+
+    @Column({ default: false })
+    isMuted: boolean;
 
     @Column({ nullable: true })
-    bannedBy: number; // ID of the user who banned this member
+    bannedID: number;
 
     @Column({ nullable: true })
-    mutedBy: number; // ID of the user who muted this member
+    mutedID: number; 
 }
