@@ -6,7 +6,7 @@ import { ImgBg } from "../../style";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const EditInfo = ({ data, setData }) => {
+const EditInfo = ({ data, setData, loading, setLoading }) => {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(() => {
     const initialAvatar = data.avatar;
@@ -72,14 +72,10 @@ const EditInfo = ({ data, setData }) => {
           return response.json();
         }
       })
-      .then((data) => {
-        console.log("File upload success:", data);
-        // setData(data);
-        Cookies.set("accessToken", data.accessToken);
-      })
       .catch((error) => {
         console.error("Error during file upload:", error);
       });
+      setLoading(!loading);
     // window.location.reload();
   };
 

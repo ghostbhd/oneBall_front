@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 import * as jwtDecode from "jwt-decode";
 
 const UserProfile = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
 
   // username from url params ------------------
@@ -54,7 +54,7 @@ const UserProfile = () => {
         })
         .then(async (response) => {
           setData(response);
-          // setBlock({blocker: response.blocker, blocked: response.blocked, username: response.username});
+          setBlock({blocker: response.blocker, blocked: response.blocked, username: username});
           setLoading(false);
         });
     };
@@ -72,13 +72,37 @@ const UserProfile = () => {
   useEffect(() => {
 
     if (!socket) return;
+    socket.on("Unblocka", (stats) => {
+      console.log("haaaaahowa tblocka ", stats)
+      console.log("data", data,
+          "stat.uaername ", stats.username
+      )
+      if (stats.username === username) {
+        setBlock( { 
+          blocker:stats.blocker,
+          blocked:stats.blocked,
+          username:stats.username
+        });
+        console.log("the block set is ", block)
+      }
+    });
     socket.on("Ha-Tblocka", (stats) => {
-      if (stats.username === data.username) {
-        setBlock(stats);
+      console.log("haaaaahowa tblocka ", stats)
+      console.log("data", data,
+          "stat.uaername ", stats.username
+      )
+      if (stats.username === username) {
+        setBlock( { 
+          blocker:stats.blocker,
+          blocked:stats.blocked,
+          username:stats.username
+        });
+        console.log("the block set is ", block)
       }
     });
     return () => {
       socket.off("Ha-Tblocka");
+      socket.off("Unblocka");
     };
   }, [socket]);
 
