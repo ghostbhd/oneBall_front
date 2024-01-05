@@ -11,12 +11,11 @@ export class GameStats {
   @Column()
   games: number;
   @Column()
-  win: number;
+  victories: number;
   @Column()
-  lose: number;
+  defeats: number;
   @Column()
   xp: number;
   @OneToOne(() => User, user => user.GameStats)
   userId : User
 }
-

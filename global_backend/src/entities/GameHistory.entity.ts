@@ -5,15 +5,14 @@ import { User } from "./user.entity";
 export class GameHistory {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => User, user => user.opponent)
-  opponent: User
+  @ManyToOne(() => User, user => user.userId1)
+  userId1: User
   @Column()
   result: string 
   @Column()
   date: string
   @Column()
   time: string
-  @ManyToOne(() => User, user => user.GameHistory)
-  userId : User;
+  @ManyToOne(() => User, user => user.userId2)
+  userId2 : User;
 }
-

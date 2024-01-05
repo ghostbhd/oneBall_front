@@ -6,6 +6,7 @@ import { GameObj } from '../game.obj';
 //I choose to encapsulate it as injectable because of the need to clear the queue whenever
 //a disconnection occures which is handled globaly elsewhere in the code
 export type Player = {
+    ConsecutiveLatencies : number;
     id: number;
     socket: Socket;
 }
@@ -15,4 +16,5 @@ export class QueueService {
     public players: Player[] = []
     public games: GameObj[] = []
     public games_size: number = -1
+    //
 }

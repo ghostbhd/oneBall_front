@@ -10,6 +10,8 @@ export default function Player(pro) {
 
     const wsocket = useSocket();
     let who = useContext(Whoami)
+
+
     let padding = pro.side === 2 ? '99%' : '0%'
     let color = pro.side === 2 ? '#7FFFD4': '#ff6d6d'
 
@@ -23,12 +25,15 @@ export default function Player(pro) {
     const token = GetHeaders().jwttt;
     const currentUserToken = jwtDecode.jwtDecode(token);
 
+    // move the even listeners to the useEffect()
+
+
     if (pro.side !== who) {
-        console.log("for me ", who, " different than", pro.side)
+        //console.log("for me ", who, " different than", pro.side)
         let event = pro.side === 1 ? 'get:left_plr:y' : 'get:right_plr:y'
-        console.log("attaching ", event," to ", pro.side)
+        //console.log("attaching ", event," to ", pro.side)
         wsocket.on(event, (data) => {
-            console.log("recieved ", event)
+            //console.log("recieved ", event)
             pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
         })
         return (
@@ -55,11 +60,11 @@ export default function Player(pro) {
             if (pro.side == 2) {
                 pro.api.start({ y: oy, immediate: true })
                 wsocket.emit("post:right_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id })
-                console.log("post:right_plr:y")
+                //console.log("post:right_plr:y")
             }
             else {
                 wsocket.emit("post:left_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id })
-                console.log("emitting left")
+                //console.log("emitting left")
                 pro.api.start({ y: oy, immediate: true })
             }
         }
