@@ -27,6 +27,19 @@ const Buttons = ({ data: initialData }) => {
     }));
   };
 
+
+  useEffect(() => {
+    socket.on("FriendRequest", (stats) => {
+      if (stats.username === data.username) {
+        dataSetten(stats);
+      }
+    });
+
+    return () => {
+      socket.off("FriendRequest");
+    };
+  }, []);
+
   const addFriend = () => {
     console.log(
       "add friend Clicked ",
@@ -60,6 +73,7 @@ const Buttons = ({ data: initialData }) => {
     });
   };
 
+  // Accept friend ------------------------------
   const AcceptFriend = () => {
     console.log(
       "Accept friend Clicked ",
@@ -73,17 +87,19 @@ const Buttons = ({ data: initialData }) => {
     });
   };
 
-  useEffect(() => {
-    socket.on("FriendRequest", (stats) => {
-      if (stats.username === data.username) {
-        dataSetten(stats);
-      }
+  // Block ------------------------------
+  const handelBlock = () => {
+    console.log(
+      "Block Clicked ",
+      decoded.name,
+      "the username is ",
+      data.username
+    );
+    socket.emit("Block-User", {
+      username1: decoded.name,
+      username2: data.username,
     });
-
-    return () => {
-      socket.off("FriendRequest");
-    };
-  }, []);
+  };
 
   return (
     <div
@@ -160,7 +176,7 @@ const Buttons = ({ data: initialData }) => {
         </div>
 
         {/* block button --------------------------- */}
-        <div className={`${button} bg-bDark_3 text-org_3/70`}>
+        <div className={`${button} bg-bDark_3 text-org_3/70`} onClick={handelBlock}>
           <p className={`${text}`}>Block</p>
           <div className={`${icon}`}>{<icons.block />}</div>
         </div>
