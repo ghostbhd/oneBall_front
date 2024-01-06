@@ -11,12 +11,13 @@ import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { GameHistory } from 'src/entities/GameHistory.entity';
-import { ExpressLoader } from '@nestjs/serve-static';
+import { GameStats } from 'src/entities/game.entity';
 
 
 @Injectable()
 export class GameService {
-    constructor(private queue: QueueService, private readonly userService: UserService) {
+    constructor(private queue: QueueService, @InjectRepository(User) private UserRepo: Repository<User>,
+        @InjectRepository(GameHistory) private GameHistoryRepo: Repository<GameHistory>) {
     }
     private MAX_H: number = 1499
     private MAX_V: number = 4973
@@ -24,6 +25,7 @@ export class GameService {
     private SPEED_LIMIT: number = 1000
     private MID_BALL_TO_MAX_V: number = 0.019021739 // (35 / 920)/ 2
 
+    /*
     async laghandled_emit(event: string, data, client: Socket, inf: GameObj, io: Server) {
         client.timeout(1300).emit(event, data, (err, response) => {
             if (err) {
@@ -38,6 +40,7 @@ export class GameService {
             }
         })
     }
+    */
 
     timeout(ms: number, inf: GameObj, n: number): Promise<string> {
         return new Promise((resolve) => {
@@ -75,8 +78,10 @@ export class GameService {
     }
 
     //TODO
-    async salat(inf: GameObj) {
+    async salat(inf: GameObj, winner: number, io: Server) {
         console.log("safi ra salaaat ====>")
+        if (inf.state.salat === true)
+            return
         inf.state.salat = true
         if (inf.ball.v_state.id != -1) {
             clearTimeout(inf.ball.v_state.id)
@@ -110,23 +115,56 @@ export class GameService {
 
             console.log("the players after the game ended queue ==> size ==> ", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
             console.log("after ended ==>")
-            //this.database_entries(inf.left_plr.Player, inf.right_plr.Player)
+            this.database_entries(inf.left_plr.Player, inf.right_plr.Player, winner)
         }
     }
 
-    async database_entries(left_plr: Player, right_plr: Player) {
-        console.log("testing the db entries left user ==> ")
-        const left_user: User = await this.userService.findUserById(left_plr.id)
-        console.log(left_user)
-        const right_user: User = await this.userService.findUserById(right_plr.id)
-        console.log("testing the db entries right user ==> ")
-        console.log(right_user)
+    add_victory(user: User, luser : User) {
+        if (user.gameStats.xp + 200 >= 1000) {
+            user.gameStats.xp = user.gameStats.xp + 200 - 1000;
+            user.gameStats.level++;
+        }
+        user.gameStats.victories++;
+        user.gameStats.xp += 200;
+        user.gameStats.games++;
+        luser.gameStats.games++;
+        luser.gameStats.defeats++;
+    }
 
-        /*
-        const gamehistory = new GameHistory()
-        gamehistory.userId1 = left_user
-        gamehistory.userId2 = right_user
-        */
+    async database_entries(left_plr: Player, right_plr: Player, winner: number) {
+        try {
+            //GameHistory relations with opponent
+            let game_time: string = new Date().toLocaleDateString() + " at " + new Date().toString().split(" ")[4]
+
+            console.log("left_plr ==> ", left_plr.id)
+            const left_user: User = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
+            console.log("\n\ntesting the db entries left user ==> ", left_user)
+            const right_user: User = await this.UserRepo.findOne({ where: { id: right_plr.id }, relations: ["victories", "losses", "gameStats"] })
+            console.log("\n\ntesting the db entries right user ==> ")
+            console.log(right_user)
+
+            const gamehistory = new GameHistory()
+
+            gamehistory.winner = winner === 1 ? left_user : right_user
+            gamehistory.loser = winner === 2 ? left_user : right_user
+
+            this.add_victory(gamehistory.winner, gamehistory.loser)
+            gamehistory.loser = winner !== 1 ? left_user : right_user
+            gamehistory.date = game_time
+            console.log("testing the db entries winner user ==> ")
+            console.log(gamehistory.winner)
+
+            await this.GameHistoryRepo.save(gamehistory)
+            console.log("testing the victories of winner ==> ")
+            left_user.victories.forEach((e) => console.log(e))
+
+            //GameStat ==>
+            //gamehistory.winner.GameStats.victories++
+
+        }
+        catch (er) {
+            console.log(er)
+        }
     }
 
     async horizontal_bouncing(io: Server, inf: GameObj) {
@@ -165,8 +203,8 @@ export class GameService {
                 }
             }
             else {
-                this.salat(inf)
                 let data: number = inf.ball.x_dir == 1 ? 2 : 1 //TOBE checked
+                this.salat(inf, data, io)
                 io.in(inf.state.roomid).emit("salat", data)
                 break
             }
@@ -235,15 +273,19 @@ export class GameService {
 
     async Ball_Logic(io: Server, inf: GameObj) {
 
+        /*
         this.laghandled_emit("opponent_found", 1, inf.left_plr.Player.socket, inf, io)
-        this.laghandled_emit("opponent_found", 2, inf.right_plr.Player.socket, inf, io)
+        this.laghandled_emit( inf.right_plr.Player.socket, inf, io)
+        //io.in(inf.state.roomid).emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur })
+        */
+        inf.left_plr.Player.socket.emit("opponent_found", 1)
+        inf.right_plr.Player.socket.emit("opponent_found", 2)
 
         const time_out_id = await this.timeout(4500, inf, 0)
 
         if (inf.state.launched == false) {
             console.log("first_ping id =", inf.state.roomid)
-            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.left_plr.Player.socket, inf, io)
-            this.laghandled_emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur }, inf.right_plr.Player.socket, inf, io)
+            io.in(inf.state.roomid).emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur })
 
             inf.state.launched = true
 

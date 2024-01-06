@@ -7,6 +7,7 @@ import { User } from '../entities/user.entity';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { Friendship } from '../entities/Friendship.entity';
+import { GameStats } from 'src/entities/game.entity';
 @Module({
     imports: [ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../', '../', 'src/uploadFiles'), 
@@ -16,7 +17,7 @@ import { Friendship } from '../entities/Friendship.entity';
           res.setHeader('Content-Type', 'image/jpeg');
         },
       },
-    }),TypeOrmModule.forFeature([ Friendship,User])],
+    }),TypeOrmModule.forFeature([ Friendship,User, GameStats])],
     controllers: [UserController],
     providers: [UserService],
     exports: [UserService, TypeOrmModule],

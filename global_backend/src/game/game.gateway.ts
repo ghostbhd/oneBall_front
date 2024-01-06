@@ -76,7 +76,6 @@ export class GameGateway {
                     console.log("matching ", this.queue.players[0].id, id, " to =>", room_id)
                     this.queue.players.forEach((e) => console.log("before waah wal7maa9 =", e.id))
 
-                    //this.database_entries(this.queue.players[0] , {id : id, socket : socket})
                     this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket , ConsecutiveLatencies : 0}, room_id))
                     this.queue.games_size++
                     this.queue.players.splice(0, 1)

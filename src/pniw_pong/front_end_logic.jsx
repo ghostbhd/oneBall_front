@@ -48,10 +48,13 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             setrequested(true)
             console.log("emited lija_bsmlah")
         }
-        f_l.ws.on("opponent_found", (data, callback) => {
+        //f_l.ws.on("opponent_found", (data, callback) => {
+        f_l.ws.on("opponent_found", (data) => {
+            /*
             callback({
                 status: 'ok'
             })
+            */
             console.log("opponent_found !!")
             setwho_val(data)
             if (ingame === false) {
@@ -68,7 +71,8 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             })
         })
 
-        f_l.ws.on("ball:horizontal:bounce", (data, callback) => {
+        //f_l.ws.on("ball:horizontal:bounce", (data, callback) => {
+        f_l.ws.on("ball:horizontal:bounce", (data) => {
             /*
             callback({
                 status: 'ok'
@@ -89,10 +93,13 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             })
         })
 
-        f_l.ws.on("ball:first_ping", (data, callback) => {
+        ///f_l.ws.on("ball:first_ping", (data, callback) => {
+        f_l.ws.on("ball:first_ping", (data) => {
+            /*
             callback({
                 status: 'ok'
             })
+                */
             /*
             console.log("first ping ", data.h_dur, data.v_dur)
             console.log("max_size ==> ", game_inf.max_y, " ball_size ==> ", ball_size, "border size ==> ", border_size)
@@ -114,7 +121,8 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             })
         })
 
-        f_l.ws.on("ball:vertical:bounce", (data, callback) => {
+        ///f_l.ws.on("ball:vertical:bounce", (data, callback) => {
+        f_l.ws.on("ball:vertical:bounce", (data ) => {
             /*
             callback({
                 status: 'ok'

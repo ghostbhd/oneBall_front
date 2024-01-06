@@ -13,12 +13,14 @@ export type state = {
     pingpongs : number;
     salat : boolean;
     MAX_V : number;
-    MAX_H : number
+    MAX_H : number;
+    winner_id : number
 }
 
 export class GameObj {
     constructor(public left_Player : Player, public right_Player : Player, public roomid : string) {
         this.state = {
+            winner_id : -1,
             roomid: roomid,
             launched: false,
             pingpongs: 0,
