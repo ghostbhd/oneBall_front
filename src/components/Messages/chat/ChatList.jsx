@@ -1,4 +1,3 @@
-
 import style, { ImgBg } from "../../../style";
 import { useState, useEffect } from "react";
 import { useSocket } from "../../../Socketio.jsx";
@@ -13,12 +12,10 @@ const ChatList = ({
   const [chats, setChats] = useState([]);
   const [sender_id, setsenderflag] = useState(null);
   const socket = useSocket();
-  
+
   // socket.emit("request-latest-messages", currentUserToken.id);
   useEffect(() => {
     if (socket == null) return;
-
-    
 
     socket.on("latest-messages", (chatsFromServer) => {
       console.log("latest messages are:", chatsFromServer);
@@ -35,7 +32,6 @@ const ChatList = ({
       setChats((prevChats) => {
         let updatedChats = [...prevChats];
 
-
         const chatIndex = updatedChats.findIndex(
           (chat) => chat.id === newMessage.chatid.id
         );
@@ -50,7 +46,6 @@ const ChatList = ({
             senderavatar: newMessage.senderavatar,
             senderflag: newMessage.senderflag,
             receiverflag: newMessage.receiverflag,
-            
           };
           // console.log("sender id is-", newMessage.senderId), console.log("sender id is --", newMessage.senderflag);
         } else {
@@ -69,7 +64,6 @@ const ChatList = ({
             },
           ];
         }
-        
 
         updatedChats.sort(
           (a, b) => new Date(b.Timestamp) - new Date(a.Timestamp)
@@ -86,8 +80,10 @@ const ChatList = ({
         console.log("Search response:", response.chatId);
         setActiveChat(response.chatId);
 
-        
-        socket.emit("request-messages-for-chat", { chatId: response.chatId , sender_id: currentUserToken.id});
+        socket.emit("request-messages-for-chat", {
+          chatId: response.chatId,
+          sender_id: currentUserToken.id,
+        });
       } else if (response.error) {
         console.error("Search error:", response.error);
         alert("User Not Found");
@@ -103,18 +99,16 @@ const ChatList = ({
   }, [socket, chats]);
 
   const handleChatClick = (chatId) => {
-    setActiveChat(chatId);
+    // if (activeChat === chatId && activeChat) return;
     console.log("Chat ID clicked:", chatId);
-    // console.log("Chat data:", chats);
-    // socket.emit("request-latest-messages", currentUserToken.id,chatId);
-
+    
+    
+    setActiveChat(chatId);
     socket.emit("request-messages-for-chat", {
       chatId,
     });
 
-        // socket.emit("request-latest-messages", currentUserToken.id);
-
-
+    // socket.emit("request-latest-messages", currentUserToken.id);
   };
 
   return (
@@ -146,7 +140,9 @@ const ChatList = ({
           ></div>
           <div className="flex w-9/12 flex-col text-sm">
             <p className="text-bLight_4 px-3">@{chat.name}</p>
-            <p className="text-bLight_2 px-3 w-full truncate">{chat.lastMessage.Content}</p>
+            <p className="text-bLight_2 px-3 w-full truncate">
+              {chat.lastMessage.Content}
+            </p>
           </div>
         </div>
       ))}

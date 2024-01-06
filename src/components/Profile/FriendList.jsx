@@ -1,90 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImgBg } from "../../style";
 import { Link } from "react-router-dom";
+import { useSocket } from "../../Socketio";
+import { GetHeaders } from "../../jwt_token";
+import * as jwtDecode from "jwt-decode";
 
 const FriendList = () => {
-  const [friends, setFriends] = useState([
-    {
-      username: "user1",
-      image: "/src/assets/avatar/jomjo.jpg",
-    },
-    {
-      username: "user2",
-      image: "/src/assets/avatar/jomjo.jpg",
-    },
-    {
-      username: "user3",
-      image: "/src/assets/avatar/jomjo.jpg",
-    },
-    // {
-    //   username: "user4",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user5",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user6",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user7",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user8",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user9",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user10",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user11",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user12",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user13",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user14",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user15",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user16",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user17",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user18",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user19",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user20",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-  ]);
+  const [friends, setFriends] = useState([]);
+
+  const socket = useSocket();
+  const token = GetHeaders().jwttt;
+  let decoded;
+  if (token) decoded = jwtDecode.jwtDecode(token);
+  else decoded = null;
+
+  useEffect(() => {
+    if (socket == null) return;
+    socket.emit("FriendList", decoded.id);
+  }, []);
+
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("Frinds-List", (data) => {
+      console.log("hte user is ", data);
+      setFriends(data);
+    });
+    return () => {
+      socket.off("Frinds-List");
+    };
+  }, [socket]);
 
   return (
     <div
@@ -94,7 +38,9 @@ const FriendList = () => {
       <p className="text-bLight_4 text-xl">Friends</p>
       {/* friend list ------------------------ */}
       <div className="w-full h-full flex rounded-3xl overflow-hidden border-2 border-bLight_5/20">
-        <div className={`flex flex-wrap w-full gap-4  items-start justify-around overflow-y-auto p-2`}>
+        <div
+          className={`flex flex-wrap w-full gap-4  items-start justify-around overflow-y-auto p-2`}
+        >
           {friends.map((friend, index) => (
             <Link
               to={`/profile/${friend.username}`}
