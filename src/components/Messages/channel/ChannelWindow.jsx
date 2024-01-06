@@ -103,20 +103,12 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   useEffect(() => {
     console.log("membershipStatus", membershipStatus);
-    // if (
-    //   membershipStatus.isMember ||
-    //   !membershipStatus.isMember ||
-    //   !membershipStatus.isAdmin ||
-    //   !membershipStatus.isOwner
-    // ) {
       setShowMembers(false);
       setMoreBadge(false);
       setShowMembers(false);
       setShowFriendList(false);
       setShowAddPassword(false);
       setShowChangePassword(false);
-
-    // }
   }, [activeChannel]);
 
   // Send message to channel --------------------------------------------------
@@ -296,6 +288,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <AddPasswordInput
               showAddPassword={showAddPassword}
               setShowAddPassword={setShowAddPassword}
+              activeChannel={activeChannel}
+              currentUserToken={currentUserToken}
             />
           )}
 
@@ -304,6 +298,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <ChangePasswordInput
               showChangePassword={showChangePassword}
               setShowChangePassword={setShowChangePassword}
+              activeChannel={activeChannel}
+              currentUserToken={currentUserToken}
             />
           )}
           {/* Members ---------------------------------------------------------------- */}
