@@ -62,20 +62,24 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
     else {
       handleRedirect("/Auth");
     }
-    await fetch("http://localhost:3009/upload", {
+    const response = await fetch("http://localhost:3009/upload", {
       method: "POST",
       body: formData,
       headers: headers,
     })
-      .then((response) => {
+      // if (.then(  (response) =>  {
         if (response.ok) {
-          return response.json();
+          console.log("the object ", response);
+          const data = await response.json();
+          console.log("the user is ", data.user);
+          console.log("accessToken ", data.accessToken);
+          Cookies.set("accessToken", data.accessToken);
+          setLoading(!loading);
+          return data;
         }
-      })
-      .catch((error) => {
-        console.error("Error during file upload:", error);
-      });
-      setLoading(!loading);
+      // .catch((error) => {
+      //   console.error("Error during file upload:", error);
+      // });
     // window.location.reload();
   };
 

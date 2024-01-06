@@ -3,6 +3,7 @@ import { ImgBg } from '../../../style'
 import PropTypes from 'prop-types'
 
 const WindowBody = ({ messages, currentUserToken}) => {
+  console.log("channel messages",messages);
   return (
     <div
         className={`flex h-full w-full px-5 flex-col scroll-mb-0 overflow-y-auto`}
