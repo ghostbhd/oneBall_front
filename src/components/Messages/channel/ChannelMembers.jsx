@@ -5,7 +5,13 @@ import { useState, useEffect } from "react";
 import { useSocket } from "../../../Socketio.jsx";
 import { Link } from "react-router-dom";
 
-const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, membershipStatus }) => {
+const ChannelMembers = ({
+  show,
+  setShow,
+  activeChannel,
+  currentUserToken,
+  membershipStatus,
+}) => {
   const [members, setMembers] = useState([]);
   const socket = useSocket();
 
@@ -15,7 +21,6 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
   useEffect(() => {
     // channel members -----------------------
     socket.on("channelMembers", (data) => {
-      console.log("dattaaa:",data);
       setMembers(data);
     });
 
@@ -26,6 +31,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
     };
   }, []);
 
+  // kick user ----------------------------------
   const handelKickUser = (requesterId) => {
     socket.emit("kickUserFromChannel", {
       channelId: activeChannel,
@@ -54,6 +60,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
     });
   };
 
+  // mute user ----------------------------------
   const handelMute = (requesterId) => {
     console.log(" MuteUser", currentUserToken.id, requesterId);
     socket.emit("MuteUser", {
@@ -63,6 +70,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
     });
   };
 
+  // unmute user ----------------------------------
   const handelUnMute = (requesterId) => {
     console.log(" Unmuting user", currentUserToken.id, requesterId);
 
@@ -73,6 +81,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
     });
   };
 
+  // ban user ----------------------------------
   const handelBane = (requesterId) => {
     console.log(" BanUser", currentUserToken.id, requesterId);
     socket.emit("BanUser", {
@@ -82,6 +91,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
     });
   };
 
+  // unban user ----------------------------------
   const handelUnBane = (requesterId) => {
     console.log(" UnBanUser", currentUserToken.id, requesterId);
     socket.emit("UnBanUser", {
@@ -93,9 +103,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
 
   return (
     <div
-      className={`fixed flex top-0 left-0 w-full h-full z-10 bg-bDark_5/70 p-4 ${
-        show ? "" : "hidden"
-      }`}
+      className={`fixed flex top-0 left-0 w-full h-full z-10 bg-bDark_5/70 p-4`}
     >
       {/* absolute class on click setShow to false ------- */}
       <div
@@ -135,95 +143,99 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
                     <p className={`text-bLight_4 py-1 text-sm`}>
                       @{member.username}
                     </p>
-                    {membershipStatus.isOwner ? 
-                    <>
-                    {/* role --------------------------- */}
-                    {member.isMember ? (
-                      <div className={`flex items-center gap-2`}>
-                        <p className={`text-bLight_5 text-xs`}>Member</p>
+                    {membershipStatus.isOwner ? (
+                      <>
+                        {/* role --------------------------- */}
+                        {member.isMember ? (
+                          <div className={`flex items-center gap-2`}>
+                            <p className={`text-bLight_5 text-xs`}>Member</p>
 
-                        {/* set as admin button -------- */}
-                        <button
-                          className={`text-xs p-1 bg-bLight_5 rounded-full text-bDark_4 transition-all hover:bg-bLight_4`}
-                          onClick={() =>
-                            handelSetAdmin(
-                              activeChannel,
-                              currentUserToken.id,
-                              member.userid.id
-                            )
-                          }
-                        >
-                          Set as admin
-                        </button>
-                      </div>
-                    ) : (
-                      <div className={`flex items-center gap-2`}>
-                        <p className={`text-org_3 text-xs`}>Admin</p>
+                            {/* set as admin button -------- */}
+                            <button
+                              className={`text-xs p-1 bg-bLight_5 rounded-full text-bDark_4 transition-all hover:bg-bLight_4`}
+                              onClick={() =>
+                                handelSetAdmin(
+                                  activeChannel,
+                                  currentUserToken.id,
+                                  member.userid.id
+                                )
+                              }
+                            >
+                              Set as admin
+                            </button>
+                          </div>
+                        ) : (
+                          <div className={`flex items-center gap-2`}>
+                            <p className={`text-org_3 text-xs`}>Admin</p>
 
-                        {/* remove admin button -------- */}
-                        <button
-                          title="Remove admin"
-                          className={`text-xs p-1 bg-bLight_5 rounded-full text-bDark_4 transition-all hover:bg-bLight_4`}
-                          onClick={() =>
-                            handelRemoveAdmin(
-                              activeChannel,
-                              currentUserToken.id,
-                              member.userid.id
-                            )
-                          }
-                        >
-                          {<chatIcons.admin />}
-                        </button>
-                      </div>
-                    )}
-                    </>
-                    :
-                    null}
+                            {/* remove admin button -------- */}
+                            <button
+                              title="Remove admin"
+                              className={`text-xs p-1 bg-bLight_5 rounded-full text-bDark_4 transition-all hover:bg-bLight_4`}
+                              onClick={() =>
+                                handelRemoveAdmin(
+                                  activeChannel,
+                                  currentUserToken.id,
+                                  member.userid.id
+                                )
+                              }
+                            >
+                              {<chatIcons.admin />}
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    ) : null}
                   </div>
                 </div>
                 {/* buttons ------------------------------------------------------------------------------------ */}
                 <div className={`ml-auto flex items-center gap-2`}>
                   {currentUserToken.name === member.username ? (
-                    <div onClick={() => handelKickUser(member.userid.id)} className={`text-sm text-bDark_4 bg-bLight_4 p-1 cursor-pointer rounded-full`}>
+                    <div
+                      onClick={() => handelKickUser(member.userid.id)}
+                      className={`text-sm text-bDark_4 bg-bLight_4 p-1 cursor-pointer rounded-full`}
+                    >
                       Leave channel
                     </div>
                   ) : (
                     <>
-                    {/* mute - unmute ----*/}
-                  <div className={`${buttonStyle}`}>
-                    {member.isMuted ? (
-                      <chatIcons.mute
-                        className={`${buttonStyle}`}
-                        onClick={() => handelUnMute(member.userid.id)} // handel click ***
-                      />
-                    ) : (
-                      <chatIcons.unmute
-                        className={`${buttonStyle}`}
-                        onClick={() => handelMute(member.userid.id)}
-                      />
-                    )}
-                  </div>
-                  {/* ban - unban ----*/}
-                  <div>
-                    {member.isBanned ? (
-                      <chatIcons.unban
-                        className={`${buttonStyle}`}
-                        onClick={() => handelUnBane(member.userid.id)}
-                      />
-                    ) : (
-                      <chatIcons.ban
-                        className={`${buttonStyle}`}
-                        onClick={() => handelBane(member.userid.id)}
-                      />
-                    )}
-                  </div>
-                  {/* kick ---*/}
-                  <div>
-                    <chatIcons.kick
-                      className={`${buttonStyle}`}
-                      onClick={() => handelKickUser(member.userid.id)}
-                    />
-                  </div></>)}
+                      {/* mute - unmute ----*/}
+                      <div className={`${buttonStyle}`}>
+                        {member.isMuted ? (
+                          <chatIcons.mute
+                            className={`${buttonStyle}`}
+                            onClick={() => handelUnMute(member.userid.id)} // handel click ***
+                          />
+                        ) : (
+                          <chatIcons.unmute
+                            className={`${buttonStyle}`}
+                            onClick={() => handelMute(member.userid.id)}
+                          />
+                        )}
+                      </div>
+                      {/* ban - unban ----*/}
+                      <div>
+                        {member.isBanned ? (
+                          <chatIcons.unban
+                            className={`${buttonStyle}`}
+                            onClick={() => handelUnBane(member.userid.id)}
+                          />
+                        ) : (
+                          <chatIcons.ban
+                            className={`${buttonStyle}`}
+                            onClick={() => handelBane(member.userid.id)}
+                          />
+                        )}
+                      </div>
+                      {/* kick ---*/}
+                      <div>
+                        <chatIcons.kick
+                          className={`${buttonStyle}`}
+                          onClick={() => handelKickUser(member.userid.id)}
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             ))}

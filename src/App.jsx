@@ -18,10 +18,8 @@ import { GameShell } from "./pniw_pong/index.jsx";
 
 import style from "./style";
 
-import { SocketProvider } from "./Socketio";
-
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useTheme } from "./themeContext";
 import { ImgBg } from "./style";
@@ -48,7 +46,7 @@ const App = () => {
       <Routes>
         <Route path="/Auth" element={<Auth />} />
         <Route path="/Callback" element={<CallBack />} />
-
+        
         <Route
           path="*"
           element={

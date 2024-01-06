@@ -4,13 +4,22 @@ import { useState } from "react";
 import { Socket } from "socket.io-client";
 import { useSocket } from "../../../Socketio.jsx";
 
-const AddPasswordInput = ({ showAddPassword, setShowAddPassword ,activeChannel,currentUserToken}) => {
+const AddPasswordInput = ({
+  showAddPassword,
+  setShowAddPassword,
+  activeChannel,
+  currentUserToken,
+}) => {
   const [addPass, setAddPass] = useState("");
-  const socket = useSocket();//TODO: add socket
+  const socket = useSocket(); //TODO: add socket
 
   const handleAddPassword = () => {
     console.log("add password:", addPass);
-    socket.emit("addpassword", { channelId: activeChannel, newPassword: addPass, userId: currentUserToken.id })
+    socket.emit("addpassword", {
+      channelId: activeChannel,
+      newPassword: addPass,
+      userId: currentUserToken.id,
+    });
     setShowAddPassword(false);
   };
 
