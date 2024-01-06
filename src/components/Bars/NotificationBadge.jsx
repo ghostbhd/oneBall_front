@@ -52,20 +52,7 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
 
     socket.on("Notif", (reqData) => {
       // console.log("FriendRequests", reqData);
-      reqData.map((element) => {
-
-        const newData = {
-          type: "friend",
-          image: element.image,
-          username: element.username,
-          fullName: element.fullName,
-        };
-      // adding data to previous data
-        console.log("the data is ", newData)
-        const isDuplicate = notifItems.some(item => item.username === newData.username);
-        if (!isDuplicate)
-          addData(newData);
-      })
+      setNotifItems(reqData);
     });
     return () => {
       socket.off("Friend-Refuse");

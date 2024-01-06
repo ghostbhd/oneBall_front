@@ -90,7 +90,6 @@ const NavBar = () => {
     console.log("the user notification");
     if (socket == null) return;
     setShowNotif(true);
-    socket.emit("Notification", decoded.name);
   };
   return (
     <div
