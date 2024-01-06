@@ -93,10 +93,10 @@ const ChatList = ({
     // console.log(chats);
     return () => {
       socket.off("latest-messages");
-      // socket.off("new-message", handleNewMessage);
       socket.off("search-user-response");
+      // socket.off("new-message", handleNewMessage);
     };
-  }, [socket, chats]);
+  }, [socket]);
 
   const handleChatClick = (chatId) => {
     // if (activeChat === chatId && activeChat) return;

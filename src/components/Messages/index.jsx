@@ -48,11 +48,12 @@ const Messages = () => {
   } else {
     currentUserToken = null;
   }
+  if (socket == null) return;
+  socket.emit("request-latest-messages", currentUserToken.id);
 
-  useEffect(() => {
-    if (socket == null) return;
-    socket.emit("request-latest-messages", currentUserToken.id);
-  }, [socket]);
+  // useEffect(() => {
+  // }, [socket]);
+
   const handleSearch = (query) => {
     setSearchTerm(query);
   };

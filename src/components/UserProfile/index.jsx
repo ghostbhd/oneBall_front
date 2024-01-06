@@ -27,6 +27,8 @@ const UserProfile = () => {
   const socket = useSocket();
 
   useEffect(() => {
+    setLoading(true);
+
     const fetchdata = async () => {
       await fetch("http://localhost:3009/profileData/user", {
         method: "POST",
@@ -35,7 +37,7 @@ const UserProfile = () => {
       })
         .then((response) => {
           if (response.status === 404) {
-            history("/Error_404");
+            history("/UserNotFound");
             return;
           } else if (response.status === 301) {
             history("/profile");
@@ -53,13 +55,14 @@ const UserProfile = () => {
           return response.json();
         })
         .then(async (response) => {
+          if (response == undefined) return;
           setData(response);
           setBlock({blocker: response.blocker, blocked: response.blocked, username: username});
           setLoading(false);
         });
     };
     fetchdata();
-  }, []);
+  }, [username]);
 
   const handelUnblock = () => {
     console.log("unblock clicked");
