@@ -238,7 +238,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
               <ul
                 ref={moreBadgeRef}
                 className={`absolute z-10 text-sm text-bLight_4 right-1/2 flex flex-col overflow-hidden 
-            top-full w-52 h-max bg-bDark_3 border-2 border-bLight_5/20 rounded-3xl ${
+                  top-full w-52 h-max bg-bDark_3 border-2 border-bLight_5/20 rounded-3xl ${
               moreBadge ? "" : "hidden"
             }`}
               >
@@ -275,6 +275,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <AddPasswordInput
               showAddPassword={showAddPassword}
               setShowAddPassword={setShowAddPassword}
+              activeChannel={activeChannel}//!important
+              currentUserToken={currentUserToken}
             />
           )}
 
@@ -283,6 +285,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <ChangePasswordInput
               showChangePassword={showChangePassword}
               setShowChangePassword={setShowChangePassword}
+              activeChannel={activeChannel}//!important
+              currentUserToken={currentUserToken}
             />
           )}
           {/* Members ---------------------------------------------------------------- */}

@@ -15,6 +15,7 @@ const ChannelMembers = ({ show, setShow, activeChannel, currentUserToken, member
   useEffect(() => {
     // channel members -----------------------
     socket.on("channelMembers", (data) => {
+      console.log("dattaaa:",data);
       setMembers(data);
     });
 
