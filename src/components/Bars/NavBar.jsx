@@ -20,10 +20,8 @@ const NavBar = () => {
   if (token) decoded = jwtDecode.jwtDecode(token);
   else decoded = null;
   const socket = useSocket();
-  useEffect(() => {
-    if (socket == null) return;
-    socket.emit("Users", decoded.name);
-  }, []);
+  
+  // Get all usernames ------------------------------------
   useEffect(() => {
     if (socket == null) return;
     socket.on("Users-List", (data) => {
@@ -32,7 +30,9 @@ const NavBar = () => {
     return () => {
       socket.off("Users-List");
     };
-  }, []);
+  }, [socket]);
+
+  // Reset search results when search bar is closed -------
   useEffect(() => {
     if (!showSearch) {
       setSearchValue("");
@@ -40,6 +40,7 @@ const NavBar = () => {
     }
   }, [showSearch]);
 
+  // Close search bar when clicked outside ----------------
   const handleClickOutside = (event) => {
     if (
       searchInputRef.current &&
@@ -49,6 +50,12 @@ const NavBar = () => {
       setShowNotif(false);
       setShowSearch(false);
     }
+  };
+
+  
+  const handelGetUsernames = () => {
+    if (socket == null) return;
+    socket.emit("Users", decoded.name);
   };
 
   const handleKeyDown = (event) => {
@@ -115,7 +122,7 @@ const NavBar = () => {
               className="p-2 flex items-center"
               onClick={() => setShowSearch(!showSearch)}
             >
-              {!showSearch ? <icons.search /> : <icons.xmark />}
+              {!showSearch ? <icons.search onClick={handelGetUsernames} /> : <icons.xmark />}
             </div>
           </div>
           {/* search results ----------------------------------------------------- */}
@@ -123,7 +130,7 @@ const NavBar = () => {
             <div className={`w-full text-base flex flex-col bg-bDark_4`}>
               {searchResults.slice(0, 5).map((username, index) => (
                 <Link
-                  to={"/profile/" + username}
+                  to={`/profile/${username}`}
                   key={index}
                   className={`p-2 hover:bg-bDark_2 hover:text-bLight_3`}
                 >

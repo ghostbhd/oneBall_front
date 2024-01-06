@@ -85,9 +85,9 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
     return () => {
       socket.off("new-message", handleNewMessage);
       socket.off("messages-for-chat-response");
-      socket.emit("leave-chat", { chatId: activeChat });
+      // socket.emit("leave-chat", { chatId: activeChat });
     };
-  }, [activeChat, socket]);
+  }, [socket]);
 
   // console.log(`active chat user is ${activeChatUser}`);
   return (
