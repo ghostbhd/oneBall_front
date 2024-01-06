@@ -114,7 +114,7 @@ export const GameShell = (props) => {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-    }, [])
+    }, [game_inf.pl_h])
 
     const [spring_l, api_l] = useSpring(() => ({ y: 10 }))
     const [spring_r, api_r] = useSpring(() => ({ y: 10 }))

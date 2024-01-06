@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne, JoinColumn} from 'typeorm';
 import { Friendship } from './Friendship.entity';
 import { Chat } from './Chat.entity';
 import { Message } from './Message.entity';
@@ -47,12 +47,18 @@ export class User {
     @OneToMany(() => Channel_Message, channel_message => channel_message.SenderUserid)
     channel_messageid: Channel_Message;
 
-    @OneToMany(() => GameHistory, Gamehistory => Gamehistory.userId1)
-    userId1: GameHistory[];
-    @OneToOne(() => GameStats, Gamestats => Gamestats.userId)
-    GameStats: GameStats;
-    @OneToMany(() => GameHistory, Gamehistory => Gamehistory.userId2)
-    userId2: GameHistory[];
+    @OneToOne(() => GameStats, Gamestats => Gamestats.userId, {
+        cascade : true
+    })
+    @JoinColumn()
+    gameStats: GameStats;
+
+    @OneToMany(() => GameHistory, Gamehistory => Gamehistory.winner)
+    @JoinColumn()
+    victories : GameHistory[];
+    @OneToMany(() => GameHistory, Gamehistory => Gamehistory.loser)
+    @JoinColumn()
+    losses : GameHistory[];
 
     @OneToMany(() => BlockedList, (block) => block.BlockedUser)
     blockedList: BlockedList[];
