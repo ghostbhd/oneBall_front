@@ -64,8 +64,8 @@ const UserProfile = () => {
   const handelUnblock = () => {
     console.log("unblock clicked");
     socket.emit("UnBlock-User", {
-      username1: data.username,
-      username2: jwtDecode.jwtDecode(Cookies.get("accessToken")).name,
+      username1: jwtDecode.jwtDecode(Cookies.get("accessToken")).name,
+      username2: data.username,
     });
   };
 
