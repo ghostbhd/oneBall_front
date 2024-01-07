@@ -53,9 +53,6 @@ export default function Player(pro) {
         }
     }, [border_height, calc_pitch, myHeight])
 
-    // move the even listeners to the useEffect()
-
-
     if (pro.side !== who) {
         return (
             <animated.div
