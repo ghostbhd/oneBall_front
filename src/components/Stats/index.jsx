@@ -40,23 +40,23 @@ const Stats = () => {
 
   const randomArray = [
     { id: 1,   img: ProfileTest ,name:"player", xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    { id: 2,   img: ProfileTest, name:"player",xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    { id: 3,   img: ProfileTest, name:"player",xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    { id: 4,   img: ProfileTest, name:"player",xp: 876, win: 10, lose: 0, badge: 'Master' },
-    { id: 5,   img: ProfileTest,name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 6,   img: ProfileTest, name:"player",xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    { id: 7,   img: ProfileTest, name:"player",xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    { id: 8,   img: ProfileTest, name:"player",xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    { id: 9,   img: ProfileTest, name:"player",xp: 876, win: 10, lose: 0, badge: 'Master' },
-    { id: 10, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 11, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 12, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 13, img: ProfileTest, name:"player", xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    { id: 14, img: ProfileTest, name:"player", xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    { id: 15, img: ProfileTest, name:"player", xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    { id: 16, img: ProfileTest, name:"player", xp: 876, win: 10, lose: 0, badge: 'Master' },
-    { id: 17, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    { id: 18, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    // { id: 2,   img: ProfileTest, name:"player",xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    // { id: 3,   img: ProfileTest, name:"player",xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    // { id: 4,   img: ProfileTest, name:"player",xp: 876, win: 10, lose: 0, badge: 'Master' },
+    // { id: 5,   img: ProfileTest,name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    // { id: 6,   img: ProfileTest, name:"player",xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    // { id: 7,   img: ProfileTest, name:"player",xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    // { id: 8,   img: ProfileTest, name:"player",xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    // { id: 9,   img: ProfileTest, name:"player",xp: 876, win: 10, lose: 0, badge: 'Master' },
+    // { id: 10, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    // { id: 11, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    // { id: 12, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    // { id: 13, img: ProfileTest, name:"player", xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    // { id: 14, img: ProfileTest, name:"player", xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    // { id: 15, img: ProfileTest, name:"player", xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    // { id: 16, img: ProfileTest, name:"player", xp: 876, win: 10, lose: 0, badge: 'Master' },
+    // { id: 17, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    // { id: 18, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
   ];
   
   return (
@@ -87,8 +87,8 @@ const Stats = () => {
       >
         <ul className="flex flex-col w-full max-w-screen-md">
           {randomArray.map(item => (
-            <li key={item.id} className={`w-full h-3/4 flex justify-around text-bLight_4 align-middle p-3 mt-2 rounded-2xl bg-bLight_5/40 `}>
-              <TrophyImage position={item.id} />
+            <li key={item.id} className={`flex justify-around text-bLight_4 align-middle p-3 mt-2 rounded-2xl bg-bLight_5/40 `}>
+              {/* <TrophyImage position={item.id} />
               <span className="flex items-center mr-20 ml-5">
                 <img src={item.img} alt={item.name} className="w-10 h-10 rounded-lg border-2 border-bDark_2" />
                 <span className="flex-1 w-10 text-center">{item.name}</span>
@@ -97,7 +97,7 @@ const Stats = () => {
               <span className="flex items-center justify-center rounded mr-40 ml-10">{item.xp}</span>
               <span className="flex items-center justify-center rounded mr-40 ml-10">{item.win}</span>
               <span className="flex items-center justify-center rounded mr-20 ml-10">{item.lose}</span>
-              <span className="flex-1 w-10 text-center">{item.badge}</span>
+              <span className="flex-1 w-10 text-center">{item.badge}</span> */}
             </li>
           ))}
         </ul>

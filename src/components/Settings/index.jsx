@@ -247,19 +247,28 @@ const handleChange = () => {
                   style={test ? { display: 'none' } : {}}
                   className="digits-grid flex flex-wrap justify-center pb-4"
                 >
-                  {digits.map((digit, index) => (
-                    <div className="digit-container" key={index}>
-                      <input
-                        type="text"
-                        value={digit}
-                        onChange={(e) => handleDigitChange(index, e.target.value)}
-                        id={`digit-${index}`}
-                        maxLength={1}
-                        className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
-                        ref={(input) => (inputRefs.current[index] = input)}
-                      />
-                    </div>
-                  ))}
+                    {digits.map((digit, index) => (
+                      <div className="digit-container" key={index}>
+                        <input
+                          type="text"
+                          value={digit}
+                          onChange={(e) => handleDigitChange(index, e.target.value)}
+                          id={`digit-${index}`}
+                          maxLength={1}
+                          className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
+                          ref={(input) => (inputRefs.current[index] = input)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'ArrowRight' && index < digits.length - 1) {
+                              inputRefs.current[index].focus();
+                            } else if (e.key === 'ArrowLeft' && index > 0) {
+                              inputRefs.current[index -1 ].focus();
+                            }
+                          }}
+                          onFocus={(e) => e.target.setSelectionRange(e.target.value.length, e.target.value.length)}
+                        />
+                      </div>
+                    ))}
+
                 </div>
     
                 <div
