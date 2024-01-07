@@ -7,8 +7,6 @@ import { Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
 import { Channel } from 'src/entities/Channel.entity';
 import { Channel_Membership } from 'src/entities/Channel_Membership.entity';
-import { Friendship } from 'src/entities/Friendship.entity';
-import { UserService } from 'src/user/user.service';
 
 
 @Injectable()
@@ -24,9 +22,6 @@ export class ChatService {
     private readonly channelRepository: Repository<Channel>,
     @InjectRepository(Channel_Membership)
     private readonly Channel_MembershipRepository: Repository<Channel_Membership>,
-    private readonly userService: UserService,
-    // @InjectRepository(Friendship)
-    // private readonly friendshipRepository: Repository<Friendship>
   ) { }
 
 
@@ -165,15 +160,16 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
       relations: ['messageid', 'sender', 'receiver'],
     });
 
+
     return chats
     .filter(chat => chat.messageid && chat.messageid.length > 0)
     .map(chat => {
-      
         const lastMessage = chat.messageid[chat.messageid.length - 1];
         const receiveravatar =chat.receiver.Avatar;
         const senderavatar =chat.sender.Avatar;
         const senderflag=chat.sender.id;
         const receiverflag= chat.receiver.id;
+        // const timestamp = lastMessage.Timestamp;
 
         return {
           id: chat.id,
@@ -183,6 +179,7 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
           senderavatar:senderavatar,
           senderflag:senderflag,
           receiverflag:receiverflag,
+          // timestamp: ,
         };
       });
   }
@@ -201,7 +198,6 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
       where: { username: targetUsername },
     });
 
-
     if (currentUser.username === targetUsername) {
       throw new Error("Cannot create a chat with yourself.");
     }
@@ -210,20 +206,13 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
       throw new NotFoundException('User not found');
     }
 
-    const friend = await this.userService.friends(currentUser.id);
-    const friendShip = friend.find(fr => fr.id === targetUser.id);
-
-    if (!friendShip) {
-      throw new Error("You can only create a chat with friends");
-    }
-
     let chat = await this.directMessageRepository.findOne({
       where: [
         { sender: currentUser, receiver: targetUser },
         { sender: targetUser, receiver: currentUser },
       ],
     });
-  
+
     if (!chat) {
       chat = new Chat();
       chat.sender = currentUser;

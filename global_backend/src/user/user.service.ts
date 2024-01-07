@@ -32,51 +32,47 @@ export class UserService {
     async saveUser(user: User): Promise<User> {
         return await this.userRepository.save(user);
     }
+  async findUserByUn(username: string): Promise<User | undefined> {
+    // console.log("the user name is 00000>> ", username)
+      // console.log(await this.userRepository.findOne({where : {username: username}}));
+    return  await this.userRepository.findOne({where : {username: username}, relations: ['friendship_sender', 'friendship_reciver', 'receivedMessages', 'messageid', 'blockedList', 'blockedList.BlockedUser', 'blocker', 'blocker.BlockedUser']});
+  }
 
-    async findUserByUn(username: string): Promise<User | undefined> {
-        // console.log("the user name is 00000>> ", username)
-        // console.log(await this.userRepository.findOne({where : {username: username}}));
-        return await this.userRepository.findOne({ where: { username: username }, relations: ['friendship_sender', 'friendship_reciver', 'receivedMessages', 'messageid', 'blockedList', 'blockedList.BlockedUser', 'blocker', 'blocker.BlockedUser'] });
-    }
+  async deleteUser(): Promise<void> {
+      // await this.userRepository.clear();
+ const users = await this.userRepository.find();
+  await Promise.all(users.map(user => this.userRepository.remove(user)));
+  }
 
-    async deleteUser(): Promise<void> {
-        // await this.userRepository.clear();
-        const users = await this.userRepository.find();
-        await Promise.all(users.map(user => this.userRepository.remove(user)));
-    }
-
-    async findUserById(id: number): Promise<User> {
-        // console.log(await this.userRepository.findOne({where : {id: id}}));
-        return await this.userRepository.findOne({ where: { id: id }, relations: ['userId2'] });
-    }
-
-    async findAllUsers(): Promise<User[]> {
-        const user = await this.userRepository.find({ relations: ['friendship_sender.userid1', 'friendship_sender.userid2', 'friendship_reciver.userid1', 'friendship_reciver.userid2', 'blockedList', 'blockedList.BlockedUser', 'blocker', 'blocker.BlockedUser'] });
-        return user;
-    }
-
-    async friends(userid: number) {
-        const user = await this.userRepository.findOne({ where: { id: userid }, relations: ['friendship_sender', 'friendship_reciver', 'friendship_sender.userid1', 'friendship_sender.userid2', 'friendship_reciver.userid1', 'friendship_reciver.userid2'] })
-        if (!user)
-            throw new error("the user not found");
-        console.log("the friend ", user.friendship_sender)
-        const friends1 = user.friendship_sender.map((friend) => {
-            if (friend.userid1.username != user.username)
-                return friend.userid1
-            if (friend.userid2.username != user.username)
-                return friend.userid2
-        })
-        const friends2 = user.friendship_reciver.map((friend) => {
-            if (friend.userid1.username != user.username && friend.Status == "accepted")
-                return friend.userid1
-            if (friend.userid2.username != user.username && friend.Status == "accepted")
-                return friend.userid2
-        })
-        const friends = friends1.concat(friends2);
-        console.log("the userfriends are =======> ", friends);
-        return friends;
-    }
+  async findUserById(id: number): Promise<User> {
+    // console.log(await this.userRepository.findOne({where : {id: id}}));
+  return  await this.userRepository.findOne({where : {id: id}});
 }
 
-// const fr = friend(userid: number);
-// const  user = fr.find()
+  async findAllUsers(): Promise<User[]> {
+    const user = await this.userRepository.find({relations: ['friendship_sender.userid1', 'friendship_sender.userid2', 'friendship_reciver.userid1', 'friendship_reciver.userid2', 'blockedList', 'blockedList.BlockedUser', 'blocker', 'blocker.BlockedUser']}); 
+    return user; 
+  }
+
+  async friends (userid: number) {
+    const user = await this.userRepository.findOne({ where : { id: userid }, relations: ['friendship_sender', 'friendship_reciver', 'friendship_sender.userid1', 'friendship_sender.userid2', 'friendship_reciver.userid1', 'friendship_reciver.userid2']})
+    if (!user)
+      throw new error("the user not found");
+    console.log("the friend ", user.friendship_sender)
+    const friends1 = user.friendship_sender.map( (friend)  => {
+      if (friend.userid1.username != user.username)
+        return friend.userid1
+      if (friend.userid2.username != user.username)
+        return friend.userid2
+    })
+    const friends2 = user.friendship_reciver.map( (friend)  => {
+      if (friend.userid1.username != user.username && friend.Status == "accepted")
+        return friend.userid1
+      if (friend.userid2.username != user.username && friend.Status == "accepted")
+        return friend.userid2
+    })
+    const friends = friends1.concat(friends2);
+    console.log("the userfriends are =======> ", friends);
+    return friends;
+  }
+}
