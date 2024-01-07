@@ -10,12 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@headlessui/react": "^1.7.17",
-    "@material-tailwind/react": "^2.1.8",
-    "@material-ui/core": "^4.12.4",
-    "@mui/material": "^5.15.2",
+    "@babel/plugin-transform-async-generator-functions": "^7.23.4",
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.4",
+    "@babel/plugin-transform-numeric-separator": "^7.23.4",
+    "@babel/plugin-transform-object-rest-spread": "^7.23.4",
+    "@babel/plugin-transform-optional-catch-binding": "^7.23.4",
+    "@babel/plugin-transform-optional-chaining": "^7.23.4",
+    "@mui/material": "^5.15.3",
+    "@use-gesture/react": "^10.3.0",
+    "dotenv": "^16.3.1",
+    "framer-motion": "^10.17.9",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "material": "^0.7.9",
@@ -33,7 +38,8 @@
     "react-tooltip": "^5.24.0",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
-    "three": "^0.158.0"
+    "three": "^0.158.0",
+    "use-gesture": "^1.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

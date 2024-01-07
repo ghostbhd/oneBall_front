@@ -1,4 +1,5 @@
-import style from "../../style";
+
+import style from '../../style';
 import {useState, useEffect, useRef} from 'react';
 import checkMark from "../../assets/Checkmark.gif";
 import { GetHeaders } from "../../jwt_token";
@@ -12,7 +13,7 @@ const SuccessCheckmark = () => {
   return (
     <div className="animate-success-check w-full text-center">
       <img src={checkMark} alt="checkMark" className="mx-auto mb-5 max-w-full h-16"/>
-      <p className="text-greenclr text-lg font-semibold mt-0 mb-0">
+      <p className="text-bLight_5 text-lg font-semibold mt-0 mb-0">
         2-Factor Authentication Enabled Successfully
       </p>
     </div>
@@ -67,13 +68,6 @@ const Header = GetHeaders().headers;
     fetch2FAStatus();
   }, []);
 
-  useEffect(() => 
-  {
-    if (isChecked) 
-    {
-      fetchQrCode();
-    }
-  }, [isChecked]);
 /*
     ================== disable2FA ==========================
 */
@@ -139,27 +133,32 @@ const handleChange = () => {
     
     const fetchQrCode = async () => {
       try {
-          const response = await fetch('http://localhost:3009/2fa', {
-            method: 'GET',
-            headers: headers,
-          });
-          if (!response.ok) {
-            throw new Error(`Failed to fetch QR code. Status: ${response.status}`);
+        if (setTest != false)
+        {
+              console.log("fetch Qr codee ===>> ");
+              const response = await fetch('http://localhost:3009/2fa', {
+                method: 'GET',
+                headers: headers,
+              });
+              if (!response.ok) {
+                throw new Error(`Failed to fetch QR code. Status: ${response.status}`);
+              }
+              const htmlString = await response.text();
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(htmlString, 'text/html');
+              const imgElement = doc.querySelector('img');
+              if (imgElement) {
+                const imageUrl = imgElement.getAttribute('src'); 
+                setQrImageUrl(imageUrl);
+              } 
+              else 
+              {
+                throw new Error('No img tag found in the HTML response');
+              }
+            } 
           }
-          const htmlString = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlString, 'text/html');
-          const imgElement = doc.querySelector('img');
-          if (imgElement) {
-            const imageUrl = imgElement.getAttribute('src'); 
-            setQrImageUrl(imageUrl);
-          } 
-          else 
-          {
-            throw new Error('No img tag found in the HTML response');
-          }
-      } 
-      catch (error) {
+      catch (error) 
+      {
         console.error('Error fetching QR code:', error.message);
       }
     };
@@ -197,6 +196,7 @@ const handleChange = () => {
             setWarning('');
             setIsSuccess(true);
             setChecked(false);
+            setTest(false);
             document.getElementById('app-root').style.filter = 'blur(5px)';
         }
       } 
@@ -255,7 +255,7 @@ const handleChange = () => {
                           onChange={(e) => handleDigitChange(index, e.target.value)}
                           id={`digit-${index}`}
                           maxLength={1}
-                          className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
+                          className="w-11 h-11 border-2 border-bLight_4/50 outline-none text-bLight_4 bg-bDark_4 rounded px-2 py-1 text-center text-2xl mx-2"
                           ref={(input) => (inputRefs.current[index] = input)}
                           onKeyDown={(e) => {
                             if (e.key === 'ArrowRight' && index < digits.length - 1) {

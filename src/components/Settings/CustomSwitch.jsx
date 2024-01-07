@@ -1,34 +1,38 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-const CustomSwitch = ({ isChecked, handleChange }) => 
-{
-    const handleToggle = () => {
-        handleChange();
-    };
+const CustomSwitch = ({ isChecked, handleChange }) => {
+  const handleToggle = () => {
+    handleChange();
+  };
 
-    useEffect(() => {
-        // console.log("state of isChecked",isChecked );
-    }, [isChecked, handleChange]);
+  useEffect(() => {
+    // console.log("state of isChecked",isChecked );
+  }, [isChecked, handleChange]);
 
-return (
-    <label className="flex items-center cursor-pointer select-none">
-        <div className="relative">
-        <input
+  return (
+    <label className="flex items-center cursor-pointer ">
+      {/* <div className=""> */}
+        {/* <input
             type="checkbox"
             checked={isChecked}
             onChange={handleToggle}
             className="sr-only"
             disabled={false}
-        />
-        <div className="block h-6 w-12 rounded-full border-2 border-bLight_4/50 bg-bLight_1"></div>
+        /> */}
         <div
-            className={`dot absolute left-1 top-0.5 h-5 w-5 rounded-full bg-bLight_4 transition-transform duration-300 transform ${
-            isChecked ? 'translate-x-5 bg-bDark_1' : 'translate-x-0 bg-gray-300'
-            }`}
+          onClick={handleChange}
+          className="flex h-max p-0.5 w-12 rounded-full border-2 border-org_3/50 bg-bDark_3"
+        >
+          <div
+          className={`dot  h-5 w-5 rounded-full bg-bLight_4 transition-transform duration-300 transform ${
+            isChecked ? "ml-auto bg-org_3/90" : "ml-0 bg-org_3/40"
+          }`}
         ></div>
         </div>
+        
+      {/* </div> */}
     </label>
-    );
+  );
 };
 
 export default CustomSwitch;

@@ -28,6 +28,7 @@ import { FcGoogle } from "react-icons/fc"; // google icon
 import { FaUserClock } from "react-icons/fa"; // friend waiting icon
 import { IoPlay } from "react-icons/io5"; // play icon
 import { MdCancel } from "react-icons/md"; // stop icon
+import { CgSearch } from "react-icons/cg"; // search icon
 
 import FortyTwo  from '../assets/42.svg'; // 42 logo
 
@@ -154,6 +155,7 @@ export const icons = { // All needed icons
   friendWaiting: FaUserClock,
   play: IoPlay,
   stop: MdCancel,
+  search: CgSearch,
 };
 
 export const chatIcons = {
@@ -164,7 +166,7 @@ export const chatIcons = {
   mute : FaVolumeXmark,
   unmute : FaVolumeHigh,
   kick : MdDelete,
-  ban : ImUserMinus,
+  ban : MdBlockFlipped,
   unban : ImUserPlus,
   owner : FaCrown,
   admin : MdAdminPanelSettings,

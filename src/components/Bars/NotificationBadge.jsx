@@ -1,43 +1,85 @@
 import { icons } from "../../constants";
 import PropTypes from "prop-types";
-import { useState } from "react";
-import style, { ImgBg } from "../../style";
+import { useEffect, useState } from "react";
+import { ImgBg } from "../../style";
+import { useSocket } from "../../Socketio";
+import { GetHeaders } from "../../jwt_token";
+import * as jwtDecode  from "jwt-decode";
 
 const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
-  const [notifItems, setNotifItems] = useState([
-    {
-      type: "friend",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User1",
-      fullName: "test test",
-    },
-    {
-      type: "game",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User2",
-      fullName: "test test",
-    },
-    {
-      type: "friend",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User3",
-      fullName: "test test",
-    },
-    {
-      type: "game",
-      image: "/src/assets/avatar/Deadpool.jpg",
-      username: "User4",
-      fullName: "test test",
-    },
-  ]);
+  const [notifItems, setNotifItems] = useState([]);
+  const removeFromData = (username) => {
+    setNotifItems((prevData) => prevData.filter((item) => item.username !== username));
+  };
+  const addData = (obj) => {
+    console.log("the username isiiiiiiii ", obj.username)
+      setNotifItems( prevData => [...prevData, obj]);
+  };
+  const socket = useSocket();
+  const token = GetHeaders().jwttt;
+  let decoded;
+  if (token)
+    decoded = jwtDecode.jwtDecode(token);
+  else
+    decoded = null;
 
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("NotificationAdd", (reqData) => {
+      // console.log("FriendRequests", reqData);
+      const newData = {
+        type: "friend",
+        image: reqData.image,
+        username: reqData.username,
+        fullName: reqData.fullName,
+      };
+      // adding data to previous data
+      console.log("the data is ", newData)
+      addData(newData);
+    });
+
+    socket.on("Friend-Refuse", (reqData) => {
+      // console.log("Refuse", data);
+      const newData = {
+        type: "friend",
+        image: reqData.image,
+        username: reqData.username,
+        fullName: reqData.fullName,
+      };
+      removeFromData(newData.username);
+      console.log("the data refused is ", newData)
+    });
+
+    socket.on("Notif", (reqData) => {
+      // console.log("FriendRequests", reqData);
+      setNotifItems(reqData);
+    });
+    return () => {
+      socket.off("Friend-Refuse");
+      socket.off("Notif");
+      socket.off("NotificationAdd");
+    };
+  }, [socket]);
+  
   // Friend request ------------------------------------------------
   const handelAcceptFriend = (username) => {
     console.log("accept friend request");
+    if (socket == null) return;
+    socket.emit("AcceptRequest", {
+      username1: decoded.name,
+      username2: username,
+    })
+    removeFromData(username);
   };
 
   const handelRejecttFriend = (username) => {
-    console.log("reject friend request");
+    console.log("reject friend request ", username);
+    if (socket == null) return;
+    socket.emit("RefuseRequest", {
+      username1: decoded.name,
+      username2: username,
+    });
+    removeFromData(username);
   };
 
   // Game request ------------------------------------------------
@@ -49,6 +91,11 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
     console.log("reject game");
   };
 
+
+  // useEffect(() => {
+
+  // }, [socket]);
+
   // style ------------------------------------------------
   const li = `w-full flex gap-2 text-sm overflow-hidden`;
   const info = `flex gap-2 p-1 rounded-r-2xl w-full border-2 border-bLight_5/10`;
@@ -59,8 +106,10 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
   return (
     <div
       ref={notifRef}
-      className={`absolute right-0 top-0 z-50 flex flex-col max-h-screen sm:w-96 w-screen m-6
-        p-2 ${style.rounded} bg-bDark_4  !border-bLight_3/10 shadow-4xl gap-4
+      className={`absolute right-0 top-0 z-50 flex flex-col h-screen sm:w-96 w-screen
+        p-2 bg-bDark_4  !border-bLight_3/10 shadow-4xl gap-4 transform transition-all ease-in-out duration-400 ${
+          showNotif ? "translate-x-0" : "translate-x-full"
+        }
       `}
     >
       {/* close badge ------ */}
@@ -77,9 +126,10 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
       <ul className="w-full h-full flex flex-col gap-1 overflow-y-auto">
         {notifItems.map((item) => (
           // friend request *********************************************************************************************
-          <>
+          // <>
+          <li className={`${li}`} key={item.username}>
             {item.type === "friend" ? (
-              <li className={`${li}`}>
+              <>
                 {/* icon friend waiting ------------------------------------------------ */}
                 <div className={`bg-bDark_4 ${firstIcon}`}>
                   {<icons.friendWaiting />}
@@ -112,10 +162,12 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
                     </div>
                   </div>
                 </div>
-              </li>
+              </>
             ) : (
+              // </li>
               // game invitaion *********************************************************************************************
-              <li className={`${li}`}>
+              // <li className={`${li}`} key={item.username}>
+              <>
                 {/* icon game req ------------------------------------------------ */}
                 <div className={`bg-bDark_3 ${firstIcon}`}>
                   {<icons.gameController />}
@@ -148,9 +200,10 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
                     </div>
                   </div>
                 </div>
-              </li>
+              </>
             )}
-          </>
+          </li>
+          // </>
         ))}
       </ul>
     </div>

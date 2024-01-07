@@ -1,22 +1,20 @@
+import Cookies from "js-cookie";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const GetHeaders = () => {
   const history = useNavigate();
-
   const headers = new Headers();
-  var jwttt;
 
-  const jwtCookie = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("accessToken="));
-  jwttt = jwtCookie;
-  if (jwtCookie) {
-    const jwt = jwtCookie.split("=")[1];
-    headers.append("Authorization", `Bearer ${jwt}`);
-  } else {
-    jwttt = undefined;
-    history("/Auth");
-  }
+  const jwttt = Cookies.get("accessToken");
+  if (jwttt) {
+    headers.append("Authorization", `Bearer ${jwttt}`);
+  } 
+  useEffect(() => {
+    if (!jwttt) {
+      history("/Auth");
+    }
+  }, [jwttt]);
 
   return { headers, jwttt };
 };

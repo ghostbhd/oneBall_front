@@ -27,6 +27,19 @@ const Buttons = ({ data: initialData }) => {
     }));
   };
 
+
+  useEffect(() => {
+    socket.on("FriendRequest", (stats) => {
+      if (stats.username === data.username) {
+        dataSetten(stats);
+      }
+    });
+
+    return () => {
+      socket.off("FriendRequest");
+    };
+  }, []);
+
   const addFriend = () => {
     console.log(
       "add friend Clicked ",
@@ -46,6 +59,7 @@ const Buttons = ({ data: initialData }) => {
     }));
   };
 
+  // remove friend ------------------------------
   const RefuseFriend = () => {
     console.log(
       "Refuse friend Clicked ",
@@ -57,15 +71,9 @@ const Buttons = ({ data: initialData }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    setData((prevData) => ({
-      ...prevData,
-      friend: false,
-      friendRequest: false,
-      friendRequestSent: false,
-    }));
-    // window.location.reload();
   };
 
+  // Accept friend ------------------------------
   const AcceptFriend = () => {
     console.log(
       "Accept friend Clicked ",
@@ -77,32 +85,21 @@ const Buttons = ({ data: initialData }) => {
       username1: decoded.name,
       username2: data.username,
     });
-    setData((prevData) => ({
-      ...prevData,
-      friend: true,
-      friendRequest: false,
-      friendRequestSent: false,
-    }));
   };
 
-  useEffect(() => {
-    socket.on("FriendRequest", (stats) => {
-      // Update the component state
-      dataSetten(stats);
+  // Block ------------------------------
+  const handelBlock = () => {
+    console.log(
+      "Block Clicked ",
+      decoded.name,
+      "the username is ",
+      data.username
+    );
+    socket.emit("Block-User", {
+      username1: decoded.name,
+      username2: data.username,
     });
-
-    // socket.on("RefuseRequest", (stats) => {
-    //   dataSetten(stats);
-    // });
-
-    // socket.on("AcceptRequest", (stats) => {
-    //   dataSetten(stats);
-    // });
-    // Clean up the socket subscription on component unmount
-    return () => {
-      socket.off("FriendRequest");
-    };
-  }, []);
+  };
 
   return (
     <div
@@ -121,12 +118,12 @@ const Buttons = ({ data: initialData }) => {
       </Link>
 
       <div
-        className={`flex flex-row text-sm w-full sm:!mt-auto justify-between`}
+        className={`flex flex-row text-sm w-full sm:!mt-auto gap-2 justify-between`}
       >
         {!data.friend && !data.friendRequest && !data.friendRequestSent ? (
           // Add friend button ------------------------------------------------------------
           <div
-            className={`${button} bg-bDark_4 text-bLight_3`}
+            className={`${button} bg-bDark_4 text-bLight_3 border-2 border-bDark_3/40`}
             onClick={addFriend}
           >
             <p className={`${text} `}>Add Friend</p>
@@ -135,7 +132,7 @@ const Buttons = ({ data: initialData }) => {
         ) : data.friend ? (
           // Remove friend button -----------------------------------------------------------
           <div
-            className={`${button} bg-bLight_4 text-bDark_3`}
+            className={`${button} bg-bLight_5 text-bDark_1 hover:bg-bLight_4 transition-all`}
             onClick={RefuseFriend}
           >
             <p className={`${text} `}>Remove Friend</p>
@@ -162,7 +159,7 @@ const Buttons = ({ data: initialData }) => {
         ) : data.friendRequestSent ? (
           // Cancel friend request button ---------------------------------------------------
           <div
-            className={`${button} bg-bLight_4 text-bDark_3`}
+            className={`${button} bg-bLight_4 text-bDark_4`}
             onClick={RefuseFriend}
           >
             <p className={`${text} `}>Cancel Request</p>
@@ -179,7 +176,7 @@ const Buttons = ({ data: initialData }) => {
         </div>
 
         {/* block button --------------------------- */}
-        <div className={`${button} bg-bDark_3 text-org_3/70`}>
+        <div className={`${button} bg-bDark_3 text-org_3/70`} onClick={handelBlock}>
           <p className={`${text}`}>Block</p>
           <div className={`${icon}`}>{<icons.block />}</div>
         </div>

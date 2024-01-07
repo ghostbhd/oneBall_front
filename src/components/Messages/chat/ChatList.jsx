@@ -1,4 +1,3 @@
-
 import style, { ImgBg } from "../../../style";
 import { useState, useEffect } from "react";
 import { useSocket } from "../../../Socketio.jsx";
@@ -14,15 +13,15 @@ const ChatList = ({
   const [sender_id, setsenderflag] = useState(null);
   const socket = useSocket();
 
+  // socket.emit("request-latest-messages", currentUserToken.id);
   useEffect(() => {
     if (socket == null) return;
 
-    socket.emit("request-latest-messages", currentUserToken.id);
-
     socket.on("latest-messages", (chatsFromServer) => {
+      console.log("latest messages are:", chatsFromServer);
       let sortedChats = chatsFromServer.sort((a, b) => {
         return (
-          new Date(b.lastMessage.timestamp) - new Date(a.lastMessage.timestamp)
+          new Date(b.lastMessage.Timestamp) - new Date(a.lastMessage.Timestamp)
         );
       });
       sortedChats = sortedChats.reverse();
@@ -33,32 +32,30 @@ const ChatList = ({
       setChats((prevChats) => {
         let updatedChats = [...prevChats];
 
-
         const chatIndex = updatedChats.findIndex(
-          (chat) => chat.id === newMessage.chatId
+          (chat) => chat.id === newMessage.chatid.id
         );
 
         if (chatIndex > -1) {
           updatedChats[chatIndex] = {
             ...updatedChats[chatIndex],
             lastMessage: newMessage.content,
-            timestamp: newMessage.Timestamp,
+            Timestamp: newMessage.Timestamp,
             senderId: newMessage.senderId,
             receiveravatar: newMessage.receiveravatar,
             senderavatar: newMessage.senderavatar,
             senderflag: newMessage.senderflag,
             receiverflag: newMessage.receiverflag,
-            
           };
           // console.log("sender id is-", newMessage.senderId), console.log("sender id is --", newMessage.senderflag);
         } else {
           updatedChats = [
             ...updatedChats,
             {
-              id: newMessage.chatId,
+              id: newMessage.chatid.id,
               name: `User ${newMessage.senderId}`,
               lastMessage: newMessage.content,
-              timestamp: newMessage.Timestamp,
+              Timestamp: newMessage.Timestamp,
               senderId: newMessage.senderId,
               receiveravatar: newMessage.receiveravatar,
               senderavatar: newMessage.senderavatar,
@@ -67,23 +64,26 @@ const ChatList = ({
             },
           ];
         }
-        
 
         updatedChats.sort(
-          (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+          (a, b) => new Date(b.Timestamp) - new Date(a.Timestamp)
         );
 
         return updatedChats;
       });
     };
 
-    socket.on("new-message", handleNewMessage);
+    // socket.on("new-message", handleNewMessage);
 
     socket.on("search-user-response", (response) => {
       if (response.chatId) {
+        console.log("Search response:", response.chatId);
         setActiveChat(response.chatId);
 
-        socket.emit("request-messages-for-chat", { chatId: response.chatId });
+        socket.emit("request-messages-for-chat", {
+          chatId: response.chatId,
+          sender_id: currentUserToken.id,
+        });
       } else if (response.error) {
         console.error("Search error:", response.error);
         alert("User Not Found");
@@ -93,19 +93,22 @@ const ChatList = ({
     // console.log(chats);
     return () => {
       socket.off("latest-messages");
-      socket.off("new-message", handleNewMessage);
       socket.off("search-user-response");
+      // socket.off("new-message", handleNewMessage);
     };
-  }, [socket, chats]);
+  }, [socket]);
 
-  const handleChatClick = (chatId, chats) => {
-    setActiveChat(chatId);
+  const handleChatClick = (chatId) => {
+    // if (activeChat === chatId && activeChat) return;
     console.log("Chat ID clicked:", chatId);
-    console.log("Chat data:", chats);
+    
+    
+    setActiveChat(chatId);
     socket.emit("request-messages-for-chat", {
       chatId,
     });
 
+    // socket.emit("request-latest-messages", currentUserToken.id);
   };
 
   return (
@@ -137,7 +140,9 @@ const ChatList = ({
           ></div>
           <div className="flex w-9/12 flex-col text-sm">
             <p className="text-bLight_4 px-3">@{chat.name}</p>
-            <p className="text-bLight_2 px-3 w-full truncate">{chat.lastMessage}</p>
+            <p className="text-bLight_2 px-3 w-full truncate">
+              {chat.lastMessage.Content}
+            </p>
           </div>
         </div>
       ))}
@@ -146,7 +151,7 @@ const ChatList = ({
 };
 
 ChatList.propTypes = {
-  activeChat: PropTypes.string,
+  activeChat: PropTypes.number,
   setActiveChat: PropTypes.func,
   currentUserToken: PropTypes.object,
   onTabSelected: PropTypes.func,

@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import style from "../../style";
+import { useSocket } from "../../Socketio.jsx";
 
-const SlidingTabBar = ({ onTabSelected }) => {
+const SlidingTabBar = ({ onTabSelected,currentUserToken }) => {
   const tabsRef = useRef([]);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-
+  const socket = useSocket();
   const tab = "py-2 w-1/2 px-6 focus:outline-none";
   const tabActive = "bg-bLight_5/60 rounded-2xl";
   const tabInactive = "bg-transparent rounded-2xl text-bLight_4";
-
+  
   const tabs = [
     {
       id: "dms",
@@ -20,6 +21,13 @@ const SlidingTabBar = ({ onTabSelected }) => {
       name: "Channels",
     },
   ];
+
+  // useEffect(() => {
+  //   if(socket == null) return;  
+  //   console.log("*****************************************************888")
+  //   socket.emit("request-latest-messages", currentUserToken.id);
+  //   }, [socket]);
+
 
   return (
     <div className={`w-full flex flex-row items-center text-bLight_2 gap-3`}>

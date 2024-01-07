@@ -39,24 +39,24 @@ const Stats = () => {
 
 
   const randomArray = [
-    { id: 1,   img: ProfileTest ,name:"player", xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    // { id: 2,   img: ProfileTest, name:"player",xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    // { id: 3,   img: ProfileTest, name:"player",xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    // { id: 4,   img: ProfileTest, name:"player",xp: 876, win: 10, lose: 0, badge: 'Master' },
-    // { id: 5,   img: ProfileTest,name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    // { id: 6,   img: ProfileTest, name:"player",xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    // { id: 7,   img: ProfileTest, name:"player",xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    // { id: 8,   img: ProfileTest, name:"player",xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    // { id: 9,   img: ProfileTest, name:"player",xp: 876, win: 10, lose: 0, badge: 'Master' },
-    // { id: 10, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    // { id: 11, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    // { id: 12, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    // { id: 13, img: ProfileTest, name:"player", xp: 222, win: 2, lose: 2, badge: 'Leader' },
-    // { id: 14, img: ProfileTest, name:"player", xp: 543, win: 7, lose: 3, badge: 'Champion' },
-    // { id: 15, img: ProfileTest, name:"player", xp: 123, win: 1, lose: 5, badge: 'Rookie' },
-    // { id: 16, img: ProfileTest, name:"player", xp: 876, win: 10, lose: 0, badge: 'Master' },
-    // { id: 17, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
-    // { id: 18, img: ProfileTest, name:"player", xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 1,   name:  (<img src={ProfileTest} alt="UserProfile" className="h-12 w-12 ml-9 border-2 border-solid  border-org_3 overflow-hidden"  style={{ borderRadius: '1vw' }}/>, 'aya'), xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    { id: 2,   name: 'Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    { id: 3,   name: 'Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    { id: 4,   name: 'Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
+    { id: 5,   name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 6,   name: 'Player', xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    { id: 7,   name: 'Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    { id: 8,   name: 'Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    { id: 9,   name: 'Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
+    { id: 10, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 11, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 12, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 13, name: 'Player', xp: 222, win: 2, lose: 2, badge: 'Leader' },
+    { id: 14, name: 'Player', xp: 543, win: 7, lose: 3, badge: 'Champion' },
+    { id: 15, name: 'Player', xp: 123, win: 1, lose: 5, badge: 'Rookie' },
+    { id: 16, name: 'Player', xp: 876, win: 10, lose: 0, badge: 'Master' },
+    { id: 17, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
+    { id: 18, name: 'Player', xp: 456, win: 4, lose: 6, badge: 'Elite' },
   ];
   
   return (
@@ -70,7 +70,7 @@ const Stats = () => {
       > */}
       <div className={`flex flex-col items-center p-5 px-6 bg-opacity-30 shadow-2xl ${style.blueBlur} ${style.rounded} ${style.boxWidth}`}>
         <div className={`w-full max-w-screen-md flex flex-row text-bLight_2 font-medium text-sm p-2 px-4 mt-1 mb-1`}>
-          <span className="flex-1">Info</span>
+          <span className="flex-1"></span>
           <span className="flex-1 mx-auto w-5 text-center">Xp</span>
           <span className="flex-1 mx-auto w-5 text-center">Win</span>
           <span className="flex-1 mx-auto w-5 text-center">Lose</span>
@@ -81,23 +81,19 @@ const Stats = () => {
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -60 }}
-          transition={{ duration: 2 }}
+          transition={{ duration: 0 }}
           className={`flex flex-col items-center ${style.boxWidth}`}
           style={{ maxHeight: "72vh", overflowY: "auto", width: "95%" }}
       >
-        <ul className="flex flex-col w-full max-w-screen-md">
+        <ul className="w-full max-w-screen-md">
           {randomArray.map(item => (
-            <li key={item.id} className={`flex justify-around text-bLight_4 align-middle p-3 mt-2 rounded-2xl bg-bLight_5/40 `}>
-              {/* <TrophyImage position={item.id} />
-              <span className="flex items-center mr-20 ml-5">
-                <img src={item.img} alt={item.name} className="w-10 h-10 rounded-lg border-2 border-bDark_2" />
-                <span className="flex-1 w-10 text-center">{item.name}</span>
-              </span>
-
-              <span className="flex items-center justify-center rounded mr-40 ml-10">{item.xp}</span>
-              <span className="flex items-center justify-center rounded mr-40 ml-10">{item.win}</span>
-              <span className="flex items-center justify-center rounded mr-20 ml-10">{item.lose}</span>
-              <span className="flex-1 w-10 text-center">{item.badge}</span> */}
+            <li key={item.id} className={`w-full h-3/4 flex justify-around text-bLight_4 align-middle p-3 mt-2 rounded-2xl bg-bLight_5/40 `}>
+              <TrophyImage position={item.id} />
+              <span className="flex-1 w-10 text-center">{item.name}</span>
+              <span className="flex-1 w-10 text-center">{item.xp}</span>
+              <span className="flex-1 w-10 text-center">{item.win}</span>
+              <span className="flex-1 w-10 text-center">{item.lose}</span>
+              <span className="flex-1 w-10 text-center">{item.badge}</span>
             </li>
           ))}
         </ul>

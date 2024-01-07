@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { fetchDataFromMockApi } from "../../data/mockApi";
 import MessageList from "./MessageList";
 import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
 import { GetHeaders } from "../../jwt_token";
+import config from "../../config";
 
 
 const Dashboard = () => {
@@ -17,9 +17,8 @@ const Dashboard = () => {
   const headers = GetHeaders().headers;
 
   useEffect(() => {
-    console.log('Headers:', headers);
-    fetch('http://localhost:3009/dashboard', {
-      method: 'GET',
+    fetch(config.domain + "/dashboard", {
+      method: "GET",
       headers: headers,
     })
       .then((response) => {
@@ -42,7 +41,7 @@ const Dashboard = () => {
 
   return (
     <div
-      className={`flex sm:flex-row flex-col w-full md:p-6 md:pt-10 pb-28 p-2  md:px-10 sm:px-6`}
+      className={`flex sm:flex-row flex-col w-full md:p-6 md:pt-14 pb-28 p-2  md:px-10 sm:px-6`}
     >
       {loading ? (
         <p className="w-10 h-16 mx-auto text-bLight_4 text-lg font-bold text-center mt-16 animate-bounce">
