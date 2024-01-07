@@ -67,13 +67,13 @@ const Header = GetHeaders().headers;
     fetch2FAStatus();
   }, []);
 
-  useEffect(() => 
-  {
-    if (isChecked) 
-    {
-      fetchQrCode();
-    }
-  }, [isChecked]);
+  // useEffect(() => 
+  // {
+  //   if (isChecked) 
+  //   {
+  //     fetchQrCode();
+  //   }
+  // }, [isChecked]);
 /*
     ================== disable2FA ==========================
 */
@@ -139,27 +139,32 @@ const handleChange = () => {
     
     const fetchQrCode = async () => {
       try {
-          const response = await fetch('http://localhost:3009/2fa', {
-            method: 'GET',
-            headers: headers,
-          });
-          if (!response.ok) {
-            throw new Error(`Failed to fetch QR code. Status: ${response.status}`);
+        if (setTest != false)
+        {
+              console.log("fetch Qr codee ===>> ");
+              const response = await fetch('http://localhost:3009/2fa', {
+                method: 'GET',
+                headers: headers,
+              });
+              if (!response.ok) {
+                throw new Error(`Failed to fetch QR code. Status: ${response.status}`);
+              }
+              const htmlString = await response.text();
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(htmlString, 'text/html');
+              const imgElement = doc.querySelector('img');
+              if (imgElement) {
+                const imageUrl = imgElement.getAttribute('src'); 
+                setQrImageUrl(imageUrl);
+              } 
+              else 
+              {
+                throw new Error('No img tag found in the HTML response');
+              }
+            } 
           }
-          const htmlString = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlString, 'text/html');
-          const imgElement = doc.querySelector('img');
-          if (imgElement) {
-            const imageUrl = imgElement.getAttribute('src'); 
-            setQrImageUrl(imageUrl);
-          } 
-          else 
-          {
-            throw new Error('No img tag found in the HTML response');
-          }
-      } 
-      catch (error) {
+      catch (error) 
+      {
         console.error('Error fetching QR code:', error.message);
       }
     };
@@ -197,6 +202,7 @@ const handleChange = () => {
             setWarning('');
             setIsSuccess(true);
             setChecked(false);
+            setTest(false);
             document.getElementById('app-root').style.filter = 'blur(5px)';
         }
       } 
