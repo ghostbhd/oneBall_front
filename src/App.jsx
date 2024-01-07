@@ -13,6 +13,8 @@ import {
   CallBack,
   Error_404,
 } from "./components";
+import WelcomeBack from "./components/WelcomeBack";
+
 
 import { GameShell } from "./pniw_pong/index.jsx";
 
@@ -32,7 +34,7 @@ const App = () => {
 
   useEffect(() => {
     if (!isAuth) {
-      navigate("/Auth");
+      // navigate("/Auth");
       return;
     }
   }, []);
@@ -50,6 +52,7 @@ const App = () => {
       <Routes>
         <Route path="/Auth" element={<Auth />} />
         <Route path="/Callback" element={<CallBack />} />
+        <Route path="/welcomeback" element={<WelcomeBack />} />
 
         <Route
           path="*"
