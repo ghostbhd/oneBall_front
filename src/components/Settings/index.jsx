@@ -3,13 +3,12 @@ import {useState, useEffect, useRef} from 'react';
 import checkMark from "../../assets/Checkmark.gif";
 import Switch from '@mui/material/Switch';
 import { GetHeaders } from "../../jwt_token";
+import * as jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 // import modeImage from "../../assets/mode2.png";
-
-
 /*
     ====================== Success mark ======================
 */
-
 const SuccessCheckmark = () => {
   return (
     <div className="animate-success-check w-full text-center">
@@ -29,7 +28,9 @@ const Settings = () => {
     const [warning, setWarning] = useState('');
     const [qrImageUrl, setQrImageUrl] = useState('');
     const [isChecked, setChecked] = useState(false);
+    const [test, setTest] = useState(false);
 
+    
 /*
     =================== check status of 2fa =========================
 */
@@ -44,11 +45,16 @@ const Header = GetHeaders().headers;
           method: 'GET',
           headers:  Header,
         });
-
+        
         if (response.ok) {
           const { is_twofactor } = await response.json();
           console.log('=====>> is_twofactor: =====>>', is_twofactor);
-          setChecked(is_twofactor);
+          // setTest(is_twofactor)
+          //setChecked(is_twofactor);
+          setTest(is_twofactor)
+          if (is_twofactor)
+            setChecked(true)
+          
         } else {
           console.log('===>> Failed to fetch 2FA status:', response.statusText);
         }
@@ -56,7 +62,7 @@ const Header = GetHeaders().headers;
         console.log('===>> Error fetching 2FA status:', error.message);
       }
     };
-
+    
     fetch2FAStatus();
   }, []);
 /*
@@ -73,6 +79,7 @@ const disable2FA = async () => {
     if (response.ok) {
       console.log('2FA disabled successfully');
       setChecked(false);
+      setTest(false)
     } else {
       console.error('Failed to disable 2FA:', response.statusText);
     }
@@ -84,30 +91,16 @@ const disable2FA = async () => {
     ============================================
 */
   const handleChange = () => {
-    const newValue = !isChecked;
-    setChecked(newValue);
-    localStorage.setItem('isChecked', String(newValue));
-
-    if (newValue) {
+    // const newValue = !isChecked;
+    setChecked(!isChecked);
+    localStorage.setItem('isChecked', String(isChecked));
+    if (isChecked) {
       fetchQrCode();
     } else {
       // Add logic to call the backend and disable 2FA
       disable2FA();
     }
   };
-
-/*
-    ============================================
-*/
-
-    useEffect(() => 
-    {
-      if (isChecked) 
-      {
-        fetchQrCode();
-      }
-    }, [isChecked]);
-
 /*
     ====================== Make sure the code is a number ======================
 */
@@ -160,25 +153,26 @@ const disable2FA = async () => {
         console.error('Error fetching QR code:', error.message);
       }
     };
-
 /*
     ====================== Check the verification code ======================
 */
-    const header = GetHeaders().headers;
+    const token = Cookies.get("accessToken");
+    const header = new Headers();
     header.append("Content-Type", "application/json");
+    const username = token ? jwtDecode.jwtDecode(token).name : null;//
 
 
     const handleSubmit = async () => {
       try {
-        console.clear();
         const passValue = digits.join('');
         const response = await fetch('http://localhost:3009/2fa', {
           method: 'POST',
           headers: header,
-          body: JSON.stringify({ pass: passValue }),
+          body: JSON.stringify({username: username , pass: passValue }),
         });
         if (!response.ok) 
         {
+          console.log("im hereeee iffff");
           if (response.status === 401) {
             setWarning('Incorrect Verification Code. Please try again.');
             setDigits(Array.from({ length: 6 }, () => ''));
@@ -187,31 +181,28 @@ const disable2FA = async () => {
             throw new Error('Failed to verify digits with the backend.');
           }
         }
-        
         else 
         {
-          console.clear();
-          const { isValid } = await response.json();
-          if (!isValid)
-          {
+            console.log("im hereeee elseeee");
             setWarning('');
             setIsSuccess(true);
+            setChecked(false);
             document.getElementById('app-root').style.filter = 'blur(5px)';
-          } 
         }
-      } catch (error) {
+      } 
+      catch (error) 
+      {
         console.error('Error handling verification:', error.message);
         setWarning('Failed to verify the code. Please try again.');
       }
     };
-  
+
     return (
-
       <div className={`w-full h-full flex`}>
-
-        {/* <img src={modeImage} alt="qr-code" className=" h-2/4 w-1/4 my-5 max-w-full h-auto rounded-lg"/> */}
           {isSuccess ? (
-            <SuccessCheckmark />
+            <div className={`sm:w-max px-20 p-6 gap-1 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
+              <SuccessCheckmark />
+            </div>
           ) : (
               <div className={`sm:w-max px-20 p-6 gap-1 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
                 <p className={`text-2xl font-semibold text-bLight_4`}>Two-Factor Authentication</p>
@@ -234,18 +225,26 @@ const disable2FA = async () => {
                 </div>
 
 
-                {isChecked && 
+                { isChecked  && 
                 (
                     <>
                       
-                      <img src={qrImageUrl} alt="qr-code" className="my-5 max-w-full h-auto rounded-lg" />
-                      <p className={`text-bLight_4 text-sm leading-5 mb-5`}>
+                      <img 
+                        className="my-5 max-w-full h-auto rounded-lg" 
+                        style={test ? {display: "none"} : {}}
+                        src={qrImageUrl} alt="qr-code"
+                        />
+                      <p
+                        style={test ? {display: "none"} : {}} 
+                        className={`text-bLight_4 text-sm leading-5 mb-5`}>
                         To enable 2-factor authentication, scan <br />
                         this QR Code with your Google Authentication App <br />
                         and enter the verification code below
                       </p>
 
-                      <div className="digits-grid flex flex-wrap justify-center pb-4">
+                      <div  
+                        style={test ? {display: "none"} : {}}
+                        className="digits-grid flex flex-wrap justify-center pb-4">
                         {digits.map((digit, index) => (
                           <div className="digit-container" key={index}>
                                 <input
@@ -261,9 +260,10 @@ const disable2FA = async () => {
                         ))} 
                       </div>
 
-                      <div className="w-full flex flex-col items-center justify-center">
+                      <div style={test ? {display: "none"} : {}} className="w-full flex flex-col items-center justify-center">
                         {warning && <p className="text-org_3 text-xs my-1">{warning}</p>}
-                        <button
+                        <button 
+                          style={test ? {display: "none"} : {}}
                           className="w-full p-4 bg-bDark_1 rounded-xl text-white text-sm mt-2"
                           onClick={handleSubmit}
                         >
