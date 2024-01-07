@@ -19,6 +19,7 @@
     "@babel/plugin-transform-optional-chaining": "^7.23.4",
     "@mui/material": "^5.15.3",
     "@use-gesture/react": "^10.3.0",
+    "dotenv": "^16.3.1",
     "framer-motion": "^10.17.9",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",

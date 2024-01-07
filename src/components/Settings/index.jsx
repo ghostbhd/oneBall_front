@@ -1,4 +1,4 @@
-import style from "../../style";
+import style from '../../style';
 import {useState, useEffect, useRef} from 'react';
 import checkMark from "../../assets/Checkmark.gif";
 import { GetHeaders } from "../../jwt_token";
@@ -12,7 +12,7 @@ const SuccessCheckmark = () => {
   return (
     <div className="animate-success-check w-full text-center">
       <img src={checkMark} alt="checkMark" className="mx-auto mb-5 max-w-full h-16"/>
-      <p className="text-greenclr text-lg font-semibold mt-0 mb-0">
+      <p className="text-bLight_5 text-lg font-semibold mt-0 mb-0">
         2-Factor Authentication Enabled Successfully
       </p>
     </div>
