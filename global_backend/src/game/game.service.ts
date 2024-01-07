@@ -119,7 +119,7 @@ export class GameService {
         }
     }
 
-    add_victory(user: User, luser : User) {
+    add_victory(user: User, luser: User) {
         if (user.gameStats.xp + 200 >= 1000) {
             user.gameStats.xp = user.gameStats.xp + 200 - 1000;
             user.gameStats.level++;
@@ -134,7 +134,9 @@ export class GameService {
     async database_entries(left_plr: Player, right_plr: Player, winner: number) {
         try {
             //GameHistory relations with opponent
-            const game_time: string = new Date().toLocaleDateString() + " at " + new Date().toString().split(" ")[4]
+            const game_time: string = new Date().toLocaleDateString() + " at " + new Date().toLocaleTimeString()
+
+            console.log("\nthis is the time ==> ", new Date().toLocaleTimeString())
 
             console.log("left_plr ==> ", left_plr.id)
             let left_user: User = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
@@ -204,11 +206,11 @@ export class GameService {
                 }
             }
             else {
-                /*
                 let data: number = inf.ball.x_dir == 1 ? 2 : 1 //TOBE checked
                 this.salat(inf, data, io)
                 io.in(inf.state.roomid).emit("salat", data)
                 break
+                /*
                 */
             }
 
