@@ -3,6 +3,8 @@ import {useState, useEffect, useRef} from 'react';
 import { GetHeaders } from "../../jwt_token";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Cookies from "js-cookie";
+import { getAccordionSummaryUtilityClass } from "@mui/material";
 
 const WelcomeBack = () => {
     const [digits, setDigits] = useState(Array.from({ length: 6 }, () => ''));
@@ -30,49 +32,51 @@ const WelcomeBack = () => {
     };
 
     /*
-    ====================== Check the verification code ======================
-*/
-const header = GetHeaders().headers;
-header.append("Content-Type", "application/json");
+        ====================== Check the verification code ======================
+    */
+    const username = Cookies.get("username");
+    const header = new Headers();
+    header.append("Content-Type", "application/json");
 
 
-const handleSubmit = async () => {
-    try 
-    {
-        console.clear();
-        const passValue = digits.join('');
-        const response = await fetch('http://localhost:3009/2fa', {
-            method: 'POST',
-            headers: header,
-            body: JSON.stringify({ pass: passValue }),
-        });
+    const handleSubmit = async () => {
+        try {
+            // console.clear();
+            const passValue = digits.join('');
+            console.log('Verification Code:', passValue);
 
-        if (!response.ok) 
-        {
-            if (response.status === 401) {
-            setWarning('Incorrect Verification Code. Please try again.');
-            setDigits(Array.from({ length: 6 }, () => ''));
-            } else {
-            throw new Error('Failed to verify digits with the backend.');
+            const response = await fetch('http://localhost:3009/2fa', {
+                method: 'POST',
+                headers: header,
+                body: JSON.stringify({ pass: passValue , username:username}),
+            });
+
+            console.log('Backend Response:', response);
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    console.log("im heereee in if >>>>>> ===== ");
+                    setWarning('Incorrect Verification Code. Please try again.');
+                    setDigits(Array.from({ length: 6 }, () => ''));
+                } else {
+                    throw new Error('Failed to verify digits with the backend.');
+                }
+            } 
+            else 
+            {
+                // console.clear();
+                console.log("heereee at else  >>>>>> ===== ");
+                const data = await response.json();
+                console.log(data);
+                Cookies.set('accessToken', data.accessToken);
+                navigate('/');
             }
-        } 
-        else {
-            console.clear();
-            // const { isValid } = await response.json();
-            // if (isValid) {
-            //   setWarning('');
-            //   document.getElementById('app-root').style.filter = 'blur(5px)';
-            // Navigate to '/' when verification is successful
-            navigate('/');
-      }
-    } 
-    catch (error) 
-    {
-      console.error('Error handling verification:', error.message);
-      setWarning('Failed to verify the code. Please try again.');
-    }
-  };
-
+        } catch (error) {
+            console.log("im heereee in catch >>>>>> ===== ");
+            console.error('Error handling verification:', error.message);
+            setWarning('Failed to verify the code. Please try again.');
+        }
+    };
 
     return (
         <div className={`w-full h-full flex`}>
@@ -99,7 +103,6 @@ const handleSubmit = async () => {
                             </div>
                         ))} 
             </div>
-
 
             <div className="w-full flex flex-col items-center justify-center ">
                         {warning && <p className=" text-org_3 text-xs my-2 mb-4">{warning}</p>}

@@ -1,11 +1,10 @@
 import style from "../../style";
 import {useState, useEffect, useRef} from 'react';
 import checkMark from "../../assets/Checkmark.gif";
-import Switch from '@mui/material/Switch';
 import { GetHeaders } from "../../jwt_token";
 import * as jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
-// import modeImage from "../../assets/mode2.png";
+import CustomSwitch from "./CustomSwitch"
 /*
     ====================== Success mark ======================
 */
@@ -55,7 +54,9 @@ const Header = GetHeaders().headers;
           if (is_twofactor)
             setChecked(true)
           
-        } else {
+        }
+        else
+        {
           console.log('===>> Failed to fetch 2FA status:', response.statusText);
         }
       } catch (error) {
@@ -65,10 +66,17 @@ const Header = GetHeaders().headers;
     
     fetch2FAStatus();
   }, []);
+
+  useEffect(() => 
+  {
+    if (isChecked) 
+    {
+      fetchQrCode();
+    }
+  }, [isChecked]);
 /*
     ================== disable2FA ==========================
 */
-
 const disable2FA = async () => {
   try {
     const response = await fetch('http://localhost:3009/2fa/disable', {
@@ -79,28 +87,30 @@ const disable2FA = async () => {
     if (response.ok) {
       console.log('2FA disabled successfully');
       setChecked(false);
-      setTest(false)
+      setTest(false);
     } else {
-      console.error('Failed to disable 2FA:', response.statusText);
+      console.error('Failed to disable 2FA:', response.status, response.statusText);
+
     }
   } catch (error) {
     console.error('Error disabling 2FA:', error.message);
   }
 };
+
 /*
     ============================================
 */
-  const handleChange = () => {
-    // const newValue = !isChecked;
-    setChecked(!isChecked);
-    localStorage.setItem('isChecked', String(isChecked));
-    if (isChecked) {
-      fetchQrCode();
-    } else {
-      // Add logic to call the backend and disable 2FA
-      disable2FA();
-    }
-  };
+const handleChange = () => {
+  const newValue = !isChecked;
+  setChecked(newValue);
+  localStorage.setItem('isChecked', String(newValue));
+
+  if (newValue) {
+    fetchQrCode();
+  } else {
+    disable2FA();
+  }
+};
 /*
     ====================== Make sure the code is a number ======================
 */
@@ -197,87 +207,83 @@ const disable2FA = async () => {
       }
     };
 
+      
     return (
       <div className={`w-full h-full flex`}>
-          {isSuccess ? (
-            <div className={`sm:w-max px-20 p-6 gap-1 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
-              <SuccessCheckmark />
-            </div>
-          ) : (
-              <div className={`sm:w-max px-20 p-6 gap-1 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
-                <p className={`text-2xl font-semibold text-bLight_4`}>Two-Factor Authentication</p>
+        {isSuccess ? (
+          <div className={`sm:w-max px-20 p-6 gap-1 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
+            <SuccessCheckmark />
+          </div>
+        ) : (
+          <div className={`sm:w-max px-20 p-6 gap-1 w-11/12 flex flex-col text-center items-center h-max m-auto relative ${style.blueBlur} ${style.rounded}`}>
+              <p className={`text-2xl font-semibold text-bLight_4`}>Two-Factor Authentication</p>
+      
+              <div className="flex items-center pt-1.5">
+              <CustomSwitch isChecked={isChecked} handleChange={handleChange} />
 
-
-                <div className="flex items-center pt-1.5">
-                  <Switch
-                    color="default"
-                    checked={isChecked}
-                    onChange={handleChange}
-                    sx={{
-                      '& .MuiSwitch-thumb': {
-                        backgroundColor: isChecked ? '#6398a4' : '#6398a4',
-                      },
-                    }}
-                  />
-                  <p className={`text-bLight_4 text-sm `}>
-                    {isChecked ? 'Disable 2FA' : 'Enable 2FA'}
-                  </p>
+                <p className={`text-bLight_4 text-sm ml-1`}>
+                  {isChecked ? 'Disable 2FA' : 'Enable 2FA'}
+                </p>
+          </div>
+    
+            {isChecked && (
+              <>
+                <img
+                  className="my-5 max-w-full h-auto rounded-lg"
+                  style={test ? { display: 'none' } : {}}
+                  src={qrImageUrl}
+                  alt="qr-code"
+                />
+                <p
+                  style={test ? { display: 'none' } : {}}
+                  className={`text-bLight_4 text-sm leading-5 mb-5`}
+                >
+                  To enable 2-factor authentication, scan <br />
+                  this QR Code with your Google Authentication App <br />
+                  and enter the verification code below
+                </p>
+    
+                <div
+                  style={test ? { display: 'none' } : {}}
+                  className="digits-grid flex flex-wrap justify-center pb-4"
+                >
+                  {digits.map((digit, index) => (
+                    <div className="digit-container" key={index}>
+                      <input
+                        type="text"
+                        value={digit}
+                        onChange={(e) => handleDigitChange(index, e.target.value)}
+                        id={`digit-${index}`}
+                        maxLength={1}
+                        className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
+                        ref={(input) => (inputRefs.current[index] = input)}
+                      />
+                    </div>
+                  ))}
                 </div>
-
-
-                { isChecked  && 
-                (
-                    <>
-                      
-                      <img 
-                        className="my-5 max-w-full h-auto rounded-lg" 
-                        style={test ? {display: "none"} : {}}
-                        src={qrImageUrl} alt="qr-code"
-                        />
-                      <p
-                        style={test ? {display: "none"} : {}} 
-                        className={`text-bLight_4 text-sm leading-5 mb-5`}>
-                        To enable 2-factor authentication, scan <br />
-                        this QR Code with your Google Authentication App <br />
-                        and enter the verification code below
-                      </p>
-
-                      <div  
-                        style={test ? {display: "none"} : {}}
-                        className="digits-grid flex flex-wrap justify-center pb-4">
-                        {digits.map((digit, index) => (
-                          <div className="digit-container" key={index}>
-                                <input
-                                      type="text"
-                                      value={digit}
-                                      onChange={(e) => handleDigitChange(index, e.target.value)}
-                                      id={`digit-${index}`}
-                                      maxLength={1}
-                                      className="w-11 h-11 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
-                                      ref={(input) => (inputRefs.current[index] = input)}
-                                />
-                          </div>
-                        ))} 
-                      </div>
-
-                      <div style={test ? {display: "none"} : {}} className="w-full flex flex-col items-center justify-center">
-                        {warning && <p className="text-org_3 text-xs my-1">{warning}</p>}
-                        <button 
-                          style={test ? {display: "none"} : {}}
-                          className="w-full p-4 bg-bDark_1 rounded-xl text-white text-sm mt-2"
-                          onClick={handleSubmit}
-                        >
-                          Submit
-                        </button>
-                      </div>
-
-
-                    </>
-                )}
-              </div>
+    
+                <div
+                  style={test ? { display: 'none' } : {}}
+                  className="w-full flex flex-col items-center justify-center"
+                >
+                  {warning && (
+                    <p className="text-org_3 text-xs my-1">{warning}</p>
+                  )}
+                  <button
+                    style={test ? { display: 'none' } : {}}
+                    className="w-full p-4 bg-bDark_1 rounded-xl text-white text-sm mt-2"
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </>
             )}
-        </div>
+          </div>
+        )}
+      </div>
     );
+    
 };
 
 export default Settings

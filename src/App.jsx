@@ -11,7 +11,6 @@ import {
   UserProfile,
   Auth,
   CallBack,
-  // WelcomeBack,
   Error_404,
 } from "./components";
 import style from "./style";
@@ -56,6 +55,7 @@ const App = () => {
           <Routes>
             <Route path="/Auth" element={<Auth />} />
             <Route path="/Callback" element={<CallBack />} />
+            <Route path="/welcomeback" element={<WelcomeBack />} />
 
             <Route
               path="*"
@@ -84,9 +84,8 @@ const App = () => {
                       <Route path="/games" element={<Games />} />
                       <Route path="/messages" element={<Messages />} />
                       <Route path="/profile" element={<Profile />} />
-                      <Route path="/stats" element={<Stats />} />
-                      <Route path="/welcomeback" element={<WelcomeBack />} />
                       <Route path="/settings" element={<Settings />} />
+                      <Route path="/stats" element={<Stats />} />
                       <Route
                         path="/profile/:username"
                         element={<UserProfile />}

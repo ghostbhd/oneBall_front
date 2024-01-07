@@ -24,6 +24,8 @@ module.exports = {
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
+        HappySerif: ["Happy Serif", "sans-serif"],
+
       },
       boxShadow: {
         "3xl": "0 25px 50px -12px rgb(0 0 0 / 0.5)",
