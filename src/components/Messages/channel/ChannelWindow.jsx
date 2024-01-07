@@ -216,7 +216,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                 // Join buttons --------------------
                 <button
                   onClick={handleJoinChannel}
-                  className={`p-3 bg-bLight_5 text-white rounded-lg`}
+                  className={`p-2 px-5 bg-bLight_5/60 text-bLight_3/70 rounded-full`}
                 >
                   Join Channel
                 </button>
@@ -224,7 +224,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                 // Leave button --------------------
                 <button
                   onClick={handleleaveChannel}
-                  className={`p-3 bg-org_3 text-white rounded-lg`}
+                  className={`p-2 px-5 bg-org_3/60 text-org_1/70 rounded-full`}
                 >
                   Leave Channel
                 </button>

@@ -91,10 +91,12 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
 
   // console.log(`active chat user is ${activeChatUser}`);
   return (
-    <div className={`w-full  ${style.contentW} ${style.chatContainer}`}>
+    <div
+      className={`w-full h-full relative flex flex-col overflow-hidden ${style.blueBlur} ${style.rounded}`}
+    >
       {/* Chat header */}
       <Link
-        className="flex  h-20 items-center rounded-t-lg bg-bDark_1 mb-5"
+        className="flex flex-row p-4 px-6 h-max items-center rounded-t-lg bg-bDark_1/40"
         to={"/profile/"}
       >
         <img
@@ -110,46 +112,61 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
 
       {/* Message display  ----------------------------------------------------------------------*/}
       <div
-        className={`flex-grow px-5 flex-col overflow-y-auto ${style.chatWindowMessages}`}
+        className={`flex h-full w-full px-5 flex-col scroll-mb-0 overflow-y-auto`}
       >
-        {messages.map((message) => {
-          {
-            /*!AYOUB update the message.senderId line 117*/
-          }
-          return (
+        {Array.isArray(messages) && messages.length === 0 ? (
+          <p className={`mx-auto mt-5 text-sm text-bLight_4/80`}>
+            No messages yet.
+          </p>
+        ) : (
+          messages.map((message) => (
             <div
               key={message.id}
-              className={`mb-5 ${
+              className={`my-2 p-2 rounded-lg w-7/12 relative flex items-center gap-2 align-baseline ${
                 message.ReceiverUserID.id === currentUserToken.id
-                  ? style.messageOtherUser
-                  : style.messageCurrentUser
+                  ? "ml-auto text-right p-2 rounded-lg flex-row-reverse"
+                  : "text-left p-2 rounded-lg"
               }`}
             >
-              <p className="text-white">{message.Content}</p>
+              {/* content ------------------ */}
+              <p
+                className={`w-max max-w-full text-bLight_2 p-3 whitespace-normal break-words  text-sm rounded-2xl ${
+                  message.ReceiverUserID.id === currentUserToken.id
+                    ? "bg-bLight_5/40"
+                    : "bg-org_1/20"
+                }`}
+              >
+                {message.Content}
+              </p>
               {/* Format the timestamp as needed */}
-              <span className="text-gray-400">
+              <span className="text-bLight_5 text-xs">
                 {new Date(message.Timestamp).toLocaleTimeString()}
               </span>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
 
       {/* Message input */}
-      <div className="flex items-center mt-auto p-2">
-        <input
-          className="w-full p-2 rounded-l-lg"
-          placeholder="Type a message..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-        />
-        <button
-          onClick={handleSendMessage}
-          className="bg-indigo-300 p-3 rounded-r-lg"
+      <div className="flex w-full p-2 px-4">
+        <div
+          className="w-full mx-auto flex flex-row items-center rounded-full p-2 px-4
+                overflow-hidden bg-bDark_3/80 text-sm border-2 border-bLight_5/40 text-bLight_3"
         >
-          <IoIosSend />
-        </button>
+          <input
+            className="w-full outline-none bg-transparent placeholder:text-bLight_5"
+            placeholder="Type a message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+          />
+          <button
+            onClick={handleSendMessage}
+            className="text-2xl text-bLight_4"
+          >
+            <IoIosSend />
+          </button>
+        </div>
       </div>
     </div>
   );
