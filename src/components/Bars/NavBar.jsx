@@ -58,14 +58,6 @@ const NavBar = () => {
     socket.emit("Users", decoded.name);
   };
 
-  const handleKeyDown = (event) => {
-    // Check the key code
-    if (event.key === "Enter") {
-      // Handle the Enter key press
-      console.log("Enter key pressed!", "search value is ", searchValue);
-    }
-  };
-
   const handelSearchChange = (e) => {
     setSearchValue(e.target.value);
     if (e.target.value === "") {
@@ -89,7 +81,8 @@ const NavBar = () => {
   const handelNotification = () => {
     console.log("the user notification");
     if (socket == null) return;
-    setShowNotif(true);
+    if (!showNotif)
+      setShowNotif(true);
   };
   return (
     <div
@@ -114,7 +107,6 @@ const NavBar = () => {
               onChange={handelSearchChange}
               autoFocus={showSearch}
               value={searchValue}
-              onKeyDown={handleKeyDown}
             />
             {/* search icon ----------------------------------------------------- */}
             <div
@@ -143,7 +135,7 @@ const NavBar = () => {
         {/* notification icon --------------------------------------- */}
         <div
           className={`text-2xl text-bDark_4 md:ml-auto cursor-pointer p-2 bg-bLight_4/70 rounded-full`}
-          onClick={() => handelNotification()}
+          onClick={handelNotification}
         >
           {<icons.notifications />}
         </div>
