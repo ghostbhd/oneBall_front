@@ -134,10 +134,10 @@ export class GameService {
     async database_entries(left_plr: Player, right_plr: Player, winner: number) {
         try {
             //GameHistory relations with opponent
-            let game_time: string = new Date().toLocaleDateString() + " at " + new Date().toString().split(" ")[4]
+            const game_time: string = new Date().toLocaleDateString() + " at " + new Date().toString().split(" ")[4]
 
             console.log("left_plr ==> ", left_plr.id)
-            const left_user: User = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
+            let left_user: User = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
             console.log("\n\ntesting the db entries left user ==> ", left_user)
             const right_user: User = await this.UserRepo.findOne({ where: { id: right_plr.id }, relations: ["victories", "losses", "gameStats"] })
             console.log("\n\ntesting the db entries right user ==> ")
@@ -156,6 +156,7 @@ export class GameService {
 
             await this.GameHistoryRepo.save(gamehistory)
             console.log("testing the victories of winner ==> ")
+            left_user = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
             left_user.victories.forEach((e) => console.log(e))
 
             //GameStat ==>
@@ -203,10 +204,12 @@ export class GameService {
                 }
             }
             else {
+                /*
                 let data: number = inf.ball.x_dir == 1 ? 2 : 1 //TOBE checked
                 this.salat(inf, data, io)
                 io.in(inf.state.roomid).emit("salat", data)
                 break
+                */
             }
 
             // accelarate ==>

@@ -122,7 +122,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
         })
 
         ///f_l.ws.on("ball:vertical:bounce", (data, callback) => {
-        f_l.ws.on("ball:vertical:bounce", (data ) => {
+        f_l.ws.on("ball:vertical:bounce", (data) => {
             /*
             callback({
                 status: 'ok'
@@ -141,6 +141,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
                     duration: data.dur
                 }
             })
+
         })
 
         return () => {

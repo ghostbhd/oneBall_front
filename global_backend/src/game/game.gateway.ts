@@ -11,13 +11,10 @@ import { GameObj } from './game.obj';
 import { EntitySchemaEmbeddedColumnOptions } from 'typeorm';
 import { QueueService } from './queue/queue.service';
 import type { Player } from './queue/queue.service';
-import { find } from 'rxjs';
-import { throws } from 'assert';
-import { number } from 'prop-types';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { GameHistory } from 'src/entities/GameHistory.entity';
 
 @WebSocketGateway({
     cors: {
@@ -27,7 +24,7 @@ import { GameHistory } from 'src/entities/GameHistory.entity';
 
 export class GameGateway {
     constructor(private readonly gameService: GameService, private queue: QueueService,
-               private readonly userService: UserService) {
+        @InjectRepository(User) private UserRepo: Repository<User>) {
     }
 
     check(games: GameObj[], playerID: number): boolean {
@@ -148,14 +145,19 @@ export class GameGateway {
         }
     }
 
+    @SubscribeMessage('inv:flan')
+    async invHandler(client : Socket, id : number, opName : string)
+    {
+    }
     /*
+    //this part will be done after validation project validation since this is not mandatory lol
     @SubscribeMessage('update:inf')
     async update_inf(@MessageBody("playerID") id: number, @ConnectedSocket() socket: Socket) {
         let side: number = 0
         let index: number = this.queue.games.findIndex(game => {
             if (game.left_plr.Player.id === id) {
                 side = 1
-                return (true)
+                return (true
             }
             if (game.right_plr.Player.id === id) {
                 side = 2
