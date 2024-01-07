@@ -8,6 +8,7 @@ import { GetHeaders } from "../../jwt_token";
 import { useSocket } from "../../Socketio";
 import Cookies from "js-cookie";
 import * as jwtDecode from "jwt-decode";
+import config from "../../config";
 
 const UserProfile = () => {
   const [data, setData] = useState({});
@@ -30,7 +31,7 @@ const UserProfile = () => {
     setLoading(true);
 
     const fetchdata = async () => {
-      await fetch("http://localhost:3009/profileData/user", {
+      await fetch(config.domain + "/profileData/user", {
         method: "POST",
         headers: header,
         body: JSON.stringify({ username: username }),

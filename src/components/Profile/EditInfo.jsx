@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { ImgBg } from "../../style";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import config from "../../config";
 
 const EditInfo = ({ data, setData, loading, setLoading }) => {
   const [selectedFile, setSelectedFile] = useState("");
@@ -62,7 +63,7 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
     else {
       handleRedirect("/Auth");
     }
-    const response = await fetch("http://localhost:3009/upload", {
+    const response = await fetch(config.domain + "/upload", {
       method: "POST",
       body: formData,
       headers: headers,

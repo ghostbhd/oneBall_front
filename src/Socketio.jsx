@@ -2,8 +2,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
+import config from "./config";
 
-const SOCKET_SERVER_URL = "http://localhost:3009/";
+const SOCKET_SERVER_URL = config.domain;
 
 const SocketContext = createContext(null);
 

@@ -3,6 +3,7 @@ import { icons } from "../../constants";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import config from "../../config";
 
 const Auth = () => {
 
@@ -48,7 +49,7 @@ const Auth = () => {
 
         {/* google button ----------------------------------------------- */}
         <Link
-          to={"http://localhost:3009/auth/login/google"}
+          to={`${config.domain}/auth/login/google`}
           className={`bg-white text-black ${btn}`}
         >
           <div className={`mr-4 text-xl xl:text-3xl`}>{<icons.google />}</div>
@@ -57,7 +58,7 @@ const Auth = () => {
 
         {/* 42 button ----------------------------------------------- */}
         <Link
-          to={"http://localhost:3009/auth/login/FortyTwo"}
+          to={`${config.domain}/auth/login/FortyTwo`}
           className={`bg-black text-white ${btn} mb-auto`}
         >
           <div className={`w-5 xl:w-7 mr-4`}>
