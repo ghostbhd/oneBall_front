@@ -126,7 +126,6 @@ export class ChatGateway {
     payload: { username: string; currentUserId: number }
   ): Promise<void> {
     try {
-      
       const currentUser = await this.userService.findUserById(
         payload.currentUserId
       );

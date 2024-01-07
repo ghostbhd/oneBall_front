@@ -252,14 +252,11 @@ export class ChannelGateway {
       const channel = await this.channelService.getChannelById(data.channelId);
       const ownerId = channel.owner.id;
       this.server.to(ownerId.toString()).emit("channelMembers", members);
+      // const room = `admin-${data.channelId}`;
+      // console.log(room);
+
 
       this.server.to(`admin-${data.channelId}`).emit("channelMembers", members);
-      // this.server
-      // .to(ownerId.toString())
-      // .emit("channelMembershipStatus", {
-      //   channelId: data.channelId,
-      //   ...status,
-      // });
       this.server
         .to(data.requesterId.toString())
         .emit("channelMembershipStatus", {
@@ -289,42 +286,33 @@ export class ChannelGateway {
     }
   }
 
-  
+  // @SubscribeMessage('PasswordCheck')
+  // async handlePasswordCheck(client: Socket, channelId: number, pass: string) {
+  //   try{
+  //     const res = await this.channelService.checkpassword(channelId , pass);
+
+  //   }
+  //   catch
+  //   {
+
+  //   }
+
+  // }
+
   @SubscribeMessage("BanUser")
   async handlebanUser(
     client: Socket,
-    data: { channelId: number, userId: number, targetUserId: number }
-    ) {
+    channelId: number,
+    targetUserId: number,
+    actorUserId: number
+  ) {
     try {
       const Ban = await this.channelService.banUserFromChannel(
-        data.channelId, data.userId,data.targetUserId
+        channelId,
+        targetUserId,
+        actorUserId
       );
-      const client2 = this.server.sockets.sockets.get(Ban);
-      client2.join(`buned-${data.channelId}`);
-      const status = await this.channelService.getUserChannelStatus(
-        data.channelId,
-        data.targetUserId
-      );
-
-      const members = await this.channelService.getChannelMembers(
-        data.channelId
-      );
-
-      const channel = await this.channelService.getChannelById(data.channelId);
-      const ownerId = channel.owner.id;
-      this.server.to(ownerId.toString()).emit("channelMembers", members);
-      // const room = `admin-${data.channelId}`;
-      // console.log(room);
-
-        console.log(`admin-${data.channelId}`);
-      this.server.to(`admin-${data.channelId}`).emit("channelMembers", members);
-      this.server
-        .to(data.targetUserId.toString())
-        .emit("channelMembershipStatus", {
-          channelId: data.channelId,
-          ...status,
-        });
-      
+      client.emit("Ban", true);
     } catch (error) {
       client.emit("is false ", false);
       throw error;
@@ -334,37 +322,15 @@ export class ChannelGateway {
   @SubscribeMessage("UnBanUser")
   async handleUnbanUser(
     client: Socket,
-    data: { channelId: number; userId: number; targetUserId: number }
-    ) {
-      try {
-        const Ban = await this.channelService.unbanUserFromChannel(
-          data.channelId, data.userId,data.targetUserId
+    channelId: number,
+    targetUserId: number
+  ) {
+    try {
+      const Ban = await this.channelService.unbanUserFromChannel(
+        channelId,
+        targetUserId
       );
-      client.leave(`buned-${data.channelId}`);
-      const status = await this.channelService.getUserChannelStatus(
-        data.channelId,
-        data.targetUserId
-      );
-
-      const members = await this.channelService.getChannelMembers(
-        data.channelId
-      );
-
-      const channel = await this.channelService.getChannelById(data.channelId);
-      const ownerId = channel.owner.id;
-      this.server.to(ownerId.toString()).emit("channelMembers", members);
-      // const room = `admin-${data.channelId}`;
-      // console.log(room);
-
-        console.log(`admin-${data.channelId}`);
-      this.server.to(`admin-${data.channelId}`).emit("channelMembers", members);
-      this.server
-        .to(data.targetUserId.toString())
-        .emit("channelMembershipStatus", {
-          channelId: data.channelId,
-          ...status,
-        });
-      
+      client.emit("UnBan", true);
     } catch (error) {
       client.emit("is false ", false);
       throw error;
@@ -374,38 +340,15 @@ export class ChannelGateway {
   @SubscribeMessage("MuteUser")
   async handleMuteUser(
     client: Socket,
-    data: { channelId: number; userId: number; targetUserId: number }
-    ) {
-      try {
-
-        console.log("TARGET USER ID", data.targetUserId);
-        const Mute = await this.channelService.muteUserInChannel(data.channelId, data.userId,data.targetUserId);
-      const client2 = this.server.sockets.sockets.get(Mute);
-      client2.join(`muted-${data.channelId}`);
-      const status = await this.channelService.getUserChannelStatus(
-        data.channelId,
-        data.targetUserId
+    channelId: number,
+    targetUserId: number
+  ) {
+    try {
+      const Ban = await this.channelService.muteUserInChannel(
+        channelId,
+        targetUserId
       );
-
-      const members = await this.channelService.getChannelMembers(
-        data.channelId
-      );
-
-      const channel = await this.channelService.getChannelById(data.channelId);
-      const ownerId = channel.owner.id;
-      this.server.to(ownerId.toString()).emit("channelMembers", members);
-      // const room = `admin-${data.channelId}`;
-      // console.log(room);
-
-        console.log(`admin-${data.channelId}`);
-      this.server.to(`admin-${data.channelId}`).emit("channelMembers", members);
-      this.server
-        .to(data.targetUserId.toString())
-        .emit("channelMembershipStatus", {
-          channelId: data.channelId,
-          ...status,
-        });
-      
+      client.emit("Mute", true);
     } catch (error) {
       client.emit("is false ", false);
       throw error;
@@ -415,53 +358,28 @@ export class ChannelGateway {
   @SubscribeMessage("UnMuteUser")
   async handleUnMuteUser(
     client: Socket,
-    data: { channelId: number; userId: number; targetUserId: number }
-    ) {
-      try {
-      const UnMute = await this.channelService.unmuteUserInChannel(
-        data.channelId,
-        data.userId,
-        data.targetUserId
+    channelId: number,
+    targetUserId: number
+  ) {
+    try {
+      const Ban = await this.channelService.unmuteUserInChannel(
+        channelId,
+        targetUserId
       );
-           
-      client.leave(`muted-${data.channelId}`);
-      const status = await this.channelService.getUserChannelStatus(
-        data.channelId,
-        data.targetUserId
-      );
-
-      const members = await this.channelService.getChannelMembers(
-        data.channelId
-      );
-
-      const channel = await this.channelService.getChannelById(data.channelId);
-      const ownerId = channel.owner.id;
-      this.server.to(ownerId.toString()).emit("channelMembers", members);
-      // const room = `admin-${data.channelId}`;
-      // console.log(room);
-
-
-      this.server.to(`admin-${data.channelId}`).emit("channelMembers", members);
-      this.server
-        .to(data.targetUserId.toString())
-        .emit("channelMembershipStatus", {
-          channelId: data.channelId,
-          ...status,
-        });
-      
+      client.emit("UnMute", true);
     } catch (error) {
       client.emit("is false ", false);
       throw error;
     }
   }
-  
+
   @SubscribeMessage("setUserAsAdmin")
   async handleSetUserAsAdmin(
     client: Socket,
     data: { channelId: number; userId: number; requesterId: number }
-    ) {
-      // const { channelId, userId, requesterId } = data;
-      
+  ) {
+    // const { channelId, userId, requesterId } = data;
+
     try {
       // console.log("data of user want to set as admin the channel:", data);
       const socket = await this.channelService.setUserAsAdmin(
@@ -477,10 +395,10 @@ export class ChannelGateway {
 
         client2.join(`admin-${data.channelId}`);
         console.log(`admin-${data.channelId}`);
-        const members = await this.channelService.getChannelMembers(
-          data.channelId
-          );
-          const channel = await this.channelService.getChannelById(data.channelId);
+      const members = await this.channelService.getChannelMembers(
+        data.channelId
+      );
+      const channel = await this.channelService.getChannelById(data.channelId);
       const ownerId = channel.owner.id;
       //console.log("ownerId", ownerId);
 
@@ -493,12 +411,12 @@ export class ChannelGateway {
       this.server.to(`admin-${data.channelId}`).emit("channelMembers", members);
 
       this.server
-      .to(data.requesterId.toString())
-      .emit("channelMembershipStatus", {
+        .to(data.requesterId.toString())
+        .emit("channelMembershipStatus", {
           channelId: data.channelId,
           ...status,
         });
-      } catch (error) {
+    } catch (error) {
       //console.error("Error setting user as admin:", error.message);
       
       /*client.emit(
@@ -513,30 +431,30 @@ export class ChannelGateway {
   async handleRemoveUserFromAdmin(
     client: Socket,
     data: { channelId: number; userId: number; requesterId: number }
-    ) {
+  ) {
     // const { channelId, userId, requesterId } = data;
     console.log("data of user want to set as admin the channel:", data);
-    
+
     try {
       await this.channelService.removeUserFromAdmin(
         data.channelId,
         data.userId,
         data.requesterId
-        );
-        
-        this.server
+      );
+
+      this.server
         .to(`channel-${data.channelId}`)
         .emit("userRemovedFromAdmin", data.channelId, data.userId);
-        
-        client.leave(`admin-${data.channelId}`);
-        console.log(`admin-${data.channelId}`);
+
+      client.leave(`admin-${data.channelId}`);
+      console.log(`admin-${data.channelId}`);
       const members = await this.channelService.getChannelMembers(
         data.channelId
-        );
+      );
       const channel = await this.channelService.getChannelById(data.channelId);
       const ownerId = channel.owner.id;
       //console.log("ownerId", ownerId);
-      
+
       const status = await this.channelService.getUserChannelStatus(
         data.channelId,
         data.requesterId
@@ -565,7 +483,7 @@ export class ChannelGateway {
 
   // @SubscribeMessage('getSenderIdsInChannel')
   // async handleGetSenderIdsInChannel(client: Socket, channelId: number) {
-    //   try {
+  //   try {
   //     const senderIds = await this.channelService.getSenderIdsInChannel(channelId);
   //     //console.log("senderIds <<<<<<<<<<<<<<<<<<", senderIds);
   //     client.emit('senderIdsInChannel', senderIds);
@@ -574,15 +492,3 @@ export class ChannelGateway {
   //   }
   // }
 }
-  // @SubscribeMessage('PasswordCheck')
-  // async handlePasswordCheck(client: Socket, channelId: number, pass: string) {
-  //   try{
-  //     const res = await this.channelService.checkpassword(channelId , pass);
-
-  //   }
-  //   catch
-  //   {
-
-  //   }
-
-  // }

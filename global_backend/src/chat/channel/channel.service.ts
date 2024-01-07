@@ -13,7 +13,6 @@ import { Channel } from "src/entities/Channel.entity";
 import { Channel_Membership } from "src/entities/Channel_Membership.entity";
 import { Channel_Message } from "src/entities/Channel_Message.entity";
 import * as bcrypt from "bcrypt";
-import { Socket } from "socket.io";
 
 @Injectable()
 export class ChannelService {
@@ -27,7 +26,6 @@ export class ChannelService {
     private readonly channelRepository: Repository<Channel>,
     @InjectRepository(Channel_Membership)
     private readonly Channel_MembershipRepository: Repository<Channel_Membership>
-    
   ) {}
 
   async createChannelForUser(
@@ -129,7 +127,7 @@ export class ChannelService {
 
     const messages = await this.Channel_MRepository.find({
       where: { channelid: channel },
-      relations: ["SenderUserid"], 
+      relations: ["SenderUserid"], // Include related User entity
       order: { Timestamp: "ASC" },
     });
 
@@ -166,7 +164,7 @@ export class ChannelService {
   async getUserChannelStatus(
     channelId: number,
     userId: number
-  ): Promise<{ channelName: string ,isMember: boolean; isAdmin: boolean; isOwner: boolean , isBuned :boolean, isMuted : boolean}> {
+  ): Promise<{ channelName: string ,isMember: boolean; isAdmin: boolean; isOwner: boolean }> {
     try {
       const channel = await this.channelRepository.findOne({
         where: { id: channelId },
@@ -175,7 +173,7 @@ export class ChannelService {
 
       const channelName = channel.Channel;
       if (!channel) {
-        return { channelName: channelName, isMember: false, isAdmin: false, isOwner: false , isBuned :false, isMuted : false};
+        return { channelName: channelName, isMember: false, isAdmin: false, isOwner: false };
       }
 
       // Retrieve membership
@@ -187,13 +185,11 @@ export class ChannelService {
         isMember: membership ? membership.isMember : false ,
         isAdmin: membership ? membership.isAdmin : false,
         isOwner: channel.owner && channel.owner.id === userId ,
-        isBuned: membership ? membership.isBanned : false,
-        isMuted: membership ? membership.isMuted : false,
       };
     } catch (error) {
       
       console.error("Error checking channel membership:", error);
-      return {  channelName: "", isMember: false, isAdmin: false, isOwner: false , isBuned :false, isMuted : false};
+      return {  channelName: "", isMember: false, isAdmin: false, isOwner: false };
     }
   }
 
@@ -238,13 +234,6 @@ export class ChannelService {
     if (!channel || !sender) {
       throw new NotFoundException("Channel or User not found");
     }
-    
-    // const friend = await this.userService.friends(currentUser.id);
-    // const friendShip = friend.find(fr => fr.id === targetUser.id);
-
-    // if (!friendShip) {
-    //   throw new Error("You can only create a chat with friends");
-    // }
 
     // Create a new message entity
     const newMessage = new Channel_Message();
@@ -352,7 +341,7 @@ export class ChannelService {
       bannedID: member.bannedID,
       mutedID: member.mutedID,
       muteExpiration: member.muteExpiration,
-      isMuted: member.isMuted,
+      ismuted: member.ismuted,
       username: member.userid.username,
       avatar: member.userid.Avatar,
     }));
@@ -454,58 +443,40 @@ export class ChannelService {
 
   async banUserFromChannel(
     channelId: number,
-    userId: number,
-    targetUserId: number
-  ): Promise<string> {
-
-    const channel = await this.channelRepository.findOne({
-      where: { id: channelId }, relations: ["owner"]
-    });
+    targetUserId: number,
+    actorUserId: number
+  ): Promise<void> {
     const membership = await this.Channel_MembershipRepository.findOne({
       where: {
         channelid: { id: channelId },
         userid: { id: targetUserId },
-      },relations: ["userid", "channelid"],
+      },
     });
-
-    const requester = await this.userService.findUserById(targetUserId);
-    const socket = requester.socket
-    
 
     if (!membership) {
       throw new Error("User is not a member of this channel.");
     }
 
-    if (channel.owner.id === targetUserId) {
-      throw new Error("Cannot ban the channel owner.");
+    if (membership.isAdmin) {
+      throw new Error("Cannot ban the channel .");
     }
 
     membership.isBanned = true;
     membership.bannedID = targetUserId;
 
     await this.Channel_MembershipRepository.save(membership);
-    return(socket);
   }
 
   async unbanUserFromChannel(
     channelId: number,
-    userId: number,
     targetUserId: number
   ): Promise<void> {
-    const channel = await this.channelRepository.findOne({
-      where: { id: channelId }, relations: ["owner"]
-    });
     const membership = await this.Channel_MembershipRepository.findOne({
       where: {
         channelid: { id: channelId },
         userid: { id: targetUserId },
-      },relations: ["userid", "channelid"],
+      },
     });
-    
-    if (channel.owner.id === targetUserId) {
-      throw new Error("Cannot Unban the channel owner.");
-    }
-
     if (membership && membership.isBanned) {
       membership.isBanned = false;
       membership.bannedID = null;
@@ -516,60 +487,42 @@ export class ChannelService {
 
   async muteUserInChannel(
     channelId: number,
-    userId: number,
     targetUserId: number
-  ): Promise<string> {
-
-    const channel = await this.channelRepository.findOne({
-      where: { id: channelId }, relations: ["owner"]
-    });
+  ): Promise<void> {
     const membership = await this.Channel_MembershipRepository.findOne({
       where: {
         channelid: { id: channelId },
         userid: { id: targetUserId },
-      },relations: ["userid", "channelid"],
+      },
     });
-    const requester = await this.userService.findUserById(targetUserId);
-    const socket = requester.socket
-
     if (!membership) {
       throw new Error("User is not a member of this channel.");
     }
 
-
-    if (channel.owner.id === targetUserId) {
-      throw new Error("Cannot mute the channel owner.");
+    if (membership.isAdmin) {
+      throw new Error("Cannot mute the channel admin.");
     }
 
     // membership.muteExpiration = new Date(Date.now() + durationMinutes * 60 * 1000);
-    membership.isMuted = true;
+    membership.ismuted = true;
     membership.mutedID = targetUserId;
 
     await this.Channel_MembershipRepository.save(membership);
-    return(socket)
   }
 
   async unmuteUserInChannel(
     channelId: number,
-    userId: number,
     targetUserId: number
   ): Promise<void> {
-    
-    const channel = await this.channelRepository.findOne({
-      where: { id: channelId }, relations: ["owner"]
-    });
     const membership = await this.Channel_MembershipRepository.findOne({
       where: {
         channelid: { id: channelId },
         userid: { id: targetUserId },
-      },relations: ["userid", "channelid"],
+      },
     });
-
-    if (channel.owner.id === targetUserId) {
-      throw new Error("Cannot Unmute the channel owner.");
-    }
-
-    membership.isMuted = false;
+    // if (membership && membership.muteExpiration) {
+    //   membership.muteExpiration = null;
+    membership.ismuted = false;
     membership.mutedID = null;
 
     await this.Channel_MembershipRepository.save(membership);

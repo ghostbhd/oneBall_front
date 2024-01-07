@@ -28,7 +28,7 @@ export class Channel_Membership {
     isBanned: boolean;
 
     @Column({ default: false })
-    isMuted: boolean;
+    ismuted: boolean;
 
     @Column({ nullable: true })
     bannedID: number;
