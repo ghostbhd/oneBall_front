@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import {
   SideBar,
   Dashboard,
@@ -15,19 +16,14 @@ import {
 } from "./components";
 import WelcomeBack from "./components/WelcomeBack";
 
-
-import { GameShell } from "./pniw_pong/index.jsx";
-
+import { GameShell } from "./pniw_pong/index";
 import style from "./style";
-
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-
 import { useTheme } from "./themeContext";
 import { ImgBg } from "./style";
 import Cookies from "js-cookie";
 
-const App = () => {
+const App: React.FC = () => {
   const { theme } = useTheme();
   const isAuth = Cookies.get("accessToken") ? true : false;
   const navigate = useNavigate();
@@ -37,7 +33,7 @@ const App = () => {
       // navigate("/Auth");
       return;
     }
-  }, []);
+  }, [isAuth]);
 
   return (
     <div
@@ -91,7 +87,6 @@ const App = () => {
             </>
           }
         />
-        {/* </Route> */}
       </Routes>
     </div>
   );
