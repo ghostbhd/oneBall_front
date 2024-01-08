@@ -7,21 +7,28 @@ import ChannelMembers from "./ChannelMembers.jsx";
 import WindowBody from "./WindowBody.jsx";
 import AddPasswordInput from "./AddPasswordInput.jsx";
 import ChangePasswordInput from "./ChangePasswordInput.jsx";
+import FriendList from "./FriendList.jsx";
 
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 
 const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
+  // Channel messages ------------------
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [showPasswordInput, setShowPasswordInput] = useState(false);
-  const [channelPassword, setChannelPassword] = useState("");
-  const [showMembers, setShowMembers] = useState(false);
-  const [sender, setSender] = useState(null);
-  const [membershipStatus, setMembershipStatus] = useState({});
-  const [moreBadge, setMoreBadge] = useState(false);
 
+  // Password input ------------
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [showAddPassword, setShowAddPassword] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [channelPassword, setChannelPassword] = useState("");
+
+  const [membershipStatus, setMembershipStatus] = useState({});
+  const [sender, setSender] = useState(null);
+
+  // more button ----------------
+  const [showMembers, setShowMembers] = useState(false);
+  const [moreBadge, setMoreBadge] = useState(false);
+  const [showFriendList, setShowFriendList] = useState(false);
 
   const socket = useSocket();
   // const messageContainerRef = useRef(null);
@@ -96,19 +103,15 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   useEffect(() => {
     console.log("membershipStatus", membershipStatus);
-    if (
-      membershipStatus.isMember ||
-      !membershipStatus.isMember ||
-      !membershipStatus.isAdmin ||
-      !membershipStatus.isOwner
-    ) {
       setShowMembers(false);
       setMoreBadge(false);
-    }
+      setShowMembers(false);
+      setShowFriendList(false);
+      setShowAddPassword(false);
+      setShowChangePassword(false);
+  }, [activeChannel]);
 
-  }, [membershipStatus]);
-
-
+  // Send message to channel --------------------------------------------------
   const handleSendMessagee = () => {
     if (newMessage.trim() !== "") {
       socket.emit("sendMessageToChannel", {
@@ -121,6 +124,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     }
   };
 
+  // Join channel -------------------------------------------------------------
   const handleJoinChannel = () => {
     if (typeOfChannel === "protected" && !showPasswordInput) {
       setShowPasswordInput(true);
@@ -135,6 +139,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     }
   };
 
+  // Leave channel ------------------------------------------------------------
   const handleleaveChannel = () => {
     socket.emit("leaveChannel", {
       channelId: activeChannel,
@@ -142,6 +147,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     });
   };
 
+  // Channel members ----------------------------------------------------------
   const handleChannelmembers = () => {
     socket.emit("getChannelMembers", activeChannel);
     setShowMembers(true);
@@ -210,7 +216,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                 // Join buttons --------------------
                 <button
                   onClick={handleJoinChannel}
-                  className={`p-3 bg-bLight_5 text-white rounded-lg`}
+                  className={`p-2 px-5 bg-bLight_5/60 text-bLight_3/70 rounded-full`}
                 >
                   Join Channel
                 </button>
@@ -218,7 +224,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                 // Leave button --------------------
                 <button
                   onClick={handleleaveChannel}
-                  className={`p-3 bg-org_3 text-white rounded-lg`}
+                  className={`p-2 px-5 bg-org_3/60 text-org_1/70 rounded-full`}
                 >
                   Leave Channel
                 </button>
@@ -265,6 +271,13 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                       Change password
                     </li>
                   )
+                ) : membershipStatus.isOwner && typeOfChannel === "private" ? (
+                  <li
+                    onClick={() => setShowFriendList(true)}
+                    className={`${li}`}
+                  >
+                    Add/Remove friends
+                  </li>
                 ) : null}
               </ul>
             </div>
@@ -275,6 +288,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <AddPasswordInput
               showAddPassword={showAddPassword}
               setShowAddPassword={setShowAddPassword}
+              activeChannel={activeChannel}
+              currentUserToken={currentUserToken}
             />
           )}
 
@@ -283,16 +298,25 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <ChangePasswordInput
               showChangePassword={showChangePassword}
               setShowChangePassword={setShowChangePassword}
+              activeChannel={activeChannel}
+              currentUserToken={currentUserToken}
             />
           )}
           {/* Members ---------------------------------------------------------------- */}
-          <ChannelMembers
-            show={showMembers}
-            setShow={setShowMembers}
-            activeChannel={activeChannel}
-            currentUserToken={currentUserToken}
-            membershipStatus={membershipStatus}
-          />
+          {showMembers && (
+            <ChannelMembers
+              show={showMembers}
+              setShow={setShowMembers}
+              activeChannel={activeChannel}
+              currentUserToken={currentUserToken}
+              membershipStatus={membershipStatus}
+            />
+          )}
+
+          {/* Friend list ---------------------------------------------------------------- */}
+          {showFriendList && (
+            <FriendList showFriendList={showFriendList} setShowFriendList={setShowFriendList} />
+          )}
 
           {/* Message display  ----------------------------------------------------------------------*/}
           <WindowBody

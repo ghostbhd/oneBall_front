@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import style from "../../../style";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
+import { useSocket } from "../../../Socketio.jsx";
 
-const ChangePasswordInput = ({ showChangePassword, setShowChangePassword }) => {
+const ChangePasswordInput = ({ showChangePassword, setShowChangePassword ,activeChannel,currentUserToken}) => {
   const [password, setPassword] = useState("");
+  const socket = useSocket();//TODO: add socket
 
   useEffect(() => {
     if (!showChangePassword) {
@@ -12,11 +14,14 @@ const ChangePasswordInput = ({ showChangePassword, setShowChangePassword }) => {
   }, [showChangePassword]);
 
   const handleChangePassword = () => {
-    console.log("change password");
+    socket.emit("ChanegePassword",{ channelId:activeChannel , newPassword:password, userId: currentUserToken.id  });
+    setShowChangePassword(false);
   };
 
   const handleRemovePassword = () => {
     console.log("remove password");
+    socket.emit("removePass",{ channelId:activeChannel ,userId: currentUserToken.id  });
+    setShowChangePassword(false);
   };
 
   return (
@@ -57,9 +62,5 @@ const ChangePasswordInput = ({ showChangePassword, setShowChangePassword }) => {
   );
 };
 
-ChangePasswordInput.PropTypes = {
-  showChangePassword: PropTypes.bool,
-  setShowChangePassword: PropTypes.func,
-};
 
 export default ChangePasswordInput;

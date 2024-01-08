@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { fetchDataFromMockApi } from "../../data/mockApi";
 import MessageList from "./MessageList";
 import ProfileDetails from "./ProfileDetails";
 import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
 import { GetHeaders } from "../../jwt_token";
+import config from "../../config";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -16,7 +16,7 @@ const Dashboard = () => {
   const headers = GetHeaders().headers;
 
   useEffect(() => {
-    fetch("http://localhost:3009/dashboard", {
+    fetch(config.domain + "/dashboard", {
       method: "GET",
       headers: headers,
     })

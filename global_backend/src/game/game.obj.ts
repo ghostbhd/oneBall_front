@@ -14,12 +14,14 @@ export type state = {
     salat : boolean;
     MAX_V : number;
     MAX_H : number;
-    winner_id : number
+    winner_id : number;
+    type : string;
 }
 
 export class GameObj {
-    constructor(public left_Player : Player, public right_Player : Player, public roomid : string) {
+    constructor(public left_Player : Player, public right_Player : Player, public roomid : string, type : string) {
         this.state = {
+            type : type,
             winner_id : -1,
             roomid: roomid,
             launched: false,

@@ -7,6 +7,7 @@ import MDetails from "./MDetails";
 import FriendRequests from "./FriendRequests";
 import { GetHeaders } from "../../jwt_token";
 import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 const Profile = () => {
   const [data, setData] = useState([]);
@@ -19,7 +20,7 @@ const Profile = () => {
   const headers = GetHeaders().headers;
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3009/profileData", {
+      const response = await fetch(config.domain + "/profileData", {
         method: "GET",
         headers: headers,
       });
@@ -34,7 +35,7 @@ const Profile = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [loading]);
 
   return (
     <div
@@ -55,7 +56,7 @@ const Profile = () => {
           <div
             className={`sm:w-8/12 w-full sm:h-full relative overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}
           >
-            <EditInfo data={data.editInnfo} setData={setData} />
+            <EditInfo data={data.editInnfo} setData={setData} loading={loading} setLoading={setLoading} />
 
             {/* Friend requests ------------------------- */}
             <FriendRequests />

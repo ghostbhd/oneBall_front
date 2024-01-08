@@ -97,24 +97,30 @@ export class GameService {
 
         let game_index: number = this.queue.games.findIndex(game => game.state.roomid === inf.state.roomid)
         if (game_index !== -1) {
-            console.log("before slicing the game lentght = ", this.queue.games.length)
-            this.queue.games.forEach(element => {
-                console.log("and this is it = ", element.state.roomid)
-            });
-            this.queue.games.splice(game_index, game_index + 1)
-            this.queue.games_size--
-            this.queue.games.forEach(element => {
-                console.log("and this is it = ", element.state.roomid)
-            });
-            console.log("after slicing the game lentght = ", this.queue.games.length)
-            this.queue.games.forEach(element => {
-                console.log("and this is it = ", element.state.roomid)
-            });
+            if (inf.state.type === "r") {
+                console.log("before slicing the game lentght = ", this.queue.games.length)
+                this.queue.games.forEach(element => {
+                    console.log("and this is it = ", element.state.roomid)
+                });
+                this.queue.games.splice(game_index, game_index + 1)
+                this.queue.games_size--
+                this.queue.games.forEach(element => {
+                    console.log("and this is it = ", element.state.roomid)
+                });
+                console.log("after slicing the game lentght = ", this.queue.games.length)
+                this.queue.games.forEach(element => {
+                    console.log("and this is it = ", element.state.roomid)
+                });
 
-            // add information to the Repository
+                console.log("the players after the game ended queue ==> size ==> ", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
+                console.log("after ended ==>")
+            }
+            else if (inf.state.type === "p") {
+                console.log("before slicing the game lentght = ", this.queue.games.length)
 
-            console.log("the players after the game ended queue ==> size ==> ", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
-            console.log("after ended ==>")
+                console.log("the players after the game ended queue ==> size ==> ", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
+                console.log("after ended ==>")
+            }
             this.database_entries(inf.left_plr.Player, inf.right_plr.Player, winner)
         }
     }
@@ -160,9 +166,6 @@ export class GameService {
             console.log("testing the victories of winner ==> ")
             left_user = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
             left_user.victories.forEach((e) => console.log(e))
-
-            //GameStat ==>
-            //gamehistory.winner.GameStats.victories++
 
         }
         catch (er) {
@@ -221,6 +224,7 @@ export class GameService {
             else
                 inf.ball.h_dur -= 20
             */
+            inf.state.pingpongs++;
 
             //console.log("MAX SPEED", inf.ball.h_dur)
             io.in(inf.roomid).emit("ball:horizontal:bounce", { dir: inf.ball.x_dir, dur: inf.ball.h_dur })
