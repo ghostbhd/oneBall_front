@@ -11,16 +11,17 @@ function ChannelList({
 }) {
   const [channels, setChannels] = useState([]);
   //   const [typeOfChannel, setTypeOfChannel] = useState("");
-  const socket = useSocket();
+  const socket: any = useSocket();
 
   // console.log("typeOfChannel is ", typeOfChannel); //! hehowa fin 7atit lik type of channel
 
   useEffect(() => {
     socket.on("channelType", (data) => {
+      
       setTypeOfChannel(data.channelType);
     });
 
-    socket.emit("getUserChannels", currentUserToken.id);
+    // socket.emit("getUserChannels", currentUserToken.id);
 
     socket.on("userChannels", (userChannels) => {
       // console.log("Received userChannels:", userChannels);
@@ -39,6 +40,10 @@ function ChannelList({
       socket.off("newChannelCreated");
     };
   }, [socket]);
+
+  useEffect(() => {
+    socket.emit("getUserChannels", currentUserToken.id);
+  },[]);
 
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);

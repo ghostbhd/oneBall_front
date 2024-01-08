@@ -30,34 +30,24 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const [moreBadge, setMoreBadge] = useState(false);
   const [showFriendList, setShowFriendList] = useState(false);
 
-  const socket = useSocket();
+  const socket: any = useSocket();
   // const messageContainerRef = useRef(null);
   const moreBadgeRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        moreBadgeRef.current &&
-        !moreBadgeRef.current.contains(event.target)
-      ) {
-        setMoreBadge(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-
-    if (activeChannel) {
-      socket.emit("getChannelMessages", activeChannel);
-    }
+    // if (activeChannel) {
+    //   socket.emit("getChannelMessages", activeChannel);
+    // }
 
     socket.on("newChannelMessage", (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
-    socket.emit("getSenderIdsInChannel", activeChannel);
+    // socket.emit("getSenderIdsInChannel", activeChannel);
 
-    socket.on("senderIdsInChannel", (id) => {
-      setSender(id);
-    });
+    // socket.on("senderIdsInChannel", (id) => {
+    //   setSender(id);
+    // });
 
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
@@ -74,10 +64,10 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     });
 
     // Listen for channel membership status -------------------------------------
-    socket.emit("checkChannelMembership", {
-      channelId: activeChannel,
-      userId: currentUserToken.id,
-    });
+    // socket.emit("checkChannelMembership", {
+    //   channelId: activeChannel,
+    //   userId: currentUserToken.id,
+    // });
 
     socket.on("channelMembershipStatus", (data) => {
       if (data.channelId === activeChannel) {
@@ -94,21 +84,42 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     });
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      socket.off("newChannelMessage");
       socket.off("channelMessages");
       socket.off("channelMembershipStatus");
-      socket.off("newChannelMessage");
     };
-  }, [socket, activeChannel, moreBadgeRef, currentUserToken.id]);
+  }, [socket, activeChannel]);
 
   useEffect(() => {
-    console.log("membershipStatus", membershipStatus);
-      setShowMembers(false);
-      setMoreBadge(false);
-      setShowMembers(false);
-      setShowFriendList(false);
-      setShowAddPassword(false);
-      setShowChangePassword(false);
+    const handleClickOutside = (event) => {
+      if (
+        moreBadgeRef.current &&
+        !moreBadgeRef.current.contains(event.target)
+      ) {
+        setMoreBadge(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [moreBadgeRef]);
+
+  useEffect(() => {
+    socket.emit("checkChannelMembership", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+    });
+    if (activeChannel) {
+      socket.emit("getChannelMessages", activeChannel);
+    }
+
+    setShowMembers(false);
+    setMoreBadge(false);
+    setShowMembers(false);
+    setShowFriendList(false);
+    setShowAddPassword(false);
+    setShowChangePassword(false);
   }, [activeChannel]);
 
   // Send message to channel --------------------------------------------------
@@ -134,6 +145,10 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         userId: currentUserToken.id,
         password: channelPassword,
       });
+
+      console.log(
+        "---------+-=-=--============================================"
+      );
       setShowPasswordInput(false);
       setChannelPassword("");
     }
@@ -152,6 +167,23 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     socket.emit("getChannelMembers", activeChannel);
     setShowMembers(true);
     setMoreBadge(false);
+  };
+
+  //!Channel List----------------------------------------------------------------
+
+  const handleChannelList = () => {
+    {
+      socket.emit("ListOfFriend", {
+        channelId: activeChannel,
+        userid: currentUserToken.id,
+      });
+      console.log(
+        "ListOfFriend---------------------------------",
+        activeChannel,
+        currentUserToken.id
+      );
+      setShowFriendList(true);
+    }
   };
 
   const li = `p-2 hover:bg-bLight_5/50 hover:text-bLight_2 cursor-pointer`;
@@ -272,10 +304,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
                     </li>
                   )
                 ) : membershipStatus.isOwner && typeOfChannel === "private" ? (
-                  <li
-                    onClick={() => setShowFriendList(true)}
-                    className={`${li}`}
-                  >
+                  <li onClick={() => handleChannelList()} className={`${li}`}>
                     Add/Remove friends
                   </li>
                 ) : null}
@@ -315,7 +344,10 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
           {/* Friend list ---------------------------------------------------------------- */}
           {showFriendList && (
-            <FriendList showFriendList={showFriendList} setShowFriendList={setShowFriendList} />
+            <FriendList
+              showFriendList={showFriendList}
+              setShowFriendList={setShowFriendList}
+            />
           )}
 
           {/* Message display  ----------------------------------------------------------------------*/}
