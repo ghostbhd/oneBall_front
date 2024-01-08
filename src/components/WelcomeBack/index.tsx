@@ -4,12 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useSocket } from "../../Socketio";
+import config from "../../config";
 
 const WelcomeBack = () => {
   const [digits, setDigits] = useState(Array.from({ length: 6 }, () => ""));
   const [warning, setWarning] = useState("");
   const inputRefs = useRef([]);
   const navigate = useNavigate();
+  const socket: any = useSocket();
 
   const handleDigitChange = (index, value) => {
     if (/^\d*$/.test(value) && value.length <= 1) {
@@ -40,7 +43,7 @@ const WelcomeBack = () => {
       const passValue = digits.join("");
       console.log("Verification Code:", passValue);
 
-      const response = await fetch("http://localhost:3009/2fa", {
+      const response = await fetch(config.domain + "/2fa", {
         method: "POST",
         headers: header,
         body: JSON.stringify({ pass: passValue, username: username }),
@@ -63,6 +66,11 @@ const WelcomeBack = () => {
         console.log(data);
         Cookies.set("accessToken", data.accessToken);
         navigate("/");
+        if (socket) {
+          socket.disconnect();
+          socket.connect();
+        }
+        // console.log("--------------------aywa stitwa");
       }
     } catch (error) {
       console.log("im heereee in catch >>>>>> ===== ");
