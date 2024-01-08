@@ -1,102 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import style, { ImgBg } from "../../../style";
 import { Link } from "react-router-dom";
+import { useSocket } from "../../../Socketio.jsx";
 
-const FriendList = ({ showFriendList, setShowFriendList }) => {
-  const [friends, setFriends] = useState([
-    {
-      username: "user1",
-      image: "/src/assets/avatar/jomjo.jpg",
-      inChannel: true,
-    },
-    {
-      username: "user2",
-      image: "/src/assets/avatar/jomjo.jpg",
-      inChannel: true,
-    },
-    {
-      username: "user3",
-      image: "/src/assets/avatar/jomjo.jpg",
-      inChannel: false,
-    },
-    // {
-    //   username: "user4",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user5",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user6",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user7",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user8",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user9",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user10",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user11",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user12",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user13",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user14",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user15",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user16",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user17",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user18",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user19",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-    // {
-    //   username: "user20",
-    //   image: "/src/assets/avatar/jomjo.jpg",
-    // },
-  ]);
+const FriendList = ({
+  showFriendList,
+  setShowFriendList,
+  activeChannel,
+  currentUserToken,
+}) => {
+  const [friends, setFriends] = useState([]);
+
+  const socket: any = useSocket();
+
+  useEffect(() => {
+    // channel members -----------------------
+    socket.on("FrindsListIs", (data) => {
+      console.log("the friend list issssssssss", data);
+      setFriends(data);
+    });
+    //    console.log("Token is ", currentUserToken);
+
+    return () => {
+      socket.off("FrindsListIs");
+    };
+  }, [socket]);
 
   // Add friend to channel -----------------------------------------------
-  const handelAddFriend = () => {
-    console.log("add friend");
+  const handelAddFriend = (requesterId) => {
+    console.log("rah emitittt");
+    socket.emit("addUsertoPrivateChannel", {
+      channelId: activeChannel,
+      userId: requesterId,
+      currentUserId: currentUserToken.id,
+      password: "",
+    });
+    console.log("add friend", activeChannel, currentUserToken.id, requesterId);
   };
 
   // Remove friend from channel -----------------------------------------------
-  const handelRemoveFriend = () => {
+  const handelRemoveFriend = (requesterId) => {
     console.log("remove friend");
+    socket.emit("leavePrivateChannel", {
+      channelId: activeChannel,
+      userId: requesterId,
+      currentUserId: currentUserToken.id,
+    });
   };
 
   const buttonStyle = `ml-auto p-1 w-24 text-center cursor-pointer transition-all duration-300 rounded-full`;
@@ -136,21 +85,18 @@ const FriendList = ({ showFriendList, setShowFriendList }) => {
                 <p className="text-sm text-bLight_4">@{friend.username}</p>
                 {/* button ---------------------- */}
                 {!friend.inChannel ? (
-                  (console.log(friend.inChannel),
-                  (
-                    // Add button ----------------------
-                    <div
-                      className={`${buttonStyle} hover:bg-bLight_5/60 text-bLight_4 border-2 border-bLight_3/20 bg-bLight_5/40`}
-                      onClick={handelAddFriend}
-                    >
-                      Add
-                    </div>
-                  ))
+                  // Add button ----------------------
+                  <div
+                    className={`${buttonStyle} hover:bg-bLight_5/60 text-bLight_4 border-2 border-bLight_3/20 bg-bLight_5/40`}
+                    onClick={() => handelAddFriend(friend.id)}
+                  >
+                    Add
+                  </div>
                 ) : (
                   // Remove button ----------------------
                   <div
                     className={`${buttonStyle} hover:bg-bDark_3 text-bDark_1 border-2 border-bLight_5/20 bg-bDark_3/40`}
-                    onClick={handelRemoveFriend}
+                    onClick={() => handelRemoveFriend(friend.id)}
                   >
                     Remove
                   </div>
