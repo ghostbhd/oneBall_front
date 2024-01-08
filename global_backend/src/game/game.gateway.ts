@@ -43,6 +43,7 @@ export class GameGateway {
 
     @SubscribeMessage('lija_bsmlah')
     async push_or_match(@MessageBody("playerID") id: number, @ConnectedSocket() socket: Socket) {
+        //consider using a mutex implementation here
         try {
             let to_push: Player
             let room_id = ""
@@ -203,6 +204,8 @@ export class GameGateway {
             if (this.queue.mymap.get(inviter.id) === id) {
                 let invited_pl: Player = { id: id, socket: client, ConsecutiveLatencies: 0 }
                 this.queue.pv_players.push(invited_pl)
+                //send notif
+                //client.emit("flan:isready", invited.username)
             }
             else
                 return ("get some friends")
@@ -220,6 +223,7 @@ export class GameGateway {
             if (res !== "mzyaan")
                 return (res)
             this.queue.mymap[id] = invited.id
+            //send notif
         } catch (error) {
             console.log("aach haaadaa ", error)
             return ("ERROR")
