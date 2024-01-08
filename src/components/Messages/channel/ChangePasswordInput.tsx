@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import style from "../../../style";
 // import PropTypes from "prop-types";
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 
 const ChangePasswordInput = ({ showChangePassword, setShowChangePassword ,activeChannel,currentUserToken}) => {
   const [password, setPassword] = useState("");

@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import style, { ImgBg } from "../../../style";
 import { chatIcons, icons } from "../../../constants";
 import { useState, useEffect } from "react";
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 import { Link } from "react-router-dom";
 
 const ChannelMembers = ({

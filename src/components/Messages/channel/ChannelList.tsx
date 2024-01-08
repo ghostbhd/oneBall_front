@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 import { chatIcons } from "../../../constants/index.js";
 
 function ChannelList({
@@ -17,7 +17,7 @@ function ChannelList({
 
   useEffect(() => {
     socket.on("channelType", (data) => {
-      
+      console.log("Received channelType:", data);
       setTypeOfChannel(data.channelType);
     });
 
@@ -39,11 +39,11 @@ function ChannelList({
       socket.off("userChannels");
       socket.off("newChannelCreated");
     };
-  }, [socket]);
+  }, [socket, activeChannel]);
 
   useEffect(() => {
     socket.emit("getUserChannels", currentUserToken.id);
-  },[]);
+  },[activeChannel]);
 
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);

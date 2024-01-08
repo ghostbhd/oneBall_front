@@ -24,7 +24,7 @@ import { ImgBg } from "./style";
 import Cookies from "js-cookie";
 
 const App: React.FC = () => {
-  const { theme } = useTheme();
+  const { theme } : any = useTheme();
   const isAuth = Cookies.get("accessToken") ? true : false;
   const navigate = useNavigate();
 

@@ -1,10 +1,10 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import MyBall from "./Ball.jsx"
-import Player from "./player.jsx"
-import Border from "./Borders.jsx";
+import MyBall from "./Ball"
+import Player from "./player"
+import Border from "./Borders";
 import { useSpring} from '@react-spring/web'
 import "./index.css"
-import FrontEndLogic from "./front_end_logic.jsx";
+import FrontEndLogic from "./front_end_logic";
 import { createContext } from 'react';
 
 export const Whoami = createContext(0)

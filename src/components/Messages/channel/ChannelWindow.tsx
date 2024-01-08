@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 import style, { ImgBg } from "../../../style";
 import { chatIcons } from "../../../constants";
-import ChannelMembers from "./ChannelMembers.jsx";
-import WindowBody from "./WindowBody.jsx";
-import AddPasswordInput from "./AddPasswordInput.jsx";
-import ChangePasswordInput from "./ChangePasswordInput.jsx";
-import FriendList from "./FriendList.jsx";
+import ChannelMembers from "./ChannelMembers";
+import WindowBody from "./WindowBody";
+import AddPasswordInput from "./AddPasswordInput";
+import ChangePasswordInput from "./ChangePasswordInput";
+import FriendList from "./FriendList";
 
 // import PropTypes from "prop-types";
 
@@ -137,6 +137,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   // Join channel -------------------------------------------------------------
   const handleJoinChannel = () => {
+    console.log("typeOfChannel", typeOfChannel);
     if (typeOfChannel === "protected" && !showPasswordInput) {
       setShowPasswordInput(true);
     } else {
@@ -149,7 +150,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       console.log(
         "---------+-=-=--============================================"
       );
-      setShowPasswordInput(false);
+      // setShowPasswordInput(false);
       setChannelPassword("");
     }
   };

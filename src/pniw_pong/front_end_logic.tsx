@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react"
 import { useSocket } from "../Socketio"
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
-import { Whoami } from "./index.jsx";
+import { Whoami } from "./index";
 
 
 function CountDown({ children }) {

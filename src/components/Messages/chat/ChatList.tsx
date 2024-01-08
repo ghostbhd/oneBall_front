@@ -1,6 +1,6 @@
 import style, { ImgBg } from "../../../style";
 import { useState, useEffect } from "react";
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 import PropTypes from "prop-types";
 
 const ChatList = ({

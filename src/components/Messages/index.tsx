@@ -1,17 +1,17 @@
-import ChatList from "./chat/ChatList.jsx";
-import ChatWindow from "./chat/ChatWindow.jsx";
+import ChatList from "./chat/ChatList";
+import ChatWindow from "./chat/ChatWindow";
 
-import ChannelWindow from "./channel/ChannelWindow.jsx";
-import ChannelCreation from "./channel/ChannelCreation.jsx";
-import ChannelList from "./channel/ChannelList.jsx";
+import ChannelWindow from "./channel/ChannelWindow";
+import ChannelCreation from "./channel/ChannelCreation";
+import ChannelList from "./channel/ChannelList";
 
 import { useState, useEffect } from "react";
-import { GetHeaders } from "../../jwt_token.jsx";
+import { GetHeaders } from "../../jwt_token";
 import * as jwtDecode from "jwt-decode";
-import SearchBar from "./searchBar.jsx";
-import SlidingTabBar from "./SlidingTabBar.jsx";
+import SearchBar from "./searchBar";
+import SlidingTabBar from "./SlidingTabBar";
 import style from "../../style";
-import { useSocket } from "../../Socketio.jsx";
+import { useSocket } from "../../Socketio";
 
 const Messages = () => {
   const [activeChat, setActiveChat] = useState(null);
