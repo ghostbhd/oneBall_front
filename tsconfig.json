@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       // Add any paths as needed
+      "*": ["declarations/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.js"]

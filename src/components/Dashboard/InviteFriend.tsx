@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "../../style";
 
-const InviteFriend = ({
+const InviteFriend: React.FC = ({
   friendList,
   setShowInviteFriend,
   showInviteFriend,
@@ -10,17 +10,20 @@ const InviteFriend = ({
   setSelectedFriend,
   selectedFriend,
 }: any) => {
-
+  const [ballSpeed, setBallSpeed] = useState("slow");
 
   // handel invite friend -----------------------------------------
   const handelInviteFriend = () => {
     console.log(selectedFriend);
+    console.log(ballSpeed);
+
     // send invite to server --------------------------------------
     // ...
     // close modal -----------------------------------------------
     setShowInviteFriend(false);
     setShowSelectFriend(false);
     setSelectedFriend("");
+    setBallSpeed("slow");
   };
 
   return (
@@ -51,7 +54,7 @@ const InviteFriend = ({
           {showSelectFriend && (
             <div className="absolute flex top-full h-48 left-0 w-full overflow-hidden rounded-3xl">
               <div className="flex flex-col w-full h-full overflow-y-auto text-bLight_4 bg-bDark_4 rounded-3xl">
-                {friendList.map((friend : any) => (
+                {friendList.map((friend: any) => (
                   <div
                     key={friend.username}
                     className={`p-2 cursor-pointer hover:bg-bLight_5/20 transition-all duration-300`}
@@ -66,6 +69,35 @@ const InviteFriend = ({
               </div>
             </div>
           )}
+        </div>
+
+        {/* Ball speed ----------------------- */}
+        <p className={`text-bLight_4`}>Ball speed</p>
+        <div className={`flex w-full justify-between items-center text-bLight_4`}>
+          <div
+            onClick={() => setBallSpeed("slow")}
+            className={`cursor-pointer p-2 ${
+              ballSpeed === "slow" && "bg-bLight_5/20 rounded-full"
+            }`}
+          >
+            Slow
+          </div>
+          <div
+            onClick={() => setBallSpeed("medium")}
+            className={`cursor-pointer p-2 ${
+              ballSpeed === "medium" && "bg-bLight_5/20 rounded-full"
+            }`}
+          >
+            Medium
+          </div>
+          <div
+            onClick={() => setBallSpeed("fast")}
+            className={`cursor-pointer p-2 ${
+              ballSpeed === "fast" && "bg-bLight_5/20 rounded-full"
+            }`}
+          >
+            Fast
+          </div>
         </div>
         {/* invite button ------ */}
         <div
