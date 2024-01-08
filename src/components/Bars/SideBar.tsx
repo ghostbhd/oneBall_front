@@ -20,11 +20,11 @@ const SideBar = () => {
   const { theme, toggleSidebar } = useTheme();
 
   const socket = useSocket();
-  
+
   useEffect(() => {
     // if (socket)
     if (socket == null) return;
-    
+
     socket.on("deconnected", (ok) => {
       console.log("ok ======== ", ok);
       if (ok === "ok") {
@@ -38,7 +38,7 @@ const SideBar = () => {
       if (socket) socket.off("deconnected");
     };
   }, [socket]);
-  
+
   const token = GetHeaders().jwttt;
   var decoded;
   if (token != undefined) {
@@ -54,7 +54,9 @@ const SideBar = () => {
     if (socket == undefined || socket == null) {
       console.log("hhhhhhhhh");
       return;
-    } else socket.emit("deconnect", username);
+    } else {
+      socket.emit("deconnect", username);
+    }
   };
 
   return (
