@@ -1,7 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 // import { useHistory } from 'react-router-dom';
 
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 
 const ChannelCreation = ({ onClose, currentUserToken }) => {
   const [channelName, setChannelName] = useState("");
@@ -9,11 +9,7 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
   const [channelType, setChannelType] = useState("public");
   const [password, setPassword] = useState("");
 
-  const socket = useSocket();
-
-  const handleChannelTypeChange = (type) => {
-    setChannelType(type);
-  };
+  const socket: any = useSocket();
 
   const handleSubmit = async () => {
     try {
@@ -25,13 +21,6 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
       };
 
       socket.emit("createChannel", channelData);
-
-      console.log("----", currentUserToken.id);
-
-      console.log("----", channelName);
-      console.log("----", channelType);
-
-      // Rest of your code to navigate or close the form
       onClose();
     } catch (error) {
       console.error("Failed to create channel:", error);
@@ -44,7 +33,7 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
         className="absolute w-full h-full top-0 left-0 bg-bDark_5/70"
         onClick={onClose}
       ></div>
-      
+
       <div className="bg-bDark_3 flex flex-col items-center rounded-3xl p-7 z-10">
         <input
           type="text"
@@ -54,37 +43,36 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
           className="w-full p-2 outline-none border-2 text-sm placeholder:text-bLight_5 text-bLight_4 border-bLight_5/40 bg-bDark_4 rounded-full"
         />
 
-        <div className="flex flex-col w-full gap-4 items-center py-3  text-bLight_5 space-x-3">
-          <div className="w-full flex justify-between">
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value="public"
-                checked={channelType === "public"}
-                onChange={() => setChannelType("public")}
-              />
-              <span>Public</span>
-            </label>
+        <div className="flex flex-col w-72 gap-4 items-center py-3  text-bLight_5">
+          <div className="w-full flex justify-between items-center">
+            <div
+              className={`flex items-center cursor-pointer ${
+                channelType === "public" &&
+                "bg-bLight_5/40 text-bLight_3/70 p-2 rounded-full"
+              }`}
+              onClick={() => setChannelType("public")}
+            >
+              Public
+            </div>
 
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value="private"
-                checked={channelType === "private"}
-                onChange={() => setChannelType("private")}
-              />
-              <span>Private</span>
-            </label>
-
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value="protected"
-                checked={channelType === "protected"}
-                onChange={() => setChannelType("protected")}
-              />
-              <span>Protected</span>
-            </label>
+            <div
+              className={`flex items-center cursor-pointer ${
+                channelType === "private" &&
+                "bg-bLight_5/40 text-bLight_3/70 p-2 rounded-full"
+              }`}
+              onClick={() => setChannelType("private")}
+            >
+              Private
+            </div>
+            <div
+              className={`flex items-center cursor-pointer ${
+                channelType === "protected" &&
+                "bg-bLight_5/40 text-bLight_3/70 p-2 rounded-full"
+              }`}
+              onClick={() => setChannelType("protected")}
+            >
+              Protected
+            </div>
           </div>
 
           {channelType === "protected" && (
@@ -93,7 +81,8 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full p-2 outline-none border-2 text-sm placeholder:text-bLight_5 text-bLight_4 border-bLight_5/40 bg-bDark_4 rounded-full"
+              className="w-full p-2 outline-none border-2 text-sm placeholder:text-bLight_5 
+              text-bLight_4 border-bLight_5/40 bg-bDark_4 rounded-full"
             />
           )}
         </div>

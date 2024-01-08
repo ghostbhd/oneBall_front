@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import style, { ImgBg } from "../../../style";
 import { Link } from "react-router-dom";
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 
 const FriendList = ({
   showFriendList,

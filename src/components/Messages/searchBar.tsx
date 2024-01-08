@@ -2,7 +2,7 @@ import style from "../../style";
 import { BiSearchAlt } from "react-icons/bi";
 import React, { useState } from "react";
 import { MdGroupAdd } from "react-icons/md";
-import { useSocket } from "../../Socketio.jsx";
+import { useSocket } from "../../Socketio";
 import { chatIcons } from "../../constants";
 
 const SearchBar = ({

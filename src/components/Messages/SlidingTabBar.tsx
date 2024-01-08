@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import style from "../../style";
-import { useSocket } from "../../Socketio.jsx";
+import { useSocket } from "../../Socketio";
 
 const SlidingTabBar = ({ onTabSelected,currentUserToken }) => {
   const tabsRef = useRef([]);

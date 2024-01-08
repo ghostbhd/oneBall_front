@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import style from "../../../style";
 import { IoIosSend } from "react-icons/io";
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 import { Link } from "react-router-dom";
 
 const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
@@ -124,16 +124,16 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
               key={message.id}
               className={`my-2 p-2 rounded-lg w-7/12 relative flex items-center gap-2 align-baseline ${
                 message.ReceiverUserID.id === currentUserToken.id
-                  ? "ml-auto text-right p-2 rounded-lg flex-row-reverse"
-                  : "text-left p-2 rounded-lg"
+                ? "text-left p-2 rounded-lg"
+                  : "ml-auto text-right p-2 rounded-lg flex-row-reverse"
               }`}
             >
               {/* content ------------------ */}
               <p
                 className={`w-max max-w-full text-bLight_2 p-3 whitespace-normal break-words  text-sm rounded-2xl ${
                   message.ReceiverUserID.id === currentUserToken.id
-                    ? "bg-bLight_5/40"
-                    : "bg-org_1/20"
+                  ? "bg-org_1/20"
+                  : "bg-bLight_5/40"
                 }`}
               >
                 {message.Content}

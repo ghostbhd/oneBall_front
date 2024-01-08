@@ -1,10 +1,10 @@
 import { animated } from '@react-spring/web'
 import { useContext} from 'react'
 import { useDrag } from '@use-gesture/react'
-import { useSocket } from "../Socketio.jsx";
+import { useSocket } from "../Socketio";
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
-import { Whoami } from "./index.jsx"
+import { Whoami } from "./index"
 
 export default function Player(pro) {
 

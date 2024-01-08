@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import style from "../../../style";
 import { useState } from "react";
 import { Socket } from "socket.io-client";
-import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 
 const AddPasswordInput = ({
   showAddPassword,
