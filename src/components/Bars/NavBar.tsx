@@ -80,7 +80,6 @@ const NavBar = () => {
 
   const handelNotification = () => {
     console.log("the user notification");
-    if (socket == null) return;
     if (!showNotif)
       setShowNotif(true);
   };
