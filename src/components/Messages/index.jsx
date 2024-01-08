@@ -43,20 +43,17 @@ const Messages = () => {
   };
   var currentUserToken;
   const token = GetHeaders().jwttt;
-  if (token)
-  {
+  if (token) {
     currentUserToken = jwtDecode.jwtDecode(token);
-  }
-  else
-  {
+  } else {
     currentUserToken = null;
   }
-  
+  if (socket == null) return;
+  socket.emit("request-latest-messages", currentUserToken.id);
 
-  useEffect(() => {
-    if (socket == null) return;
-    socket.emit("request-latest-messages", currentUserToken.id);
-  }, [socket]);
+  // useEffect(() => {
+  // }, [socket]);
+
   const handleSearch = (query) => {
     setSearchTerm(query);
   };
@@ -72,7 +69,7 @@ const Messages = () => {
 
   return (
     <div
-      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} p-6 pb-14 md:pb-0 md:pt-14`}
+      className={`flex w-full h-full gap-2 ${style.chatsone} ${style.rounded} p-6 pb-14 md:pb-6 md:pt-14`}
     >
       {/* chat sideBar ############################################################### */}
       <div className={`w-3/12 ${style.sidebarW} ${style.chatListContainer}`}>

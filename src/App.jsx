@@ -13,15 +13,15 @@ import {
   CallBack,
   Error_404,
 } from "./components";
+import WelcomeBack from "./components/WelcomeBack";
+
 
 import { GameShell } from "./pniw_pong/index.jsx";
 
 import style from "./style";
 
-import { SocketProvider } from "./Socketio";
-
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useTheme } from "./themeContext";
 import { ImgBg } from "./style";
@@ -34,7 +34,7 @@ const App = () => {
 
   useEffect(() => {
     if (!isAuth) {
-      navigate("/Auth");
+      // navigate("/Auth");
       return;
     }
   }, []);
@@ -44,19 +44,20 @@ const App = () => {
       className={`w-full h-full flex flex-row fixed`}
       style={ImgBg({ img: "/src/assets/bg contain.png" })}
     >
+      {/* backdrop ----------------------------------------------------------------- */}
+      <div
+        className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60 ${style.backdropBlur}`}
+      ></div>
       {/* Authentication ---------------------------------------------------------- */}
       <Routes>
         <Route path="/Auth" element={<Auth />} />
         <Route path="/Callback" element={<CallBack />} />
+        <Route path="/welcomeback" element={<WelcomeBack />} />
 
         <Route
           path="*"
           element={
             <>
-              {/* backdrop ----------------------------------------------------------------- */}
-              <div
-                className={`absolute right-0 top-0 w-full h-full bg-bDark_5/60 ${style.backdropBlur}`}
-              ></div>
               {/* sidebar ----------------------------------------------------------------- */}
               <SideBar />
               {/* mobile sidebar ---------------------------------------------------------- */}
@@ -75,8 +76,8 @@ const App = () => {
               >
                 {/* routes ----------------------------------------------------------------- */}
                 <Routes>
-                  <Route path="/Ingame" element={<GameShell />} />
                   <Route index element={<Dashboard />} />
+                  <Route path="/Ingame" element={<GameShell />} />
                   <Route path="/games" element={<Games />} />
                   <Route path="/Messages" element={<Messages />} />
                   <Route path="/profile" element={<Profile />} />

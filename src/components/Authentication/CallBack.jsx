@@ -6,7 +6,7 @@ const CallBack = () => {
 
   useEffect(() => {
     history("/");
-  }, []);
+  }, [history]);
 
   return <div></div>;
 };

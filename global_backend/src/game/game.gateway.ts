@@ -52,14 +52,16 @@ export class GameGateway {
             console.log("ha wahd====token =", id)
             console.log("id==", socket.id)
             if (this.queue.players.find((player) => player.id === id) === undefined &&
-                this.check(this.queue.games, id) === false) {
+                this.check(this.queue.games, id) === false &&
+                this.queue.pv_players.find(e => e.id === id) === undefined
+            ) {
                 if (this.queue.players.length + 1 < 2) {
 
                     console.log("\n\n------pushing into the players ===>\n")
                     to_push = {
                         id: id,
                         socket: socket,
-                        ConsecutiveLatencies : 0,
+                        ConsecutiveLatencies: 0,
                     }
                     this.queue.players.push(to_push)
                     console.log("pushing player ====", id)
@@ -73,7 +75,7 @@ export class GameGateway {
                     console.log("matching ", this.queue.players[0].id, id, " to =>", room_id)
                     this.queue.players.forEach((e) => console.log("before waah wal7maa9 =", e.id))
 
-                    this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket , ConsecutiveLatencies : 0}, room_id))
+                    this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket, ConsecutiveLatencies: 0 }, room_id, "r"))
                     this.queue.games_size++
                     this.queue.players.splice(0, 1)
                     console.log("lentgh after slicing", this.queue.players.length)
@@ -145,38 +147,82 @@ export class GameGateway {
         }
     }
 
-    @SubscribeMessage('inv:flan')
-    async invHandler(client : Socket, id : number, opName : string)
-    {
-    }
-    /*
-    //this part will be done after validation project validation since this is not mandatory lol
-    @SubscribeMessage('update:inf')
-    async update_inf(@MessageBody("playerID") id: number, @ConnectedSocket() socket: Socket) {
-        let side: number = 0
-        let index: number = this.queue.games.findIndex(game => {
-            if (game.left_plr.Player.id === id) {
-                side = 1
-                return (true
-            }
-            if (game.right_plr.Player.id === id) {
-                side = 2
-                return (true)
-            }
-        })
-        console.log(" updating side ", side)
-        if (index !== -1) {
-            if (this.queue.games[index].state.launched === true) {
-                socket.emit('update:', {
-                    //ball pos,
-                    ball_pos: {
-                        x: {
+    async myfindusers(byUser: User, byId: User, User: string, id: number): Promise<string> {
+        try {
+            if (this.check(this.queue.games, id) === true)
+                return ("ERROR: please finish your current game")
 
-                        }
-                    }
-                })
-            }
+            byUser = await this.UserRepo.findOne({ where: { username: User } })
+            if (byUser === undefined)
+                throw ("wiii")
+            byId = await this.UserRepo.findOne({ where: { id: id } })
+            if (byId === undefined)
+                throw ("wiii")
+            return ("mzyaan")
+        }
+        catch (e) {
+            console.log("aach haaadaa ", e)
+            return ("ERROR")
         }
     }
-        */
+
+    @SubscribeMessage('readytojoin:flan')
+    async friendgame(client: Socket, id: number, opName: string) {
+        //in frontend redirect to waiting and only then emit this
+        try {
+            let invited: User;
+            let inviter: User;
+            let res = await this.myfindusers(invited, inviter, opName, id);
+            if (res !== "mzyaan")
+                return (res)
+
+            let op: Player = this.queue.pv_players.find(e => e.id === invited.id)
+            if (op === undefined)
+                return ("ERROR: Opponent isn't available'")
+
+            let joiner: Player = { id: id, ConsecutiveLatencies: 0, socket: client };
+            let room_id: string = id.toString() + op.id;
+            this.gameService.Ball_Logic(this.server, new GameObj(joiner, op, room_id, "p"))
+        }
+        catch (e) {
+            console.log("aach haaadaa ", e)
+            return ("ERROR")
+        }
+    }
+
+    @SubscribeMessage('accept:flan')
+    async acceptHandler(client: Socket, id: number, opName: string) {
+
+        try {
+            let invited: User;
+            let inviter: User;
+            let res = await this.myfindusers(inviter, invited, opName, id);
+            if (res !== "mzyaan")
+                return (res)
+
+            if (this.queue.mymap.get(inviter.id) === id) {
+                let invited_pl: Player = { id: id, socket: client, ConsecutiveLatencies: 0 }
+                this.queue.pv_players.push(invited_pl)
+            }
+            else
+                return ("get some friends")
+        } catch (error) {
+            console.log("aach haaadaa ", error)
+        }
+    }
+
+    @SubscribeMessage('inv:flan')
+    async invHandler(client: Socket, id: number, opName: string) {
+        try {
+            let invited : User;
+            let inviter : User;
+            let res = await this.myfindusers(invited, inviter, opName, id);
+            if (res !== "mzyaan")
+                return (res)
+            this.queue.mymap[id] = invited.id
+        } catch (error) {
+            console.log("aach haaadaa ", error)
+            return ("ERROR")
+        }
+    }
 }

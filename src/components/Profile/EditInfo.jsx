@@ -5,8 +5,9 @@ import PropTypes from "prop-types";
 import { ImgBg } from "../../style";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import config from "../../config";
 
-const EditInfo = ({ data, setData }) => {
+const EditInfo = ({ data, setData, loading, setLoading }) => {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(() => {
     const initialAvatar = data.avatar;
@@ -62,24 +63,24 @@ const EditInfo = ({ data, setData }) => {
     else {
       handleRedirect("/Auth");
     }
-    await fetch("http://localhost:3009/upload", {
+    const response = await fetch(config.domain + "/upload", {
       method: "POST",
       body: formData,
       headers: headers,
     })
-      .then((response) => {
+      // if (.then(  (response) =>  {
         if (response.ok) {
-          return response.json();
+          console.log("the object ", response);
+          const data = await response.json();
+          console.log("the user is ", data.user);
+          console.log("accessToken ", data.accessToken);
+          Cookies.set("accessToken", data.accessToken);
+          setLoading(!loading);
+          return data;
         }
-      })
-      .then((data) => {
-        console.log("File upload success:", data);
-        // setData(data);
-        Cookies.set("accessToken", data.accessToken);
-      })
-      .catch((error) => {
-        console.error("Error during file upload:", error);
-      });
+      // .catch((error) => {
+      //   console.error("Error during file upload:", error);
+      // });
     // window.location.reload();
   };
 
