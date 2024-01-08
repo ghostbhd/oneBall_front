@@ -2,16 +2,37 @@ import { icons } from "../../constants";
 import { useState, useEffect, useRef } from "react";
 import NotificationBadge from "./NotificationBadge";
 import { Link } from "react-router-dom";
+import { useSocket } from "../../Socketio";
+import * as jwtDecode from "jwt-decode";
+import { GetHeaders } from "../../jwt_token";
 
 const NavBar = () => {
   const [showNotif, setShowNotif] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [usernames, setUsernames] = useState(["anass", "mohamed", "ali"]); // ["user1", "user2", "user3"]
+  const [usernames, setUsernames] = useState([]); // ["user1", "user2", "user3"]
   const [searchResults, setSearchResults] = useState([]); // ["user1", "user2", "user3"
   const notifRef = useRef();
   const searchInputRef = useRef();
 
+  const token = GetHeaders().jwttt;
+  let decoded;
+  if (token) decoded = jwtDecode.jwtDecode(token);
+  else decoded = null;
+  const socket = useSocket();
+  useEffect(() => {
+    if (socket == null) return;
+    socket.emit("Users", decoded.name);
+  }, []);
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("Users-List", (data) => {
+      setUsernames(data);
+    });
+    return () => {
+      socket.off("Users-List");
+    };
+  }, []);
   useEffect(() => {
     if (!showSearch) {
       setSearchValue("");
@@ -58,6 +79,12 @@ const NavBar = () => {
     };
   }, []);
 
+  const handelNotification = () => {
+    console.log("the user notification");
+    if (socket == null) return;
+    setShowNotif(true);
+    socket.emit("Notification", decoded.name);
+  };
   return (
     <div
       className={`md:w-4/12 w-full md:pr-10 h-auto absolute z-40 top-0 right-0 md:p-1 
@@ -93,11 +120,13 @@ const NavBar = () => {
           </div>
           {/* search results ----------------------------------------------------- */}
           {showSearch ? (
-            <div
-              className={`w-full text-base flex flex-col bg-bDark_4`}
-            >
+            <div className={`w-full text-base flex flex-col bg-bDark_4`}>
               {searchResults.slice(0, 5).map((username, index) => (
-                <Link to={"/profile/" + username} key={index} className={`p-2 hover:bg-bDark_2 hover:text-bLight_3`}>
+                <Link
+                  to={"/profile/" + username}
+                  key={index}
+                  className={`p-2 hover:bg-bDark_2 hover:text-bLight_3`}
+                >
                   @{username}
                 </Link>
               ))}
@@ -108,7 +137,7 @@ const NavBar = () => {
         {/* notification icon --------------------------------------- */}
         <div
           className={`text-2xl text-bDark_4 md:ml-auto cursor-pointer p-2 bg-bLight_4/70 rounded-full`}
-          onClick={() => setShowNotif(true)}
+          onClick={() => handelNotification()}
         >
           {<icons.notifications />}
         </div>

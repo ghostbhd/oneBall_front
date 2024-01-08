@@ -43,15 +43,11 @@ const Messages = () => {
   };
   var currentUserToken;
   const token = GetHeaders().jwttt;
-  if (token)
-  {
+  if (token) {
     currentUserToken = jwtDecode.jwtDecode(token);
-  }
-  else
-  {
+  } else {
     currentUserToken = null;
   }
-  
 
   useEffect(() => {
     if (socket == null) return;

@@ -20,11 +20,13 @@ const ChannelMembers = ({
 
   useEffect(() => {
     // channel members -----------------------
+  
     socket.on("channelMembers", (data) => {
+      console.log("members are _>>>>> ", data);
       setMembers(data);
     });
 
-    console.log("Token is ", currentUserToken);
+    // console.log("Token is ", currentUserToken);
 
     return () => {
       socket.off("channelMembers");

@@ -12,7 +12,8 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
     setNotifItems((prevData) => prevData.filter((item) => item.username !== username));
   };
   const addData = (obj) => {
-    setNotifItems( prevData => [...prevData, obj]);
+    console.log("the username isiiiiiiii ", obj.username)
+      setNotifItems( prevData => [...prevData, obj]);
   };
   const socket = useSocket();
   const token = GetHeaders().jwttt;
@@ -49,9 +50,27 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
       console.log("the data refused is ", newData)
     });
 
+    socket.on("Notif", (reqData) => {
+      // console.log("FriendRequests", reqData);
+      reqData.map((element) => {
+
+        const newData = {
+          type: "friend",
+          image: element.image,
+          username: element.username,
+          fullName: element.fullName,
+        };
+      // adding data to previous data
+        console.log("the data is ", newData)
+        const isDuplicate = notifItems.some(item => item.username === newData.username);
+        if (!isDuplicate)
+          addData(newData);
+      })
+    });
     return () => {
-      socket.off("Friend-Request");
-      // socket.off("Friend-Refuse");
+      socket.off("Friend-Refuse");
+      socket.off("Notif");
+      socket.off("NotificationAdd");
     };
   }, [socket]);
   
@@ -67,7 +86,7 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
   };
 
   const handelRejecttFriend = (username) => {
-    console.log("reject friend request");
+    console.log("reject friend request ", username);
     if (socket == null) return;
     socket.emit("RefuseRequest", {
       username1: decoded.name,
@@ -84,6 +103,11 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
   const handelRejecttGame = (username) => {
     console.log("reject game");
   };
+
+
+  // useEffect(() => {
+
+  // }, [socket]);
 
   // style ------------------------------------------------
   const li = `w-full flex gap-2 text-sm overflow-hidden`;
