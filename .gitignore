@@ -9,11 +9,13 @@ pnpm-debug.log*
 lerna-debug.log*
 
 dist/
+node_modules/
 g_frontend/node_modules
 g_frontend/dist
-node_modules/
 src/global_backend/src/node_modules/
 src/global_backend/src/backend/node_modules/
 src/global_backend/src/dist
+backend/node_modules
+backend/dist
 dist
 .env
