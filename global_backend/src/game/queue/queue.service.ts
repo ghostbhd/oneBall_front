@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { number } from 'prop-types';
 import { Socket, Server } from 'socket.io';
 import { GameObj } from '../game.obj';
 
