@@ -9,7 +9,7 @@ import { FortyTwoStrategy } from './passport.fortytow.strategy';
 
 @Module({
     imports: [UserModule, JwtModule.register({
-      secret: "secre of mine", //sould add it the env
+      secret: process.env.SECRET_JWT, //sould add it the env
       signOptions: { expiresIn: '600000s' },
   })],
     controllers: [AuthController],

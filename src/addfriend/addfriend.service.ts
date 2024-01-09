@@ -2,15 +2,18 @@ import { HttpException, Injectable } from "@nestjs/common";
 import { CreateAddfriendDto } from "./dto/create-addfriend.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Friendship } from "src/entities/Friendship.entity";
-import { Repository } from "typeorm";
+import { Equal, Repository } from "typeorm";
 import { UserService } from "src/user/user.service";
 import { FriendService } from "src/friend/friend.service";
 import { BlockedList } from "src/entities/BlockedList.entity";
 import { User } from "src/entities/user.entity";
+import { Notif } from "src/entities/Notification.entity";
 
 @Injectable()
 export class AddfriendService {
   constructor(
+    @InjectRepository(Notif)
+    private readonly notifService: Repository<Notif>,
     @InjectRepository(BlockedList)
     private readonly blockedlist: Repository<BlockedList>,
     @InjectRepository(Friendship)
@@ -95,6 +98,12 @@ export class AddfriendService {
     const user2 = await this.friendShip.find({ where: { userid2: username1 } });
     if (!user1 || !user2)
       throw new HttpException("the user is not found", 404);
+      const notif = new Notif();
+      notif.userid1 = username1; 
+      notif.userid2 = username2; 
+      notif.type = "friend";
+    const no = await this.notifService.save(notif);
+    console.log("the notifacation is -------> ", no);
     return "This action adds a new addfriend";
   }
   async AcceptUser(accepted_friend: CreateAddfriendDto) {
@@ -110,6 +119,8 @@ export class AddfriendService {
       relations: ["userid1"],
     });
     console.log("this the usenamer ===> ", userfriend.userid1.username);
+    const notif = await this.notifService.findOne({where: [{userid1: username1, userid2: username2}, {userid2: username1, userid1: username2} ]})
+    const noti = await this.notifService.remove(notif);
     const us1 = { ...userfriend, Status: "accepted" };
     const u = await this.friendShip.save(us1);
     // console.log("the friend is accepted ==============> ", u);
@@ -123,17 +134,20 @@ export class AddfriendService {
       accepted_friend.username2
     );
     console.log("waahaaaaaa l user1 ", username1,
-                "wahhhhhhhhhaaaaal user1 ", username2)
+                "jwahhhhhhhhhaaaaal user1 ", username2)
     if (!username1 || !username2) throw new HttpException("the not found", 404);
     const userfriend = await this.friendShip.findOne({
       where: [{userid1: username1, userid2: username2}, {userid2: username1, userid1: username2} ],
       relations: ['userid1', 'userid2']
     });
-    //console.log("this the usenamer ===> ", userfriend.userid1.username);
+    // console.log("this the usenamer ===> ", userfriend.userid1.username);
     // const us1 = { ...userfriend,  Status: "accepted"}
-    //console.log("the friend is Refused ==============> ", userfriend);
+    console.log("the friend is Refused ==============> ", userfriend);
+    const notif = await this.notifService.findOne({where: [{userid1: username1, userid2: username2}, {userid2: username1, userid1: username2} ]})
+    if (notif)
+      await this.notifService.remove(notif);
     const u = await this.friendShip.remove(userfriend);
-    //console.log("the friend is Refused ==============> ", u);
+    console.log("the friend is Refused ==============> ", u);
   }
 
   async Blockuser(username1: string, username2: string) {
@@ -162,6 +176,7 @@ export class AddfriendService {
   async UnBlockuser(username1: string, username2: string) {
     const user1 = await this.userservice.findUserByUn(username1);
     const user2 = await this.userservice.findUserByUn(username2);
+    console.log("the username of the blocker ", username1, "this is the username of the clocked ", username2)
     if (!user1 || !user2)
       throw new HttpException("the user not found", 404)
     const block = await this.blockedlist.findOne({where: {Blocker: user1, BlockedUser: user2}})
@@ -171,4 +186,42 @@ export class AddfriendService {
     await this.blockedlist.remove(block);
     return {user1, user2};
   }
+
+  async getNotifications(username: string) {
+    console.log("thhhhhhhe username ", username)
+    const user = await this.userservice.findUserByUn(username);
+    console.log("the user name ", user)
+    if (!user)
+      throw new HttpException("the user not found", 404);
+    if (user.Notifreciever.length != 0)
+      return user;
+    else
+      null;
+  }
+
+
+  async friendObject(userid1: number, userid2: number) {
+
+    const friends = await this.userservice.friends(userid1);
+    const obj1 = friends.map((element) => {
+      return{
+            username: element.username,
+            image: element.Avatar
+      }
+    })
+    var obj2: any;
+    if (userid2 != null)
+     {
+      const friends2 = await this.userservice.friends(userid2);
+       obj2 = friends2.map((element) => {
+      return{
+            username: element.username,
+            image: element.Avatar
+      }
+      })
+     }
+    return({obj1, obj2})
+    }
+
+
 }

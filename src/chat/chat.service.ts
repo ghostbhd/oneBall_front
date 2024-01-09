@@ -3,10 +3,13 @@ import { Message } from 'src/entities/Message.entity';
 import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { Chat } from 'src/entities/Chat.entity';
 import { Channel } from 'src/entities/Channel.entity';
 import { Channel_Membership } from 'src/entities/Channel_Membership.entity';
+import { Friendship } from 'src/entities/Friendship.entity';
+import { UserService } from 'src/user/user.service';
+import { BlockedList } from 'src/entities/BlockedList.entity';
 
 
 @Injectable()
@@ -22,6 +25,12 @@ export class ChatService {
     private readonly channelRepository: Repository<Channel>,
     @InjectRepository(Channel_Membership)
     private readonly Channel_MembershipRepository: Repository<Channel_Membership>,
+    @InjectRepository(BlockedList)
+    private readonly blockedListRepository: Repository<BlockedList>,
+    private readonly userService: UserService,
+
+    // @InjectRepository(Friendship)
+    // private readonly friendshipRepository: Repository<Friendship>
   ) { }
 
 
@@ -38,6 +47,7 @@ export class ChatService {
     }
 
     const receiver = chat.sender.id === sender.id ? chat.receiver : chat.sender;
+    
 
     const newMessage = new Message();
     newMessage.chatid = chat;
@@ -47,12 +57,23 @@ export class ChatService {
     newMessage.Timestamp = new Date().toISOString();
 
 
-    const savedMessage = await this.messageRepository.save(newMessage);
+    // return true;
+    return await this.messageRepository.save(newMessage);
 
-    return savedMessage;
   }
 
-
+  async IsBlocked(sender:User , receiver:User): Promise<boolean> {
+    const blockcheck = await this.blockedListRepository.findOne({
+      where: [{
+        Blocker: Equal( sender.id),
+        BlockedUser: Equal(receiver.id),
+      },{
+        Blocker: Equal( receiver.id),
+        BlockedUser: Equal(sender.id),
+      }],
+    });
+    return !!blockcheck;
+  }
 
   async listChatsForUser(userId: number): Promise<Chat[]> {
     return await this.directMessageRepository.find({
@@ -75,31 +96,8 @@ export class ChatService {
     }
     return chat.messageid;
   }
-
-
   
-
-  async getDirectMessagesBetweenUsers(senderId: number, receiverId: number): Promise<any> {
-    const chat = await this.directMessageRepository.findOne({
-      where: {
-        sender: { id: senderId },
-        receiver: { id: receiverId },
-      },
-      relations: ['messageid'],
-    });
-
-    if (chat) {
-      return {
-        id: chat.id,
-        messages: chat.messageid,
-        sender: chat.sender,
-
-      };
-    }
-    return { messages: [] };
-  }
-
-
+  
 async getLastMessage(chatId: number, sender:User): Promise<Message> {
   {
 
@@ -107,6 +105,7 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
         where: { id: chatId , sender : sender },
         relations: ['messageid' ],
       });
+
 
     
       const mesaage  = await this.messageRepository.find({
@@ -125,11 +124,12 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
       relations: ['messageid', 'messageid.SenderUserID', 'messageid.ReceiverUserID', 'sender', 'receiver'],
     });
 
-    if (chat) {
+    if (chat ) {
       return {
 
         id: chat.id,
-        messages: chat.messageid.map(message => ({
+        messages: chat.messageid.sort((a, b) => a.id - b.id) // Sort messages by id
+        .map(message => ({
           id: message.id,
           Content: message.Content,
           Timestamp: message.Timestamp,
@@ -157,19 +157,18 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
         { receiver: { id: userId } },
        
       ],
-      relations: ['messageid', 'sender', 'receiver'],
+      relations: ['messageid', 'sender', 'receiver'],order: { id: 'ASC'}
     });
-
 
     return chats
     .filter(chat => chat.messageid && chat.messageid.length > 0)
     .map(chat => {
+      
         const lastMessage = chat.messageid[chat.messageid.length - 1];
         const receiveravatar =chat.receiver.Avatar;
         const senderavatar =chat.sender.Avatar;
         const senderflag=chat.sender.id;
         const receiverflag= chat.receiver.id;
-        // const timestamp = lastMessage.Timestamp;
 
         return {
           id: chat.id,
@@ -179,7 +178,6 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
           senderavatar:senderavatar,
           senderflag:senderflag,
           receiverflag:receiverflag,
-          // timestamp: ,
         };
       });
   }
@@ -198,6 +196,7 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
       where: { username: targetUsername },
     });
 
+
     if (currentUser.username === targetUsername) {
       throw new Error("Cannot create a chat with yourself.");
     }
@@ -206,13 +205,20 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
       throw new NotFoundException('User not found');
     }
 
+    const friend = await this.userService.friends(currentUser.id);
+    const friendShip = friend.find(fr => fr.id === targetUser.id);
+
+    if (!friendShip) {
+      throw new Error("You can only create a chat with friends");
+    }
+
     let chat = await this.directMessageRepository.findOne({
       where: [
         { sender: currentUser, receiver: targetUser },
         { sender: targetUser, receiver: currentUser },
       ],
     });
-
+    
     if (!chat) {
       chat = new Chat();
       chat.sender = currentUser;
@@ -224,5 +230,28 @@ async getLastMessage(chatId: number, sender:User): Promise<Message> {
     return chat;
   }
 
+  
+  // async blocked (userid: number) {
+  //   const user = await this.userRepository.findOne({ where : { id: userid }, relations: ['blockedList', 'blocker', 'blockedList.Blocker', 'blocker.BlockedUser', 'friendship_reciver.userid1', 'friendship_reciver.userid2']})
+  //   if (!user)
+  //     throw new error("the user not found");
+  //   console.log("the friend ", user.friendship_sender)
+  //   const friends1 = user.friendship_sender.map( (friend)  => {
+  //     if (friend.userid1.username != user.username && friend.Status == "accepted")
+  //       return friend.userid1
+  //     if (friend.userid2.username != user.username && friend.Status == "accepted")
+  //       return friend.userid2
+  //   })
+  //   const friends2 = user.friendship_reciver.map( (friend)  => {
+  //     if (friend.userid1.username != user.username && friend.Status == "accepted")
+  //       return friend.userid1
+  //     if (friend.userid2.username != user.username && friend.Status == "accepted")
+  //       return friend.userid2
+  //   })
+  //   const friends = friends1.concat(friends2);
+  //   // console.log("the userfriends are =======> ", friends);
+  //   return friends;
+  // }
 
 }
+

@@ -30,7 +30,7 @@ export class ChatGateway {
   @SubscribeMessage("request-latest-messages")
   async handleRequestLatestMessages(
     client: Socket,
-    userId: number,
+    userId: number
   ): Promise<void> {
     const latestMessages =
       await this.chatService.getLatestMessagesForAllChats(userId);
@@ -44,7 +44,6 @@ export class ChatGateway {
   ): Promise<void> {
     const chatData = await this.chatService.getMessagesForChat(payload.chatId);
     client.emit("messages-for-chat-response", chatData);
-
   }
 
   @SubscribeMessage("join-chat")
@@ -63,58 +62,60 @@ export class ChatGateway {
     payload: { chatId: number; Content: string; senderId: number }
   ) {
     try {
+      const chat = await this.directMessageRepository.findOne({
+        where: { id: payload.chatId },
+        relations: ["receiver", "sender"],
+      });
       const sender = await this.userService.findUserById(payload.senderId);
+      const receiver1 = chat.sender.id === sender.id ? chat.receiver : chat.sender;
 
+
+      const isBlocked = await this.chatService.IsBlocked(sender, receiver1);
+
+      if (isBlocked) {
+
+        console.log("blocked HAAADAA");
+        client.emit("IsBlocked",true);
+        return false;
+      }
       const message = await this.chatService.sendMessage(
         payload.chatId,
         payload.Content,
         sender
       );
 
-      const chat = await this.directMessageRepository.findOne({
-        where: { id: payload.chatId },
-        relations: ["receiver", "sender"],
-      });
+      const chatData = message;
 
-      // const chatData = await this.chatService.getMessagesForChat(
-      //   payload.chatId
-      // );
-
-      const chatData = await this.chatService.getLastMessage(
-        payload.chatId, sender
-      );
-     
       const messages = {
+        id: chatData.SenderUserID.id,
+        username: chatData.SenderUserID.username,
+        image: chatData.SenderUserID.Avatar,
+        lastMessage: chatData.Content,
+        status: chatData.SenderUserID.status,
+        ischannel: true,
+        // IsBlocked: !message,
 
-      id: chatData.SenderUserID.id,
-      username: chatData.SenderUserID.username,
-      image: chatData.SenderUserID.Avatar,
-      lastMessage: chatData.Content,
-      status: chatData.SenderUserID.status,
-      ischannel: true,
-      }
-     console.log("whaaaaanaaaaaaaaa"); 
-      client.emit("new-message", chatData);
+      };
+      console.log("whaaaaanaaaaaaaaa", chatData);
+      // client.emit("new-message", chatData);
+      this.server.to(sender.id.toString()).emit("new-message", chatData);
 
       this.server
-      .to(chatData.ReceiverUserID.id.toString())
-      .emit("new-message", chatData);
-      
+        .to(chatData.ReceiverUserID.id.toString())
+        .emit("new-message", chatData);
+
       this.server
-      .to(chatData.ReceiverUserID.id.toString())
-      .emit("LastMessage-forDash", messages);
+        .to(chatData.ReceiverUserID.id.toString())
+        .emit("LastMessage-forDash", messages);
 
       const receiver =
         chat.sender.id === sender.id ? chat.receiver.id : chat.sender.id;
-      const latestMessages =
-      await this.chatService.getLatestMessagesForAllChats(sender.id);
-      const latestMessagesres =
-        await this.chatService.getLatestMessagesForAllChats(receiver);
+      const latestMessages = await this.chatService.getLatestMessagesForAllChats(sender.id);
+      const latestMessagesres = await this.chatService.getLatestMessagesForAllChats(receiver);
       client.emit("latest-messages", latestMessages);
       this.server
         .to(receiver.toString())
         .emit("latest-messages", latestMessagesres);
-
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -137,7 +138,7 @@ export class ChatGateway {
     } catch (error) {
       client.emit("search-user-response", {
         chatId: null,
-        //error: error.message,
+        error: error.message,
       });
     }
   }

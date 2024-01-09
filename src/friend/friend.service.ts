@@ -28,10 +28,10 @@ export class FriendService {
 
   async findOne(user1: User, user2: User): Promise<Friendship> {
     // const user = await this.userService.findUserByUn(username) 
-    console.log('hanaaaaaaaaaaaaaaaaaaaaaa', user1, "hanaaaaaaaaaaaaaaaaaaaaaa ", user2)
+    // console.log('hanaaaaaaaaaaaaaaaaaaaaaa', user1, "hanaaaaaaaaaaaaaaaaaaaaaa ", user2)
     const friend = await this.friendService.findOne({where:[{userid1: Equal(user1.id), userid2: Equal(user2.id)}, {userid1: Equal(user2.id), userid2: Equal(user1.id)}], relations: ['userid1', 'userid2']})
 
-    console.log("the friendship table |||||", friend)
+    // console.log("the friendship table |||||", friend)
     return friend;
   }
 

@@ -9,6 +9,7 @@ export class DashboardController {
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async get_dashboard_info (@Req() req: any) {
+    console.log("the env is wooooooooorking ----=====-----==-==-=-=-> ", process.env.SECRET_JWT)
     return (this.datadashboard.getInfodashboard(req.user.username));
   }
 }

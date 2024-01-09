@@ -26,7 +26,7 @@ export class AuthController {
       @UseGuards(AuthGuard('google'))
       async googleLoginCallback(@Req() req: any , @Res({ passthrough: true }) res: Response ) {
     // console.log("here is user informations :" + JSON.stringify(req.user.profile, null, 2));
-    console.log("profile here ===========" +( req));
+    // console.log("profile here ===========" +( req));
     // const accessToken:  string = await this.authService.create_jwt({
     //     email: req.user.profile.emails[0].value,
     //     username: req.user.profile.emails[0].value.split("@")[0] + "_g",
@@ -39,10 +39,18 @@ export class AuthController {
         username: user.username,
         avatar: user.Avatar
       });
-    res.cookie('accessToken', accessToken);
-    // const accessTokenCookie = `accessToken=${accessToken}; HttpOnly; domain=.localhost; Max-Age=${6000 * 60}; SameSite=Strict`;
+    if (user.is_twofactor == false)
+    {
+      res.cookie('accessToken', accessToken);
+      res.redirect(process.env.HOST_F + "CallBack");
+    }
+    else
+    {
+      res.cookie('username', user.username);
+      res.redirect(process.env.HOST_F + "welcomeback");
+    }
+      // const accessTokenCookie = `accessToken=${accessToken}; HttpOnly; domain=.localhost; Max-Age=${6000 * 60}; SameSite=Strict`;
       // res.setHeader('Set-Cookie', accessTokenCookie);
-      res.redirect("http://localhost:5173/CallBack");
     // console.log("the user throw an Exception ")
   }
 
@@ -55,7 +63,7 @@ export class AuthController {
       @Get('FortyTwo/callback')
       @UseGuards(AuthGuard('FortyTwo'))
       async FortyTwoLoginCallback(@Req() req: any , @Res() res: Response ) {
-    console.log("profile here ===========");
+    // console.log("profile here ===========");
     
     const user = await this.userReposite.findOne({where: {username: req.user.user.username}})
     const accessToken:  string = await this.authService.create_jwt({
@@ -63,7 +71,15 @@ export class AuthController {
         username: user.username,
         avatar: user.Avatar
       });
+    if (user.is_twofactor == false)
+    {
       res.cookie('accessToken', accessToken);
-      res.redirect("http://localhost:5173/CallBack");
+      res.redirect(process.env.HOST_F + "CallBack");
+    }
+    else
+    {
+      res.cookie('username', user.username);
+      res.redirect(process.env.HOST_F + "welcomeback");
+    }
   }
 }

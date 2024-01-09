@@ -13,7 +13,6 @@ export class ProfiledataController {
   async UserProfile(@Body() Body: ProfileUserDto, @Req() req: any) {
     if (req.user.username === Body.username)
   {
-
     console.log("the usernames ", req.user.username, " ", Body.username)
       throw new HttpException("redirect to user profile", 301);
     }

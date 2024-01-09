@@ -2,12 +2,17 @@ import { UserService } from "src/user/user.service";
 import { HttpException, Injectable } from "@nestjs/common";
 import { FriendService } from "src/friend/friend.service";
 import { User } from "src/entities/user.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Equal, Repository } from "typeorm";
+import { BlockedList } from "src/entities/BlockedList.entity";
 
 @Injectable()
 export class Dataprofile {
   constructor(
     private readonly friendService: FriendService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    @InjectRepository(BlockedList)
+    private readonly blockedList: Repository<BlockedList>
   ) {}
 
   async getUserprofile(username1: string, username2: string) {
@@ -49,7 +54,25 @@ export class Dataprofile {
       "is it friendRequestSent=====> ",
       friendRequestSent
     );
+    const blockedList = await this.blockedList.findOne({where: [{Blocker : Equal(user1.id), BlockedUser: Equal(user2.id)}, {Blocker : Equal(user2.id), BlockedUser: Equal(user1.id)}]})
+    var blocked : boolean = false;
+    var blocker: boolean =false;
+    var username: string;
+    if (user1.blocker.find(() => blockedList))
+    {
+      console.log("the user one blocked the user two")
+      blocker = true;
+      username = user2.username;
+    }
+    else if (user2.blocker.find(() => blockedList))
+    {
+      console.log("the user two blocked the user one")
+      blocked = true;
+      username = user2.username;
+    }
     const profileUser = {
+      blocked: blocked,
+      blocker: blocker,
       username: user2.username,
       fullName: user2.username,
       image: user2.Avatar,
