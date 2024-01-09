@@ -2,7 +2,8 @@ import { Fragment, useEffect, useState } from "react"
 import { useSocket } from "../Socketio"
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
-import { Whoami } from "./index";
+import { Whoami } from "./index.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 function CountDown({ children }) {
@@ -22,7 +23,7 @@ function CountDown({ children }) {
     )
 }
 
-export default function FrontEndLogic({ children, f_l }) {
+export default function FrontEndLogic({ children, f_l, game_inf }) {
 
     const [ingame, setingame] = useState(false)
     const [requested, setrequested] = useState(false)
@@ -31,55 +32,57 @@ export default function FrontEndLogic({ children, f_l }) {
 
     f_l.ws = useSocket()
 
-    let ball_size = f_l.game_inf.ball_size
-    let border_size = f_l.game_inf.border_size
-    let pl_width = f_l.game_inf.pl_w
+    let ball_size = game_inf.ball_size
+    let border_size = game_inf.border_size
+    let pl_width = game_inf.pl_w
 
     const token = GetHeaders().jwttt;
     const currentUserToken = jwtDecode.jwtDecode(token);
-    console.log("current user id is ", currentUserToken.id);
+    const nav = useNavigate()
+
+    console.log("rerendered heeere !!! and pitch_w=", game_inf.pitch_w, "and max_x", game_inf.max_x)
+
     useEffect(() => {
         if (requested === false) {
             f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
             setrequested(true)
             console.log("emited lija_bsmlah")
         }
-    }, [])
-
-    f_l.ws.on("opponent_found", (data) => {
-        console.log("opponent_found !!")
-        setwho_val(data)
-        if (ingame === false) {
-            setingame(true)
-        }
-        else {
-            console.log("wtfff")
-        }
-        f_l.ws.on("salat", (data) => {
-            f_l.b_apiy.pause()
-            f_l.b_apix.pause()
-            console.log("winner winner chicken dinner ", data.winner)
-        })
-
-        f_l.ws.on("ball:vertical:bounce", (data) => {
-            const dir = data.dir == 1 ? f_l.game_inf.pitch_h - ball_size : 0
-            const from_ = 0 + (data.pos * (f_l.game_inf.pitch_h - ball_size))
-            //console.log("v_bounce from ", from_, "to ", dir,
-            //"duration :", data.dur, "pos", data.pos)
-            f_l.b_apiy.start({
-                from: { y: from_ },
-                to: { y: dir },
-                config: {
-                    duration: data.dur
-                }
+        //f_l.ws.on("opponent_found", (data, callback) => {
+        f_l.ws.on("opponent_found", (data) => {
+            /*
+            callback({
+                status: 'ok'
+            })
+            */
+            console.log("opponent_found !!")
+            setwho_val(data)
+            if (ingame === false) {
+                setingame(true)
+            }
+            else {
+                console.log("wtfff")
+            }
+            f_l.ws.on("salat", (data) => {
+                nav("/games")
+                f_l.b_apiy.pause()
+                f_l.b_apix.pause()
+                console.log("winner winner chicken dinner ", data)
             })
         })
 
+        //f_l.ws.on("ball:horizontal:bounce", (data, callback) => {
         f_l.ws.on("ball:horizontal:bounce", (data) => {
-            const dir = data.dir == 1 ? f_l.game_inf.pitch_w - ball_size : 0
-            const from_ = data.dir == 1 ? 0 : f_l.game_inf.pitch_w - ball_size
+            /*
+            callback({
+                status: 'ok'
+            })
+                */
+            const dir = data.dir == 1 ? game_inf.pitch_w - ball_size : 0
+            const from_ = data.dir == 1 ? 0 : game_inf.pitch_w - ball_size
             //console.log("h_bounce from ", from_, "to " , dir, 
             //"duration :", data.dur)
+            //console.log("stop point should be==> ", game_inf.pitch_w - ball_size, " ball_size ==> ")
 
             f_l.b_apix.start({
                 from: { x: from_ },
@@ -90,13 +93,20 @@ export default function FrontEndLogic({ children, f_l }) {
             })
         })
 
+        ///f_l.ws.on("ball:first_ping", (data, callback) => {
         f_l.ws.on("ball:first_ping", (data) => {
+            /*
+            callback({
+                status: 'ok'
+            })
+                */
+            /*
             console.log("first ping ", data.h_dur, data.v_dur)
-            console.log("max_size ==> ", f_l.game_inf.max_y, " ball_size ==> ", ball_size, "border size ==> ", border_size)
-            console.log("pitch_h ==>", f_l.game_inf.pitch_h)
+            console.log("max_size ==> ", game_inf.max_y, " ball_size ==> ", ball_size, "border size ==> ", border_size)
+            */
             f_l.b_apix.start({
                 from: { x: pl_width },
-                to: { x: f_l.game_inf.pitch_w - ball_size },
+                to: { x: game_inf.pitch_w - ball_size },
                 config: {
                     duration: data.h_dur
                 }
@@ -104,13 +114,44 @@ export default function FrontEndLogic({ children, f_l }) {
 
             f_l.b_apiy.start({
                 from: { y: border_size },
-                to: { y: f_l.game_inf.pitch_h - ball_size },
+                to: { y: game_inf.pitch_h - ball_size },
                 config: {
                     duration: data.v_dur
                 },
             })
         })
-    })
+
+        ///f_l.ws.on("ball:vertical:bounce", (data, callback) => {
+        f_l.ws.on("ball:vertical:bounce", (data) => {
+            /*
+            callback({
+                status: 'ok'
+            })
+                */
+            const dir = data.dir == 1 ? game_inf.pitch_h - ball_size : 0
+            const from_ = 0 + (data.pos * (game_inf.pitch_h - ball_size))
+            //console.log("v_bounce from ", from_, "to ", dir,
+            //"duration :", data.dur, "pos", data.pos)
+            //console.log("stop point should be==> ", game_inf.pitch_w - ball_size)
+
+            f_l.b_apiy.start({
+                from: { y: from_ },
+                to: { y: dir },
+                config: {
+                    duration: data.dur
+                }
+            })
+
+        })
+
+        return () => {
+            f_l.ws.off("ball:first_ping")
+            f_l.ws.off("opponent_found")
+            f_l.ws.off("ball:horizontal:bounce")
+            f_l.ws.off("salat")
+            f_l.ws.off("ball:vertical:bounce")
+        }
+    }, [game_inf, nav])
 
 
     return (
