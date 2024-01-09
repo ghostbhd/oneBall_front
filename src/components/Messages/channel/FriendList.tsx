@@ -1,44 +1,51 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import style, { ImgBg } from "../../../style";
 import { Link } from "react-router-dom";
-// import { useSocket } from "../../../Socketio.jsx";
+import { useSocket } from "../../../Socketio";
 
-const FriendList = ({ showFriendList, setShowFriendList,activeChannel,currentUserToken }) => {
+const FriendList = ({
+  showFriendList,
+  setShowFriendList,
+  activeChannel,
+  currentUserToken,
+}) => {
   const [friends, setFriends] = useState([]);
 
-  const socket = useSocket();
+  const socket: any = useSocket();
 
   useEffect(() => {
     // channel members -----------------------
     socket.on("FrindsListIs", (data) => {
-      console.log("the data is ", data)
+      console.log("the friend list issssssssss", data);
       setFriends(data);
-      
-
     });
-//    console.log("Token is ", currentUserToken);
+    //    console.log("Token is ", currentUserToken);
 
     return () => {
       socket.off("FrindsListIs");
     };
-  }, []);
-
-
+  }, [socket]);
 
   // Add friend to channel -----------------------------------------------
   const handelAddFriend = (requesterId) => {
-    // socket.emit("joinChannel", {
-    //   channelId: activeChannel,
-    //   userId:requesterId,
-    //   password: "",
-
-    // });
-    console.log("add friend",activeChannel,currentUserToken.id, requesterId);
+    console.log("rah emitittt");
+    socket.emit("addUsertoPrivateChannel", {
+      channelId: activeChannel,
+      userId: requesterId,
+      currentUserId: currentUserToken.id,
+      password: "",
+    });
+    console.log("add friend", activeChannel, currentUserToken.id, requesterId);
   };
 
   // Remove friend from channel -----------------------------------------------
-  const handelRemoveFriend = () => {
+  const handelRemoveFriend = (requesterId) => {
     console.log("remove friend");
+    socket.emit("leavePrivateChannel", {
+      channelId: activeChannel,
+      userId: requesterId,
+      currentUserId: currentUserToken.id,
+    });
   };
 
   const buttonStyle = `ml-auto p-1 w-24 text-center cursor-pointer transition-all duration-300 rounded-full`;
@@ -78,21 +85,18 @@ const FriendList = ({ showFriendList, setShowFriendList,activeChannel,currentUse
                 <p className="text-sm text-bLight_4">@{friend.username}</p>
                 {/* button ---------------------- */}
                 {!friend.inChannel ? (
-                  (console.log(friend.inChannel),
-                  (
-                    // Add button ----------------------
-                    <div
-                      className={`${buttonStyle} hover:bg-bLight_5/60 text-bLight_4 border-2 border-bLight_3/20 bg-bLight_5/40`}
-                      onClick={handelAddFriend(friend.id)}
-                    >
-                      Add
-                    </div>
-                  ))
+                  // Add button ----------------------
+                  <div
+                    className={`${buttonStyle} hover:bg-bLight_5/60 text-bLight_4 border-2 border-bLight_3/20 bg-bLight_5/40`}
+                    onClick={() => handelAddFriend(friend.id)}
+                  >
+                    Add
+                  </div>
                 ) : (
                   // Remove button ----------------------
                   <div
                     className={`${buttonStyle} hover:bg-bDark_3 text-bDark_1 border-2 border-bLight_5/20 bg-bDark_3/40`}
-                    onClick={handelRemoveFriend}
+                    onClick={() => handelRemoveFriend(friend.id)}
                   >
                     Remove
                   </div>
