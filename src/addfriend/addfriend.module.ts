@@ -9,9 +9,10 @@ import { FriendModule } from 'src/friend/friend.module';
 import { BlockedList } from 'src/entities/BlockedList.entity';
 import { Notif } from 'src/entities/Notification.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { GameStats } from 'src/entities/game.entity';
 
 @Module({
-  imports: [JwtModule ,FriendModule, TypeOrmModule.forFeature([Friendship, User, BlockedList, Notif])],
+  imports: [JwtModule ,FriendModule, TypeOrmModule.forFeature([Friendship, User, BlockedList, Notif, GameStats])],
   providers: [AddfriendGateway, AddfriendService, UserService],
 })
 export class AddfriendModule {}

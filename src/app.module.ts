@@ -24,6 +24,7 @@ import { ChannelModule } from './chat/channel/channel.module';
 import { GameStats } from './entities/game.entity';
 import { GameHistory } from './entities/GameHistory.entity';
 import { GameModule } from './game/game.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [

@@ -769,12 +769,14 @@ export class ChannelGateway {
           ...status,
         });
     } catch (error) {
-      console.error("Error setting user as admin:", error.message);
+      //console.error("Error setting user as admin:", error.message);
 
+      /*
       client.emit(
         "adminOperationFailed",
         (data.channelId, data.userId, error.message)
       );
+      */
     }
   }
 
@@ -821,13 +823,13 @@ export class ChannelGateway {
           ...status,
         });
     } catch (error) {
-      console.error("Error removing user from admin:", error.message);
+      //console.error("Error removing user from admin:", error.message);
 
       client.emit(
         "adminOperationFailed",
         data.channelId,
         data.userId,
-        error.message
+        //error.message
       );
     }
   }
