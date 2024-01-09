@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* scrool styling ---------------------------------------- */
 ::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-thumb{background-color:#395f6d;border-radius:50px}
+::-webkit-scrollbar-thumb{background-color:hsl(196, 31%, 33%);border-radius:50px}
 ::-webkit-scrollbar-track{background:0 0}
