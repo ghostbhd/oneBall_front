@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const GamesHistory = ({ gamehistory }) => {
   return (
     <div
-      className={`md:w-4/12 sm:w-5/12 w-full h-full ml-auto flex flex-col p-2 ${style.blueBlur} ${style.rounded}`}
+      className={`md:w-4/12 sm:w-5/12 w-full sm:h-full h-80 ml-auto flex flex-col p-2 ${style.blueBlur} ${style.rounded}`}
     >
       {/* head ---------------------- */}
       <div className="h-max w-full flex flex-col items-center">

@@ -1,5 +1,3 @@
-
-
 import avatar1 from '../../assets/avatar/Deadpool.jpg'
 import avatar2 from '../../assets/avatar/Join and have fun.jpg'
 import avatar3 from '../../assets/avatar/jomjo.jpg'

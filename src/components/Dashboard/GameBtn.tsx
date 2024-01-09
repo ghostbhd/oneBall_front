@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { icons } from "../../constants";
 import InviteFriend from "./InviteFriend";
 
-const GameBtn: React.FC = () => {
+const GameBtn = () => {
   const [showInviteFriend, setShowInviteFriend] = useState(false);
   const [showSelectFriend, setShowSelectFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState({} as any);
@@ -18,7 +18,7 @@ const GameBtn: React.FC = () => {
     { username: "friend6", id: 6 },
     { username: "friend7", id: 7 },
     { username: "friend8", id: 8 },
-  ]);
+  ] as any);
 
   useEffect(() => {
     // get friend list from server -------------------------------
