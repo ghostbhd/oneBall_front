@@ -31,7 +31,6 @@ const ChatList = ({
     const handleNewMessage = (newMessage) => {
       setChats((prevChats) => {
         let updatedChats = [...prevChats];
-
         const chatIndex = updatedChats.findIndex(
           (chat) => chat.id === newMessage.chatid.id
         );
@@ -101,8 +100,6 @@ const ChatList = ({
   const handleChatClick = (chatId) => {
     // if (activeChat === chatId && activeChat) return;
     console.log("Chat ID clicked:", chatId);
-    
-    
     setActiveChat(chatId);
     socket.emit("request-messages-for-chat", {
       chatId,

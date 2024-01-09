@@ -5,21 +5,21 @@ import { useSocket } from "../../Socketio";
 
 import { useTheme } from "../../themeContext";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as jwtDecode from "jwt-decode";
 import { GetHeaders } from "../../jwt_token";
 
-const SideBar = () => {
+const SideBar : React.FC = () => {
   const location = useLocation();
 
-  var username = "";
+  var username : any = "";
 
   const history = useNavigate();
 
-  const { theme, toggleSidebar } = useTheme();
+  const { theme , toggleSidebar } = useTheme() as any;
 
-  const socket = useSocket();
+  const socket : any = useSocket();
 
   useEffect(() => {
     // if (socket)
@@ -40,7 +40,7 @@ const SideBar = () => {
   }, [socket]);
 
   const token = GetHeaders().jwttt;
-  var decoded;
+  var decoded : any;
   if (token != undefined) {
     decoded = jwtDecode.jwtDecode(token);
     username = decoded.name;
@@ -136,9 +136,7 @@ const SideBar = () => {
           className={`${
             theme.isSidebarCollapsed ? "w-max" : "w-full"
           } cursor-pointer`}
-          onClick={() => {
-            handelDesconnect();
-          }}
+          onClick={() => handelDesconnect()}
         >
           <div className={`flex flex-row p-2 items-center`}>
             {/* Icon ---------- */}
