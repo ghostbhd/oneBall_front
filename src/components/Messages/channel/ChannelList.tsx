@@ -48,6 +48,7 @@ function ChannelList({
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);
     socket.emit("getChannelType", activeChannel);
+    socket.emit("autojoined", {channelId: activeChannel, userId: currentUserToken.id})
     console.log("active channel is => ", activeChannel);
   };
 
