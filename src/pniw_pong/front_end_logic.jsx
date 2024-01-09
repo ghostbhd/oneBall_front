@@ -151,7 +151,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             f_l.ws.off("salat")
             f_l.ws.off("ball:vertical:bounce")
         }
-    }, [game_inf])
+    }, [game_inf, nav])
 
 
     return (
