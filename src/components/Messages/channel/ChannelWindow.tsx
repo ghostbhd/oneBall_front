@@ -8,6 +8,7 @@ import WindowBody from "./WindowBody";
 import AddPasswordInput from "./AddPasswordInput";
 import ChangePasswordInput from "./ChangePasswordInput";
 import FriendList from "./FriendList";
+import React from "react";
 
 // import PropTypes from "prop-types";
 
@@ -39,8 +40,12 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     //   socket.emit("getChannelMessages", activeChannel);
     // }
 
+ 
     socket.on("newChannelMessage", (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      console.log("actiiiiiv", activeChannel);
+      console.log("newChannelMessage", newMessage); 
+      if(newMessage.channelId === activeChannel)
+        setMessages((prevMessages) => [...prevMessages, newMessage.message]);
     });
 
     // socket.emit("getSenderIdsInChannel", activeChannel);
@@ -142,6 +147,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       setShowPasswordInput(true);
     } else {
       socket.emit("joinChannel", {
+
         channelId: activeChannel,
         userId: currentUserToken.id,
         password: channelPassword,
