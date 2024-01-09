@@ -1,5 +1,3 @@
-
-
 const config = {
   domain: "http://localhost:3009",
 };
