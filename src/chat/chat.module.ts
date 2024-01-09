@@ -11,11 +11,12 @@ import { UserService } from 'src/user/user.service';
 import { Channel_Membership} from 'src/entities/Channel_Membership.entity';
 import { Friendship } from 'src/entities/Friendship.entity';
 import { BlockedList } from 'src/entities/BlockedList.entity';
+import { GameStats } from 'src/entities/game.entity';
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Message, Chat, User, Channel, Channel_Membership, Friendship, BlockedList]),
+    TypeOrmModule.forFeature([Message, Chat, User, Channel, Channel_Membership, Friendship, BlockedList, GameStats]),
   ],
   providers: [ChatService, ChatGateway,UserService], 
   controllers: [ChatController],

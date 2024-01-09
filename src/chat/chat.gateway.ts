@@ -136,10 +136,12 @@ export class ChatGateway {
       );
       client.emit("search-user-response", { chatId: chat.id });
     } catch (error) {
+        /*
       client.emit("search-user-response", {
         chatId: null,
         error: error.message,
       });
+      */
     }
   }
 }
