@@ -1,0 +1,41 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres
+    init: true
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: database # Specify the database name here
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/home/ayoub/Documents/data
+    networks:
+      - private_network
+  back-end:
+    init: true
+    container_name: back-end
+    build: ./back-end/
+    ports:
+      - '3009:3009'
+    networks:
+      - private_network
+    depends_on:
+      - postgres
+  front-end:
+    container_name: front-end
+    build: ./front-end/
+    ports:
+      - '5173:5173'
+    networks:
+      - private_network
+    init: true
+    depends_on:
+      - back-end
+volumes:
+  db_data:
+networks:
+  private_network:
