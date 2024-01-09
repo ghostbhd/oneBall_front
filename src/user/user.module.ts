@@ -17,7 +17,7 @@ import { GameStats } from 'src/entities/game.entity';
           res.setHeader('Content-Type', 'image/jpeg');
         },
       },
-    }),TypeOrmModule.forFeature([ Friendship,User, GameStats])],
+    }),TypeOrmModule.forFeature([ Friendship,User])],
     controllers: [UserController],
     providers: [UserService],
     exports: [UserService, TypeOrmModule],

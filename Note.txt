@@ -1,0 +1,34 @@
+
+
+* add Gatewey for 
+
+Ban / 
+mute /
+ change password /
+ remove password /
+add password/
+check pass /
+set as admin/
+
+* channel service 
+
+in removeUserFromAdmin need to make sure that the requested is an admin first :
+
+hash all the passwords : 
+
+add a method or just  call campare the password :
+
+
+
+
+
+
+
+"I'm a full-stack developer proficient in a variety of programming languages and technologies. My experience spans from frontend technologies like react, JavaScript/TypeScript to backend technologies such as nest.js, Express.js, and database management. I enjoy tackling challenging problems and constantly strive to expand my knowledge to deliver effective solutions.
+
+As a collaborative team member, I actively collaborate with my colleagues to ensure that our combined efforts result in great projects. My goal is to contribute to the team's success by delivering high-quality code and innovative solutions."
+
+
+
+
+will I am studying for my network diploma . I discovered the tech filed and how interesting it is, so my journey in the tech world continues when i get to 1337,wish is a perfect environment to embrace my self-learning abilities. I get the chance to demonstrate a remarkable capacity for adapt  to new challenges and technologies.

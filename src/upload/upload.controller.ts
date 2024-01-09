@@ -17,6 +17,9 @@ export class UploadController {
     const { username , filepath } = body;
     const usernm: string = username;
       console.log(usernm.search(" "))
+    const UserChange = await this.userService.findUserByUn(username)
+    if (UserChange)
+      throw new HttpException("the user is already used", 401);
     if (usernm.search(" ") != -1)
       throw new HttpException("the username is not acceptable", 401)
     const user1 = await this.userService.findUserByUn(req.user.username);
@@ -35,7 +38,7 @@ export class UploadController {
     }
     else {
       path = file.path;
-      user = await this.uploadsevice.saveAvatar(req.user.username , username, {filePath: "http://localhost:3009/" + path})
+      user = await this.uploadsevice.saveAvatar(req.user.username , username, {filePath: process.env.HOST_B  + path})
     }
     console.log('Username :', username, " the username ", user.username);
     console.log(file);
@@ -44,6 +47,7 @@ export class UploadController {
         username: user.username,//////////////// hna fin wgaft
         avatar: path
       });
+    console.log("the accessToken is ", accessToken);
     // res.clearCookie('accessToken')
     // res.cookie('accessToken', accessToken);
     return ({user : user, accessToken: accessToken});

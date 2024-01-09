@@ -9,6 +9,8 @@ import { GameHistory } from './GameHistory.entity';
 import { GameStats } from './game.entity'
 import { Socket } from 'socket.io';
 import { BlockedList } from './BlockedList.entity';
+import { Notif } from './Notification.entity';
+
 @Entity()
 export class User {
     @OneToOne(() => GameStats, Gamestats => Gamestats.userId, {
@@ -55,10 +57,14 @@ export class User {
   channel_membershipid: Channel_Membership;
   @OneToMany(() => Channel_Message, channel_message => channel_message.SenderUserid)
   channel_messageid: Channel_Message;
-  @OneToMany(() => BlockedList, (block) => block.BlockedUser)
+  @OneToMany(() => BlockedList, (block) => block.BlockedUser)// nas li homa blockaw
   blockedList: BlockedList[];
   @OneToMany(() => BlockedList, (block) => block.Blocker)
   blocker: BlockedList[];
+  @OneToMany(() => Notif, notif => notif.userid1)
+  Notifsender: Notif[];
+  @OneToMany(() => Notif, notif => notif.userid2)
+  Notifreciever: Notif[];
   //  @OneToMany(() => Channel, channel => channel.owner)
   // ownedChannels: Channel[];
 }

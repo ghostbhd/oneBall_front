@@ -27,6 +27,9 @@ import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
    TypeOrmModule.forRoot(config),
     TypeOrmModule.forFeature([User ,Channel, Channel_Membership, Chat, Message, Channel_Message, Friendship, GameStats, GameHistory]),
     UserModule,
