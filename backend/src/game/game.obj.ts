@@ -4,7 +4,9 @@ import { Player } from './queue/queue.service';
 
 export type pl_inf = {
     Player : Player,
-    y : number
+    y : number,
+    ly : number,
+    afks : number
 }
 
 export type state = {
@@ -33,10 +35,14 @@ export class GameObj {
         this.left_plr = {
             Player: left_Player,
             y: 0,
+            ly: 0,
+            afks : 0
         }
         this.right_plr = {
             Player: right_Player,
             y: 0,
+            ly: 0,
+            afks : 0
         }
         this.ball = {
             x_dir: 1, y_dir: 1,

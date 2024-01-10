@@ -107,7 +107,8 @@ export class GameGateway {
                         to_push = {
                             id: id,
                             socket: socket,
-                            ConsecutiveLatencies: 0,
+                            Consecutiveafk: 0,
+                            lasty : 0,
                         }
                         this.queue.players.push(to_push)
                         console.log("pushing player ====", id)
@@ -121,7 +122,7 @@ export class GameGateway {
                         console.log("matching ", this.queue.players[0].id, id, " to =>", room_id)
                         this.queue.players.forEach((e) => console.log("before waah wal7maa9 =", e.id))
 
-                        this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket, ConsecutiveLatencies: 0 }, room_id, "r"))
+                        this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket, Consecutiveafk: 0, lasty : 0}, room_id, "r"))
                         this.queue.games_size++
                         this.queue.players.splice(0, 1)
                         console.log("lentgh after slicing", this.queue.players.length)
@@ -195,29 +196,6 @@ export class GameGateway {
         }
     }
 
-    @SubscribeMessage('iquit')
-    async iquit(@MessageBody("id") id: number, @ConnectedSocket() client: Socket) {
-        console.log("======quitter here =============", id)
-        let winner: number;
-        let n: number = this.queue.games.findIndex(e => {
-            console.log("checking ", e.left_plr.Player.id, " ", e.right_plr.Player.id)
-            if (e.right_plr.Player.id === id) {
-                winner = e.left_plr.Player.id;
-                return true
-            }
-            if (e.left_plr.Player.id === id) {
-                winner = e.right_plr.Player.id
-                return (true)
-            }
-            return false
-        })
-        if (n !== -1) {
-            console.log("removing here accessing n=", n)
-            this.server.to(this.queue.games[n].state.roomid).emit("salat",winner)
-            this.gameService.salat(this.queue.games[n], winner, this.server)
-        }
-    }
-
     @SubscribeMessage('readytojoin:flan')
     async friendgame(client: Socket, id: number, opName: string) {
         //in frontend redirect to waiting and only then emit this
@@ -240,7 +218,7 @@ export class GameGateway {
                 resolve()
             })
 
-            let joiner: Player = { id: id, ConsecutiveLatencies: 0, socket: client };
+            let joiner: Player = { id: id, Consecutiveafk: 0, socket: client, lasty : 0 };
             let room_id: string = id.toString() + op.id;
 
             this.queue.pv_rooms.push({ waiter: invited.id, joiner: inviter.id })
@@ -268,7 +246,7 @@ export class GameGateway {
                 return ("Unavailable")
             let index = arr.findIndex(e => e === id)
             if (index !== -1) {
-                let invited_pl: Player = { id: id, socket: client, ConsecutiveLatencies: 0 }
+                let invited_pl: Player = { id: id, socket: client, Consecutiveafk: 0, lasty : 0}
                 this.queue.pv_players.push(invited_pl);
                 let not: Notif = new Notif;
                 not.type = "game";

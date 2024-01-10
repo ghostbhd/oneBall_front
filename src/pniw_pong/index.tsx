@@ -76,111 +76,84 @@ export const GameShell = (props) => {
             })
         }
         const handleResize = () => {
-
-            //console.log("traj pos ===> ", game_inf.pl_h)
-            /*
-            if (game_inf.pl_h !== 0) {
-                console.log("new ", myComponentRef.current.offsetHeight, " old ", game_inf.pl_h)
-                let _m_height = myComponentRef.current.offsetHeight
-                let _border_size = _m_height * 0.015
-                let _pitch_h = (_m_height - (2 * _border_size))
-
-                //console.log("pos = ", spring_r.y.get(), " / ", game_inf.pl_h, " == ", spring_r.y.get() / game_inf.pl_h , " * ", _pitch_h, " == ", ((spring_r.y.get() / game_inf.pl_h) * (_pitch_h)))
-                let res_r = (((spring_r.y.get() - _border_size) / game_inf.pl_h) * (_pitch_h))
-                let res_l = (((spring_l.y.get() - _border_size) / game_inf.pl_h) * (_pitch_h))
-                api_r.set({ y: res_r })
-                api_l.set({ y: res_l })
-                    */
-            /*
-            //api_l.set({ y: (spring_l.y.get() / game_inf.pl_h) * (_pitch_h) })
-            if (res <= 100 && res >= 10)
-            {
-            }
-            console.log("hahyaa ==>", spring_r.y.get())
-            console.log("this is the diff => ", (_m_height - game_inf.pl_h) / _m_height)
-            let tes = spring_r.y.get()
-            let res = ((spring_r.y.get() / game_inf.pl_h) * (_pitch_h))
-            api_r.set({y : 0})
-            }
-                */
             api_r.set({ y: 0 })
             api_l.set({ y: 0 })
+            pre_calc()
+            //console.log("resize detected and this max_x after", game_inf.pitch_w)
+        };
+        const inputField = document.getElementById("pingpong_playground");
+
+        window.addEventListener('resize', handleResize);
+
+        //todo fixing dimensions
         pre_calc()
-        //console.log("resize detected and this max_x after", game_inf.pitch_w)
-    };
-    const inputField = document.getElementById("pingpong_playground");
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    }, [game_inf.pl_h])
 
-    window.addEventListener('resize', handleResize);
-
-    //todo fixing dimensions
-    pre_calc()
-    return () => {
-        window.removeEventListener('resize', handleResize);
-    }
-}, [game_inf.pl_h])
-
-const [spring_l, api_l] = useSpring(() => ({ y: 10 }))
-const [spring_r, api_r] = useSpring(() => ({ y: 10 }))
+    const [spring_l, api_l] = useSpring(() => ({ y: 10 }))
+    const [spring_r, api_r] = useSpring(() => ({ y: 10 }))
 
 
-const [x_traj, b_apix] = useSpring(() => ({
-    x: 0,
-    config: {
-        duration: 4973
-    }
-    /*
-    onRest: () => {
-        console.log("stoped")
-        console.log("y ==> ", x_traj.x.get())
-        console.log("max", game_inf.max_x)
-    }
-    */
-}))
+    const [x_traj, b_apix] = useSpring(() => ({
+        x: 0,
+        config: {
+            duration: 4973
+        }
+        /*
+        onRest: () => {
+            console.log("stoped")
+            console.log("y ==> ", x_traj.x.get())
+            console.log("max", game_inf.max_x)
+        }
+        */
+    }))
 
-const [y_traj, b_apiy] = useSpring(() => ({
-    y: 0,
-    config: {
-        duration: 1500,
-    }
-}));
+    const [y_traj, b_apiy] = useSpring(() => ({
+        y: 0,
+        config: {
+            duration: 1500,
+        }
+    }));
 
-if (game_inf.calculated === false) {
-    console.log("waaalooo")
-    return (
-        //tailwind
-        <div className="content" id="pingpong_playground" ref={myComponentRef}>
-            <Border p={1} />
-            <Border p={0} />
-        </div>
-    );
-}
-
-//console.log("ok now rendered height :", game_inf.max_y)
-else {
-    const front_logic = {
-        b_apix: b_apix,
-        b_apiy: b_apiy,
-        x_traj: x_traj,
-        y_traj: y_traj,
-        ws: {}
-    }
-    console.log("pitch_w before going into the game ", game_inf.pitch_w)
-
-    return (
-        //
-        //replace className css with tailwind and use props.background_color in the background instead of black
-
-        <div className="content" id="pingpong_playground" ref={myComponentRef}>
-            <FrontEndLogic f_l={front_logic} game_inf={game_inf}>
-                <MyBall x_traj={x_traj} y_traj={y_traj} size={game_inf.ball_size} />
-                {/*<Player b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />*/}
-                {/*<Player b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} /> */}
-                <Player b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />
-                <Player b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} />
+    if (game_inf.calculated === false) {
+        console.log("waaalooo")
+        return (
+            //tailwind
+            <div className="content" id="pingpong_playground" ref={myComponentRef}>
                 <Border p={1} />
                 <Border p={0} />
-            </FrontEndLogic>
-        </div>
-    )
-}
+            </div>
+        );
+    }
+
+    //console.log("ok now rendered height :", game_inf.max_y)
+    else {
+        const front_logic = {
+            b_apix: b_apix,
+            b_apiy: b_apiy,
+            x_traj: x_traj,
+            y_traj: y_traj,
+            ws: {}
+        }
+        console.log("pitch_w before going into the game ", game_inf.pitch_w)
+
+        return (
+            //
+            //replace className css with tailwind and use props.background_color in the background instead of black
+
+            <div className="content" id="pingpong_playground" ref={myComponentRef}>
+                <FrontEndLogic f_l={front_logic} game_inf={game_inf}>
+                    <MyBall x_traj={x_traj} y_traj={y_traj} size={game_inf.ball_size} />
+                    {/*<Player b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />*/}
+                    {/*<Player b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} /> */}
+                    <Player b_s={game_inf.border_size} anim_val={spring_l} api={api_l} side={1} height={game_inf.max_y} />
+                    <Player b_s={game_inf.border_size} anim_val={spring_r} api={api_r} side={2} height={game_inf.max_y} />
+                    <Border p={1} />
+                    <Border p={0} />
+                </FrontEndLogic>
+            </div>
+        )
+    }
 };
