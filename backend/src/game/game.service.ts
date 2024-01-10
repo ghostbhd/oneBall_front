@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Socket, Server } from 'socket.io';
-import { GameObj } from './game.obj';
+import { GameObj, pl_inf } from './game.obj';
 import { Player, QueueService } from './queue/queue.service';
 import { state } from './game.obj';
 import { Game } from './entities/game.entity';
@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { GameHistory } from 'src/entities/GameHistory.entity';
 import { GameStats } from 'src/entities/game.entity';
+import { throws } from 'assert';
 
 
 @Injectable()
@@ -77,7 +78,6 @@ export class GameService {
         return (result)
     }
 
-    //TODO
     async salat(inf: GameObj, winner: number, io: Server) {
         console.log("safi ra salaaat ====>")
         if (inf.state.salat === true)
@@ -150,14 +150,14 @@ export class GameService {
             //GameHistory relations with opponent
             const game_time: string = new Date().toLocaleDateString() + " at " + new Date().toLocaleTimeString()
 
-            console.log("\nthis is the time ==> ", new Date().toLocaleTimeString())
+            //console.log("\nthis is the time ==> ", new Date().toLocaleTimeString())
 
-            console.log("left_plr ==> ", left_plr.id)
+            //console.log("left_plr ==> ", left_plr.id)
             let left_user: User = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
-            console.log("\n\ntesting the db entries left user ==> ", left_user)
+            //console.log("\n\ntesting the db entries left user ==> ", left_user)
             const right_user: User = await this.UserRepo.findOne({ where: { id: right_plr.id }, relations: ["victories", "losses", "gameStats"] })
-            console.log("\n\ntesting the db entries right user ==> ")
-            console.log(right_user)
+            //console.log("\n\ntesting the db entries right user ==> ")
+            //console.log(right_user)
 
             const gamehistory = new GameHistory()
 
@@ -169,13 +169,15 @@ export class GameService {
             gamehistory.date = game_time
             gamehistory.winner.status = "online"
             gamehistory.loser.status = "online"
-            console.log("testing the db entries winner user ==> ")
-            console.log(gamehistory.winner)
+            //console.log("testing the db entries winner user ==> ")
+            //console.log(gamehistory.winner)
 
             await this.GameHistoryRepo.save(gamehistory)
             console.log("testing the victories of winner ==> ")
+            /*
             left_user = await this.UserRepo.findOne({ where: { id: left_plr.id }, relations: ["victories", "losses", "gameStats"] })
             left_user.victories.forEach((e) => console.log(e))
+            */
 
         }
         catch (er) {
@@ -196,11 +198,12 @@ export class GameService {
 
             inf.ball.x_dir = inf.ball.x_dir == 1 ? 0 : 1
             let pl_y = inf.ball.x_dir == 1 ? inf.left_plr.y : inf.right_plr.y
+            let myplr: pl_inf = inf.ball.x_dir == 1 ? inf.left_plr : inf.right_plr
 
             let ball_y = this.upd_vertical_pos(inf) + this.MID_BALL_TO_MAX_V
 
-            //bounce or score a goal ==> 
-            if (ball_y <= pl_y + this.PLAYER_TO_MAX && ball_y >= pl_y) {
+            //bounce or score a goal ==> //add here condition for afk
+            if (ball_y <= pl_y + this.PLAYER_TO_MAX && ball_y >= pl_y && myplr.afks <= 4) {
                 //cross or normal bounce ==>
                 if ((inf.ball.y_dir === 1 && ball_y < pl_y + (this.PLAYER_TO_MAX / 2))
                     || ((inf.ball.y_dir === 0 && ball_y > pl_y + (this.PLAYER_TO_MAX / 2)))) {
@@ -216,6 +219,14 @@ export class GameService {
                     }
                     else
                         console.log("wtf")
+
+                    if (myplr.ly === myplr.y)
+                        myplr.afks++
+                    else {
+                        myplr.ly = myplr.y
+                        myplr.afks = 0;
+                    }
+
                 }
             }
             else {
@@ -290,6 +301,12 @@ export class GameService {
         this.horizontal_bouncing(io, inf)
     }
 
+    async UserIngame(id: number, inf : GameObj) {
+        let LeftUser: User = await this.UserRepo.findOneBy({ id: inf.left_plr.Player.id })
+        LeftUser.status = "in game"
+        await this.UserRepo.save(LeftUser)
+    }
+
     async Ball_Logic(io: Server, inf: GameObj) {
 
         /*
@@ -304,13 +321,14 @@ export class GameService {
         RightUser.status = "in game"
         await this.UserRepo.save(LeftUser)
         await this.UserRepo.save(RightUser)
+        //TODO protect
 
         inf.left_plr.Player.socket.emit("opponent_found", 1)
         inf.right_plr.Player.socket.emit("opponent_found", 2)
 
         const time_out_id = await this.timeout(4500, inf, 0)
 
-        if (inf.state.launched == false) {
+        if (inf.state.launched as boolean === false && inf.state.salat as boolean === false) {
             console.log("first_ping id =", inf.state.roomid)
             io.in(inf.state.roomid).emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur })
 

@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useRef, useState } from "react"
+import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import { useSocket } from "../Socketio"
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
 import { Whoami } from "./index.jsx";
 import { useNavigate } from "react-router-dom";
+
 
 
 function CountDown({ children }) {
@@ -41,10 +42,13 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
     let salat = useRef(false)
     const nav = useNavigate()
 
-    console.log("rerendered heeere !!! and pitch_w=", game_inf.pitch_w, "and max_x", game_inf.max_x)
 
     useEffect(() => {
-        f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
+        console.log("useeffect res ", f_l.res)
+        if (requested === false) {
+            f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
+            setrequested(true)
+        }
         //f_l.ws.on("opponent_found", (data, callback) => {
         f_l.ws.on("opponent_found", (data) => {
             /*
@@ -149,15 +153,11 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             //f_l.ws.off("salat")
             f_l.ws.off("ball:vertical:bounce")
             if (salat.current !== true) {
-                if (ingame === true) {
-                    f_l.ws.emit("iquit", { id: currentUserToken.id })
-                    console.log("iquit emited")
-                }
-                else
+                if (!ingame && requested)
                     f_l.ws.emit("thala", { id: currentUserToken.id })
             }
         }
-    }, [game_inf, nav, ingame])
+    }, [game_inf, nav, ingame, requested, salat])
 
 
     return (
