@@ -128,6 +128,7 @@ export const phoneNavBar = [
 
 export const icons = { // All needed icons
   logout : TbLogout,
+  settings : MdSettings,
   toRight: FaAngleRight,
   toLeft: FaAngleLeft,
   arrowRight: BiSolidArrowToRight,

@@ -1,9 +1,9 @@
 import style from "../../style";
 import { icons } from "../../constants";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import React from "react";
 
-const GameHistory = ({ last6Games }) => {
+const GameHistory: React.FC = ({ last6Games }: any) => {
   return (
     <div
       className={`h-max flex flex-col p-5 px-6 bg-opacity-30 shadow-2xl 
@@ -72,8 +72,6 @@ const GameHistory = ({ last6Games }) => {
   );
 };
 
-GameHistory.propTypes = {
-  last6Games: PropTypes.array,
-};
+
 
 export default GameHistory;

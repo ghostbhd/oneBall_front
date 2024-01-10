@@ -1,72 +1,82 @@
-import { useState, useEffect } from "react";
-import style from "../../../style";
+import React, { useState, useEffect } from "react";
+import style, { ImgBg } from "../../../style";
 import { IoIosSend } from "react-icons/io";
 import { useSocket } from "../../../Socketio";
 import { Link } from "react-router-dom";
+import { icons } from "../../../constants";
 
-const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
+const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  // const [Avatar, setUseravatar] = useState(null);
-  // const [username, setUsername] = useState(null);
-
-  const socket = useSocket();
+  const [senderData, setSenderData] = useState({
+    image: "",
+    username: "",
+    inviter: true,
+    invited: false,
+  } as any);
+  
+  console.log("--------------pipiw------",activeChat);
+  const socket: any = useSocket();
 
   const handleSendMessage = () => {
-    // if (message.trim()) {
-    // const newMessage = {}
-
-    //   Content: message,
-    //   Timestamp: new Date().toISOString(),
-    //   senderId: currentUserToken.id,
-    //   chatId: activeChat,
-
-    // // };
-    // console.log('Sending message:', newMessage);
-    // setMessages((prevMessages) => [...prevMessages, newMessage]);
-
     socket.emit("send-message", {
       chatId: activeChat,
       Content: message,
       senderId: currentUserToken.id,
     });
     setMessage("");
-    // }
   };
 
   useEffect(() => {
     if (socket == null) return;
+    console.log("messages for chat request sent", messages);
 
     socket.emit("join-chat", { chatId: activeChat });
     console.log(`active chat is ${activeChat}`);
 
-    const handleNewMessage = (newMessage) => {
+    const handleNewMessage = (newMessage: any) => {
       console.log(
         "new message received:================================================",
         newMessage
       );
+      console.log("active chat is ", activeChat, "new message chat is ", newMessage.chatid.id);
       if (newMessage.chatid.id === activeChat) {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        setMessages((prevMessages) => [...prevMessages, newMessage] as any);
       }
     };
 
     socket.on("new-message", handleNewMessage);
 
-    socket.on("messages-for-chat-response", (chatData) => {
+    socket.on("messages-for-chat-response", (chatData: any) => {
       console.log(
         "new:================================================",
         chatData
       );
 
       if (chatData.id === activeChat) {
-        setMessages((prevMessages) => [...prevMessages, chatData.messages]);
+        setMessages(
+          (prevMessages) => [...prevMessages, chatData.messages] as any
+        );
       }
       if (chatData && Array.isArray(chatData.messages)) {
         console.log("Chat data received:", chatData);
 
         setMessages(chatData.messages);
+        if (chatData.chatReceiverId === currentUserToken.id) {
+          setSenderData(() => ({
+            ...senderData,
+            image: chatData.senderAvatar,
+            username: chatData.senderUsername,
+          }));
+        } else {
+          setSenderData(() => ({
+            ...senderData,
+            image: chatData.receiverAvatar,
+            username: chatData.receiverUsername,
+          }));
+        }
 
-        const ids = chatData.messages.map((msg) => msg.id);
+        const ids = chatData.messages.map((msg: any) => msg.id);
         const uniqueIds = new Set(ids);
         if (ids.length !== uniqueIds.size) {
           console.error("Non-unique IDs detected", ids);
@@ -87,28 +97,64 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
       socket.off("messages-for-chat-response");
       // socket.emit("leave-chat", { chatId: activeChat });
     };
-  }, [socket]);
+  }, [socket,activeChat]);
 
-  // console.log(`active chat user is ${activeChatUser}`);
+  // challenge handeling ---------------------------------------------------------
+  const handelChallenge = () => {
+    console.log("invite from chat sent to ", senderData.username);
+  };
+
+  // accept challenge handeling ---------------------------------------------------------
+  const handelAcceptChallenge = () => {
+    console.log("invite from chat accepted", senderData.username);
+  };
+
+  // cancel challenge handeling ---------------------------------------------------------
+  const handelCancelInvitetion = () => {
+    console.log("invite from chat canceled", senderData.username);
+  };
+
   return (
     <div
       className={`w-full h-full relative flex flex-col overflow-hidden ${style.blueBlur} ${style.rounded}`}
     >
-      {/* Chat header */}
-      <Link
-        className="flex flex-row p-4 px-6 h-max items-center rounded-t-lg bg-bDark_1/40"
-        to={"/profile/"}
-      >
-        <img
-          className="w-16 h-18  rounded-full  mr-5"
-          src={
-            activeChatUser?.avatar ||
-            "https://i.pinimg.com/236x/7f/61/ef/7f61efa1cfbf210ac8df7a813cf56a1e.jpg"
-          }
-          alt={activeChatUser?.name || "Default Name"}
-        />
-        <h2 className="text-black">{activeChatUser?.name || "Default Name"}</h2>
-      </Link>
+      {/* Chat header ----------------------------------------------------------------------*/}
+      <div className="flex p-2 px-6 gap-4 h-max items-center rounded-t-lg bg-bDark_1/50">
+        {/* image ------------------------- */}
+        <Link
+          to={`/profile/${senderData.username}`}
+          style={ImgBg({ img: senderData.image })}
+          className="w-12 h-12 rounded-full hover:opacity-80 transition-all duration-300"
+        ></Link>
+        {/* username -------------------- */}
+        <div className="text-bLight_4">@{senderData.username}</div>
+        {/* invite to game -------------- */}
+        {!senderData.inviter && !senderData.invited ? (
+          <div
+            onClick={() => handelChallenge()}
+            className={`ml-auto p-2 px-4 text-org_1/70 bg-org_3/50 rounded-full border-2 border-org_3/40 
+            hover:bg-org_3/70 transition-all duration-300 cursor-pointer`}
+          >
+            Challenge
+          </div>
+        ) : senderData.invited ? (
+          <div
+            onClick={() => handelAcceptChallenge()}
+            className={`felx ml-auto p-2 gap-2 text-org_1/70 bg-bDark_4/50 rounded-full border-2 border-org_1/40
+            hover:bg-bDark_1/70 transition-all duration-300 cursor-pointer `}
+          >
+            <div className="w-max">Accept Challenge</div>
+          </div>
+        ) : (
+          <div
+            onClick={() => handelCancelInvitetion()}
+            className={`ml-auto p-2 px-4 text-org_1/50 bg-org_3/20 rounded-full border-2 border-org_3/20 
+            hover:bg-org_3/70 transition-all duration-300 cursor-pointer`}
+          >
+            Invitetion sent ...
+          </div>
+        )}
+      </div>
 
       {/* Message display  ----------------------------------------------------------------------*/}
       <div
@@ -119,12 +165,12 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
             No messages yet.
           </p>
         ) : (
-          messages.map((message) => (
+          messages.map((message: any) => (
             <div
               key={message.id}
               className={`my-2 p-2 rounded-lg w-7/12 relative flex items-center gap-2 align-baseline ${
                 message.ReceiverUserID.id === currentUserToken.id
-                ? "text-left p-2 rounded-lg"
+                  ? "text-left p-2 rounded-lg"
                   : "ml-auto text-right p-2 rounded-lg flex-row-reverse"
               }`}
             >
@@ -132,8 +178,8 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }) => {
               <p
                 className={`w-max max-w-full text-bLight_2 p-3 whitespace-normal break-words  text-sm rounded-2xl ${
                   message.ReceiverUserID.id === currentUserToken.id
-                  ? "bg-org_1/20"
-                  : "bg-bLight_5/40"
+                    ? "bg-org_1/20"
+                    : "bg-bLight_5/40"
                 }`}
               >
                 {message.Content}

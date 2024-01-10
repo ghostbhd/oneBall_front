@@ -5,10 +5,11 @@ import { ImgBg } from "../../style";
 import { useSocket } from "../../Socketio";
 import { GetHeaders } from "../../jwt_token";
 import * as jwtDecode  from "jwt-decode";
+import React from "react";
 
-const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
+const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any) => {
   const [notifItems, setNotifItems] = useState([]);
-  const removeFromData = (username) => {
+  const removeFromData = (username: any) => {
     setNotifItems((prevData) => prevData.filter((item) => item.username !== username));
   };
   const addData = (obj) => {
@@ -82,7 +83,7 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
     removeFromData(username);
   };
 
-  // Game request ------------------------------------------------
+  // Game request -------------------------------------------------------
   const handelPlayGame = (username) => {
     console.log("play game");
   };
@@ -126,7 +127,6 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
       <ul className="w-full h-full flex flex-col gap-1 overflow-y-auto">
         {notifItems.map((item) => (
           // friend request *********************************************************************************************
-          // <>
           <li className={`${li}`} key={item.username}>
             {item.type === "friend" ? (
               <>
@@ -164,9 +164,9 @@ const NotificationBadge = ({ notifRef, showNotif, setShowNotif }) => {
                 </div>
               </>
             ) : (
-              // </li>
+              // type = game in accepted request type = acceptedGame last one not yet
+
               // game invitaion *********************************************************************************************
-              // <li className={`${li}`} key={item.username}>
               <>
                 {/* icon game req ------------------------------------------------ */}
                 <div className={`bg-bDark_3 ${firstIcon}`}>

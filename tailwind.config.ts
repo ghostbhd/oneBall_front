@@ -28,6 +28,7 @@ module.exports = {
         "4xl": "0 0 60px -12px rgb(0 0 0 / 0.4)",
         "5xl": "-4px 4px 40px -12px rgb(0 0 0 / 1)",
         btn: "0 0px 50px -12px rgb(0 0 0 / 0.3)",
+        btn2: "0 0px 20px -12px rgb(0 0 0 / 0.3)",
         sBar: "20px 0 40px -12px rgb(0 0 0 / 0.4)",
         login: "inset 20px 20px 44px 0 rgb(255 255 255 / 0.1),\
           0 0 60px -12px rgb(0 0 0 / 0.4)"

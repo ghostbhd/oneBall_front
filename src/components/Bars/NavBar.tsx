@@ -1,12 +1,13 @@
-import { icons } from "../../constants";
-import { useState, useEffect, useRef } from "react";
+import { icons, phoneNavBar } from "../../constants";
+import React, { useState, useEffect, useRef } from "react";
 import NotificationBadge from "./NotificationBadge";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSocket } from "../../Socketio";
 import * as jwtDecode from "jwt-decode";
 import { GetHeaders } from "../../jwt_token";
+import Cookies from "js-cookie";
 
-const NavBar = () => {
+const NavBar: React.FC = () => {
   const [showNotif, setShowNotif] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -14,21 +15,34 @@ const NavBar = () => {
   const [searchResults, setSearchResults] = useState([]); // ["user1", "user2", "user3"
   const notifRef = useRef();
   const searchInputRef = useRef();
+  const history = useNavigate();
+  const location = useLocation();
+  var username: any = "";
 
-  const token = GetHeaders().jwttt;
-  let decoded;
+  const token: any = GetHeaders().jwttt;
+  let decoded: any;
   if (token) decoded = jwtDecode.jwtDecode(token);
   else decoded = null;
-  const socket = useSocket();
-  
+  const socket: any = useSocket();
+
   // Get all usernames ------------------------------------
   useEffect(() => {
     if (socket == null) return;
-    socket.on("Users-List", (data) => {
+    socket.on("Users-List", (data: any) => {
       setUsernames(data);
     });
+    socket.on("deconnected", (ok: string) => {
+      console.log("ok ======== ", ok);
+      if (ok === "ok") {
+        Cookies.remove("accessToken");
+        socket.disconnect();
+        history("/Auth");
+      }
+    });
+
     return () => {
       socket.off("Users-List");
+      socket.off("deconnected");
     };
   }, [socket]);
 
@@ -41,7 +55,7 @@ const NavBar = () => {
   }, [showSearch]);
 
   // Close search bar when clicked outside ----------------
-  const handleClickOutside = (event) => {
+  const handleClickOutside = (event: any) => {
     if (
       searchInputRef.current &&
       !searchInputRef.current.contains(event.target) &&
@@ -52,12 +66,24 @@ const NavBar = () => {
     }
   };
 
-  
+  // Disconnect -------------------------------------------
+  const handelDesconnect = () => {
+    console.log(socket);
+    if (socket == undefined || socket == null) {
+      console.log("hhhhhhhhh");
+      return;
+    } else {
+      socket.emit("deconnect", decoded.name);
+    }
+  };
+
+  // Get all usernames ------------------------------------
   const handelGetUsernames = () => {
     if (socket == null) return;
     socket.emit("Users", decoded.name);
   };
 
+  // Search bar -------------------------------------------
   const handelSearchChange = (e) => {
     setSearchValue(e.target.value);
     if (e.target.value === "") {
@@ -80,9 +106,7 @@ const NavBar = () => {
 
   const handelNotification = () => {
     console.log("the user notification");
-    if (socket == null) return;
-    if (!showNotif)
-      setShowNotif(true);
+    if (!showNotif) setShowNotif(true);
   };
   return (
     <div
@@ -90,11 +114,27 @@ const NavBar = () => {
         md:bg-transparent bg-bDark_4/90
       `}
     >
-      <div className="md:w-max w-full gap-4 flex flex-row items-start p-1 md:ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
+      {/* navbar ------------------------------------------------------------------------------------------------------------- */}
+      <div className="md:w-max w-full h-14 md:gap-4 gap-8 flex flex-row md:items-start items-center md:p-1 p-2 ml-auto  md:backdrop-blur-none backdrop-blur-3xl">
+        {/* logout icon --------------------------------------------------------- */}
+        <div
+          className={`md:hidden text-3xl text-bLight_5 cursor-pointer`}
+          onClick={() => handelDesconnect()}
+        >
+          {<icons.logout />}
+        </div>
+
         {/* search bar --------------------------------------------------------- */}
         <div
           ref={searchInputRef}
-          className={`text-2xl flex overflow-hidden flex-col border-2 border-bLight_5/40 text-bLight_5 bg-bDark_4 cursor-pointer rounded-3xl shadow-4xl transition-all`}
+          className={`md:text-2xl flex overflow-hidden ml-auto flex-col md:border-2 md:border-bLight_5/40 
+            text-bLight_5 md:bg-bDark_4 cursor-pointer rounded-3xl shadow-4xl
+            ${
+              showSearch
+                ? "border-2 border-bLight_5/40 text-2xl my-auto"
+                : "text-3xl"
+            }
+          `}
         >
           <div className={`flex items-center `}>
             {/* search input ----------------------------------------------------- */}
@@ -110,10 +150,14 @@ const NavBar = () => {
             />
             {/* search icon ----------------------------------------------------- */}
             <div
-              className="p-2 flex items-center"
+              className="md:p-2 flex items-center"
               onClick={() => setShowSearch(!showSearch)}
             >
-              {!showSearch ? <icons.search onClick={handelGetUsernames} /> : <icons.xmark />}
+              {!showSearch ? (
+                <icons.search onClick={handelGetUsernames} />
+              ) : (
+                <icons.xmark />
+              )}
             </div>
           </div>
           {/* search results ----------------------------------------------------- */}
@@ -134,18 +178,24 @@ const NavBar = () => {
 
         {/* notification icon --------------------------------------- */}
         <div
-          className={`text-2xl text-bDark_4 md:ml-auto cursor-pointer p-2 bg-bLight_4/70 rounded-full`}
+          className={`md:text-2xl text-3xl md:text-bDark_4 text-bLight_5 md:ml-auto cursor-pointer md:p-2 md:bg-bLight_4/70 rounded-full`}
           onClick={handelNotification}
         >
           {<icons.notifications />}
         </div>
 
-        {/* menu icon --------------------------------------------------------- */}
-        <div
-          className={`md:hidden text-3xl text-bLight_5 ml-auto cursor-pointer`}
+        {/* setting icon --------------------------------------------------------- */}
+        <Link
+          to={"/settings"}
+          className={`md:hidden text-3xl text-bLight_5 cursor-pointer ${
+            location.pathname === `/settings` ||
+            location.pathname === "/settings/"
+              ? `text-white`
+              : ""
+          }}`}
         >
-          {<icons.menu />}
-        </div>
+          {<icons.settings />}
+        </Link>
       </div>
 
       {/* notification badge --------- */}

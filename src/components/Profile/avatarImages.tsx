@@ -5,6 +5,7 @@ import avatar4 from '../../assets/avatar/Swagboysteve on instagram BABY RAPHAEL 
 import avatar5 from '../../assets/avatar/Strong Baby.jpg'
 import avatar6 from '../../assets/avatar/010534_1346719.gif'
 
+
 export const avatarImages = [
   avatar1,
   avatar2,

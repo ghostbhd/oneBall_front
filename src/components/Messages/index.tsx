@@ -5,7 +5,7 @@ import ChannelWindow from "./channel/ChannelWindow";
 import ChannelCreation from "./channel/ChannelCreation";
 import ChannelList from "./channel/ChannelList";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { GetHeaders } from "../../jwt_token";
 import * as jwtDecode from "jwt-decode";
 import SearchBar from "./searchBar";
@@ -23,7 +23,7 @@ const Messages = () => {
   const [activeChannel, setActiveChannel] = useState(null);
   const [typeOfChannel, setTypeOfChannel] = useState("");
 
-  const socket = useSocket();
+  const socket: any = useSocket();
 
   const handleSearchSubmit = (searchTerm) => {
     // if (searchTerm.trim()) {
@@ -34,17 +34,17 @@ const Messages = () => {
     // }
   };
 
-  const handleTabSelected = (tabId) => {
+  const handleTabSelected = (tabId :any) => {
     if (socket == null) return;
     console.log("*****************************************************888");
     socket.emit("request-latest-messages", currentUserToken.id);
 
     setActiveTab(tabId);
   };
-  var currentUserToken;
-  const token = GetHeaders().jwttt;
+  var currentUserToken :any;
+  const token : any = GetHeaders().jwttt as any;
   if (token) {
-    currentUserToken = jwtDecode.jwtDecode(token);
+    currentUserToken  = jwtDecode.jwtDecode(token) as any;
   } else {
     currentUserToken = null;
   }
@@ -54,12 +54,12 @@ const Messages = () => {
   // useEffect(() => {
   // }, [socket]);
 
-  const handleSearch = (query) => {
+  const handleSearch = (query : any) => {
     setSearchTerm(query);
   };
 
   const filteredChats = latestMessages.filter(
-    (chat) =>
+    (chat : any) =>
       chat.name && chat.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
