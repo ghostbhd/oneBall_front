@@ -1,17 +1,20 @@
 import { animated } from '@react-spring/web'
-import { useContext} from 'react'
+import { useContext, useEffect } from 'react'
 import { useDrag } from '@use-gesture/react'
-import { useSocket } from "../Socketio";
+import { useSocket } from "../Socketio.jsx";
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
-import { Whoami } from "./index"
+import { Whoami } from "./index.jsx"
 
 export default function Player(pro) {
 
+
     const wsocket = useSocket();
     let who = useContext(Whoami)
+
+
     let padding = pro.side === 2 ? '99%' : '0%'
-    let color = pro.side === 2 ? '#7FFFD4': '#ff6d6d'
+    let color = pro.side === 2 ? '#7FFFD4' : '#ff6d6d'
 
     let myHeight = pro.height * 0.15
 
@@ -23,14 +26,34 @@ export default function Player(pro) {
     const token = GetHeaders().jwttt;
     const currentUserToken = jwtDecode.jwtDecode(token);
 
-    if (pro.side !== who) {
-        console.log("for me ", who, " different than", pro.side)
-        let event = pro.side === 1 ? 'get:left_plr:y' : 'get:right_plr:y'
-        console.log("attaching ", event," to ", pro.side)
-        wsocket.on(event, (data) => {
-            console.log("recieved ", event)
-            pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
+    useEffect(() => {
+        let event
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowDown') {
+                pro.api.start({ y: pro.anim_val.y.get() + 2 , immediate : true})
+                console.log("hihi")
+            }
+            if (event.key === 'ArrowUp') {
+                pro.api.start({ y: pro.anim_val.y.get() - 2 , immediate: true})
+                console.log("hihi")
+            }
         })
+        if (pro.side !== who) {
+            //console.log("for me ", who, " different than", pro.side)
+            event = pro.side === 1 ? 'get:left_plr:y' : 'get:right_plr:y'
+            //console.log("attaching ", event," to ", pro.side)
+            wsocket.on(event, (data) => {
+                //console.log("recieved ", event)
+                pro.api.start({ y: (data * calc_pitch) + border_height, immediate: true })
+            })
+        }
+
+        return () => {
+            wsocket.off(event)
+        }
+    }, [border_height, calc_pitch, myHeight])
+
+    if (pro.side !== who) {
         return (
             <animated.div
                 style={{
@@ -49,17 +72,18 @@ export default function Player(pro) {
     }
 
 
+
     const bind = useDrag(({ active, movement: [, my],
         offset: [, oy], direction: [xDir], velocity, cancel }) => {
         if (oy >= border_height) {
             if (pro.side == 2) {
                 pro.api.start({ y: oy, immediate: true })
                 wsocket.emit("post:right_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id })
-                console.log("post:right_plr:y")
+                //console.log("post:right_plr:y")
             }
             else {
                 wsocket.emit("post:left_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id })
-                console.log("emitting left")
+                //console.log("emitting left")
                 pro.api.start({ y: oy, immediate: true })
             }
         }

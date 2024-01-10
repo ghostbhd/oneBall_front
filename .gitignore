@@ -1,4 +1,5 @@
 # Logs
+node_modules
 logs
 *.log
 npm-debug.log*
@@ -7,19 +8,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+dist/
+node_modules/
+g_frontend/node_modules
+g_frontend/dist
+src/global_backend/src/node_modules/
+src/global_backend/src/backend/node_modules/
+src/global_backend/src/dist
+backend/node_modules
+backend/dist
 dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
