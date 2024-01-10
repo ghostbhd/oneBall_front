@@ -1,5 +1,5 @@
 const config = {
-  domain: "http://localhost:3009",
+  domain: "https://aa8d-197-230-122-194.ngrok-free.app",
 };
 
 export default config;
