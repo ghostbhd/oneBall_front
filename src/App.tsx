@@ -12,6 +12,7 @@ import {
   UserProfile,
   Auth,
   CallBack,
+  FirstTime,
   Error_404,
 } from "./components";
 import WelcomeBack from "./components/WelcomeBack";
@@ -24,7 +25,7 @@ import { ImgBg } from "./style";
 import Cookies from "js-cookie";
 
 const App = () => {
-  const { theme } : any = useTheme();
+  const { theme }: any = useTheme();
   const isAuth = Cookies.get("accessToken") ? true : false;
   const navigate = useNavigate();
 
@@ -72,6 +73,7 @@ const App = () => {
               >
                 {/* routes ----------------------------------------------------------------- */}
                 <Routes>
+                  <Route path="/FirstTime" element={<FirstTime />} />
                   <Route index element={<Dashboard />} />
                   <Route path="/Ingame" element={<GameShell />} />
                   <Route path="/games" element={<Games />} />
