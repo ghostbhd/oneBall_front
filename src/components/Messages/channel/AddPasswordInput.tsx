@@ -11,7 +11,7 @@ const AddPasswordInput = ({
   currentUserToken,
 }) => {
   const [addPass, setAddPass] = useState("");
-  const socket = useSocket(); //TODO: add socket
+  const socket = useSocket();
 
   const handleAddPassword = () => {
     console.log("add password:", addPass);
