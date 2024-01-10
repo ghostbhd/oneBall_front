@@ -116,17 +116,25 @@ export class GameService {
                 console.log("after ended ==>")
             }
             else if (inf.state.type === "p") {
-                console.log("before slicing the game lentght = ", this.queue.games.length)
-
-                console.log("the players after the game ended queue ==> size ==> ", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
-                console.log("after ended ==>")
+                let n: number = this.queue.pv_rooms.findIndex(e => {
+                    ((e.joiner === inf.left_plr.Player.id || e.joiner === inf.right_plr.Player.id)
+                        && (e.waiter === inf.left_plr.Player.id || e.waiter === inf.right_plr.Player.id))
+                })
+                if (n === -1)
+                    console.log("reaallyyyy baaaaad")
+                else {
+                    console.log("before slicing the game lentght = ", this.queue.pv_rooms.length)
+                    this.queue.pv_rooms.splice(n, 1)
+                    console.log("the players after the game ended queue ==> size ==> ", this.queue.pv_rooms.length, this.queue.pv_rooms.forEach(element => console.log(element.waiter)))
+                    console.log("after ended ==>")
+                }
             }
             this.database_entries(inf.left_plr.Player, inf.right_plr.Player, winner)
         }
     }
 
     add_victory(user: User, luser: User) {
-        if (user.gameStats.xp + 200 >= 1000) {
+        if (user.gameStats.xp + 200 > 1000) {
             user.gameStats.xp = user.gameStats.xp + 200 - 1000;
             user.gameStats.level++;
         }
@@ -290,8 +298,8 @@ export class GameService {
         //io.in(inf.state.roomid).emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur })
         */
 
-        let LeftUser : User = await this.UserRepo.findOneBy({id : inf.left_plr.Player.id})
-        let RightUser : User = await this.UserRepo.findOneBy({id : inf.right_plr.Player.id})
+        let LeftUser: User = await this.UserRepo.findOneBy({ id: inf.left_plr.Player.id })
+        let RightUser: User = await this.UserRepo.findOneBy({ id: inf.right_plr.Player.id })
         LeftUser.status = "in game"
         RightUser.status = "in game"
         await this.UserRepo.save(LeftUser)

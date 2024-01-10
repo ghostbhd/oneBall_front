@@ -9,6 +9,10 @@ export type Player = {
     id: number;
     socket: Socket;
 }
+export type MyPair = {
+    waiter : number;
+    joiner : number;
+}
 
 @Injectable()
 export class QueueService {
@@ -16,7 +20,9 @@ export class QueueService {
     public games: GameObj[] = []
     public games_size: number = -1
 
-    public mymap: Map<number, number>
+    public mymap: Map<number, number[]>
     public pv_players: Player[] = []
+    public pv_rooms : MyPair[] = []
     public mutex : Promise<number>
+    public p_mutex : Promise<number>
 }

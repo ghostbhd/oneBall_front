@@ -15,6 +15,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { resolve } from 'path';
+import { Notif } from 'src/entities/Notification.entity';
 
 @WebSocketGateway({
     cors: {
@@ -24,7 +26,8 @@ import { UserService } from 'src/user/user.service';
 
 export class GameGateway {
     constructor(private readonly gameService: GameService, private queue: QueueService,
-        @InjectRepository(User) private UserRepo: Repository<User>) {
+        @InjectRepository(User) private UserRepo: Repository<User>,
+        @InjectRepository(Notif) private notifRepo: Repository<Notif>) {
     }
 
     check(games: GameObj[], playerID: number): boolean {
@@ -192,6 +195,28 @@ export class GameGateway {
         }
     }
 
+    @SubscribeMessage('iquit')
+    async iquit(@MessageBody("id") id: number, @ConnectedSocket() client: Socket) {
+        console.log("======quitter here =============", id)
+        let winner: number;
+        let n: number = this.queue.games.findIndex(e => {
+            console.log("checking ", e.left_plr.Player.id, " ", e.right_plr.Player.id)
+            if (e.right_plr.Player.id === id) {
+                winner = e.left_plr.Player.id;
+                return true
+            }
+            if (e.left_plr.Player.id === id) {
+                winner = e.right_plr.Player.id
+                return (true)
+            }
+            return false
+        })
+        if (n !== -1) {
+            console.log("removing here accessing n=", n)
+            this.server.to(this.queue.games[n].state.roomid).emit("salat",winner)
+            this.gameService.salat(this.queue.games[n], winner, this.server)
+        }
+    }
 
     @SubscribeMessage('readytojoin:flan')
     async friendgame(client: Socket, id: number, opName: string) {
@@ -203,12 +228,23 @@ export class GameGateway {
             if (res !== "mzyaan")
                 return (res)
 
-            let op: Player = this.queue.pv_players.find(e => e.id === invited.id)
-            if (op === undefined)
-                return ("ERROR: Opponent isn't available'")
+            let op: Player
+            await this.queue.p_mutex
+            this.queue.p_mutex = new Promise(resolved => {
+                let index = this.queue.pv_players.findIndex(e => e.id === invited.id)
+                if (index === -1)
+                    return ("ERROR: Opponent isn't available'")
+
+                op = this.queue.pv_players[index]
+                this.queue.pv_players.splice(index, 1)
+                resolve()
+            })
 
             let joiner: Player = { id: id, ConsecutiveLatencies: 0, socket: client };
             let room_id: string = id.toString() + op.id;
+
+            this.queue.pv_rooms.push({ waiter: invited.id, joiner: inviter.id })
+            this.server.to(inviter.id.toString()).emit("Notif")
             this.gameService.Ball_Logic(this.server, new GameObj(joiner, op, room_id, "p"))
         }
         catch (e) {
@@ -227,11 +263,28 @@ export class GameGateway {
             if (res !== "mzyaan")
                 return (res)
 
-            if (this.queue.mymap.get(inviter.id) === id) {
+            let arr = this.queue.mymap.get(inviter.id)
+            if (arr === undefined)
+                return ("Unavailable")
+            let index = arr.findIndex(e => e === id)
+            if (index !== -1) {
                 let invited_pl: Player = { id: id, socket: client, ConsecutiveLatencies: 0 }
-                this.queue.pv_players.push(invited_pl)
-                //send notif
-                //client.emit("flan:isready", invited.username)
+                this.queue.pv_players.push(invited_pl);
+                let not: Notif = new Notif;
+                not.type = "game";
+                not.userid1 = inviter;
+                not.userid2 = invited;
+                await this.notifRepo.save(not);
+                this.server.to(inviter.id.toString()).emit("Notif")
+
+                //removing the main invitation
+                this.queue.mymap[inviter.id].splice(index, 1)
+
+                //removing the mutual invitation
+                arr = this.queue.mymap[invited.id]
+                index = arr.findIndex(e => e === inviter.id)
+                if (index !== -1)
+                    arr.splice(index, 1)
             }
             else
                 return ("get some friends")
@@ -248,8 +301,19 @@ export class GameGateway {
             let res = await this.myfindusers(invited, inviter, opName, id);
             if (res !== "mzyaan")
                 return (res)
-            this.queue.mymap[id] = invited.id
-            //send notif
+            await this.queue.p_mutex
+            this.queue.p_mutex = new Promise(resolve => {
+                if (this.queue.mymap[id].findIndex(e => e === invited.id) === -1) {
+                    this.queue.mymap[id].push(invited.id);
+                    this.server.to(invited.id.toString()).emit("Notif") // adding the information
+                }
+                resolve(0);
+            })
+            let not: Notif = new Notif;
+            not.type = "game";
+            not.userid1 = inviter;
+            not.userid2 = invited;
+            await this.notifRepo.save(not);
         } catch (error) {
             console.log("aach haaadaa ", error)
             return ("ERROR")
