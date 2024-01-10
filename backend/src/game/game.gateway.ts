@@ -38,86 +38,130 @@ export class GameGateway {
         return true
     }
 
+    async myfindusers(byUser: User, byId: User, User: string, id: number): Promise<string> {
+        try {
+            if (this.check(this.queue.games, id) === true)
+                return ("ERROR: please finish your current game")
+
+            byUser = await this.UserRepo.findOne({ where: { username: User } })
+            if (byUser === undefined)
+                throw ("wiii")
+            byId = await this.UserRepo.findOne({ where: { id: id } })
+            if (byId === undefined)
+                throw ("wiii")
+            return ("mzyaan")
+        }
+        catch (e) {
+            console.log("aach haaadaa ", e)
+            return ("ERROR")
+        }
+    }
+
     @WebSocketServer() server: Server;
 
+    @SubscribeMessage('thala')
+    async hayd(@MessageBody("id") id: number, @ConnectedSocket() client: Socket) {
+        await this.queue.mutex
+        this.queue.mutex = new Promise(resolve => {
+            try {
+                console.log("thala ==> quitter is ", id)
+                console.log("before =>")
+                this.queue.players.forEach(p => console.log(p.id))
+                let quitter: number = this.queue.players.findIndex((player) => player.id === id)
+                if (quitter !== -1) {
+                    console.log("splicing index ==> ", quitter, this.queue.players[quitter].id)
+                    this.queue.players.splice(quitter, 1)
+                }
+                console.log("after =>")
+                this.queue.players.forEach(p => console.log(p.id))
+            } catch (e) {
+                return ("ERROR")
+            }
+            resolve(0)
+        })
+    }
 
     @SubscribeMessage('lija_bsmlah')
     async push_or_match(@MessageBody("playerID") id: number, @ConnectedSocket() socket: Socket) {
-        //consider using a mutex implementation here
-        try {
-            let to_push: Player
-            let room_id = ""
-            let game_index: number
+        //lock
+        await this.queue.mutex
+        this.queue.mutex = new Promise(resolve => {
+            try {
+                let to_push: Player
+                let room_id = ""
+                let game_index: number
 
-            this.queue.players.forEach((e) => console.log(e.id))
-            console.log("ha wahd====token =", id)
-            console.log("id==", socket.id)
-            if (this.queue.players.find((player) => player.id === id) === undefined &&
-                this.check(this.queue.games, id) === false &&
-                this.queue.pv_players.find(e => e.id === id) === undefined
-            ) {
-                if (this.queue.players.length + 1 < 2) {
+                this.queue.players.forEach((e) => console.log(e.id))
+                console.log("ha wahd====token =", id)
+                console.log("id==", socket.id)
+                if (this.queue.players.find((player) => player.id === id) === undefined &&
+                    this.check(this.queue.games, id) === false &&
+                    this.queue.pv_players.find(e => e.id === id) === undefined
+                ) {
+                    if (this.queue.players.length + 1 < 2) {
 
-                    console.log("\n\n------pushing into the players ===>\n")
-                    to_push = {
-                        id: id,
-                        socket: socket,
-                        ConsecutiveLatencies: 0,
+                        console.log("\n\n------pushing into the players ===>\n")
+                        to_push = {
+                            id: id,
+                            socket: socket,
+                            ConsecutiveLatencies: 0,
+                        }
+                        this.queue.players.push(to_push)
+                        console.log("pushing player ====", id)
+                        console.log("\n\n------end of pushing ===>\n")
                     }
-                    this.queue.players.push(to_push)
-                    console.log("pushing player ====", id)
-                    console.log("\n\n------end of pushing ===>\n")
+                    else {
+                        console.log("\n\n------------match\n\n")
+                        room_id = this.queue.players[0].id.toString() + id.toString()
+                        this.queue.players[0].socket.join(room_id)
+
+                        console.log("matching ", this.queue.players[0].id, id, " to =>", room_id)
+                        this.queue.players.forEach((e) => console.log("before waah wal7maa9 =", e.id))
+
+                        this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket, ConsecutiveLatencies: 0 }, room_id, "r"))
+                        this.queue.games_size++
+                        this.queue.players.splice(0, 1)
+                        console.log("lentgh after slicing", this.queue.players.length)
+                        this.queue.players.forEach((e) => console.log("waah wal7maa9 =", e.id))
+                        socket.join(room_id)
+
+                        console.log("accessing with ", this.queue.games_size)
+                        this.server.in(room_id).emit('get:right_plr:y', this.queue.games[this.queue.games_size].right_plr.y)
+                        this.server.in(room_id).emit('get:left_plr:y', this.queue.games[this.queue.games_size].left_plr.y)
+
+                        game_index = this.queue.games.findIndex(game => game.state.roomid === room_id)
+                        if (game_index == -1)
+                            throw ("aaach haad lmlawi")
+                        console.log("the players before the size ==>", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
+                        console.log("\n\nendof------------match\n\n")
+
+                        this.gameService.Ball_Logic(this.server, this.queue.games[game_index])
+                        //handle in the gameservice ack from both clients that they're ready
+                        //handle out of game
+                        //handle disconnections
+                        //handle lag
+                        /*
+                        socket.on("disconnect", () => {
+                            const indexOfBanana = this.queue.players.findIndex(fruit => fruit.id === id);
+                            if (indexOfBanana !== -1) {
+                                this.queue.players.slice(indexOfBanana, 1);
+                            }
+                            console.log(`disconnect:`, id);
+                        });
+                            */
+                    }
                 }
                 else {
-                    console.log("\n\n------------match\n\n")
-                    room_id = this.queue.players[0].id.toString() + id.toString()
-                    this.queue.players[0].socket.join(room_id)
-
-                    console.log("matching ", this.queue.players[0].id, id, " to =>", room_id)
-                    this.queue.players.forEach((e) => console.log("before waah wal7maa9 =", e.id))
-
-                    this.queue.games.push(new GameObj(this.queue.players[0], { id: id, socket: socket, ConsecutiveLatencies: 0 }, room_id, "r"))
-                    this.queue.games_size++
-                    this.queue.players.splice(0, 1)
-                    console.log("lentgh after slicing", this.queue.players.length)
-                    this.queue.players.forEach((e) => console.log("waah wal7maa9 =", e.id))
-                    socket.join(room_id)
-
-                    console.log("accessing with ", this.queue.games_size)
-                    this.server.in(room_id).emit('get:right_plr:y', this.queue.games[this.queue.games_size].right_plr.y)
-                    this.server.in(room_id).emit('get:left_plr:y', this.queue.games[this.queue.games_size].left_plr.y)
-
-                    game_index = this.queue.games.findIndex(game => game.state.roomid === room_id)
-                    if (game_index == -1)
-                        throw ("aaach haad lmlawi")
-                    console.log("the players before the size ==>", this.queue.players.length, this.queue.players.forEach(element => console.log(element.id)))
-                    console.log("\n\nendof------------match\n\n")
-
-                    this.gameService.Ball_Logic(this.server, this.queue.games[game_index])
-                    //handle in the gameservice ack from both clients that they're ready
-                    //handle out of game
-                    //handle disconnections
-                    //handle lag
-                    /*
-                    socket.on("disconnect", () => {
-                        const indexOfBanana = this.queue.players.findIndex(fruit => fruit.id === id);
-                        if (indexOfBanana !== -1) {
-                            this.queue.players.slice(indexOfBanana, 1);
-                        }
-                        console.log(`disconnect:`, id);
-                    });
-                        */
+                    if (this.queue.players.find((player) => player.id === id) !== undefined)
+                        console.log("already here ====")
                 }
             }
-            else {
-                if (this.queue.players.find((player) => player.id === id) !== undefined)
-                    console.log("already here ====")
+            catch (hh) {
+                console.log('veery bad!!')
+                console.log(hh)
             }
-        }
-        catch (hh) {
-            console.log('veery bad!!')
-            console.log(hh)
-        }
+            resolve(0)
+        })
     }
 
     @SubscribeMessage('post:right_plr:y')
@@ -148,24 +192,6 @@ export class GameGateway {
         }
     }
 
-    async myfindusers(byUser: User, byId: User, User: string, id: number): Promise<string> {
-        try {
-            if (this.check(this.queue.games, id) === true)
-                return ("ERROR: please finish your current game")
-
-            byUser = await this.UserRepo.findOne({ where: { username: User } })
-            if (byUser === undefined)
-                throw ("wiii")
-            byId = await this.UserRepo.findOne({ where: { id: id } })
-            if (byId === undefined)
-                throw ("wiii")
-            return ("mzyaan")
-        }
-        catch (e) {
-            console.log("aach haaadaa ", e)
-            return ("ERROR")
-        }
-    }
 
     @SubscribeMessage('readytojoin:flan')
     async friendgame(client: Socket, id: number, opName: string) {
@@ -217,8 +243,8 @@ export class GameGateway {
     @SubscribeMessage('inv:flan')
     async invHandler(client: Socket, id: number, opName: string) {
         try {
-            let invited : User;
-            let inviter : User;
+            let invited: User;
+            let inviter: User;
             let res = await this.myfindusers(invited, inviter, opName, id);
             if (res !== "mzyaan")
                 return (res)

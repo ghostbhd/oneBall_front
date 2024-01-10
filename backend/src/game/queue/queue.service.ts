@@ -12,11 +12,11 @@ export type Player = {
 
 @Injectable()
 export class QueueService {
-    public pseudoMutex : number = 0
     public players: Player[] = []
     public games: GameObj[] = []
     public games_size: number = -1
 
     public mymap: Map<number, number>
     public pv_players: Player[] = []
+    public mutex : Promise<number>
 }
