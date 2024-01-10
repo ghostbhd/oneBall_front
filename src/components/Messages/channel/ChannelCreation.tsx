@@ -4,6 +4,8 @@ import { useSocket } from "../../../Socketio";
 
 const ChannelCreation = ({ onClose, currentUserToken }) => {
   const [channelName, setChannelName] = useState("");
+  const [inputError, setInputError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const [channelType, setChannelType] = useState("public");
   const [password, setPassword] = useState("");
@@ -11,19 +13,39 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
   const socket: any = useSocket();
 
   const handleSubmit = async () => {
-    try {
-      const channelData = {
-        ownerId: parseInt(currentUserToken.id),
-        channelName,
-        channelType,
-        password: channelType === "protected" ? password : undefined,
-      };
+    const regex = /[A-Z !@#$%^&*(),.?":{}|<>]/;
 
-      socket.emit("createChannel", channelData);
-      onClose();
-    } catch (error) {
-      console.error("Failed to create channel:", error);
+    if (
+      channelName.length < 3 ||
+      channelName.length > 15 ||
+      regex.test(channelName)
+    ) {
+      setInputError(
+        "Channel name must be 3-15 characters long and contain only letters and numbers"
+      );
+      setChannelName("");
+      return;
     }
+
+    if (channelType === "protected" && password.length < 3) {
+      setPasswordError("Password must be at least 3 characters long");
+      setPassword("");
+      return;
+    }
+
+    // try {
+    const channelData = {
+      ownerId: parseInt(currentUserToken.id),
+      channelName,
+      channelType,
+      password: channelType === "protected" ? password : undefined,
+    };
+
+    socket.emit("createChannel", channelData);
+    onClose();
+    // } catch (error) {
+    // console.error("Failed to create channel:", error);
+    // }
   };
 
   return (
@@ -33,16 +55,23 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
         onClick={onClose}
       ></div>
 
-      <div className="bg-bDark_3 flex flex-col items-center rounded-3xl p-7 z-10">
-        <input
-          type="text"
-          value={channelName}
-          onChange={(e) => setChannelName(e.target.value)}
-          placeholder="Channel Name"
-          className="w-full p-2 outline-none border-2 text-sm placeholder:text-bLight_5 text-bLight_4 border-bLight_5/40 bg-bDark_4 rounded-full"
-        />
+      <div className="bg-bDark_3 flex flex-col items-center rounded-3xl gap-6 w-96 p-5 z-10">
+        <p className="text-bLight_5 text-lg mb-5">Create Channel</p>
 
-        <div className="flex flex-col w-72 gap-4 items-center py-3  text-bLight_5">
+        {/* channel name -------------------------------------------------------------------- */}
+        <div className="w-full flex flex-col gap-1">
+          <input
+            type="text"
+            value={channelName}
+            onChange={(e) => setChannelName(e.target.value)}
+            placeholder="Channel Name"
+            className="w-full p-2 outline-none border-2 text-sm placeholder:text-bLight_5 text-bLight_4 border-bLight_5/40 bg-bDark_4 rounded-full"
+          />
+          <p className="text-org_1/60 text-xs px-2">{inputError}</p>
+        </div>
+
+        {/* channel type -------------------------------------------------------------------- */}
+        <div className="flex flex-col w-full px-2 items-center gap-4 py-3  text-bLight_5">
           <div className="w-full flex justify-between items-center">
             <div
               className={`flex items-center cursor-pointer ${
@@ -74,8 +103,10 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
             </div>
           </div>
 
+          {/* password -------------------------------------------------------------------- */}
           {channelType === "protected" && (
-            <input
+            <div className="w-full">
+              <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -83,16 +114,19 @@ const ChannelCreation = ({ onClose, currentUserToken }) => {
               className="w-full p-2 outline-none border-2 text-sm placeholder:text-bLight_5 
               text-bLight_4 border-bLight_5/40 bg-bDark_4 rounded-full"
             />
+            <p className="text-org_1/60 text-xs px-2">{passwordError}</p>
+            </div>
           )}
         </div>
 
-        <div className="flex w-full items-center justify-between">
-          <button onClick={onClose} className="text-org_1/60">
+        {/* buttons -------------------------------------------------------------------- */}
+        <div className="flex w-full gap-4 items-center">
+          <button onClick={onClose} className="text-org_1/70 ml-auto">
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-3 py-2 ms-8 rounded-full bg-org_3/60 text-org_1 hover:bg-org_3/70 transition-all"
+            className="px-3 py-2 ms-8 rounded-full bg-org_3/60 text-org_1/80 hover:bg-org_3/70 transition-all"
           >
             Create Channel
           </button>
