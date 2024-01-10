@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 export default function MyBall(props) {
 
+    //color = props.ball_color
     console.log("ball:size", props.size)
     return (
         <animated.div
@@ -13,6 +14,7 @@ export default function MyBall(props) {
                 height: props.size,
                 top : '1.5%',
                 left : '1%',
+                //background: props.ball_color,
                 background: '#ffff00',
                 borderRadius: 50,
                 ...props.x_traj,
