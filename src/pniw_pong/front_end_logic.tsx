@@ -43,11 +43,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
     console.log("rerendered heeere !!! and pitch_w=", game_inf.pitch_w, "and max_x", game_inf.max_x)
 
     useEffect(() => {
-        if (requested === false) {
-            f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
-            setrequested(true)
-            console.log("emited lija_bsmlah")
-        }
+        f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
         //f_l.ws.on("opponent_found", (data, callback) => {
         f_l.ws.on("opponent_found", (data) => {
             /*
@@ -148,8 +144,9 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             f_l.ws.off("ball:first_ping")
             f_l.ws.off("opponent_found")
             f_l.ws.off("ball:horizontal:bounce")
-            f_l.ws.off("salat")
+            //f_l.ws.off("salat")
             f_l.ws.off("ball:vertical:bounce")
+            f_l.ws.emit("thala", { id: currentUserToken.id })
         }
     }, [game_inf, nav])
 

@@ -159,6 +159,8 @@ export class GameService {
             this.add_victory(gamehistory.winner, gamehistory.loser)
             gamehistory.loser = winner !== 1 ? left_user : right_user
             gamehistory.date = game_time
+            gamehistory.winner.status = "online"
+            gamehistory.loser.status = "online"
             console.log("testing the db entries winner user ==> ")
             console.log(gamehistory.winner)
 
@@ -287,6 +289,14 @@ export class GameService {
         this.laghandled_emit( inf.right_plr.Player.socket, inf, io)
         //io.in(inf.state.roomid).emit("ball:first_ping", { h_dur: inf.ball.h_dur, v_dur: inf.ball.v_dur })
         */
+
+        let LeftUser : User = await this.UserRepo.findOneBy({id : inf.left_plr.Player.id})
+        let RightUser : User = await this.UserRepo.findOneBy({id : inf.right_plr.Player.id})
+        LeftUser.status = "in game"
+        RightUser.status = "in game"
+        await this.UserRepo.save(LeftUser)
+        await this.UserRepo.save(RightUser)
+
         inf.left_plr.Player.socket.emit("opponent_found", 1)
         inf.right_plr.Player.socket.emit("opponent_found", 2)
 
