@@ -21,12 +21,9 @@ function ChannelList({
       setTypeOfChannel(data.channelType);
     });
 
-    // socket.emit("getUserChannels", currentUserToken.id);
 
     socket.on("userChannels", (userChannels) => {
-      // console.log("Received userChannels:", userChannels);
       setChannels(userChannels);
-      // console.log("userChannels", userChannels);
     });
 
     socket.on("newChannelCreated", (newChannel) => {
