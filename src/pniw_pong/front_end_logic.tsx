@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { useSocket } from "../Socketio"
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
@@ -38,6 +38,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
 
     const token = GetHeaders().jwttt;
     const currentUserToken = jwtDecode.jwtDecode(token);
+    let salat = useRef(false)
     const nav = useNavigate()
 
     console.log("rerendered heeere !!! and pitch_w=", game_inf.pitch_w, "and max_x", game_inf.max_x)
@@ -60,6 +61,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
                 console.log("wtfff")
             }
             f_l.ws.on("salat", (data) => {
+                salat.current = true
                 nav("/games")
                 f_l.b_apiy.pause()
                 f_l.b_apix.pause()
@@ -146,9 +148,16 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             f_l.ws.off("ball:horizontal:bounce")
             //f_l.ws.off("salat")
             f_l.ws.off("ball:vertical:bounce")
-            f_l.ws.emit("thala", { id: currentUserToken.id })
+            if (salat.current !== true) {
+                if (ingame === true) {
+                    f_l.ws.emit("iquit", { id: currentUserToken.id })
+                    console.log("iquit emited")
+                }
+                else
+                    f_l.ws.emit("thala", { id: currentUserToken.id })
+            }
         }
-    }, [game_inf, nav])
+    }, [game_inf, nav, ingame])
 
 
     return (
