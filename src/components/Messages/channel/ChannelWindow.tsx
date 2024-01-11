@@ -39,8 +39,12 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     //   socket.emit("getChannelMessages", activeChannel);
     // }
 
+ 
     socket.on("newChannelMessage", (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      console.log("actiiiiiv", activeChannel);
+      console.log("newChannelMessage", newMessage); 
+      if(newMessage.channelId === activeChannel)
+        setMessages((prevMessages) => [...prevMessages, newMessage.message]);
     });
 
     // socket.emit("getSenderIdsInChannel", activeChannel);
@@ -51,23 +55,16 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
-      if (data && Array.isArray(data.messages)) {
+      if (data && Array.isArray(data.message)) {
+        if(data.channelId === activeChannel){
         console.log("data.messages", data);
-        setMessages(data.messages);
+        setMessages(data.message);}
       } else {
         setMessages([]);
       }
-      // if (messageContainerRef.current) {
-      //   messageContainerRef.current.scrollTop =
-      //     messageContainerRef.current.scrollHeight;
-      // }
+
     });
 
-    // Listen for channel membership status -------------------------------------
-    // socket.emit("checkChannelMembership", {
-    //   channelId: activeChannel,
-    //   userId: currentUserToken.id,
-    // });
 
     socket.on("channelMembershipStatus", (data) => {
       if (data.channelId === activeChannel) {
@@ -111,7 +108,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       userId: currentUserToken.id,
     });
     if (activeChannel) {
-      socket.emit("getChannelMessages", activeChannel);
+      socket.emit("getChannelMessages",{ channelId:activeChannel, currentUserId:currentUserToken.id});
     }
 
     setShowMembers(false);
@@ -142,15 +139,14 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
       setShowPasswordInput(true);
     } else {
       socket.emit("joinChannel", {
+
         channelId: activeChannel,
         userId: currentUserToken.id,
         password: channelPassword,
       });
 
-      console.log(
-        "---------+-=-=--============================================"
-      );
-      // setShowPasswordInput(false);
+     
+      setShowPasswordInput(false);
       setChannelPassword("");
     }
   };
@@ -348,6 +344,8 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
             <FriendList
               showFriendList={showFriendList}
               setShowFriendList={setShowFriendList}
+              activeChannel={activeChannel}
+              currentUserToken={currentUserToken}
             />
           )}
 

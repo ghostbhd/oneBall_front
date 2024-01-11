@@ -6,6 +6,7 @@ import { ImgBg } from "../../style";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import config from "../../config";
+import React from "react";
 
 const EditInfo = ({ data, setData, loading, setLoading }) => {
   const [selectedFile, setSelectedFile] = useState("");
@@ -31,7 +32,7 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const regex = /[A-Z0-9!@#$%^&*(),.?":{}|<>]/;
+    const regex = /[A-Z !@#$%^&*(),.?":{}|<>]/;
 
     if (
       username.length &&
@@ -115,6 +116,7 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
     setError("");
   };
 
+
   return (
     <form action="POST" className="w-full p-6" onSubmit={handleSubmit}>
       {/* head ------------------------------------------------------------------ */}
@@ -155,7 +157,7 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
 
       {/* Avatar selection -------------- */}
       <div className="w-full mt-3 relative space-y-4">
-        <div
+        <label
           className={`w-full grid md:grid-cols-5 grid-cols-4 gap-4 relative overflow-hidden ${
             moreAvatars ? "h-max" : "xl:h-28 sm:h-[90px] h-[60px]"
           }`}
@@ -183,7 +185,7 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
               )}
             </div>
           ))}
-        </div>
+        </label>
         {/* more avatars button --------------------- */}
         <div
           className={`w-full flex flex-row text-bLight_5 cursor-pointer text-sm p-1.5 bg-gradient-to-r from-bLight_5/50 to-bDark_4/70 rounded-full
