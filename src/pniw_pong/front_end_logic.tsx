@@ -3,7 +3,7 @@ import { useSocket } from "../Socketio"
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
 import { Whoami } from "./index.jsx";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 
@@ -40,6 +40,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
     const token = GetHeaders().jwttt;
     const currentUserToken = jwtDecode.jwtDecode(token);
     let salat = useRef(false)
+    let loc = useLocation()
     const nav = useNavigate()
 
 
@@ -152,11 +153,11 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
             //f_l.ws.off("salat")
             f_l.ws.off("ball:vertical:bounce")
             if (salat.current !== true) {
-                if (!ingame && requested)
+                if (!ingame && requested && loc.pathname !== "/ingame")
                     f_l.ws.emit("thala", { id: currentUserToken.id })
             }
         }
-    }, [game_inf, nav, ingame, requested, salat])
+    }, [game_inf, nav, ingame, requested, salat, loc.pathname])
 
 
     return (
