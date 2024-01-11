@@ -24,7 +24,6 @@ const ChannelMembers = ({
       setMembers(data);
     });
 
-    // console.log("Token is ", currentUserToken);
 
     return () => {
       socket.off("channelMembers");
