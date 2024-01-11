@@ -48,7 +48,7 @@ const Messages = () => {
   } else {
     currentUserToken = null;
   }
-  if (socket == null) return;
+  if (socket == null || !currentUserToken) return;
   socket.emit("request-latest-messages", currentUserToken.id);
 
   // useEffect(() => {

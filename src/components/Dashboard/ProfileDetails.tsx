@@ -16,7 +16,7 @@ const ProfileDetails = ({ user }) => {
         {/* FullName and userName -------------------------------------*/}
         <p className="sm:w-8/12 w-full text-bLight_3 text-2xl text-center">
           {user.fullName}
-          <span className={`block text-lg text-bLight_4`}>{user.username}</span>
+          <span className={`block text-lg text-bLight_4`}>@{user.username}</span>
         </p>
         {/* level, games, win, lose  ----------------*/}
         <div className={`sm:w-8/12 w-full sm:p-8 p-2 flex flex-col space-y-4`}>

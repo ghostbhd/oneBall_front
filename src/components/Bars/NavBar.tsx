@@ -123,6 +123,10 @@ const NavBar: React.FC = () => {
         >
           {<icons.logout />}
         </div>
+        {/* Logo -------------------------------------------------------------- */}
+        <Link to={"/"} className={`md:text-3xl mx-auto absolute left-1/2 -translate-x-1/2 md:hidden text-4xl text-bLight_5`}>
+          OB
+        </Link>
 
         {/* search bar --------------------------------------------------------- */}
         <div

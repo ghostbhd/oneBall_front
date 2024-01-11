@@ -6,6 +6,8 @@ import style from "../../style";
 import React from "react";
 import InviteFriend from "./InviteFriend";
 import { useSocket } from "../../Socketio";
+import config from "../../config";
+import { GetHeaders } from "../../jwt_token";
 
 const Games = () => {
   const [data, setData] = useState([] as any);
@@ -14,22 +16,20 @@ const Games = () => {
 
   const [showInviteFriend, setShowInviteFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState({} as any);
-  const [friendList, setFriendList] = useState([
-    { username: "friend1", id: 1 },
-    { username: "friend2", id: 2 },
-    { username: "friend3", id: 3 },
-    { username: "friend4", id: 4 },
-    { username: "friend5", id: 5 },
-    { username: "friend6", id: 6 },
-    { username: "friend7", id: 7 },
-    { username: "friend8", id: 8 },
-  ] as any);
+  const [friendList, setFriendList] = useState([] as any);
 
+  const Header = GetHeaders().headers;
   useEffect(() => {
-    gamesData()
-      .then((data) => {
+    // gamesData()
+    fetch(`${config.domain}/history`, {
+      method: "GET",
+      headers: Header,
+    })
+      .then(async (dats) => {
+        const data = await dats.json();
         console.log(data); // Log the data to check its structure
         setData(data);
+        console.log(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -37,12 +37,6 @@ const Games = () => {
         setLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-    // get friend list from server -------------------------------
-    // ... socket.on frindlist
-    setSelectedFriend(friendList[0]);
-  }, [showInviteFriend]);
 
   return (
     <div
@@ -71,6 +65,7 @@ const Games = () => {
               {showInviteFriend && (
                 <InviteFriend
                   friendList={friendList}
+                  setFriendList={setFriendList}
                   setShowInviteFriend={setShowInviteFriend}
                   setSelectedFriend={setSelectedFriend}
                   selectedFriend={selectedFriend}
@@ -80,7 +75,7 @@ const Games = () => {
           </div>
 
           {/* Game history --------------------------------------------*/}
-          <GamesHistory gamehistory={data.gamesHistory} />
+          <GamesHistory gamehistory={data} />
         </>
       )}
     </div>
