@@ -6,6 +6,8 @@ import style from "../../style";
 import React from "react";
 import InviteFriend from "./InviteFriend";
 import { useSocket } from "../../Socketio";
+import config from "../../config";
+import { GetHeaders } from "../../jwt_token";
 
 const Games = () => {
   const [data, setData] = useState([] as any);
@@ -16,11 +18,18 @@ const Games = () => {
   const [selectedFriend, setSelectedFriend] = useState({} as any);
   const [friendList, setFriendList] = useState([] as any);
 
+  const Header = GetHeaders().headers;
   useEffect(() => {
-    gamesData()
-      .then((data) => {
+    // gamesData()
+    fetch(`${config.domain}/history`, {
+      method: "GET",
+      headers: Header,
+    })
+      .then(async (dats) => {
+        const data = await dats.json();
         console.log(data); // Log the data to check its structure
         setData(data);
+        console.log(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -66,7 +75,7 @@ const Games = () => {
           </div>
 
           {/* Game history --------------------------------------------*/}
-          <GamesHistory gamehistory={data.gamesHistory} />
+          <GamesHistory gamehistory={data} />
         </>
       )}
     </div>
