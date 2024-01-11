@@ -49,7 +49,7 @@ const Dashboard = () => {
         <>
           <div className={`${row}`}>
             {/* messages ---------------------------------------------------------------- */}
-            {/* <MessageList last4Msgs={data.last4Msg} /> */}
+            <MessageList last4Msgs={data.last4Msg} />
             {/* Game -------------------------------------------------------------------- */}
             <GameBtn />
           </div>
