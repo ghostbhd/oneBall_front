@@ -30,9 +30,9 @@ const GameHistory: React.FC = ({ last6Games }: any) => {
       {/* game history list ************************************** */}
       <ul>
         {last6Games && Array.isArray(last6Games) && last6Games.length > 0 ? (
-          last6Games.map((item) => (
+          last6Games.map((item, index) => (
             <li
-              key={item.id}
+              key={index}
               className={`w-full flex flex-row text-bLight_4 align-middle
                 p-3 mt-2 rounded-2xl bg-bLight_5/40
               `}

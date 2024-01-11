@@ -6,6 +6,7 @@ import { useSocket } from "../../Socketio";
 import { GetHeaders } from "../../jwt_token";
 import * as jwtDecode from "jwt-decode";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const NotificationBadge: React.FC = ({
   notifRef,
@@ -13,6 +14,7 @@ const NotificationBadge: React.FC = ({
   setShowNotif,
 }: any) => {
   const [notifItems, setNotifItems] = useState([]);
+  const history = useNavigate();
 
   const socket: any = useSocket();
   const token = GetHeaders().jwttt;
@@ -113,7 +115,7 @@ const NotificationBadge: React.FC = ({
   // Friend request ------------------------------------------------
   const handelAcceptFriend = (username) => {
     console.log("accept friend request");
-    if (socket == null) return;
+    if (socket == null || !decoded) return;
     socket.emit("AcceptRequest", {
       username1: decoded.name,
       username2: username,
@@ -124,7 +126,7 @@ const NotificationBadge: React.FC = ({
   // Friend reject ------------------------------------------------
   const handelRejecttFriend = (username) => {
     console.log("reject friend request ", username);
-    if (socket == null) return;
+    if (socket == null || !decoded) return;
     socket.emit("RefuseRequest", {
       username1: decoded.name,
       username2: username,
@@ -137,6 +139,7 @@ const NotificationBadge: React.FC = ({
     console.log("play game");
     if (socket == null) return;
     socket.emit("accept:flan", { id: decoded.id, username: username });
+    history("/ingame");
     removeFromData(username);
   };
 
@@ -148,6 +151,10 @@ const NotificationBadge: React.FC = ({
   // start playing -------------------------------------------------------
   const handelStartPlaying = (username) => {
     console.log("start playing");
+    if (socket == null) return;
+    socket.emit("readytojoin:flan", { id: decoded.id, username: username });
+    removeFromData(username);
+    history("/ingame");
   };
 
   // useEffect(() => {
