@@ -60,11 +60,19 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
         console.log("Chat data received:", chatData);
 
         setMessages(chatData.messages);
-        setSenderData(() => ({
-          ...senderData,
-          image: chatData.senderAvatar,
-          username: chatData.senderUsername,
-        }));
+        if (chatData.chatReceiverId === currentUserToken.id) {
+          setSenderData(() => ({
+            ...senderData,
+            image: chatData.senderAvatar,
+            username: chatData.senderUsername,
+          }));
+        } else {
+          setSenderData(() => ({
+            ...senderData,
+            image: chatData.receiverAvatar,
+            username: chatData.receiverUsername,
+          }));
+        }
 
         const ids = chatData.messages.map((msg: any) => msg.id);
         const uniqueIds = new Set(ids);
@@ -88,7 +96,6 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
       // socket.emit("leave-chat", { chatId: activeChat });
     };
   }, [socket]);
-
 
   // challenge handeling ---------------------------------------------------------
   const handelChallenge = () => {

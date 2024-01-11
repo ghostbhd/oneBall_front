@@ -17,16 +17,14 @@ function ChannelList({
 
   useEffect(() => {
     socket.on("channelType", (data) => {
-      console.log("Received channelType:", data);
       setTypeOfChannel(data.channelType);
+      console.log("Received channelType:", data);
     });
 
-    // socket.emit("getUserChannels", currentUserToken.id);
-
     socket.on("userChannels", (userChannels) => {
-      // console.log("Received userChannels:", userChannels);
       setChannels(userChannels);
-      // console.log("userChannels", userChannels);
+      console.log("userChannels", userChannels);
+      console.log("activeChannel", activeChannel);
     });
 
     socket.on("newChannelCreated", (newChannel) => {
@@ -43,11 +41,15 @@ function ChannelList({
 
   useEffect(() => {
     socket.emit("getUserChannels", currentUserToken.id);
-  },[activeChannel]);
+  }, [activeChannel]);
 
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);
     socket.emit("getChannelType", activeChannel);
+    socket.emit("autojoined", {
+      channelId: activeChannel,
+      userId: currentUserToken.id,
+    });
     console.log("active channel is => ", activeChannel);
   };
 
@@ -61,10 +63,11 @@ function ChannelList({
           }`}
           onClick={() => handleChannelClick(channel.id)}
         >
-          {console.log("channel id is ", channel.id, "active channel is ", activeChannel)}
-          <div className="text-bLight_4">#{channel.Channel}</div>
+          <div className={`text-bLight_4 ${activeChannel === channel.id ? "bg-bLight_5" : ""}`}>#{channel.Channel}</div>
           {/* lock icon for protectd channel */}
-          {channel.protected ? <div className={`text-bLight_5 ml-auto`}>{<chatIcons.lock />}</div> : null}
+          {channel.protected ? (
+            <div className={`text-bLight_5 ml-auto`}>{<chatIcons.lock />}</div>
+          ) : null}
         </div>
       ))}
     </div>

@@ -46,6 +46,7 @@ const FriendList = ({
       userId: requesterId,
       currentUserId: currentUserToken.id,
     });
+    
   };
 
   const buttonStyle = `ml-auto p-1 w-24 text-center cursor-pointer transition-all duration-300 rounded-full`;
