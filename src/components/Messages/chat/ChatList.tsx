@@ -13,12 +13,10 @@ const ChatList = ({
   const [sender_id, setsenderflag] = useState(null);
   const socket = useSocket();
 
-  // socket.emit("request-latest-messages", currentUserToken.id);
   useEffect(() => {
     if (socket == null) return;
 
     socket.on("latest-messages", (chatsFromServer) => {
-      console.log("latest messages are:", chatsFromServer);
       let sortedChats = chatsFromServer.sort((a, b) => {
         return (
           new Date(b.lastMessage.Timestamp) - new Date(a.lastMessage.Timestamp)
@@ -46,7 +44,6 @@ const ChatList = ({
             senderflag: newMessage.senderflag,
             receiverflag: newMessage.receiverflag,
           };
-          // console.log("sender id is-", newMessage.senderId), console.log("sender id is --", newMessage.senderflag);
         } else {
           updatedChats = [
             ...updatedChats,
@@ -76,7 +73,6 @@ const ChatList = ({
 
     socket.on("search-user-response", (response) => {
       if (response.chatId) {
-        console.log("Search response:", response.chatId);
         setActiveChat(response.chatId);
 
         socket.emit("request-messages-for-chat", {
@@ -89,25 +85,19 @@ const ChatList = ({
       }
     });
 
-    // console.log(chats);
     return () => {
       socket.off("latest-messages");
       socket.off("search-user-response");
-      // socket.off("new-message", handleNewMessage);
     };
   }, [socket]);
 
   const handleChatClick = (chatId) => {
-    // if (activeChat === chatId && activeChat) return;
-    console.log("Chat ID clicked:", chatId);
+
     setActiveChat(chatId);
     socket.emit("request-messages-for-chat", {
       chatId,
     });
-        // socket.emit("request-latest-messages", currentUserToken.id);
 
-
-    // socket.emit("request-latest-messages", currentUserToken.id);
   };
 
   return (

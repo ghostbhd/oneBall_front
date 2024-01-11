@@ -10,14 +10,10 @@ function ChannelList({
   setTypeOfChannel,
 }) {
   const [channels, setChannels] = useState([]);
-  //   const [typeOfChannel, setTypeOfChannel] = useState("");
   const socket: any = useSocket();
-
-  // console.log("typeOfChannel is ", typeOfChannel); //! hehowa fin 7atit lik type of channel
 
   useEffect(() => {
     socket.on("channelType", (data) => {
-      console.log("Received channelType:", data);
       setTypeOfChannel(data.channelType);
     });
 
@@ -28,7 +24,6 @@ function ChannelList({
 
     socket.on("newChannelCreated", (newChannel) => {
       setChannels((prevChannels) => [...prevChannels, newChannel]);
-      // console.log("new channel created", newChannel);
     });
 
     return () => {
@@ -46,7 +41,6 @@ function ChannelList({
     setActiveChannel(activeChannel);
     socket.emit("getChannelType", activeChannel);
     socket.emit("autojoined", {channelId: activeChannel, userId: currentUserToken.id})
-    console.log("active channel is => ", activeChannel);
   };
 
   return (

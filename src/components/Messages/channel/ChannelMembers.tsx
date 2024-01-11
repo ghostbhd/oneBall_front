@@ -41,7 +41,6 @@ const ChannelMembers = ({
 
   // set admin ----------------------------------
   const handelSetAdmin = (channelId, seter, userSetted) => {
-    console.log("setting user as admin", channelId, seter, userSetted);
     socket.emit("setUserAsAdmin", {
       channelId: channelId,
       userId: seter,
@@ -51,7 +50,6 @@ const ChannelMembers = ({
 
   // remove admin ----------------------------------
   const handelRemoveAdmin = (channelId, seter, userSetted) => {
-    console.log("setting user as admin", channelId, seter, userSetted);
     socket.emit("removeUserFromAdmin", {
       channelId: channelId,
       userId: seter,
@@ -61,7 +59,6 @@ const ChannelMembers = ({
 
   // mute user ----------------------------------
   const handelMute = (requesterId) => {
-    console.log(" MuteUser", currentUserToken.id, requesterId);
     socket.emit("MuteUser", {
       channelId: activeChannel,
       userId: currentUserToken.id,
@@ -71,7 +68,6 @@ const ChannelMembers = ({
 
   // unmute user ----------------------------------
   const handelUnMute = (requesterId) => {
-    console.log(" Unmuting user", currentUserToken.id, requesterId);
 
     socket.emit("UnMuteUser", {
       channelId: activeChannel,
@@ -82,7 +78,6 @@ const ChannelMembers = ({
 
   // ban user ----------------------------------
   const handelBane = (requesterId) => {
-    console.log(" BanUser", currentUserToken.id, requesterId);
     socket.emit("BanUser", {
       channelId: activeChannel,
       userId: currentUserToken.id,
@@ -92,7 +87,6 @@ const ChannelMembers = ({
 
   // unban user ----------------------------------
   const handelUnBane = (requesterId) => {
-    console.log(" UnBanUser", currentUserToken.id, requesterId);
     socket.emit("UnBanUser", {
       channelId: activeChannel,
       userId: currentUserToken.id,
