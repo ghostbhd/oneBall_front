@@ -20,9 +20,9 @@ const UserGamesHistory = ({ gamehistory }) => {
           Array.isArray(gamehistory) &&
           gamehistory.length > 0 ? ( // if is array and has items
             // map items
-            gamehistory.map((item) => (
+            gamehistory.map((item,index) => (
               <li
-                key={item.id}
+                key={index}
                 className={`w-full flex flex-row text-bLight_4 align-middle
                 bg-bDark_1/50 p-4`}
               >
