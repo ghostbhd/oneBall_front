@@ -11,7 +11,7 @@ import * as jwtDecode from "jwt-decode";
 import config from "../../config";
 
 const UserProfile = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({} as any);
   const [loading, setLoading] = useState(true);
 
   // username from url params ------------------
@@ -25,10 +25,9 @@ const UserProfile = () => {
     username: "",
   });
 
-  const socket = useSocket();
+  const socket: any = useSocket();
 
   useEffect(() => {
-    setLoading(true);
 
     const fetchdata = async () => {
       await fetch(config.domain + "/profileData/user", {
@@ -48,17 +47,20 @@ const UserProfile = () => {
             history("/Auth");
             // console.log("user not authenticated");
             return;
-          } else if (response.status === 500) {
-            history("/Error_500");
-            // console.log("server error");
-            return;
+          } else if (!response.ok) {
+            Cookies.remove("accessToken");
+            history("/auth");
           }
           return response.json();
         })
         .then(async (response) => {
           if (response == undefined) return;
           setData(response);
-          setBlock({blocker: response.blocker, blocked: response.blocked, username: username});
+          setBlock({
+            blocker: response.blocker,
+            blocked: response.blocked,
+            username: username as any,
+          });
           setLoading(false);
         });
     };
@@ -71,37 +73,33 @@ const UserProfile = () => {
       username1: jwtDecode.jwtDecode(Cookies.get("accessToken")).name,
       username2: data.username,
     });
+    // setLoading(true);
   };
 
   useEffect(() => {
-
     if (!socket) return;
     socket.on("Unblocka", (stats) => {
-      console.log("haaaaahowa tblocka ", stats)
-      console.log("data", data,
-          "stat.uaername ", stats.username
-      )
+      console.log("haaaaahowa tblocka ", stats);
+      console.log("data", data, "stat.uaername ", stats.username);
       if (stats.username === username) {
-        setBlock( { 
-          blocker:stats.blocker,
-          blocked:stats.blocked,
-          username:stats.username
+        setBlock({
+          blocker: stats.blocker,
+          blocked: stats.blocked,
+          username: stats.username,
         });
-        console.log("the block set is ", block)
+        console.log("the block set is ", block);
       }
     });
     socket.on("Ha-Tblocka", (stats) => {
-      console.log("haaaaahowa tblocka ", stats)
-      console.log("data", data,
-          "stat.uaername ", stats.username
-      )
+      console.log("haaaaahowa tblocka ", stats);
+      console.log("data", data, "stat.uaername ", stats.username);
       if (stats.username === username) {
-        setBlock( { 
-          blocker:stats.blocker,
-          blocked:stats.blocked,
-          username:stats.username
+        setBlock({
+          blocker: stats.blocker,
+          blocked: stats.blocked,
+          username: stats.username,
         });
-        console.log("the block set is ", block)
+        console.log("the block set is ", block);
       }
     });
     return () => {
@@ -125,7 +123,7 @@ const UserProfile = () => {
             <div className={`flex flex-col gap-6`}>
               <p className={`text-xl text-bLight_4`}>You blocked this user</p>
               <p
-                onClick={handelUnblock}
+                onClick={() => handelUnblock()}
                 className={`p-6 text-center bg-org_3/40 hover:bg-org_3/60 cursor-pointer transition-all 
                   text-org_2/80 rounded-2xl border-2 border-org_2/50 text-2xl font-bold`}
               >

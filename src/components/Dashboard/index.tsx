@@ -5,10 +5,13 @@ import GameBtn from "./GameBtn";
 import GameHistory from "./GameHistory";
 import { GetHeaders } from "../../jwt_token";
 import config from "../../config";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const history = useNavigate();
 
   const row = "sm:w-1/2 w-full sm:flex hidden flex-col space-y-20";
 
@@ -16,25 +19,31 @@ const Dashboard = () => {
   const headers = GetHeaders().headers;
 
   useEffect(() => {
-    fetch(config.domain + "/dashboard", {
-      method: "GET",
-      headers: headers,
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
+    const fetchData = async () => {
+      await fetch(config.domain + "/dashboard", {
+        method: "GET",
+        headers: headers,
       })
-      // fetchDataFromMockApi()
-      .then((data) => {
-        console.log(data); // Log the data to check its structure
-        setData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("Error fetching data", err);
-        setLoading(false);
-      });
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }else {
+            throw new Error();
+          }
+        })
+        .then((data) => {
+          console.log(data); // Log the data to check its structure
+          setData(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log("Error fetching data", err);
+          Cookies.remove("accessToken");
+          history("/auth");
+          setLoading(false);
+        });
+    }
+    fetchData();
   }, []);
 
   return (

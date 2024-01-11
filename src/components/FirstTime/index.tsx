@@ -21,20 +21,18 @@ const FirstTime = () => {
 
   const history = useNavigate();
   const headers = GetHeaders().headers;
-  
+
   window.history.replaceState(null, null, "/");
 
-
   useEffect(() => {
-    
-
     const fetchData = async () => {
       const response = await fetch(config.domain + "/profileData", {
         method: "GET",
         headers: headers,
       });
-      if (response.status === 401) {
-        history("/Auth");
+      if (!response.ok) {
+        Cookies.remove("accessToken");
+        history("/auth");
         console.log("Unauthorized. Please log in.");
         return;
       }
