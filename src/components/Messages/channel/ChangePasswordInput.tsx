@@ -19,7 +19,6 @@ const ChangePasswordInput = ({ showChangePassword, setShowChangePassword ,active
   };
 
   const handleRemovePassword = () => {
-    console.log("remove password");
     socket.emit("removePass",{ channelId:activeChannel ,userId: currentUserToken.id  });
     setShowChangePassword(false);
   };

@@ -14,7 +14,6 @@ const AddPasswordInput = ({
   const socket = useSocket();
 
   const handleAddPassword = () => {
-    console.log("add password:", addPass);
     socket.emit("addpassword", {
       channelId: activeChannel,
       newPassword: addPass,

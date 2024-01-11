@@ -19,7 +19,6 @@ const FriendList = ({
       console.log("the friend list issssssssss", data);
       setFriends(data);
     });
-    //    console.log("Token is ", currentUserToken);
 
     return () => {
       socket.off("FrindsListIs");
