@@ -78,8 +78,7 @@ const NotificationBadge: React.FC = ({
         username: reqData.username,
         fullName: reqData.fullName,
       };
-      // adding data to previous data
-      console.log("the data is ", newData);
+      console.log("the accepted game is ", newData);
       addGameInvite(newData);
     });
 
@@ -87,7 +86,7 @@ const NotificationBadge: React.FC = ({
     socket.on("Friend-Refuse", (reqData: any) => {
       // console.log("Refuse", data);
       const newData = {
-        type: "friend",
+        type: reqData.type,
         image: reqData.image,
         username: reqData.username,
         fullName: reqData.fullName,
@@ -98,13 +97,16 @@ const NotificationBadge: React.FC = ({
 
     // get all notification -------------------------------
     socket.on("Notif", (reqData: any) => {
-      // console.log("FriendRequests", reqData);
+      console.log("notiffffffff", reqData);
+      setNotifItems([]);
       setNotifItems(reqData);
     });
     return () => {
       socket.off("Friend-Refuse");
       socket.off("Notif");
       socket.off("NotificationAdd");
+      socket.off("gameInvite");
+      socket.off("acceptgame");
     };
   }, [socket]);
 
@@ -135,6 +137,7 @@ const NotificationBadge: React.FC = ({
     console.log("play game");
     if (socket == null) return;
     socket.emit("accept:flan", { id: decoded.id, username: username });
+    removeFromData(username);
   };
 
   // Game request reject -------------------------------------------------------
@@ -179,9 +182,9 @@ const NotificationBadge: React.FC = ({
 
       {/* items ---------------- */}
       <ul className="w-full h-full flex flex-col gap-1 overflow-y-auto">
-        {notifItems.map((item) => (
+        {notifItems.map((item: any, index) => (
           // friend request *********************************************************************************************
-          <li className={`${li}`} key={item.username}>
+          <li className={`${li}`} key={index}>
             {item.type === "friend" ? (
               <>
                 {/* icon friend waiting ------------------------------------------------ */}
