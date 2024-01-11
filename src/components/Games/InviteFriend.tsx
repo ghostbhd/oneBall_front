@@ -1,23 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "../../style";
+import { useSocket } from "../../Socketio";
+import { GetHeaders } from "../../jwt_token";
+import * as jwtDecode from "jwt-decode";
 
 const InviteFriend: React.FC = ({
   friendList,
+  setFriendList,
   setShowInviteFriend,
   setSelectedFriend,
   selectedFriend,
 }: any) => {
   const [showSelectFriend, setShowSelectFriend] = useState(false);
   const [ballSpeed, setBallSpeed] = useState("slow");
+  const socket: any = useSocket();
+  const token: any = GetHeaders().jwttt;
+  const [errorFriend, setErrorFriend] = useState("");
+
+  const userTok = jwtDecode.jwtDecode(token);
+
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("Frinds-List", (data) => {
+      if (data.length === 0) {
+        setSelectedFriend({ username: "No friends", id: "" });
+        return;
+      }
+      setFriendList(data);
+      setSelectedFriend(data[0]);
+    });
+
+    return () => {
+      socket.off("Frinds-List");
+    };
+  }, [socket]);
 
   // handel invite friend -----------------------------------------
   const handelInviteFriend = () => {
     console.log(selectedFriend);
     console.log(ballSpeed);
+    if (selectedFriend.username === "No friends") {
+      setErrorFriend("No friend selected");
+      return;
+    }
 
     // send invite to server --------------------------------------
-    // ...
+    socket.emit("inv:flan", {
+      id: userTok.id,
+      opName: selectedFriend.username,
+      ballSpeed: ballSpeed, // slow, medium, fast
+    });
     // close modal -----------------------------------------------
+    setErrorFriend("");
     setShowSelectFriend(false);
     setShowInviteFriend(false);
     setSelectedFriend("");
@@ -42,16 +76,19 @@ const InviteFriend: React.FC = ({
         {/* invite friend text ------ */}
         <p className={`text-bLight_4`}>Select friend to invite</p>
         {/* select friend ------ */}
-        <div className="w-full flex h-max relative">
-          <div
-            className={`w-full cursor-pointer p-2 outline-none rounded-full bg-bDark_4 border-2 border-bLight_5/50 text-bLight_5`}
-            onClick={() => setShowSelectFriend(!showSelectFriend)}
-          >
-            {selectedFriend.username}
+        <div className="w-full flex flex-col flex h-max relative">
+          <div className="w-full">
+            <div
+              className={`w-full cursor-pointer p-2 outline-none rounded-full bg-bDark_4 border-2 border-bLight_5/50 text-bLight_5`}
+              onClick={() => setShowSelectFriend(!showSelectFriend)}
+            >
+              {selectedFriend.username}
+            </div>
+            <p className="w-full text-xs text-org_3 px-2">{errorFriend}</p>
           </div>
           {/* friend list --------------------------- */}
           {showSelectFriend && (
-            <div className="absolute flex top-full h-48 left-0 w-full overflow-hidden rounded-3xl">
+            <div className="absolute flex top-full max-h-48 h-max left-0 w-full overflow-hidden rounded-3xl">
               <div className="flex flex-col w-full h-full overflow-y-auto text-bLight_4 bg-bDark_4 rounded-3xl">
                 {friendList.map((friend: any) => (
                   <div

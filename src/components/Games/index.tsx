@@ -14,16 +14,7 @@ const Games = () => {
 
   const [showInviteFriend, setShowInviteFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState({} as any);
-  const [friendList, setFriendList] = useState([
-    { username: "friend1", id: 1 },
-    { username: "friend2", id: 2 },
-    { username: "friend3", id: 3 },
-    { username: "friend4", id: 4 },
-    { username: "friend5", id: 5 },
-    { username: "friend6", id: 6 },
-    { username: "friend7", id: 7 },
-    { username: "friend8", id: 8 },
-  ] as any);
+  const [friendList, setFriendList] = useState([] as any);
 
   useEffect(() => {
     gamesData()
@@ -37,12 +28,6 @@ const Games = () => {
         setLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-    // get friend list from server -------------------------------
-    // ... socket.on frindlist
-    setSelectedFriend(friendList[0]);
-  }, [showInviteFriend]);
 
   return (
     <div
@@ -71,6 +56,7 @@ const Games = () => {
               {showInviteFriend && (
                 <InviteFriend
                   friendList={friendList}
+                  setFriendList={setFriendList}
                   setShowInviteFriend={setShowInviteFriend}
                   setSelectedFriend={setSelectedFriend}
                   selectedFriend={selectedFriend}

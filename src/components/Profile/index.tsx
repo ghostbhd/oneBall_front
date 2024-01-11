@@ -8,10 +8,13 @@ import FriendRequests from "./FriendRequests";
 import { GetHeaders } from "../../jwt_token";
 import { useNavigate } from "react-router-dom";
 import config from "../../config";
+import { useSocket } from "../../Socketio";
+import * as jwtDecode from "jwt-decode";
 
 const Profile = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const socket = useSocket();
 
   const history = useNavigate();
   const handleRedirect = (url) => {
@@ -35,6 +38,16 @@ const Profile = () => {
       setLoading(false);
     };
     fetchData();
+  }, [loading]);
+
+  const token = GetHeaders().jwttt;
+  let decoded;
+  if (token) decoded = jwtDecode.jwtDecode(token);
+  else decoded = null
+  useEffect(() => {
+    if (socket == null) return;
+    socket.emit("FriendList", decoded.id);
+    console.log("the user id is ", decoded.id);
   }, [loading]);
 
   return (
