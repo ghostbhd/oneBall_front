@@ -18,12 +18,14 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
   const socket: any = useSocket();
 
   const handleSendMessage = () => {
+    if (message.trim() !== "") {
     socket.emit("send-message", {
       chatId: activeChat,
       Content: message,
       senderId: currentUserToken.id,
     });
-    setMessage("");
+  }
+  setMessage("");
   };
 
   useEffect(() => {
