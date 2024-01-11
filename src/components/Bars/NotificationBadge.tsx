@@ -73,15 +73,19 @@ const NotificationBadge: React.FC = ({
     });
 
     // game invite accepted --------------------------------------------
-    socket.on("acceptgame", (reqData: any) => {
-      const newData = {
-        type: reqData.type,
-        image: reqData.image,
-        username: reqData.username,
-        fullName: reqData.fullName,
-      };
-      console.log("the accepted game is ", newData);
-      addGameInvite(newData);
+    socket.on("acceptgame", () => {
+      // const newData = {
+      //   username: reqData.username,
+
+      // };
+      // console.log("the accepted game is ", newData);
+      // addGameInvite(newData);
+      // socket.emit("startPlaying", {
+      //   username1: decoded.name,
+      //   username2:newData.username,
+      // })
+      history("/ingame");
+
     });
 
     // remove notification to friend request -------------------------------
@@ -96,6 +100,12 @@ const NotificationBadge: React.FC = ({
       removeFromData(newData.username);
       console.log("the data refused is ", newData);
     });
+
+    // start playing ====================================
+    // socket.on("startPlaying", (reqData:any) =>
+    // {
+    //   socket.emit("")
+    // })
 
     // get all notification -------------------------------
     socket.on("Notif", (reqData: any) => {
@@ -140,7 +150,7 @@ const NotificationBadge: React.FC = ({
     if (socket == null) return;
     socket.emit("accept:flan", { id: decoded.id, username: username });
     history("/ingame");
-    removeFromData(username);
+    // removeFromData(username);
   };
 
   // Game request reject -------------------------------------------------------
@@ -150,10 +160,11 @@ const NotificationBadge: React.FC = ({
 
   // start playing -------------------------------------------------------
   const handelStartPlaying = (username) => {
-    console.log("start playing");
-    if (socket == null) return;
-    socket.emit("readytojoin:flan", { id: decoded.id, username: username });
-    removeFromData(username);
+    // console.log("start playing");
+    // if (socket == null) return;
+    
+    // socket.emit("readytojoin:flan", { id: decoded.id, username: username });
+    // removeFromData(username, type);
     history("/ingame");
   };
 
