@@ -14,32 +14,27 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
     inviter: true,
     invited: false,
   } as any);
-
+  
   const socket: any = useSocket();
 
   const handleSendMessage = () => {
     if (message.trim() !== "") {
-      socket.emit("send-message", {
-        chatId: activeChat,
-        Content: message,
-        senderId: currentUserToken.id,
-      });
-    }
-    setMessage("");
+    socket.emit("send-message", {
+      chatId: activeChat,
+      Content: message,
+      senderId: currentUserToken.id,
+    });
+  }
+  setMessage("");
   };
 
   useEffect(() => {
     if (socket == null) return;
-    console.log("messages for chat request sent", messages);
 
     socket.emit("join-chat", { chatId: activeChat });
-    console.log(`active chat is ${activeChat}`);
 
     const handleNewMessage = (newMessage: any) => {
-      console.log(
-        "new message received:================================================",
-        newMessage
-      );
+
       if (newMessage.chatid.id === activeChat) {
         setMessages((prevMessages) => [...prevMessages, newMessage] as any);
       }
@@ -48,10 +43,7 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
     socket.on("new-message", handleNewMessage);
 
     socket.on("messages-for-chat-response", (chatData: any) => {
-      console.log(
-        "new:================================================",
-        chatData
-      );
+
 
       if (chatData.id === activeChat) {
         setMessages(
@@ -59,7 +51,6 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
         );
       }
       if (chatData && Array.isArray(chatData.messages)) {
-        console.log("Chat data received:", chatData);
 
         setMessages(chatData.messages);
         if (chatData.chatReceiverId === currentUserToken.id) {
@@ -89,15 +80,13 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
     const sortedMessages = [...messages].sort(
       (a, b) => new Date(a.Timestamp) - new Date(b.Timestamp)
     );
-    console.log("#################### ", sortedMessages);
 
     setMessages(sortedMessages);
     return () => {
       socket.off("new-message", handleNewMessage);
       socket.off("messages-for-chat-response");
-      // socket.emit("leave-chat", { chatId: activeChat });
     };
-  }, [socket]);
+  }, [socket,activeChat]);
 
   // challenge handeling ---------------------------------------------------------
   const handelChallenge = () => {
