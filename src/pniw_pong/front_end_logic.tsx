@@ -4,6 +4,7 @@ import { GetHeaders } from "../jwt_token";
 import * as jwtDecode from "jwt-decode";
 import { Whoami } from "./index.jsx";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
 function CountDown({ children }) {
   const [time, settime] = useState(3);
@@ -35,6 +36,17 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
   const currentUserToken = jwtDecode.jwtDecode(token);
   let salat = useRef(false);
   const nav = useNavigate();
+
+
+  useEffect(() => {
+    f_l.ws.on("friendHere", () => {
+      setrequested(true);
+    });
+
+    return () => {
+      f_l.ws.off("friendHere");
+    };
+  },[f_l.ws])
 
   useEffect(() => {
 
@@ -110,6 +122,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
       f_l.ws.off("ball:first_ping");
       f_l.ws.off("opponent_found");
       f_l.ws.off("ball:horizontal:bounce");
+      // f_l.ws.off("friendHere");
       //f_l.ws.off("salat")
       f_l.ws.off("ball:vertical:bounce");
       if (salat.current !== true) {
