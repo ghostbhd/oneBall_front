@@ -38,7 +38,9 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
       username.length &&
       (username.length < 3 || username.length > 10 || regex.test(username))
     ) {
-      setError("Username must be 3-10 characters long and contain only letters");
+      setError(
+        "Username must be 3-10 characters long and contain only letters"
+      );
       setUsername("");
       return;
     }
@@ -68,20 +70,24 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
       method: "POST",
       body: formData,
       headers: headers,
-    })
-      // if (.then(  (response) =>  {
-        if (response.ok) {
-          console.log("the object ", response);
-          const data = await response.json();
-          console.log("the user is ", data.user);
-          console.log("accessToken ", data.accessToken);
-          Cookies.set("accessToken", data.accessToken);
-          setLoading(!loading);
-          return data;
-        }
-      // .catch((error) => {
-      //   console.error("Error during file upload:", error);
-      // });
+    });
+    // if (.then(  (response) =>  {
+    if (response.ok) {
+      console.log("the object ", response);
+      const data = await response.json();
+      console.log("the user is ", data.user);
+      console.log("accessToken ", data.accessToken);
+      Cookies.set("accessToken", data.accessToken);
+      setLoading(!loading);
+      return data;
+    } else {
+      Cookies.remove("accessToken");
+      history("/auth");
+      return response.json();
+    }
+    // .catch((error) => {
+    //   console.error("Error during file upload:", error);
+    // });
     // window.location.reload();
   };
 
@@ -115,7 +121,6 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
     setMoreAvatars(false);
     setError("");
   };
-
 
   return (
     <form action="POST" className="w-full p-6" onSubmit={handleSubmit}>

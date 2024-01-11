@@ -10,26 +10,20 @@ function ChannelList({
   setTypeOfChannel,
 }) {
   const [channels, setChannels] = useState([]);
-  //   const [typeOfChannel, setTypeOfChannel] = useState("");
   const socket: any = useSocket();
-
-  // console.log("typeOfChannel is ", typeOfChannel); //! hehowa fin 7atit lik type of channel
 
   useEffect(() => {
     socket.on("channelType", (data) => {
       setTypeOfChannel(data.channelType);
-      console.log("Received channelType:", data);
     });
+
 
     socket.on("userChannels", (userChannels) => {
       setChannels(userChannels);
-      console.log("userChannels", userChannels);
-      console.log("activeChannel", activeChannel);
     });
 
     socket.on("newChannelCreated", (newChannel) => {
       setChannels((prevChannels) => [...prevChannels, newChannel]);
-      // console.log("new channel created", newChannel);
     });
 
     return () => {
@@ -41,16 +35,12 @@ function ChannelList({
 
   useEffect(() => {
     socket.emit("getUserChannels", currentUserToken.id);
-  }, [activeChannel]);
+  },[activeChannel]);
 
   const handleChannelClick = (activeChannel) => {
     setActiveChannel(activeChannel);
     socket.emit("getChannelType", activeChannel);
-    socket.emit("autojoined", {
-      channelId: activeChannel,
-      userId: currentUserToken.id,
-    });
-    console.log("active channel is => ", activeChannel);
+    socket.emit("autojoined", {channelId: activeChannel, userId: currentUserToken.id})
   };
 
   return (
@@ -63,11 +53,10 @@ function ChannelList({
           }`}
           onClick={() => handleChannelClick(channel.id)}
         >
-          <div className={`text-bLight_4 ${activeChannel === channel.id ? "bg-bLight_5" : ""}`}>#{channel.Channel}</div>
+          {console.log("channel id is ", channel.id, "active channel is ", activeChannel)}
+          <div className="text-bLight_4">#{channel.Channel}</div>
           {/* lock icon for protectd channel */}
-          {channel.protected ? (
-            <div className={`text-bLight_5 ml-auto`}>{<chatIcons.lock />}</div>
-          ) : null}
+          {channel.protected ? <div className={`text-bLight_5 ml-auto`}>{<chatIcons.lock />}</div> : null}
         </div>
       ))}
     </div>

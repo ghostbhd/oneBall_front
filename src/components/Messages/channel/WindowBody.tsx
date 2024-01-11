@@ -7,7 +7,7 @@ const WindowBody = ({ messages, currentUserToken }) => {
   return (
     <div
       className={`flex h-full w-full px-5 flex-col scroll-mb-0 overflow-y-auto`}
-      // ref={messageContainerRef}
+
     >
       {Array.isArray(messages) && messages.length === 0 ? (
         <p className={`mx-auto mt-5 text-sm text-bLight_4/80`}>

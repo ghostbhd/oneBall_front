@@ -100,7 +100,7 @@ const WelcomeBack = () => {
                 onChange={(e) => handleDigitChange(index, e.target.value)}
                 id={`digit-${index}`}
                 maxLength={1}
-                className="w-10 h-10 border border-gray-300 rounded px-2 py-1 text-center text-2xl mx-2"
+                className="w-11 h-11 border-2 border-bLight_4/50 outline-none text-bLight_4 bg-bDark_4 rounded px-2 py-1 text-center text-2xl mx-2"
                 ref={(input) => (inputRefs.current[index] = input)}
               />
             </div>
