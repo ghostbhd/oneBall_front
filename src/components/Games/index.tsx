@@ -8,11 +8,14 @@ import InviteFriend from "./InviteFriend";
 import { useSocket } from "../../Socketio";
 import config from "../../config";
 import { GetHeaders } from "../../jwt_token";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Games = () => {
   const [data, setData] = useState([] as any);
   const [loading, setLoading] = useState(true as boolean);
   const socket = useSocket();
+  const history = useNavigate();
 
   const [showInviteFriend, setShowInviteFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState({} as any);
@@ -27,6 +30,7 @@ const Games = () => {
     })
       .then(async (dats) => {
         const data = await dats.json();
+        if (!dats.ok) throw new Error();
         console.log(data); // Log the data to check its structure
         setData(data);
         console.log(data);
@@ -34,6 +38,8 @@ const Games = () => {
       })
       .catch((err) => {
         console.log("Error fetching data", err);
+        Cookies.remove("accessToken");
+        history("/auth");
         setLoading(false);
       });
   }, []);

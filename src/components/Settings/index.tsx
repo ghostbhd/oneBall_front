@@ -6,10 +6,12 @@ import * as jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
 import CustomSwitch from "./CustomSwitch";
 import config from "../../config";
+import { useNavigate } from "react-router-dom";
 
 /*
     ====================== Success mark ======================
 */
+
 const SuccessCheckmark: React.FC = () => {
   return (
     <div className="animate-success-check w-full text-center">
@@ -35,6 +37,7 @@ const Settings: React.FC = () => {
   const [qrImageUrl, setQrImageUrl] = useState<string>("");
   const [isChecked, setChecked] = useState<boolean>(false);
   const [test, setTest] = useState<boolean>(false);
+  const history = useNavigate();
 
   /*
     =================== check status of 2fa =========================
@@ -64,6 +67,8 @@ const Settings: React.FC = () => {
         }
       } catch (error) {
         console.log("===>> Error fetching 2FA status:", error.message);
+        Cookies.remove("accessToken");
+        history("/auth");
       }
     };
 
@@ -192,7 +197,7 @@ const Settings: React.FC = () => {
         setIsSuccess(true);
         setChecked(false);
         setTest(false);
-        document.getElementById("app-root")!.style.filter = "blur(5px)";
+        // document.getElementById("app-root")!.style.filter = "blur(5px)";
       }
     } catch (error) {
       console.error("Error handling verification:", error.message);

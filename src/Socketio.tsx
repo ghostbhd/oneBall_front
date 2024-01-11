@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import config from "./config";
+import { useNavigate } from "react-router-dom";
 
 const SOCKET_SERVER_URL = config.domain;
 
@@ -13,6 +14,7 @@ export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
+  const history = useNavigate();
   var token;
   const toke = document.cookie
     .split("; ")
@@ -30,6 +32,7 @@ export const SocketProvider = ({ children }) => {
     newSocket.io.on("error", (err) => {
       console.log(`connect_error due to ${err.message}`);
       Cookies.remove("accessToken");
+      history("/auth");
     });
     console.log("connected =================> ", token);
 
