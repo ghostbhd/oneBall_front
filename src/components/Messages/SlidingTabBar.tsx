@@ -7,7 +7,7 @@ const SlidingTabBar = ({ onTabSelected,currentUserToken }) => {
   const tabsRef = useRef([]);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const socket = useSocket();
-  const tab = "py-2 w-1/2 px-6 focus:outline-none";
+  const tab = "py-2 md:w-1/2 w-full px-6 focus:outline-none";
   const tabActive = "bg-bLight_5/60 rounded-2xl";
   const tabInactive = "bg-transparent rounded-2xl text-bLight_4";
   
@@ -30,7 +30,7 @@ const SlidingTabBar = ({ onTabSelected,currentUserToken }) => {
 
 
   return (
-    <div className={`w-full flex flex-row items-center text-bLight_2 gap-3`}>
+    <div className={`w-full flex md:flex-row flex-col items-center text-bLight_2 gap-3`}>
       <button
         ref={(el) => (tabsRef.current[0] = el)}
         className={`${tab} ${

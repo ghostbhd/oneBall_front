@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import config from "../../config";
 import { useSocket } from "../../Socketio";
 import * as jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 
 const Profile = () => {
   const [data, setData] = useState([]);
@@ -27,8 +28,9 @@ const Profile = () => {
         method: "GET",
         headers: headers,
       });
-      if (response.status === 401) {
-        handleRedirect("/Auth");
+      if (!response.ok) {
+        Cookies.remove("accessToken");
+        history("/auth");
         console.log("Unauthorized. Please log in.");
         return;
       }
@@ -43,7 +45,7 @@ const Profile = () => {
   const token = GetHeaders().jwttt;
   let decoded;
   if (token) decoded = jwtDecode.jwtDecode(token);
-  else decoded = null
+  else decoded = null;
   useEffect(() => {
     if (socket == null) return;
     socket.emit("FriendList", decoded.id);
@@ -69,7 +71,12 @@ const Profile = () => {
           <div
             className={`sm:w-8/12 w-full sm:h-full relative overflow-y-auto h-max ${style.blueBlur} ${style.rounded}`}
           >
-            <EditInfo data={data.editInnfo} setData={setData} loading={loading} setLoading={setLoading} />
+            <EditInfo
+              data={data.editInnfo}
+              setData={setData}
+              loading={loading}
+              setLoading={setLoading}
+            />
 
             {/* Friend requests ------------------------- */}
             <FriendRequests />

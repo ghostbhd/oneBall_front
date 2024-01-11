@@ -9,7 +9,6 @@ import AddPasswordInput from "./AddPasswordInput";
 import ChangePasswordInput from "./ChangePasswordInput";
 import FriendList from "./FriendList";
 
-// import PropTypes from "prop-types";
 
 const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   // Channel messages ------------------
@@ -31,33 +30,20 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
   const [showFriendList, setShowFriendList] = useState(false);
 
   const socket: any = useSocket();
-  // const messageContainerRef = useRef(null);
   const moreBadgeRef = useRef(null);
 
   useEffect(() => {
-    // if (activeChannel) {
-    //   socket.emit("getChannelMessages", activeChannel);
-    // }
-
  
     socket.on("newChannelMessage", (newMessage) => {
-      console.log("actiiiiiv", activeChannel);
-      console.log("newChannelMessage", newMessage); 
+
       if(newMessage.channelId === activeChannel)
         setMessages((prevMessages) => [...prevMessages, newMessage.message]);
     });
-
-    // socket.emit("getSenderIdsInChannel", activeChannel);
-
-    // socket.on("senderIdsInChannel", (id) => {
-    //   setSender(id);
-    // });
 
     // Listen for channel messages ---------------------------------------------
     socket.on("channelMessages", (data) => {
       if (data && Array.isArray(data.message)) {
         if(data.channelId === activeChannel){
-        console.log("data.messages", data);
         setMessages(data.message);}
       } else {
         setMessages([]);
@@ -68,7 +54,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
     socket.on("channelMembershipStatus", (data) => {
       if (data.channelId === activeChannel) {
-        console.log("channelMembershipStatus", data);
         setMembershipStatus({
           channelName: data.channelName,
           isAdmin: data.isAdmin,
@@ -134,7 +119,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
 
   // Join channel -------------------------------------------------------------
   const handleJoinChannel = () => {
-    console.log("typeOfChannel", typeOfChannel);
     if (typeOfChannel === "protected" && !showPasswordInput) {
       setShowPasswordInput(true);
     } else {
@@ -166,7 +150,6 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
     setMoreBadge(false);
   };
 
-  //!Channel List----------------------------------------------------------------
 
   const handleChannelList = () => {
     {
@@ -174,11 +157,7 @@ const ChannelWindow = ({ activeChannel, currentUserToken, typeOfChannel }) => {
         channelId: activeChannel,
         userid: currentUserToken.id,
       });
-      console.log(
-        "ListOfFriend---------------------------------",
-        activeChannel,
-        currentUserToken.id
-      );
+
       setShowFriendList(true);
     }
   };
