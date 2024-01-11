@@ -16,11 +16,6 @@ const FriendList = () => {
 
   useEffect(() => {
     if (socket == null) return;
-    socket.emit("FriendList", decoded.id);
-  }, []);
-
-  useEffect(() => {
-    if (socket == null) return;
     socket.on("Frinds-List", (data) => {
       console.log("hte user is ", data);
       setFriends(data);

@@ -26,15 +26,15 @@ import Cookies from "js-cookie";
 
 const App = () => {
   const { theme }: any = useTheme();
-  const isAuth = Cookies.get("accessToken") ? true : false;
-  const navigate = useNavigate();
+  // const isAuth = Cookies.get("accessToken") ? true : false;
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isAuth) {
-      // navigate("/Auth");
-      return;
-    }
-  }, [isAuth]);
+  // useEffect(() => {
+  //   if (!isAuth) {
+  //     // navigate("/Auth");
+  //     return;
+  //   }
+  // }, [isAuth]);
 
   return (
     <div

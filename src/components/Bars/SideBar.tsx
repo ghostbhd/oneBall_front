@@ -85,7 +85,7 @@ const SideBar : React.FC = () => {
             theme.isSidebarCollapsed ? "w-max" : "w-full"
           }`}
         >
-          <Link to={"/"}>{theme.isSidebarCollapsed ? "Pi" : "PiPo"}</Link>
+          <Link to={"/"}>{theme.isSidebarCollapsed ? "OB" : "One Ball"}</Link>
         </li>
         {/* items ------------------------ */}
         {sidebarItems.map((item, index) => (

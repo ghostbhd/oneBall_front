@@ -103,7 +103,7 @@ const Buttons = ({ data: initialData }) => {
 
   return (
     <div
-      className={`w-full flex flex-col space-y-6 sm:px-5 px-3 ${style.blueBlur} p-4 ${style.rounded}`}
+      className={`w-full flex flex-col sm:px-5 px-3 ${style.blueBlur} p-4 ${style.rounded}`}
     >
       {/* challenge button ----------------------------------------- */}
       <Link
@@ -170,10 +170,10 @@ const Buttons = ({ data: initialData }) => {
         )}
 
         {/* send message button --------------------------- */}
-        <div className={`${button} bg-bLight_3 text-bDark_4`}>
+        {/* <div className={`${button} bg-bLight_3 text-bDark_4`}>
           <p className={`${text}`}>Send Message</p>
           <div className={`${icon}`}>{<icons.sendMessage />}</div>
-        </div>
+        </div> */}
 
         {/* block button --------------------------- */}
         <div className={`${button} bg-bDark_3 text-org_3/70`} onClick={handelBlock}>

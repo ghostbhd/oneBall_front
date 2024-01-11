@@ -18,11 +18,13 @@ const ChatWindow = ({ activeChat, activeChatUser, currentUserToken }: any) => {
   const socket: any = useSocket();
 
   const handleSendMessage = () => {
-    socket.emit("send-message", {
-      chatId: activeChat,
-      Content: message,
-      senderId: currentUserToken.id,
-    });
+    if (message.trim() !== "") {
+      socket.emit("send-message", {
+        chatId: activeChat,
+        Content: message,
+        senderId: currentUserToken.id,
+      });
+    }
     setMessage("");
   };
 

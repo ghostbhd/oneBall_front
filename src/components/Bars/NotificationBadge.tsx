@@ -4,29 +4,46 @@ import { useEffect, useState } from "react";
 import { ImgBg } from "../../style";
 import { useSocket } from "../../Socketio";
 import { GetHeaders } from "../../jwt_token";
-import * as jwtDecode  from "jwt-decode";
+import * as jwtDecode from "jwt-decode";
 import React from "react";
 
-const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any) => {
+const NotificationBadge: React.FC = ({
+  notifRef,
+  showNotif,
+  setShowNotif,
+}: any) => {
   const [notifItems, setNotifItems] = useState([]);
-  const removeFromData = (username: any) => {
-    setNotifItems((prevData) => prevData.filter((item) => item.username !== username));
-  };
-  const addData = (obj) => {
-    console.log("the username isiiiiiiii ", obj.username)
-      setNotifItems( prevData => [...prevData, obj]);
-  };
-  const socket = useSocket();
+
+  const socket: any = useSocket();
   const token = GetHeaders().jwttt;
-  let decoded;
-  if (token)
-    decoded = jwtDecode.jwtDecode(token);
-  else
-    decoded = null;
+  let decoded: any;
+  if (token) decoded = jwtDecode.jwtDecode(token);
+  else decoded = null;
+
+  // add friend data to notification -------------------------------
+  const addData = (obj: any) => {
+    console.log("the username isiiiiiiii ", obj.username);
+    setNotifItems((prevData): any => [...prevData, obj]);
+  };
+
+  // remove friend data to notification -------------------------------
+  const removeFromData = (username: any) => {
+    setNotifItems((prevData) =>
+      prevData.filter((item: any) => item.username !== username)
+    );
+  };
+
+  // add game data to notification -------------------------------
+  const addGameInvite = (obj: any) => {
+    console.log("the username isiiiiiiii ", obj.username);
+    setNotifItems((prevData): any => [...prevData, obj]);
+  };
 
   useEffect(() => {
     if (socket == null) return;
-    socket.on("NotificationAdd", (reqData) => {
+
+    // add notification to friend request -------------------------------
+    socket.on("NotificationAdd", (reqData: any) => {
       // console.log("FriendRequests", reqData);
       const newData = {
         type: "friend",
@@ -35,11 +52,39 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
         fullName: reqData.fullName,
       };
       // adding data to previous data
-      console.log("the data is ", newData)
+      console.log("the data is ", newData);
       addData(newData);
     });
 
-    socket.on("Friend-Refuse", (reqData) => {
+    // add notification to game request -------------------------------
+    socket.on("gameInvite", (reqData: any) => {
+      console.log("game invite", reqData);
+      const newData = {
+        type: reqData.type,
+        image: reqData.image,
+        username: reqData.username,
+        fullName: reqData.fullName,
+      };
+      // adding data to previous data
+      console.log("the data is ", newData);
+      addGameInvite(newData);
+    });
+
+    // game invite accepted --------------------------------------------
+    socket.on("acceptgame", (reqData: any) => {
+      const newData = {
+        type: reqData.type,
+        image: reqData.image,
+        username: reqData.username,
+        fullName: reqData.fullName,
+      };
+      // adding data to previous data
+      console.log("the data is ", newData);
+      addGameInvite(newData);
+    });
+
+    // remove notification to friend request -------------------------------
+    socket.on("Friend-Refuse", (reqData: any) => {
       // console.log("Refuse", data);
       const newData = {
         type: "friend",
@@ -48,10 +93,11 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
         fullName: reqData.fullName,
       };
       removeFromData(newData.username);
-      console.log("the data refused is ", newData)
+      console.log("the data refused is ", newData);
     });
 
-    socket.on("Notif", (reqData) => {
+    // get all notification -------------------------------
+    socket.on("Notif", (reqData: any) => {
       // console.log("FriendRequests", reqData);
       setNotifItems(reqData);
     });
@@ -61,7 +107,7 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
       socket.off("NotificationAdd");
     };
   }, [socket]);
-  
+
   // Friend request ------------------------------------------------
   const handelAcceptFriend = (username) => {
     console.log("accept friend request");
@@ -69,10 +115,11 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
     socket.emit("AcceptRequest", {
       username1: decoded.name,
       username2: username,
-    })
+    });
     removeFromData(username);
   };
 
+  // Friend reject ------------------------------------------------
   const handelRejecttFriend = (username) => {
     console.log("reject friend request ", username);
     if (socket == null) return;
@@ -83,15 +130,22 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
     removeFromData(username);
   };
 
-  // Game request -------------------------------------------------------
-  const handelPlayGame = (username) => {
+  // Game request accept -------------------------------------------------------
+  const handelAcceptGame = (username) => {
     console.log("play game");
+    if (socket == null) return;
+    socket.emit("accept:flan", { id: decoded.id, username: username });
   };
 
+  // Game request reject -------------------------------------------------------
   const handelRejecttGame = (username) => {
     console.log("reject game");
   };
 
+  // start playing -------------------------------------------------------
+  const handelStartPlaying = (username) => {
+    console.log("start playing");
+  };
 
   // useEffect(() => {
 
@@ -163,7 +217,7 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
                   </div>
                 </div>
               </>
-            ) : (
+            ) : item.type === "game" ? (
               // type = game in accepted request type = acceptedGame last one not yet
 
               // game invitaion *********************************************************************************************
@@ -187,7 +241,7 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
                     {/* play request ------------------------------ */}
                     <div
                       className={`text-org_3 cursor-pointer`}
-                      onClick={() => handelPlayGame(item.username)}
+                      onClick={() => handelAcceptGame(item.username)}
                     >
                       {<icons.play />}
                     </div>
@@ -201,6 +255,30 @@ const NotificationBadge: React.FC = ({ notifRef, showNotif, setShowNotif } : any
                   </div>
                 </div>
               </>
+            ) : (
+              <div
+                className={`bg-gradient-to-r items-center gap-2 from-org_1/30 border-2 border-org_1/50 to-bDark_1  w-full flex p-1 rounded-full`}
+              >
+                <div
+                  className={`${image} border-2 border-org_1/80`}
+                  style={ImgBg({ img: item.image })}
+                ></div>
+                <div className={`flex items-center text-bLight_3`}>
+                  <p>@{item.username}</p>
+                </div>
+                {/* buttons ----------------------------------------------------------- */}
+                <div
+                  className={`ml-auto text-lg px-4 rounded-full flex items-center`}
+                >
+                  {/* play request ------------------------------ */}
+                  <div
+                    className={`text-org_1/70 hover:text-org_1 cursor-pointer`}
+                    onClick={() => handelStartPlaying(item.username)}
+                  >
+                    {<icons.play />}
+                  </div>
+                </div>
+              </div>
             )}
           </li>
           // </>
