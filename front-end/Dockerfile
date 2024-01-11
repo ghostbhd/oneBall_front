@@ -1,6 +1,7 @@
 FROM node:20
 RUN mkdir front-end
-COPY . ./front-end
+WORKDIR /front-end
+COPY . ./
 EXPOSE 5173
-RUN chmod +x ./front-end/script.sh
-CMD ["./front-end/script.sh", "bash"]
+RUN chmod +x ./script.sh
+CMD ["./script.sh", "bash"]

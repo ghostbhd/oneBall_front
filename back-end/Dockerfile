@@ -1,6 +1,7 @@
 FROM node:20
 RUN     mkdir back-end
-COPY ./ ./back-end
-RUN chmod +x ./back-end/script.sh
+WORKDIR /back-end
+COPY . ./
+RUN chmod +x ./script.sh
 EXPOSE 3009
-CMD ["./back-end/script.sh","bash"]
+CMD ["./script.sh","bash"]
