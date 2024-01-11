@@ -44,7 +44,6 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
 
 
     useEffect(() => {
-        console.log("useeffect res ", f_l.res)
         if (requested === false) {
             f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
             setrequested(true)
