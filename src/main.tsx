@@ -10,7 +10,7 @@ const root = document.getElementById("root");
 
 if (root) {
   createRoot(root).render(
-    <React.StrictMode>
+    //<React.StrictMode>
       <Router>
         <SocketProvider>
           <ThemeProvider>
@@ -18,7 +18,7 @@ if (root) {
           </ThemeProvider>
         </SocketProvider>
       </Router>
-    </React.StrictMode>
+    //</React.StrictMode>
   );
 } else {
   console.error("Root element not found in the document.");
