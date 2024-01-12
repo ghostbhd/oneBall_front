@@ -1,10 +1,11 @@
 import { animated } from '@react-spring/web'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDrag } from '@use-gesture/react'
 import { useSocket } from "../Socketio.jsx";
 import { GetHeaders } from "../jwt_token"
 import * as jwtDecode from "jwt-decode";
 import { Whoami } from "./index.jsx"
+import { useLocation } from 'react-router-dom';
 
 export default function Player(pro) {
 
@@ -21,6 +22,7 @@ export default function Player(pro) {
     let border_height = pro.height * 0.015
 
     let calc_pitch = pro.height - (border_height * 2)
+    const [mode, setmode] = useState("r")
 
     //tobe checked for buggies
     const token = GetHeaders().jwttt;
@@ -30,11 +32,11 @@ export default function Player(pro) {
         let event
         window.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowDown') {
-                pro.api.start({ y: pro.anim_val.y.get() + 2 , immediate : true})
+                pro.api.start({ y: pro.anim_val.y.get() + 2, immediate: true })
                 console.log("hihi")
             }
             if (event.key === 'ArrowUp') {
-                pro.api.start({ y: pro.anim_val.y.get() - 2 , immediate: true})
+                pro.api.start({ y: pro.anim_val.y.get() - 2, immediate: true })
                 console.log("hihi")
             }
         })
@@ -76,14 +78,15 @@ export default function Player(pro) {
     const bind = useDrag(({ active, movement: [, my],
         offset: [, oy], direction: [xDir], velocity, cancel }) => {
         if (oy >= border_height) {
+            console.log("pro.side ", pro.side)
             if (pro.side == 2) {
                 pro.api.start({ y: oy, immediate: true })
-                wsocket.emit("post:right_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id })
-                //console.log("post:right_plr:y")
+                wsocket.emit("post:right_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id})
+                console.log("post:right_plr:y")
             }
             else {
-                wsocket.emit("post:left_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id })
-                //console.log("emitting left")
+                wsocket.emit("post:left_plr:y", { data: (oy - border_height) / calc_pitch, playerID: currentUserToken.id})
+                console.log("emitting left")
                 pro.api.start({ y: oy, immediate: true })
             }
         }
