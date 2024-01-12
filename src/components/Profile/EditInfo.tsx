@@ -73,22 +73,16 @@ const EditInfo = ({ data, setData, loading, setLoading }) => {
     });
     // if (.then(  (response) =>  {
     if (response.ok) {
-      console.log("the object ", response);
       const data = await response.json();
-      console.log("the user is ", data.user);
-      console.log("accessToken ", data.accessToken);
       Cookies.set("accessToken", data.accessToken);
       setLoading(!loading);
       return data;
-    } else {
+    } else if (response.status === 401) {
+      setError("The username is already taken");
+    } else if (response.status === 404) {
+      history("/auth")
       Cookies.remove("accessToken");
-      history("/auth");
-      return response.json();
     }
-    // .catch((error) => {
-    //   console.error("Error during file upload:", error);
-    // });
-    // window.location.reload();
   };
 
   // File handling -------------------------------------------------------------
