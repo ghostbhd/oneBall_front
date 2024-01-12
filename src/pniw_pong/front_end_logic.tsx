@@ -45,8 +45,14 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
 
 
     useEffect(() => {
-        if (requested === false) {
+        if (requested === false && !loc.search) {
+            console.log("emmiitiing lijaa====", loc.search)
             f_l.ws.emit("lija_bsmlah", { playerID: currentUserToken.id })
+            setrequested(true)
+        }
+        else if (requested === false && loc.search) {
+            console.log("waakwaaak")
+            f_l.ws.emit("matchfriends", { id: currentUserToken.id })
             setrequested(true)
         }
         //f_l.ws.on("opponent_found", (data, callback) => {
@@ -56,7 +62,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
                 status: 'ok'
             })
             */
-            console.log("opponent_found !!")
+            console.log("opponent_found !!", data)
             setwho_val(data)
             if (ingame === false) {
                 setingame(true)
@@ -157,7 +163,7 @@ export default function FrontEndLogic({ children, f_l, game_inf }) {
                     f_l.ws.emit("thala", { id: currentUserToken.id })
             }
         }
-    }, [game_inf, nav, ingame, requested, salat, loc.pathname])
+    }, [game_inf, nav, ingame, salat, loc])
 
 
     return (
