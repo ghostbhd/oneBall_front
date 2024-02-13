@@ -5,10 +5,10 @@ The game is built using ***React*** for the frontend framework, ***Vite.js*** fo
 and ***Tailwind CSS*** for styling. 
 The user interface design was crafted using Figma.
 
-## Features
-- **Ping Pong Game:** Enjoy a classic Ping Pong game experience right in your browser.
-- **Responsive Design:** The application is designed to work seamlessly across various screen sizes and devices.
-- **Customizable Styling:** Tailwind CSS allows for easy customization and theming to suit your preferences.
+- ## Features
+-- **Ping Pong Game:** Enjoy a classic Ping Pong game experience right in your browser.
+-- **Responsive Design:** The application is designed to work seamlessly across various screen sizes and devices.
+-- **Customizable Styling:** Tailwind CSS allows for easy customization and theming to suit your preferences.
 
 # Project Overview
 
@@ -17,7 +17,7 @@ Welcome to the One Ball Ping Pong Game Single-Page Web App! This project encompa
   ## Profile Page
 
 - **User Name and Avatar:** Customize your profile by changing your user name and avatar.
-- **User Profile:** View your own profile to send friend requests, challenge friends to games, view rankings, and access details about yourself.
+- **User Profile:** Access your user profile page to send friend requests, challenge friends to games, view rankings, and access details about yourself.
 
   ## Real-Time Chat Interface
 
@@ -26,7 +26,7 @@ Welcome to the One Ball Ping Pong Game Single-Page Web App! This project encompa
 
   ## Dashboard
 
-- **Main Features:** Access essential features such as viewing last messages, accessing your profile details, and reviewing your game history.
+- **Main Features:** Access essential features such as viewing the last messages, accessing your profile details, and reviewing your game history.
 - **Start Game:** Initiate a game either randomly or challenge a friend directly from the dashboard.
 
   ## Game Page
