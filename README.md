@@ -14,35 +14,35 @@ The user interface design was crafted using Figma.
 
 Welcome to the One Ball Ping Pong Game Single-Page Web App! This project encompasses various features to enhance your gaming experience and foster community interaction. Here's an overview of what you can expect:
 
-## Profile Page
+  ## Profile Page
 
 - **User Name and Avatar:** Customize your profile by changing your user name and avatar.
 - **User Profile:** View your own profile to send friend requests, challenge friends to games, view rankings, and access details about yourself.
 
-## Real-Time Chat Interface
+  ## Real-Time Chat Interface
 
 - **Direct Messages (DMs):** Engage in private conversations with other users.
 - **Channels:** Join or create chat channels to discuss various topics with the community.
 
-## Dashboard
+  ## Dashboard
 
 - **Main Features:** Access essential features such as viewing last messages, accessing your profile details, and reviewing your game history.
 - **Start Game:** Initiate a game either randomly or challenge a friend directly from the dashboard.
 
-## Game Page
+  ## Game Page
 
 - **Game Settings:** Customize your game experience by selecting backgrounds, paddles, and ball styles.
 - **Game History:** Track your total game history to monitor your progress and performance.
 
-## Leaderboard Page
+  ## Leaderboard Page
 
 - **Ranking:** View the rankings of all users to see how you stack up against the competition.
 
-## Settings Page
+  ## Settings Page
 - **Two-Factor Authentication (2FA):** Enable or disable 2FA for enhanced security.
 
 
-## Contributing
+# Contributing
 Contributions to this project are welcome! 
 If you find any issues or have suggestions for improvements, 
 please feel free to open an issue or submit a pull request.
