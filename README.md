@@ -1,8 +1,8 @@
 # One Ball Ping Pong Game Single-Page Web App
 
 This repository contains the front-end code for a Ping Pong game single-page web application. 
-The game is built using <u>React</u> for the frontend framework, <u>Vite.js</u> for the build tooling, 
-and <u>Tailwind CSS</u> for styling. 
+The game is built using **React** for the frontend framework, **Vite.js** for the build tooling, 
+and **Tailwind CSS** for styling. 
 The user interface design was crafted using Figma.
 
 ## Features
