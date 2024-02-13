@@ -18,3 +18,4 @@ src/global_backend/src/dist
 backend/node_modules
 backend/dist
 dist
+.env
